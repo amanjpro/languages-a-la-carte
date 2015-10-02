@@ -112,7 +112,7 @@ trait ForNamerComponent extends NamerComponent {
   def apply(tree: Tree): Tree = tree match {
     case forloop: For          =>
       val inits = forloop.inits.map { init =>
-        name(init).asInstanceOf[Expr]
+        name(init)
       }
       val cond = name(forloop.cond).asInstanceOf[Expr]
       val steps = forloop.steps.map { step =>
