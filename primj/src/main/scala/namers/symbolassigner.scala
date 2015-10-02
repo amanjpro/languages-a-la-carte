@@ -152,7 +152,7 @@ trait ForSymbolAssignerComponent extends SymbolAssignerComponent {
       case forloop: For          =>
         val symbol  = Some(ScopeSymbol(owner))
         val inits = forloop.inits.map { init =>
-          assign((init, symbol)).asInstanceOf[Expr]
+          assign((init, symbol))
         }
         val cond = assign((forloop.cond, symbol)).asInstanceOf[Expr]
         val steps = forloop.steps.map { step =>
