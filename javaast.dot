@@ -1,0 +1,79 @@
+strict digraph JavaAST {
+  size="10.0,3.5";
+  orientation="landscape";
+  ratio=fill;
+  
+  Tree -> IdentifiedTree;
+  Tree -> NamedTree;
+  Tree -> Modifiable;
+  Tree -> Expr;
+  Tree -> UseTree;
+  Tree -> Template;
+  Tree -> Case;
+
+
+  subgraph {
+    Modifiable -> DefTree;
+    Modifiable -> While;
+    Modifiable -> Unary;
+  }
+
+  subgraph {
+    IdentifiedTree -> DefTree;
+    IdentifiedTree -> BadTree;
+    IdentifiedTree -> Block;
+    IdentifiedTree -> For;
+  }
+
+  subgraph {
+    NamedTree -> DefTree;
+    NamedTree -> Label;
+  }
+
+
+  subgraph {
+    DefTree -> TypeTree;
+    DefTree -> TermTree;
+  }
+
+  subgraph {
+    TypeTree -> ClassDef;
+  }
+
+  subgraph {
+    TermTree -> MethodDef;
+    TermTree -> ValDef;
+  }
+
+
+  subgraph {
+    Expr -> Empty;
+    Expr -> Ident;
+    Expr -> Cast;
+    Expr -> Binary;
+    Expr -> Unary;
+    Expr -> Lit;
+    Expr -> Return;
+    Expr -> Block;
+    Expr -> Assign;
+    Expr -> If;
+    Expr -> While;
+    Expr -> For;
+    Expr -> Ternary;
+    Expr -> Apply;
+    Expr -> Label;
+    Expr -> Break;
+    Expr -> Continue;
+    Expr -> Switch;
+    Expr -> New;
+    Expr -> This;
+    Expr -> Super;
+  }
+
+
+  subgraph {
+    UseTree -> TypeUse;
+    UseTree -> Ident;
+    UseTree -> Select;
+  }
+}

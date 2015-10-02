@@ -1,0 +1,68 @@
+package ch.usi.inf.l3.sana.primj.symbols
+
+import ch.usi.inf.l3.sana
+import sana.tiny.types.Type
+import sana.primj.types.VoidType
+import sana.tiny.symbols.{Symbol, TermSymbol, TypeSymbol}
+import sana.tiny.modifiers.Flags
+import sana.tiny.modifiers.Ops.noflags
+import sana.tiny.names.{Name, noname}
+
+
+
+
+
+case object ProgramSymbol extends Symbol {
+  decls = decls + SymbolUtils.standardDefinitions
+
+  var name: Name = noname
+  var mods: Flags = noflags
+  var tpe: Option[Type] = None
+  var owner: Option[Symbol] = None
+}
+
+case class VariableSymbol(var mods: Flags, var name: Name,
+  var tpe: Option[Type], var owner: Option[Symbol])
+  extends TermSymbol {
+
+  override def declare(symbol: Symbol): Unit = ???
+  override def delete(symbol: Symbol): Unit = ???
+  override def defines(symbol: Symbol): Boolean =
+    owner.map(_.defines(symbol)).getOrElse(false)
+  override def getSymbol(name: Name,
+    p: Symbol => Boolean): Option[Symbol] =
+    owner.flatMap(_.getSymbol(name, p))
+}
+
+case class MethodSymbol(var mods: Flags, var name: Name,
+  var params: List[Symbol],
+  var tpe: Option[Type],
+  var owner: Option[Symbol])
+  extends TermSymbol
+
+
+case class ScopeSymbol(var owner: Option[Symbol]) extends Symbol {
+  var name: Name = noname
+  var mods: Flags = noflags
+  var tpe: Option[Type] = None
+}
+
+case object VoidSymbol extends TypeSymbol {
+  def tpe: Option[Type] = Some(VoidType)
+  def owner: Option[Symbol] = None
+  def mods: Flags = noflags
+  def name: Name = Name("void")
+
+  def tpe_=(t: Option[Type]): Unit = ???
+  def owner_=(t: Option[Symbol]): Unit = ???
+  def mods_=(f: Flags): Unit = ???
+  def name_=(name: Name) = ???
+
+
+
+  override def declare(symbol: Symbol): Unit = ???
+  override def delete(symbol: Symbol): Unit = ???
+  override def defines(symbol: Symbol): Boolean = false
+  override def getSymbol(name: Name,
+    p: Symbol => Boolean): Option[Symbol] = None
+}

@@ -1,0 +1,7 @@
+// fails
+// REASSIGNING_FINAL_VARIABLE
+
+
+void m(final int x) {
+  x = 10;
+}

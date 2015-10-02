@@ -1,0 +1,6 @@
+// fails
+// UNINITIALIZED_FINAL_VARIABLE
+
+
+final int x;
+

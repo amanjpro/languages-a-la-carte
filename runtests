@@ -1,0 +1,148 @@
+#!/bin/sh
+exec scala -save -deprecation -feature "$0" "$@"
+!#
+
+import java.util.Random
+import sys.process._
+import scala.io._
+import java.io._
+import scala.language.postfixOps
+
+
+val VERSION = "0.1-SNAPSHOT"
+val SVERSION = "2.11"
+val red = "\u001b[91m"
+val green = "\u001b[92m"
+val endcolor = "\u001b[0m"
+
+
+val random = new Random
+
+var passed: Int  = 0
+var failed: Int  = 0
+var skipped: Int = 0
+
+def writeToFile(fname: String, text: String) {
+  val file = new File(fname)
+  val bw = new BufferedWriter(new FileWriter(file))
+  bw.write(text)
+  bw.close()
+}
+
+def fail(f: String, prog: List[String], ref: List[String]): Unit = {
+  println("=======================================================")
+  println("-------------------- Reference ------------------------")
+  ref.foreach(println)
+  println("---------------------- Program ------------------------")
+  prog.foreach(println)
+  println("---------------------- Test case ----------------------")
+  (ref, prog) match {
+    case (Nil, _)    =>
+      println(s"$red $f $endcolor should pass")
+    case (_, Nil)    =>
+      println(s"$red $f $endcolor should fail")
+    case _           =>
+      println(s"$red $f $endcolor should fail, but with different errors")
+  }
+  println("=======================================================")
+  failed += 1
+}
+
+def skip(f: String): Unit = {
+  println(s"$f skipped")
+  skipped += 1
+}
+def pass(f: String): Unit = {
+  passed += 1
+  println(s"$green $f passed $endcolor")
+}
+
+def test(file: String, prg: String): Unit = {
+  val source = Source.fromFile(file)
+  val lines = source.getLines.toList
+  lines.indexWhere((x) => ! x.startsWith("//")) match {
+    case -1 | 0 | 1                => skip(file)
+    case n                         =>
+      // Only take the first error codes
+      val refErrorCodes = lines.take(n).tail.flatMap((code) => {
+        val trimmed = code.trim
+        if(trimmed == "//") Nil
+        else List(trimmed)
+      })
+
+      var rr: List[String] = Nil
+      val countLogger = ProcessLogger(line => (),
+                                      line => rr = rr ++ List(line))
+
+      s"scala $prg --Ytest --Xlog off $file" ! countLogger
+      val programErrors = rr.flatMap((err) => {
+        val trimmed = err.trim
+        if(trimmed != "") List(s"// $trimmed")
+        else Nil
+      })
+
+      if(refErrorCodes.length == programErrors.length &&
+        refErrorCodes == programErrors)
+        pass(file)
+      else fail(file, programErrors, refErrorCodes)
+  }
+}
+
+def testDir(dir: String, prg: String): Unit = {
+  val files = new File(dir).listFiles
+  val testFiles = files.filter((x) => {
+    !(x.getName.startsWith(".") ||
+    x.getName.endsWith("~") ||
+    x.getName.endsWith(".swp"))
+  })
+  testFiles.foreach((x) => {
+    if(x.isDirectory) {
+      testDir(x.getAbsolutePath, prg)
+    } else {
+      test(x.getAbsolutePath, prg)
+    }
+  })
+}
+
+def start(opts: List[String]): Unit = {
+  opts match {
+    case List("recompile", "all")   =>
+      val dirs = new File("tests").listFiles.filter(_.isDirectory)
+      dirs.foreach((x) => {
+        val n = x.getName
+        s"sbt $n/assembly".!
+        if(new File(
+          s"$n/target/scala-$VERSION/$n-assembly-$VERSION.jar").exists)
+
+          s"cp $n/target/scala-$SVERSION/$n-assembly-$VERSION.jar bin/$n.jar".!
+        else ()
+      })
+      start(List("all"))
+    case List("recompile", x)       =>
+      s"sbt $x/assembly".!
+      s"cp $x/target/scala-$SVERSION/$x-assembly-$VERSION.jar bin/$x.jar".!
+      start(List(x))
+    case List("all")                =>
+      val dirs = new File("tests").listFiles.filter(_.isDirectory)
+      dirs.foreach((x) => {
+        if(new File(s"bin/${x.getName}.jar").exists)
+          testDir(x.getAbsolutePath, s"bin/${x.getName}.jar")
+        else println("${x.getName} skipped")
+      })
+    case List(dir)                  =>
+      testDir(s"tests/$dir", s"bin/$dir.jar")
+    case _                                   =>
+      println("usage: ./runtests [all | language to be tested]")
+  }
+}
+
+/* The first two lines of a test file should be as the following:
+   1- line 1 should be one of the following:
+      // fails
+      // passes
+   2- line 2 should show the compilation result, like:
+      // TYPE_MISMATCH    (make sure to leave the space after //)
+*/
+"mkdir -p bin".!!
+start(args.toList)
+System.exit(failed)

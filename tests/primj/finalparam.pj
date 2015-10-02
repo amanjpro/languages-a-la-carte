@@ -1,0 +1,4 @@
+// passes
+
+void m(final int x) {
+}
