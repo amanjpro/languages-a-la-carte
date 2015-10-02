@@ -13,7 +13,7 @@ import sana.tiny.names.{Name, noname}
 
 
 case object ProgramSymbol extends Symbol {
-  decls = decls + SymbolUtils.standardDefinitions
+  decls = decls ++ SymbolUtils.standardDefinitions
 
   var name: Name = noname
   var mods: Flags = noflags
@@ -32,19 +32,55 @@ case class VariableSymbol(var mods: Flags, var name: Name,
   override def getSymbol(name: Name,
     p: Symbol => Boolean): Option[Symbol] =
     owner.flatMap(_.getSymbol(name, p))
+
+  override def equals(other: Any): Boolean = other match {
+    case null                 => false
+    case that: VariableSymbol =>
+      this.mods == that.mods &&
+        this.name == that.name &&
+        this.tpe == that.tpe
+    case _                    =>
+      false
+  }
+  override def toString(): String = s"Variable symbol $name"
+  override def hashCode(): Int = name.hashCode * 43 +
+    tpe.hashCode * mods.hashCode
 }
 
 case class MethodSymbol(var mods: Flags, var name: Name,
   var params: List[Symbol],
   var tpe: Option[Type],
   var owner: Option[Symbol])
-  extends TermSymbol
+  extends TermSymbol {
+
+  override def equals(other: Any): Boolean = other match {
+    case null                 => false
+    case that: MethodSymbol   =>
+      this.name == that.name &&
+        this.tpe == that.tpe
+    case _                    =>
+      false
+  }
+  override def toString(): String = s"Method symbol: $name"
+  override def hashCode(): Int = name.hashCode * 43 + tpe.hashCode
+}
 
 
 case class ScopeSymbol(var owner: Option[Symbol]) extends Symbol {
   var name: Name = noname
   var mods: Flags = noflags
   var tpe: Option[Type] = None
+
+  override def equals(other: Any): Boolean = other match {
+    case null                 => false
+    case that: ScopeSymbol    =>
+      this.name == that.name &&
+        this.tpe == that.tpe
+    case _                    =>
+      false
+  }
+  override def toString(): String = s"Scope symbol"
+  override def hashCode(): Int = name.hashCode * 43 + tpe.hashCode
 }
 
 case object VoidSymbol extends TypeSymbol {
