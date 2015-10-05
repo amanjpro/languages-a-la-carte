@@ -234,8 +234,8 @@ trait ValDefShapeCheckerComponent extends ShapeCheckerComponent {
       }
 
       val enclMeth = SymbolUtils.enclosingMethod(valdef.symbol)
-      if(enclMeth != None &&
-          !(valdef.mods.isLocalVariable)) {
+      if(enclMeth != None
+        && !(valdef.mods.isLocalVariable || valdef.mods.isParam)) {
         // TODO: Better error message
         error(UNEXPETED_TREE,
           valdef.toString, "an expression", valdef.pos, valdef)
