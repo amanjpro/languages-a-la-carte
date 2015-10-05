@@ -204,6 +204,7 @@ class Parser extends parsers.Parser {
       ValDef(mods, tpe, name, NoTree, pos(ctx), None, None)
     }
 
+
 		override def visitMethodDeclaration(@NotNull ctx:
       PrimjParser.MethodDeclarationContext): Tree = {
       val tpe    = visit(ctx.`type`)
@@ -240,7 +241,15 @@ class Parser extends parsers.Parser {
 		override def visitBlock(@NotNull ctx: PrimjParser.BlockContext): Tree = {
       val stmts   = ctx.statement match {
         case null    => Nil
-        case stmts   => stmts.asScala.toList.map(visit(_))
+        case stmts   => stmts.asScala.toList.flatMap { stmt =>
+          stmt match {
+            case vr: PrimjParser.VarStmtContext =>
+              createVarDecls(vr.variableDeclaration,
+                Flags(LOCAL_VARIABLE))
+            case _                  =>
+              List(visit(stmt))
+          }
+        }
       }
       Block(stmts, pos(ctx), None, None)
     }
