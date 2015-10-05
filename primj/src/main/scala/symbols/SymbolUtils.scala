@@ -11,6 +11,9 @@ trait SymbolUtils extends sana.calcj.symbols.SymbolUtils {
     case _                     => super.getSymbol(t)
   }
 
+  override def standardDefinitions: Set[Symbol] =
+    super.standardDefinitions + VoidSymbol
+
   def enclosingMethod(symbol: Option[Symbol]): Option[Symbol] =
     symbol.flatMap {
       case sym: MethodSymbol => Some(sym)
