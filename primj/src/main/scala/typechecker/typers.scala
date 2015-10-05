@@ -353,7 +353,7 @@ trait ValDefTyperComponent extends TyperComponent {
             valdef.toString, "", valdef.pos, valdef)
         valdef
       } else (rtpe <:< ttpe) match {
-          case false if !valdef.mods.isParam =>
+          case false if rhs != NoTree        =>
             error(TYPE_MISMATCH,
               rtpe.toString, ttpe.toString, rhs.pos, valdef)
             valdef
