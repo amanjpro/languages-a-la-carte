@@ -1,17 +1,18 @@
 // fails
 // VOID_VARIABLE_TYPE
+// BAD_STATEMENT
 
 int x = 10;
 int y = 10;
 char k = 'k';
 void z = x;     // VOID_VARIABLE_TYPE
 
-int m(int l) {  
+int m(int l) {
   for(int k=0, z = 10; k < 10; k++,z--) {
     y = 10;
-    int k1 =1;
+    int k1 = 1;
     k = 10;
-    1;
+    18;
   }
   return 10;
 }
