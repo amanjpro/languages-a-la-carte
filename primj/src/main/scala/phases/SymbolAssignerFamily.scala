@@ -8,7 +8,6 @@ import sana.tiny.symbols.Symbol
 import sana.tiny.ast.{Tree, NoTree}
 import sana.primj.PrimjNodes
 import sana.primj.namers._
-// import sana.primj.namers.symbolassigners.Implicits._
 
 
 
@@ -21,7 +20,7 @@ trait PrimjSymbolAssignerFamily
 
   def components: List[PartialFunction[AssignerInput, Tree]] =
     generateComponents[AssignerInput, Tree](PrimjNodes.nodes,
-      "SymbolAssignerComponent", "assign", "Literal")
+      "SymbolAssignerComponent", "assign", "")
       // "Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal")
 
   def assign: AssignerInput => Tree = family

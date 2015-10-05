@@ -363,3 +363,18 @@ trait ApplySymbolAssignerComponent extends SymbolAssignerComponent {
     case _             => false
   }
 }
+
+trait LiteralSymbolAssignerComponent extends SymbolAssignerComponent {
+  def apply(p: (Tree, Option[Symbol])): Tree = {
+    val (tree, owner) = p
+    tree match {
+      case lit: Literal => lit
+    }
+  }
+
+  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
+    case (_: Literal, _) => true
+    case _               => false
+  }
+}
+

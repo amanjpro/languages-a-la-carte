@@ -240,3 +240,13 @@ trait ApplyNamerComponent extends NamerComponent {
 
   def isDefinedAt(tree: Tree): Boolean = defines(tree, "Apply")
 }
+
+trait LiteralNamerComponent extends NamerComponent {
+  def apply(tree: Tree): Tree = tree match {
+    case lit: Literal          => lit
+  }
+
+  def isDefinedAt(tree: Tree): Boolean = defines(tree, "Literal")
+}
+
+
