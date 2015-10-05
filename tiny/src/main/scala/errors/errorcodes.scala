@@ -7,7 +7,7 @@ trait ErrorCode {
 
 trait ErrorCodes {
   case object BAD_STATEMENT extends ErrorCode {
-    val message: String = "Unexpected expressions here"
+    val message: String = "Unexpected statement here"
   }
   case object TYPE_MISMATCH extends ErrorCode {
     val message: String = "Type mismatch"
