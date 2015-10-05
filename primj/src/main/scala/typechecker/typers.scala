@@ -372,12 +372,21 @@ trait MethodDefTyperComponent extends TyperComponent {
     case mthd: MethodDef          =>
       val tpt     = typed(mthd.ret).asInstanceOf[UseTree]
       val params  = mthd.params.map(typed(_).asInstanceOf[ValDef])
+      val mtpe    = {
+        val ptpes = params.flatMap(_.tpe)
+        if(ptpes.size == params.size) {
+          for {
+            rtpe <- tpt.tpe
+          } yield MethodType(rtpe, ptpes)
+        } else None
+      }
+      mthd.symbol.foreach(_.tpe = mtpe)
+
       val body    = typed(mthd.body).asInstanceOf[Expr]
       val tparams = params.map(_.tpe.getOrElse(ErrorType))
       val rtpe    = tpt.tpe.getOrElse(ErrorType)
-      val mtpe    = MethodType(rtpe, tparams)
       val btpe    = body.tpe.getOrElse(ErrorType)
-      if(btpe <:< rtpe && rtpe =/= VoidType) {
+      if(!(btpe <:< rtpe) && rtpe =/= VoidType) {
         error(TYPE_MISMATCH,
             rtpe.toString, btpe.toString, body.pos, mthd)
         mthd
@@ -390,7 +399,6 @@ trait MethodDefTyperComponent extends TyperComponent {
         } else {
           val res = mthd.copy(ret = tpt,
             params = params, body = body)
-          res.symbol.foreach(_.tpe = Some(mtpe))
           res
         }
       }
