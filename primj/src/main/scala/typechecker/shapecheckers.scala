@@ -113,7 +113,7 @@ trait ForShapeCheckerComponent extends ShapeCheckerComponent {
 
       isValidInitStatements(forloop)
       forloop.steps.foreach { step =>
-        if(TreeUtils.isValidStatement(step))
+        if(!TreeUtils.isValidStatement(step))
           error(BAD_STATEMENT,
             step.toString, "a statement", step.pos,
             step)
