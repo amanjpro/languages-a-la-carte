@@ -60,7 +60,7 @@ trait IfShapeCheckerComponent extends ShapeCheckerComponent {
       } else ()
       if(!isValidExpr(ifelse.cond)) {
         error(BAD_EXPRESSION,
-          ifelse.cond.toString, "a statement", ifelse.cond.pos,
+          ifelse.cond.toString, "an expression", ifelse.cond.pos,
           ifelse.cond)
       } else ()
   }
