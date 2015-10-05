@@ -26,8 +26,8 @@ trait ShapeCheckerComponent extends CheckerComponent[Tree] {
 trait BlockShapeCheckerComponent extends ShapeCheckerComponent {
   def apply(tree: Tree): Unit = tree match {
     case block: Block          =>
-      block.stmts.foreach{ tree =>
-        if(isValidStmt(tree)) {
+      block.stmts.foreach { tree =>
+        if(!isValidStmt(tree)) {
           error(BAD_STATEMENT,
             tree.toString, "a statement", tree.pos, tree)
         } else ()
