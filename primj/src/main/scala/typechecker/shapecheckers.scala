@@ -205,7 +205,7 @@ trait UnaryShapeCheckerComponent extends ShapeCheckerComponent {
   // postfix flag can only be set if the operator is postfix
   def apply(tree: Tree): Unit = tree match {
     case unary: Unary =>
-      if(unary.isPostfix && (unary.op != Inc || unary.op != Dec))
+      if(unary.isPostfix && (unary.op != Inc && unary.op != Dec))
         error(BAD_STATEMENT,
           unary.toString, "a postfix operation", unary.pos, unary)
       else ()
