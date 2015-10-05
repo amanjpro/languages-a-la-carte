@@ -224,7 +224,7 @@ trait ValDefShapeCheckerComponent extends ShapeCheckerComponent {
           valdef.tpt.toString, "a type", valdef.tpt.pos, valdef.tpt)
       } else ()
 
-      valdef.symbol match {
+      valdef.owner match {
         case Some(_: MethodSymbol) if  !valdef.mods.isParam  =>
           // TODO: Better error message
           error(UNEXPETED_TREE,
