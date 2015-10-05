@@ -82,14 +82,13 @@ trait MethodDefSymbolAssignerComponent extends SymbolAssignerComponent {
       case mthd: MethodDef          =>
         val symbol  = MethodSymbol(noflags, mthd.name,
           Nil, None, owner)
+        owner.foreach(sym => sym.declare(symbol))
         val opsym   = Some(symbol)
         val tpt     = assign((mthd.ret, opsym)).asInstanceOf[UseTree]
         val params  = mthd.params.map((x) =>
             assign((x, opsym)).asInstanceOf[ValDef])
         val body    = assign((mthd.body, opsym)).asInstanceOf[Expr]
         symbol.params = params.map(_.symbol).flatten
-
-        owner.foreach(sym => sym.declare(symbol))
 
         mthd.copy(ret = tpt, params = params, body = body, symbol = opsym)
     }
@@ -109,11 +108,11 @@ trait ValDefSymbolAssignerComponent extends SymbolAssignerComponent {
       case valdef: ValDef          =>
         val symbol  = VariableSymbol(valdef.mods, valdef.name,
           None, owner)
+        owner.foreach(sym => sym.declare(symbol))
         val opsym   = Some(symbol)
         val tpt     = assign((valdef.tpt, opsym)).asInstanceOf[UseTree]
         val rhs     = assign((valdef.rhs, opsym)).asInstanceOf[Expr]
 
-        owner.foreach(sym => sym.declare(symbol))
         valdef.copy(tpt = tpt, rhs = rhs, symbol = opsym)
     }
   }
@@ -195,7 +194,7 @@ trait IdentSymbolAssignerComponent extends SymbolAssignerComponent {
     val (tree, owner) = p
     tree match {
       case id: Ident          =>
-        Ident(id.symbol, id.pos, owner)
+        Ident(id.name, id.pos, owner)
     }
   }
 
