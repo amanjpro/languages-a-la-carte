@@ -12,7 +12,7 @@ import sana.tiny.names.{Name, noname}
 
 
 
-case object ProgramSymbol extends Symbol {
+object ProgramSymbol extends Symbol {
   decls = decls ++ SymbolUtils.standardDefinitions
 
   var name: Name = noname
@@ -83,7 +83,7 @@ case class ScopeSymbol(var owner: Option[Symbol]) extends Symbol {
   override def hashCode(): Int = name.hashCode * 43 + tpe.hashCode
 }
 
-case object VoidSymbol extends TypeSymbol {
+object VoidSymbol extends TypeSymbol {
   def tpe: Option[Type] = Some(VoidType)
   def owner: Option[Symbol] = None
   def mods: Flags = noflags
