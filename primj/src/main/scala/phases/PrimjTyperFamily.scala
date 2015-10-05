@@ -7,7 +7,7 @@ import sana.core.Implicits._
 import sana.tiny.ast.{Tree, NoTree}
 import sana.primj.PrimjNodes
 import sana.primj.typechecker._
-import sana.calcj.typechecker._
+import sana.calcj.typechecker.{UnaryTyperComponent => _, _}
 
 
 
