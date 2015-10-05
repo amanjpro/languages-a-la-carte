@@ -13,6 +13,8 @@ package types {
   object ErrorType extends Type {
     def =:=(other: Type): Boolean = false
     def <:<(other: Type): Boolean = false
+
+    override val toString: String = "ErrorType"
   }
 }
 
