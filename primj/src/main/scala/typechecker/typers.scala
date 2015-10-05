@@ -15,6 +15,8 @@ import tiny.source.Position
 import tiny.errors.ErrorReporting.{error,warning}
 import calcj.typechecker.{TyperComponent, TypePromotions}
 import calcj.types._
+import calcj.ast.Unary
+import calcj.ast.operators._
 import primj.ast._
 import primj.symbols._
 import primj.errors.ErrorCodes._
@@ -314,7 +316,25 @@ trait ReturnTyperComponent extends TyperComponent {
 
 }
 
+trait UnaryTyperComponent extends calcj.typechecker.UnaryTyperComponent {
+  override def apply(tree: Tree): Tree = tree match {
+    case unary: Unary          =>
+      super.apply(unary) match {
+        case Unary(_, op, expr, _, _, _) if op == Inc || op == Dec    =>
+          if(! TreeUtils.isVariable(expr))
+            error(ASSIGNING_NOT_TO_VARIABLE,
+              expr.toString, expr.toString, expr.pos, expr)
+          else if(TreeUtils.isFinal(expr))
+            error(REASSIGNING_FINAL_VARIABLE,
+              expr.toString, expr.toString, expr.pos, expr)
+          else ()
+          unary
+        case _                                                        =>
+          unary
+      }
+  }
 
+}
 
 trait ValDefTyperComponent extends TyperComponent {
   def apply(tree: Tree): Tree = tree match {
