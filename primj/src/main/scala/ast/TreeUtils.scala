@@ -67,10 +67,8 @@ trait TreeUtils {
       // Statements in primj: if, while, for, block, return, valdef
       // brokenj adds: Switch, continue, break
       case _: If | _: While | _: For | _: Block |
-         _: Return | _: ValDef | NoTree     =>
-        true
-      case _                                =>
-        false
+         _: Return | _: ValDef | NoTree     => true
+      case _                                => false
     }
     isValidStatementExpression(e) || isStmt
   }
@@ -81,6 +79,7 @@ trait TreeUtils {
     case _: Apply                       => true
     // case _: New                         => true
     case _: Assign                      => true
+    case NoTree                         => true
     case _                              => false
   }
 
