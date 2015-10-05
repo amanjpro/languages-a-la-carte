@@ -34,7 +34,7 @@ trait TypeTree extends DefTree
 
 trait Expr extends Tree
 
-trait UseTree extends Expr {
+trait UseTree extends Expr with SymTree {
   val symbol: Option[Symbol]
 }
 
@@ -49,6 +49,8 @@ class TypeUse protected[ast](val name: Name, val pos: Option[Position],
   val owner: Option[Symbol]) extends TypeUseApi {
   def tpe: Option[Type] = symbol.flatMap(_.tpe)
 
+  override def toString: String = s"TypeUse(${name.asString})"
+
   override def equals(other: Any): Boolean = other match {
     case null                    => false
     case that: TypeUse           =>
@@ -56,6 +58,7 @@ class TypeUse protected[ast](val name: Name, val pos: Option[Position],
         this.symbol == that.symbol &&
         this.owner == that.owner
         this.name == that.name
+    case _                       => false
   }
 
   override def hashCode(): Int =
@@ -81,6 +84,11 @@ object TypeUse {
     owner: Option[Symbol]): TypeUse =
       new TypeUse(symbol.map(_.name).getOrElse(noname),
         pos, symbol, owner)
+
+
+  def apply(name: Name, pos: Option[Position],
+    owner: Option[Symbol]): TypeUse =
+      new TypeUse(name, pos, None, owner)
 }
 
 class Ident protected[ast](val name: Name, val pos: Option[Position],
@@ -89,13 +97,15 @@ class Ident protected[ast](val name: Name, val pos: Option[Position],
 
   def tpe: Option[Type] = symbol.flatMap(_.tpe)
 
+  override def toString: String = s"Ident(${name.asString})"
   override def equals(other: Any): Boolean = other match {
     case null                    => false
-    case that: TypeUse           =>
+    case that: Ident             =>
       this.pos == that.pos &&
         this.symbol == that.symbol &&
         this.owner == that.owner
         this.name == that.name
+    case _                       => false
   }
 
   override def hashCode(): Int =
@@ -121,6 +131,11 @@ object Ident {
   def apply(symbol: Option[Symbol], pos: Option[Position],
     owner: Option[Symbol]): Ident =
       new Ident(symbol.map(_.name).getOrElse(noname), pos, symbol, owner)
+
+  def apply(name: Name, pos: Option[Position],
+    owner: Option[Symbol]): Ident =
+      new Ident(name, pos, None, owner)
+
 }
 
 case object NoTree extends Expr {
