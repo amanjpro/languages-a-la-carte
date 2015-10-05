@@ -33,7 +33,7 @@ case object CharType extends IntegralType {
   def <:<(other: Type): Boolean = other match {
     case IntType              => true
     case LongType             => true
-    case ShortType            => true
+    case CharType             => true
     case _: DecimalType       => true
     case _                    => false
   }
