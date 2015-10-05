@@ -20,16 +20,6 @@ trait TyperComponent extends TransformationComponent[Tree, Tree] {
 }
 
 
-trait LiteralTyperComponent extends TyperComponent {
-
-  def apply(tree: Tree): Tree = tree match {
-    case lit: Literal          => lit
-  }
-
-  def isDefinedAt(tree: Tree): Boolean   = defines(tree, "Literal")
-}
-
-
 trait BinaryTyperComponent extends TyperComponent {
 
   def apply(tree: Tree): Tree = tree match {
@@ -184,9 +174,9 @@ trait UnaryTyperComponent extends TyperComponent {
               // errors are already reported
               unary
           }
-            case _                                    =>
-              // errors are already reported
-              unary
+        case _                                    =>
+          // errors are already reported
+          unary
       }
   }
 
@@ -243,4 +233,12 @@ trait CastTyperComponent extends TyperComponent {
   }
 
   def isDefinedAt(tree: Tree): Boolean   = defines(tree, "Cast")
+}
+
+trait LiteralTyperComponent extends TyperComponent {
+  def apply(tree: Tree): Tree = tree match {
+    case lit: Literal     => lit
+  }
+
+  def isDefinedAt(tree: Tree): Boolean = defines(tree, "Literal")
 }
