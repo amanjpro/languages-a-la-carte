@@ -43,10 +43,10 @@ Unary: DONE
 
 /*
 Case: DONE
-Swtich
-Label
-Break
-Continue
+Swtich: DONE
+Label: DONE
+Break: DONE
+Continue: DONE
 */
 
 
