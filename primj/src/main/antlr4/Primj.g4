@@ -78,7 +78,7 @@ formalParameters
     ;
 
 formalParameterList
-    :   formalParameter (',' formalParameter)* 
+    :   formalParameter (',' formalParameter)*
     ;
 
 formalParameter
@@ -90,7 +90,7 @@ methodBody
     :   block
     ;
 
-literal                                                
+literal
     :   IntegerLiteral                                                # IntLit
     |   FloatingPointLiteral                                          # FloatLit
     |   CharacterLiteral                                              # CharLit
@@ -140,7 +140,7 @@ forControl
     ;
 
 variableDefinition
-    : mods='final'? type Identifier '=' 
+    : mods='final'? type Identifier '='
               expression (',' Identifier '=' expression)*
     ;
 
@@ -176,8 +176,8 @@ expression
     |   expression op=('*'|'/'|'%') expression                           # Mul
     |   expression op=('+'|'-') expression                               # Add
     |   expression op=('<<' | '>>>' | '>>') expression                   # Shifts
-    |   expression op=('<=' | '>=' | '>' | '<') expression               # Rel  
-    |   expression op=('==' | '!=') expression                           # Equ 
+    |   expression op=('<=' | '>=' | '>' | '<') expression               # Rel
+    |   expression op=('==' | '!=') expression                           # Equ
     |   expression '&' expression                                        # BAnd
     |   expression '^' expression                                        # BXor
     |   expression '|' expression                                        # BOr
