@@ -100,19 +100,18 @@ trait MethodDefSymbolAssignerComponent extends SymbolAssignerComponent {
   }
 }
 
-
 trait ValDefSymbolAssignerComponent extends SymbolAssignerComponent {
   def apply(p: (Tree, Option[Symbol])): Tree = {
     val (tree, owner) = p
     tree match {
       case valdef: ValDef          =>
+        val tpt     = assign((valdef.tpt, owner)).asInstanceOf[UseTree]
+        val rhs     = assign((valdef.rhs, owner)).asInstanceOf[Expr]
+
         val symbol  = VariableSymbol(valdef.mods, valdef.name,
-          None, owner)
+          tpt.tpe, owner)
         owner.foreach(sym => sym.declare(symbol))
         val opsym   = Some(symbol)
-        val tpt     = assign((valdef.tpt, opsym)).asInstanceOf[UseTree]
-        val rhs     = assign((valdef.rhs, opsym)).asInstanceOf[Expr]
-
         valdef.copy(tpt = tpt, rhs = rhs, symbol = opsym)
     }
   }
