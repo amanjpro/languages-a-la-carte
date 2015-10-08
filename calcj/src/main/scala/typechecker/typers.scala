@@ -20,30 +20,30 @@ trait TyperComponent extends TransformationComponent[Tree, Tree] {
 }
 
 
+@component
 trait BinaryTyperComponent extends TyperComponent {
 
-  def apply(tree: Tree): Tree = tree match {
-    case bin: Binary           =>
-      val e1 = typed(bin.lhs)
-      val e2 = typed(bin.rhs)
-      (e1, e2) match {
-        case (e1: Expr, e2: Expr)       if e1.tpe != None && e2.tpe != None =>
-          val btpe = binaryTyper(e1.tpe.get, e2.tpe.get, bin)
-          btpe match {
-            case Some((e1tpe, e2tpe, rtpe))           =>
-              val expr1 = TypePromotions.castIfNeeded(e1,
-                e1tpe, e1.tpe.get)
-              val expr2 = TypePromotions.castIfNeeded(e2,
-                e2tpe, e2.tpe.get)
-              bin.copy(lhs = expr1, rhs = expr2, tpe = Some(rtpe))
-            case _                                    =>
-              // errors are already reported
-              bin
-          }
-        case _                                                              =>
-          // errors are already reported
-          bin
-      }
+  (bin: Binary)           => {
+    val e1 = typed(bin.lhs)
+    val e2 = typed(bin.rhs)
+    (e1, e2) match {
+      case (e1: Expr, e2: Expr)       if e1.tpe != None && e2.tpe != None =>
+        val btpe = binaryTyper(e1.tpe.get, e2.tpe.get, bin)
+        btpe match {
+          case Some((e1tpe, e2tpe, rtpe))           =>
+            val expr1 = TypePromotions.castIfNeeded(e1,
+              e1tpe, e1.tpe.get)
+            val expr2 = TypePromotions.castIfNeeded(e2,
+              e2tpe, e2.tpe.get)
+            bin.copy(lhs = expr1, rhs = expr2, tpe = Some(rtpe))
+          case _                                    =>
+            // errors are already reported
+            bin
+        }
+      case _                                                              =>
+        // errors are already reported
+        bin
+    }
   }
 
 
@@ -145,39 +145,38 @@ trait BinaryTyperComponent extends TyperComponent {
         }
       }
 
-  def isDefinedAt(tree: Tree): Boolean   = defines(tree, "Binary")
 }
 
+@component
 trait UnaryTyperComponent extends TyperComponent {
 
-  def apply(tree: Tree): Tree = tree match {
-    case unary: Unary          =>
-      // TODO:
-      // Pos unary operator, should ideally perform the cast and return
-      // the containing expression not the whole unary expression (the
-      // operation is redundant). But this will reproduce the same problem
-      // that Scala has, when type checker can return a different tree
-      // type. What should we do here?
-      // res        <- unary.op match {
-      //   case Pos    => point(expr)
-      //   case _      => point(Unary(unary.op, expr, point(utpe), unary.pos))
-      // }
-      typed(unary.expr) match {
-        case expr: Expr       if expr.tpe != None =>
-          val utpe = unaryTyper(expr.tpe.get, unary)
-          utpe match {
-            case Some((etpe, rtpe))            =>
-              val expr2 = TypePromotions.castIfNeeded(expr,
-                etpe, expr.tpe.get)
-              unary.copy(expr = expr2, tpe = Some(rtpe))
-            case _                             =>
-              // errors are already reported
-              unary
-          }
-        case _                                    =>
-          // errors are already reported
-          unary
-      }
+  (unary: Unary)          => {
+    // TODO:
+    // Pos unary operator, should ideally perform the cast and return
+    // the containing expression not the whole unary expression (the
+    // operation is redundant). But this will reproduce the same problem
+    // that Scala has, when type checker can return a different tree
+    // type. What should we do here?
+    // res        <- unary.op match {
+    //   case Pos    => point(expr)
+    //   case _      => point(Unary(unary.op, expr, point(utpe), unary.pos))
+    // }
+    typed(unary.expr) match {
+      case expr: Expr       if expr.tpe != None =>
+        val utpe = unaryTyper(expr.tpe.get, unary)
+        utpe match {
+          case Some((etpe, rtpe))            =>
+            val expr2 = TypePromotions.castIfNeeded(expr,
+              etpe, expr.tpe.get)
+            unary.copy(expr = expr2, tpe = Some(rtpe))
+          case _                             =>
+            // errors are already reported
+            unary
+        }
+      case _                                    =>
+        // errors are already reported
+        unary
+    }
   }
 
   protected def unaryTyper(tpe: Type,
@@ -213,32 +212,26 @@ trait UnaryTyperComponent extends TyperComponent {
     }
   }
 
-  def isDefinedAt(tree: Tree): Boolean   = defines(tree, "Unary")
 }
 
-
+@component
 trait CastTyperComponent extends TyperComponent {
 
-  def apply(tree: Tree): Tree = tree match {
-    case cast: Cast           =>
-      val tpt  = typed(cast.tpt)
-      val expr = typed(cast.expr)
-      (tpt, expr) match {
-        case (tpt: UseTree, expr: Expr)   =>
-          cast.copy(tpt = tpt, expr = expr)
-        case _                            =>
-          // errors are already reported
-          cast
-      }
+  (cast: Cast)           => {
+    val tpt  = typed(cast.tpt)
+    val expr = typed(cast.expr)
+    (tpt, expr) match {
+      case (tpt: UseTree, expr: Expr)   =>
+        cast.copy(tpt = tpt, expr = expr)
+      case _                            =>
+        // errors are already reported
+        cast
+    }
   }
 
-  def isDefinedAt(tree: Tree): Boolean   = defines(tree, "Cast")
 }
 
+@component
 trait LiteralTyperComponent extends TyperComponent {
-  def apply(tree: Tree): Tree = tree match {
-    case lit: Literal     => lit
-  }
-
-  def isDefinedAt(tree: Tree): Boolean = defines(tree, "Literal")
+  (lit: Literal)     => lit
 }
