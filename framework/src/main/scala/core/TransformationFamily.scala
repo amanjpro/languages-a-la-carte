@@ -1,13 +1,14 @@
 package ch.usi.inf.l3.sana.core
 
 trait PhaseFamily[P, R] {
+  self =>
 
   def default: R = ???
 
   def components: List[PartialFunction[P, R]]
 
   def family: P => R = components.reduce((x, y) => x orElse y) orElse {
-    case _ => default
+    case _ => self.default
   }
 }
 
