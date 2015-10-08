@@ -65,7 +65,12 @@ object SharedSettings {
     libraryDependencies ++=
       List("org.scalatest" % "scalatest_2.11" % "2.2.4" % "test",
             "org.ow2.asm" % "asm-all" % "5.0.3",
-            "com.github.scopt" %% "scopt" % "3.3.0")
+            "com.github.scopt" %% "scopt" % "3.3.0"),
+
+    libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _),
+    resolvers += Resolver.sonatypeRepo("snapshots"),
+    resolvers += Resolver.sonatypeRepo("releases"),
+    addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0-M5" cross CrossVersion.full)
             // "org.scalaz" %% "scalaz-core" % "7.1.1")
   )
 }
@@ -107,16 +112,10 @@ object build extends Build {
 
 
   lazy val framework = project("framework")
-  lazy val macros = project("macros", Seq(framework), Seq(
-      libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _),
-      resolvers += Resolver.sonatypeRepo("snapshots"),
-      resolvers += Resolver.sonatypeRepo("releases"),
-      addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.0-M5" cross CrossVersion.full)
-    ))
-
-  lazy val testLang = project("testLang", Seq(macros))
-  lazy val tiny = project("tiny", Seq(macros))
-  lazy val calcj = project("calcj", Seq(tiny))
-  lazy val primj = project("primj", Seq(calcj), Seq(antlrSetting("primj")))
-  lazy val brokenj = project("brokenj", Seq(primj))
+  lazy val macros    = project("macros", Seq(framework))
+  lazy val testLang  = project("testLang", Seq(macros))
+  lazy val tiny      = project("tiny", Seq(macros))
+  lazy val calcj     = project("calcj", Seq(tiny))
+  lazy val primj     = project("primj", Seq(calcj), Seq(antlrSetting("primj")))
+  lazy val brokenj   = project("brokenj", Seq(primj))
 }
