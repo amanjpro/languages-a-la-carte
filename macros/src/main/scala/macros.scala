@@ -18,7 +18,8 @@ object dsl {
   //   macro MacroImpls.generateComponentsImpl[T, R]
   //
 
-  def defines(id: Any, tpe: String): Boolean = macro MacroImpls.definesImpl
+  // @deprecated("Use @component instead", "0.1")
+  // def defines(id: Any, tpe: String): Boolean = macro MacroImpls.definesImpl
 
 
   @compileTimeOnly("Enable macro paradise to expand macro annotations")
@@ -30,11 +31,6 @@ object dsl {
 
 object MacroImpls {
 
-  def definesImpl(c: Context)(id: c.Expr[Any],
-                              tpe: c.Expr[String]): c.Expr[Boolean] = {
-    import c.universe._
-    val Literal(Constant(nme: String))   = tpe.tree
-    val tnme                             = TypeName(nme)
 
   def componentsImpl(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
     import c.universe._
@@ -73,6 +69,22 @@ object MacroImpls {
     }
     c.Expr[Any](expandee)
   }
+
+  // @deprecated("Use @component instead", "0.1")
+  // def definesImpl(c: Context)(id: c.Expr[Any],
+  //                             tpe: c.Expr[String]): c.Expr[Boolean] = {
+  //   import c.universe._
+  //   val Literal(Constant(nme: String))   = tpe.tree
+  //   val tnme                             = TypeName(nme)
+  //
+  //   val expr = q"""
+  //   $id match {
+  //     case _: $tnme       => true
+  //     case _              => false
+  //   }
+  //   """
+  //   c.Expr[Boolean](expr)
+  // }
 
   def generateComponentsImpl[T : c.WeakTypeTag,
       R: c.WeakTypeTag](c: Context)
