@@ -32,6 +32,9 @@ object Implicits {
 trait PhaseComponent[P, R] extends PartialFunction[P, R] {
   self =>
 
+  type Input  = P
+  type Output = R
+
   def point(r: R): PhaseComponent[P, R] = new PhaseComponent[P, R] {
     def apply(p: P): R = r
 
