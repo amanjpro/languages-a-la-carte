@@ -21,33 +21,83 @@ object dsl {
   // def defines(id: Any, tpe: String): Boolean = macro MacroImpls.definesImpl
 
 
-  @compileTimeOnly("Enable macro paradise to expand macro annotations")
+  @compileTimeOnly("Enable macro paradise to components")
   class component extends StaticAnnotation {
-    def macroTransform(annottees: Any*): Any = macro MacroImpls.componentsImpl
+    def macroTransform(annottees: Any*): Any = macro MacroImpls.componentImpl
   }
+
 }
 
 
 object MacroImpls {
 
-
-  def componentsImpl(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
+  def componentImpl(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
     import c.universe._
     val inputs = annottees.map(_.tree).toList
+    // Luckily Scala compiler is fool enough to accept that all apply
+    // methods can have override modifier.
+    // We use this foolishness behaviour to help the clients not to
+    // distinguish between an overriding component and a component.
+    val mods   = Modifiers(Flag.OVERRIDE)
     val expandee = inputs match {
       case (clazz: ClassDef) :: Nil =>
+
+        val (variables, head): (List[ValDef], Option[ValDef]) =
+            c.prefix.tree match {
+              case Apply(_, xs) if xs.size >= 2 =>
+                val vals = xs.zipWithIndex.map((x) => {
+                  val tree  = x._1
+                  val index = TermName("_" + (x._2 + 1))
+                  q"val ${TermName(tree.toString)} = p.$index"
+                })
+                (vals, vals.headOption)
+              case Apply(_, xs) if xs.size == 1 =>
+                c.abort(c.enclosingPosition,
+                  "components for tuple should be used for pairs")
+                (Nil, None)
+              case _ =>
+                (Nil, None)
+            }
+
+        // We are sure it exists, otherwise we wouldn't have been here
+        // val head = variables.head
+
         val impl = clazz.impl.body.flatMap { mthd =>
           mthd match {
             case pf@Function(List(param), rhs) =>
-              val app = q"""
-                def apply(p: Input): Output = p match {
-                  case p: ${param.tpt} => ${pf}.apply(p)
+              val app =
+              q"""
+                $mods def apply(p: Input): Output = {
+                  ..$variables
+                  ${head match {
+                      case Some(v) =>
+                        q"""${v.name} match {
+                          case p: ${param.tpt} => ${pf}.apply(p)
+                        }"""
+                      case _   =>
+                        q"""p match {
+                          case p: ${param.tpt} => ${pf}.apply(p)
+                        }
+                        """
+                      }
+                    }
                 }
               """
-              val isDefinedAt = q"""
-                def isDefinedAt(p: Input): Boolean = p match {
-                  case p: ${param.tpt} => true
-                  case _               => false
+              val isDefinedAt =
+              q"""
+                $mods def isDefinedAt(p: Input): Boolean =
+                  ${head match {
+                      case Some(v) =>
+                        q"""p match {
+                          case (p: ${v.tpt}, _)         => true
+                          case _                        => false
+                        }"""
+                      case _   =>
+                        q"""p match {
+                          case p: ${param.tpt}          => true
+                          case _                        => false
+                        }"""
+                  }
                 }
               """
               List(app, isDefinedAt)
@@ -65,25 +115,14 @@ object MacroImpls {
         ${clazz.mods} trait ${clazz.name} extends ..${clazz.impl.parents} {
           ..$impl
         }"""
+      case _ =>
+        c.abort(c.enclosingPosition,
+          "Only traits/classes can become component")
+        EmptyTree
     }
     c.Expr[Any](expandee)
   }
 
-  // @deprecated("Use @component instead", "0.1")
-  // def definesImpl(c: Context)(id: c.Expr[Any],
-  //                             tpe: c.Expr[String]): c.Expr[Boolean] = {
-  //   import c.universe._
-  //   val Literal(Constant(nme: String))   = tpe.tree
-  //   val tnme                             = TypeName(nme)
-  //
-  //   val expr = q"""
-  //   $id match {
-  //     case _: $tnme       => true
-  //     case _              => false
-  //   }
-  //   """
-  //   c.Expr[Boolean](expr)
-  // }
 
   def generateComponentsImpl[T : c.WeakTypeTag,
       R: c.WeakTypeTag](c: Context)
