@@ -1,7 +1,6 @@
 package ch.usi.inf.l3.sana
 
 
-// import ch.usi.inf.l3.sana.core.SyntaxComponent
 import scala.reflect.macros.blackbox.Context
 import scala.annotation.{StaticAnnotation,compileTimeOnly}
 import scala.language.experimental.macros
