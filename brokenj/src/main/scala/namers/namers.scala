@@ -50,53 +50,41 @@ Break: DONE
 Continue: DONE
 */
 
+@component
 trait CaseNamerComponent extends NamerComponent {
- def apply(tree: Tree): Tree = tree match {
-    case cse: Case            =>
-      val guards =
-        cse.guards.map(x => name(x).asInstanceOf[Expr])
-      val body   = name(cse.body)
-      cse.copy(guards = guards, body = body)
+  (cse: Case)            => {
+    val guards =
+      cse.guards.map(x => name(x).asInstanceOf[Expr])
+    val body   = name(cse.body)
+    cse.copy(guards = guards, body = body)
   }
-
-  def isDefinedAt(tree: Tree): Boolean   = defines(tree, "Case")
 }
 
+@component
 trait SwitchNamerComponent extends NamerComponent {
- def apply(tree: Tree): Tree = tree match {
-    case switch: Switch            =>
-      val cases =
-        switch.cases.map(x => name(x).asInstanceOf[CaseApi])
-      val expr   = name(switch.expr).asInstanceOf[Expr]
-      switch.copy(cases = cases, expr = expr)
+  (switch: Switch)            => {
+    val cases =
+      switch.cases.map(x => name(x).asInstanceOf[CaseApi])
+    val expr   = name(switch.expr).asInstanceOf[Expr]
+    switch.copy(cases = cases, expr = expr)
   }
-
-  def isDefinedAt(tree: Tree): Boolean   = defines(tree, "Switch")
 }
 
+@component
 trait LabelNamerComponent extends NamerComponent {
- def apply(tree: Tree): Tree = tree match {
-    case label: Label            =>
-      val stmt   = name(label.stmt).asInstanceOf[Expr]
-      label.copy(stmt = stmt)
+  (label: Label)            => {
+    val stmt   = name(label.stmt).asInstanceOf[Expr]
+    label.copy(stmt = stmt)
   }
-
-  def isDefinedAt(tree: Tree): Boolean   = defines(tree, "Label")
 }
 
+@component
 trait BreakNamerComponent extends NamerComponent {
- def apply(tree: Tree): Tree = tree match {
-    case break: Break            => break
-  }
-
-  def isDefinedAt(tree: Tree): Boolean   = defines(tree, "Break")
+  (break: Break)            => break
 }
 
+@component
 trait ContinueNamerComponent extends NamerComponent {
- def apply(tree: Tree): Tree = tree match {
-    case continue: Continue => continue
-  }
-
-  def isDefinedAt(tree: Tree): Boolean   = defines(tree, "Continue")
+  (continue: Continue) => continue
 }
 

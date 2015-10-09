@@ -50,87 +50,48 @@ Continue: DONE
 */
 
 
+@component(tree, owner)
 trait CaseSymbolAssigner extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case cse: Case     =>
-        val guards = cse.guards.map { guard =>
-          assign((guard, owner)).asInstanceOf[Expr]
-        }
-        val body   = assign((cse.body, owner))
-        cse.copy(guards = guards, body = body, owner = owner)
+  (cse: Case)     => {
+    val guards = cse.guards.map { guard =>
+      assign((guard, owner)).asInstanceOf[Expr]
     }
-  }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: Case, _)    => true
-    case _               => false
+    val body   = assign((cse.body, owner))
+    cse.copy(guards = guards, body = body, owner = owner)
   }
 }
 
+
+@component(tree, owner)
 trait SwitchSymbolAssigner extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case switch: Switch     =>
-        val expr  = assign((switch.expr, owner)).asInstanceOf[Expr]
-        val cases = switch.cases.map { guard =>
-          assign((guard, owner)).asInstanceOf[CaseApi]
-        }
-        switch.copy(cases = cases, expr = expr, owner = owner)
+  (switch: Switch)     => {
+    val expr  = assign((switch.expr, owner)).asInstanceOf[Expr]
+    val cases = switch.cases.map { guard =>
+      assign((guard, owner)).asInstanceOf[CaseApi]
     }
-  }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: Switch, _)  => true
-    case _               => false
+    switch.copy(cases = cases, expr = expr, owner = owner)
   }
 }
 
 
+@component(tree, owner)
 trait LabelSymbolAssigner extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case label: Label     =>
-        val stmt  = assign((label.stmt, owner)).asInstanceOf[Expr]
-        label.copy(stmt = stmt, owner = owner)
-    }
-  }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: Label, _)   => true
-    case _               => false
+  (label: Label)     => {
+    val stmt  = assign((label.stmt, owner)).asInstanceOf[Expr]
+    label.copy(stmt = stmt, owner = owner)
   }
 }
 
+@component(tree, owner)
 trait BreakSymbolAssigner extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case break: Break     =>
-        break.copy(owner = owner)
-    }
-  }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: Break, _)   => true
-    case _               => false
+  (break: Break)     => {
+    break.copy(owner = owner)
   }
 }
 
+@component(tree, owner)
 trait ContinueSymbolAssigner extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case continue: Continue     =>
-        continue.copy(owner = owner)
-    }
-  }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: Continue, _)    => true
-    case _                   => false
+  (continue: Continue)     => {
+    continue.copy(owner = owner)
   }
 }

@@ -23,46 +23,45 @@ trait ShapeCheckerComponent extends CheckerComponent[Tree] {
 }
 
 
+@component
 trait BlockShapeCheckerComponent extends ShapeCheckerComponent {
-  def apply(tree: Tree): Unit = tree match {
-    case block: Block          =>
-      block.stmts.foreach { tree =>
-        if(!isValidStmt(tree)) {
-          error(BAD_STATEMENT,
-            tree.toString, "a statement", tree.pos, tree)
-        } else ()
-        check(tree)
-      }
+  (block: Block)          => {
+    block.stmts.foreach { tree =>
+      if(!isValidStmt(tree)) {
+        error(BAD_STATEMENT,
+          tree.toString, "a statement", tree.pos, tree)
+      } else ()
+      check(tree)
+    }
   }
 
   protected def isValidStmt(t: Tree): Boolean =
     TreeUtils.isValidStatement(t)
 
-  def isDefinedAt(tree: Tree): Boolean   = defines(tree, "Block")
 }
 
 
+@component
 trait IfShapeCheckerComponent extends ShapeCheckerComponent {
-  def apply(tree: Tree): Unit = tree match {
-    case ifelse: If            =>
-      check(ifelse.cond)
-      check(ifelse.thenp)
-      check(ifelse.elsep)
-      if(!isValidStmt(ifelse.thenp)) {
-        error(BAD_STATEMENT,
-          ifelse.thenp.toString, "a statement", ifelse.thenp.pos,
-          ifelse.thenp)
-      } else ()
-      if(!isValidStmt(ifelse.elsep)) {
-        error(BAD_STATEMENT,
-          ifelse.elsep.toString, "a statement", ifelse.elsep.pos,
-          ifelse.elsep)
-      } else ()
-      if(!isValidExpr(ifelse.cond)) {
-        error(BAD_EXPRESSION,
-          ifelse.cond.toString, "an expression", ifelse.cond.pos,
-          ifelse.cond)
-      } else ()
+  (ifelse: If)            => {
+    check(ifelse.cond)
+    check(ifelse.thenp)
+    check(ifelse.elsep)
+    if(!isValidStmt(ifelse.thenp)) {
+      error(BAD_STATEMENT,
+        ifelse.thenp.toString, "a statement", ifelse.thenp.pos,
+        ifelse.thenp)
+    } else ()
+    if(!isValidStmt(ifelse.elsep)) {
+      error(BAD_STATEMENT,
+        ifelse.elsep.toString, "a statement", ifelse.elsep.pos,
+        ifelse.elsep)
+    } else ()
+    if(!isValidExpr(ifelse.cond)) {
+      error(BAD_EXPRESSION,
+        ifelse.cond.toString, "an expression", ifelse.cond.pos,
+        ifelse.cond)
+    } else ()
   }
 
   protected def isValidStmt(t: Tree): Boolean =
@@ -71,26 +70,25 @@ trait IfShapeCheckerComponent extends ShapeCheckerComponent {
   protected def isValidExpr(t: Tree): Boolean =
     TreeUtils.isValidExpression(t)
 
-  def isDefinedAt(tree: Tree): Boolean   = defines(tree, "If")
 }
 
 
+@component
 trait WhileShapeCheckerComponent extends ShapeCheckerComponent {
-  def apply(tree: Tree): Unit = tree match {
-    case wile: While            =>
-      check(wile.cond)
-      check(wile.body)
+  (wile: While)            => {
+    check(wile.cond)
+    check(wile.body)
 
-      if(!isValidStmt(wile.body)) {
-        error(BAD_STATEMENT,
-          wile.body.toString, "a statement", wile.body.pos,
-          wile.body)
-      } else ()
-      if(!isValidExpr(wile.cond)) {
-        error(BAD_EXPRESSION,
-          wile.cond.toString, "a statement", wile.cond.pos,
-          wile.cond)
-      } else ()
+    if(!isValidStmt(wile.body)) {
+      error(BAD_STATEMENT,
+        wile.body.toString, "a statement", wile.body.pos,
+        wile.body)
+    } else ()
+    if(!isValidExpr(wile.cond)) {
+      error(BAD_EXPRESSION,
+        wile.cond.toString, "a statement", wile.cond.pos,
+        wile.cond)
+    } else ()
   }
 
   protected def isValidStmt(t: Tree): Boolean =
@@ -99,37 +97,36 @@ trait WhileShapeCheckerComponent extends ShapeCheckerComponent {
   protected def isValidExpr(t: Tree): Boolean =
     TreeUtils.isValidExpression(t)
 
-  def isDefinedAt(tree: Tree): Boolean   = defines(tree, "While")
 }
 
 
+@component
 trait ForShapeCheckerComponent extends ShapeCheckerComponent {
-  def apply(tree: Tree): Unit = tree match {
-    case forloop: For            =>
-      forloop.inits.foreach(check(_))
-      check(forloop.cond)
-      forloop.steps.foreach(check(_))
-      check(forloop.body)
+  (forloop: For)            => {
+    forloop.inits.foreach(check(_))
+    check(forloop.cond)
+    forloop.steps.foreach(check(_))
+    check(forloop.body)
 
-      isValidInitStatements(forloop)
-      forloop.steps.foreach { step =>
-        if(!TreeUtils.isValidStatement(step))
-          error(BAD_STATEMENT,
-            step.toString, "a statement", step.pos,
-            step)
-        else ()
-      }
-
-      if(!isValidStmt(forloop.body)) {
+    isValidInitStatements(forloop)
+    forloop.steps.foreach { step =>
+      if(!TreeUtils.isValidStatement(step))
         error(BAD_STATEMENT,
-          forloop.body.toString, "a statement", forloop.body.pos,
-          forloop.body)
-      } else ()
-      if(!isValidExpr(forloop.cond) || forloop.cond == NoTree) {
-        error(BAD_EXPRESSION,
-          forloop.cond.toString, "a statement", forloop.cond.pos,
-          forloop.cond)
-      } else ()
+          step.toString, "a statement", step.pos,
+          step)
+      else ()
+    }
+
+    if(!isValidStmt(forloop.body)) {
+      error(BAD_STATEMENT,
+        forloop.body.toString, "a statement", forloop.body.pos,
+        forloop.body)
+    } else ()
+    if(!isValidExpr(forloop.cond) || forloop.cond == NoTree) {
+      error(BAD_EXPRESSION,
+        forloop.cond.toString, "a statement", forloop.cond.pos,
+        forloop.cond)
+    } else ()
   }
 
   protected def allValDefsOrNone(trees: List[Tree]): Boolean = {
@@ -157,109 +154,103 @@ trait ForShapeCheckerComponent extends ShapeCheckerComponent {
   protected def isValidExpr(t: Tree): Boolean =
     TreeUtils.isValidExpression(t)
 
-  def isDefinedAt(tree: Tree): Boolean   = defines(tree, "For")
 }
 
 
+@component
 trait CastShapeCheckerComponent extends ShapeCheckerComponent {
-  def apply(tree: Tree): Unit = tree match {
-    case cast: Cast            =>
-      check(cast.expr)
+  (cast: Cast)            => {
+    check(cast.expr)
 
-      if(!isTypeUse(cast.tpt)) {
-        error(TYPE_NAME_EXPECTED,
-        cast.tpt.toString, "a type", cast.tpt.pos, cast.tpt)
-      } else ()
+    if(!isTypeUse(cast.tpt)) {
+      error(TYPE_NAME_EXPECTED,
+      cast.tpt.toString, "a type", cast.tpt.pos, cast.tpt)
+    } else ()
   }
 
   protected def isTypeUse(t: UseTree): Boolean =
     TreeUtils.isTypeUse(t)
 
-  def isDefinedAt(tree: Tree): Boolean   = defines(tree, "Cast")
 }
 
 
+@component
 trait ProgramShapeCheckerComponent extends ShapeCheckerComponent {
-  def apply(tree: Tree): Unit = tree match {
-    case prg: Program =>
-      prg.members.foreach(check(_))
+  (prg: Program) => {
+    prg.members.foreach(check(_))
   }
 
-  def isDefinedAt(tree: Tree): Boolean   = defines(tree, "Program")
 }
+@component
 trait MethodDefShapeCheckerComponent extends ShapeCheckerComponent {
-  def apply(tree: Tree): Unit = tree match {
-    case meth: MethodDef  =>
-      if(!TreeUtils.isTypeUse(meth.ret)) {
-        error(TYPE_NAME_EXPECTED,
-          meth.ret.toString, "a type", meth.ret.pos, meth.ret)
-      } else ()
-      meth.params.foreach(check(_))
-      check(meth.body)
+  (meth: MethodDef)  => {
+    if(!TreeUtils.isTypeUse(meth.ret)) {
+      error(TYPE_NAME_EXPECTED,
+        meth.ret.toString, "a type", meth.ret.pos, meth.ret)
+    } else ()
+    meth.params.foreach(check(_))
+    check(meth.body)
   }
-  def isDefinedAt(tree: Tree): Boolean   = defines(tree, "MethodDef")
 }
 
 
+@component
 trait UnaryShapeCheckerComponent extends ShapeCheckerComponent {
   // postfix flag can only be set if the operator is postfix
-  def apply(tree: Tree): Unit = tree match {
-    case unary: Unary =>
-      if(unary.isPostfix && (unary.op != Inc && unary.op != Dec))
-        error(BAD_STATEMENT,
-          unary.toString, "a postfix operation", unary.pos, unary)
-      else ()
+  (unary: Unary) => {
+    if(unary.isPostfix && (unary.op != Inc && unary.op != Dec))
+      error(BAD_STATEMENT,
+        unary.toString, "a postfix operation", unary.pos, unary)
+    else ()
   }
 
-  def isDefinedAt(tree: Tree): Boolean = defines(tree, "Unary")
 }
 
 
+@component
 trait ValDefShapeCheckerComponent extends ShapeCheckerComponent {
-  def apply(tree: Tree): Unit = tree match {
-    case valdef: ValDef =>
-      if(!TreeUtils.isTypeUse(valdef.tpt)) {
-        // TODO: Better error message
-        error(TYPE_NAME_EXPECTED,
-          valdef.tpt.toString, "a type", valdef.tpt.pos, valdef.tpt)
-      } else ()
+  (valdef: ValDef) => {
+    if(!TreeUtils.isTypeUse(valdef.tpt)) {
+      // TODO: Better error message
+      error(TYPE_NAME_EXPECTED,
+        valdef.tpt.toString, "a type", valdef.tpt.pos, valdef.tpt)
+    } else ()
 
-      valdef.owner match {
-        case Some(_: MethodSymbol) if  !valdef.mods.isParam  =>
-          // TODO: Better error message
-          error(UNEXPETED_TREE,
-            valdef.toString, "an expression", valdef.pos, valdef)
-        case _                                               =>
-          ()
-      }
-
-      val enclMeth = SymbolUtils.enclosingMethod(valdef.symbol)
-      if(enclMeth != None
-        && !(valdef.mods.isLocalVariable || valdef.mods.isParam)) {
+    valdef.owner match {
+      case Some(_: MethodSymbol) if  !valdef.mods.isParam  =>
         // TODO: Better error message
         error(UNEXPETED_TREE,
           valdef.toString, "an expression", valdef.pos, valdef)
-      } else ()
-
-      if(enclMeth == None && !valdef.mods.isField) {
-        // TODO: Better error message
-        error(UNEXPETED_TREE,
-          valdef.toString, "an expression", valdef.pos, valdef)
-      } else ()
-
-      if(isSimpleExpression(valdef.rhs))
+      case _                                               =>
         ()
-      else
-        // TODO: Better error message
-        error(UNEXPETED_TREE,
-          valdef.toString, "an expression", valdef.pos, valdef)
+    }
 
-      check(valdef.rhs)
+    val enclMeth = SymbolUtils.enclosingMethod(valdef.symbol)
+    if(enclMeth != None
+      && !(valdef.mods.isLocalVariable || valdef.mods.isParam)) {
+      // TODO: Better error message
+      error(UNEXPETED_TREE,
+        valdef.toString, "an expression", valdef.pos, valdef)
+    } else ()
+
+    if(enclMeth == None && !valdef.mods.isField) {
+      // TODO: Better error message
+      error(UNEXPETED_TREE,
+        valdef.toString, "an expression", valdef.pos, valdef)
+    } else ()
+
+    if(isSimpleExpression(valdef.rhs))
+      ()
+    else
+      // TODO: Better error message
+      error(UNEXPETED_TREE,
+        valdef.toString, "an expression", valdef.pos, valdef)
+
+    check(valdef.rhs)
   }
 
 
   protected def isSimpleExpression(tree: Tree): Boolean =
     TreeUtils.isSimpleExpression(tree)
 
-  def isDefinedAt(tree: Tree): Boolean = defines(tree, "ValDef")
 }

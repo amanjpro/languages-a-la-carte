@@ -55,324 +55,185 @@ trait SymbolAssignerComponent extends
   def assign: ((Tree, Option[Symbol])) => Tree
 }
 
+@component(tree, owner)
 trait ProgramSymbolAssignerComponent extends SymbolAssignerComponent {
-
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case program: Program          =>
-        val symbol = Some(ProgramSymbol)
-        val newMembers =
-          program.members.map(x => assign((x, symbol)).asInstanceOf[DefTree])
-        program.copy(members = newMembers, symbol = symbol)
-    }
-  }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: Program, _) => true
-    case _               => false
+  (program: Program)          => {
+    val symbol = Some(ProgramSymbol)
+    val newMembers =
+      program.members.map(x => assign((x, symbol)).asInstanceOf[DefTree])
+    program.copy(members = newMembers, symbol = symbol)
   }
 }
 
 
+@component(tree, owner)
 trait MethodDefSymbolAssignerComponent extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case mthd: MethodDef          =>
-        val symbol  = MethodSymbol(noflags, mthd.name,
-          Nil, None, owner)
-        owner.foreach(sym => sym.declare(symbol))
-        val opsym   = Some(symbol)
-        val tpt     = assign((mthd.ret, opsym)).asInstanceOf[UseTree]
-        val params  = mthd.params.map((x) =>
-            assign((x, opsym)).asInstanceOf[ValDef])
-        val body    = assign((mthd.body, opsym)).asInstanceOf[Expr]
-        symbol.params = params.map(_.symbol).flatten
+  (mthd: MethodDef)          => {
+    val symbol  = MethodSymbol(noflags, mthd.name,
+      Nil, None, owner)
+    owner.foreach(sym => sym.declare(symbol))
+    val opsym   = Some(symbol)
+    val tpt     = assign((mthd.ret, opsym)).asInstanceOf[UseTree]
+    val params  = mthd.params.map((x) =>
+        assign((x, opsym)).asInstanceOf[ValDef])
+    val body    = assign((mthd.body, opsym)).asInstanceOf[Expr]
+    symbol.params = params.map(_.symbol).flatten
 
-        mthd.copy(ret = tpt, params = params, body = body, symbol = opsym)
-    }
-  }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: MethodDef, _) => true
-    case _                 => false
+    mthd.copy(ret = tpt, params = params, body = body, symbol = opsym)
   }
 }
 
+@component(tree, owner)
 trait ValDefSymbolAssignerComponent extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case valdef: ValDef          =>
-        val tpt     = assign((valdef.tpt, owner)).asInstanceOf[UseTree]
-        val rhs     = assign((valdef.rhs, owner)).asInstanceOf[Expr]
+  (valdef: ValDef)          => {
+    val tpt     = assign((valdef.tpt, owner)).asInstanceOf[UseTree]
+    val rhs     = assign((valdef.rhs, owner)).asInstanceOf[Expr]
 
-        val symbol  = VariableSymbol(valdef.mods, valdef.name,
-          tpt.tpe, owner)
-        owner.foreach(sym => sym.declare(symbol))
-        val opsym   = Some(symbol)
-        valdef.copy(tpt = tpt, rhs = rhs, symbol = opsym)
-    }
-  }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: ValDef, _) => true
-    case _              => false
+    val symbol  = VariableSymbol(valdef.mods, valdef.name,
+      tpt.tpe, owner)
+    owner.foreach(sym => sym.declare(symbol))
+    val opsym   = Some(symbol)
+    valdef.copy(tpt = tpt, rhs = rhs, symbol = opsym)
   }
 }
 
 
+@component(tree, owner)
 trait TypeUseSymbolAssignerComponent extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case tuse: TypeUse          =>
-        val symbol = owner.flatMap(_.getSymbol(tuse.name,
-          _.isInstanceOf[TypeSymbol]))
-        symbol match {
-          case Some(sym)      => TypeUse(sym, tuse.pos)
-          case _              => tuse
-        }
+  (tuse: TypeUse)          => {
+    val symbol = owner.flatMap(_.getSymbol(tuse.name,
+      _.isInstanceOf[TypeSymbol]))
+    symbol match {
+      case Some(sym)      => TypeUse(sym, tuse.pos)
+      case _              => tuse
     }
-  }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: TypeUse, _) => true
-    case _               => false
   }
 }
 
+@component(tree, owner)
 trait ForSymbolAssignerComponent extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case forloop: For          =>
-        val symbol  = Some(ScopeSymbol(owner))
-        val inits = forloop.inits.map { init =>
-          assign((init, symbol))
-        }
-        val cond = assign((forloop.cond, symbol)).asInstanceOf[Expr]
-        val steps = forloop.steps.map { step =>
-          assign((step, symbol)).asInstanceOf[Expr]
-        }
-        val body = assign((forloop.body, symbol)).asInstanceOf[Expr]
-        forloop.copy(inits = inits, cond = cond, steps = steps,
-          body = body, owner = owner, symbol = symbol)
+  (forloop: For)          => {
+    val symbol  = Some(ScopeSymbol(owner))
+    val inits = forloop.inits.map { init =>
+      assign((init, symbol))
     }
-  }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: For, _)     => true
-    case _               => false
+    val cond = assign((forloop.cond, symbol)).asInstanceOf[Expr]
+    val steps = forloop.steps.map { step =>
+      assign((step, symbol)).asInstanceOf[Expr]
+    }
+    val body = assign((forloop.body, symbol)).asInstanceOf[Expr]
+    forloop.copy(inits = inits, cond = cond, steps = steps,
+      body = body, owner = owner, symbol = symbol)
   }
 }
 
+@component(tree, owner)
 trait BlockSymbolAssignerComponent extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case block: Block          =>
-        val symbol  = Some(ScopeSymbol(owner))
-        val stmts = block.stmts.map { stmt =>
-          assign((stmt, symbol))
-        }
-        block.copy(stmts = stmts, owner = owner, symbol = symbol)
+  (block: Block)          => {
+    val symbol  = Some(ScopeSymbol(owner))
+    val stmts = block.stmts.map { stmt =>
+      assign((stmt, symbol))
     }
-  }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: Block, _)   => true
-    case _               => false
+    block.copy(stmts = stmts, owner = owner, symbol = symbol)
   }
 }
+
 // Boring cases, just pass the owner around and assign it to
 // all the trees that can have an owner
+@component(tree, owner)
 trait IdentSymbolAssignerComponent extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case id: Ident          =>
-        Ident(id.name, id.pos, owner)
-    }
-  }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: Ident, _)   => true
-    case _               => false
+  (id: Ident)          => {
+    Ident(id.name, id.pos, owner)
   }
 }
 
+@component(tree, owner)
 trait BinarySymbolAssignerComponent extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case bin: Binary          =>
-        val lhs = assign((bin.lhs, owner)).asInstanceOf[Expr]
-        val rhs = assign((bin.rhs, owner)).asInstanceOf[Expr]
-        bin.copy(lhs = lhs, rhs = rhs, owner = owner)
-    }
-  }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: Binary, _)  => true
-    case _               => false
+  (bin: Binary)          => {
+    val lhs = assign((bin.lhs, owner)).asInstanceOf[Expr]
+    val rhs = assign((bin.rhs, owner)).asInstanceOf[Expr]
+    bin.copy(lhs = lhs, rhs = rhs, owner = owner)
   }
 }
 
+@component(tree, owner)
 trait UnarySymbolAssignerComponent extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case unary: Unary          =>
-        val expr = assign((unary.expr, owner)).asInstanceOf[Expr]
-        unary.copy(expr = expr, owner = owner)
-    }
-  }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: Unary, _)   => true
-    case _               => false
+  (unary: Unary)          => {
+    val expr = assign((unary.expr, owner)).asInstanceOf[Expr]
+    unary.copy(expr = expr, owner = owner)
   }
 }
 
+@component(tree, owner)
 trait CastSymbolAssignerComponent extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case cast: Cast          =>
-        val expr = assign((cast.expr, owner)).asInstanceOf[Expr]
-        cast.copy(expr = expr, owner = owner)
-    }
-  }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: Cast, _)    => true
-    case _               => false
+  (cast: Cast)          => {
+    val expr = assign((cast.expr, owner)).asInstanceOf[Expr]
+    cast.copy(expr = expr, owner = owner)
   }
 }
 
+@component(tree, owner)
 trait ReturnSymbolAssignerComponent extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case ret: Return          =>
-        val expr = ret.expr.map( x =>
-          assign((x, owner)).asInstanceOf[Expr])
-        ret.copy(expr = expr, owner = owner)
-    }
+  (ret: Return)          => {
+    val expr = ret.expr.map( x =>
+      assign((x, owner)).asInstanceOf[Expr])
+    ret.copy(expr = expr, owner = owner)
   }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: Return, _)  => true
-    case _               => false
-  }
-  def isDefinedAt(tree: Tree): Boolean = defines(tree, "Return")
 }
 
+@component(tree, owner)
 trait AssignSymbolAssignerComponent extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case assgn: Assign          =>
-        val lhs = assign((assgn.lhs, owner)).asInstanceOf[Expr]
-        val rhs = assign((assgn.rhs, owner)).asInstanceOf[Expr]
-        assgn.copy(lhs = lhs, rhs = rhs, owner = owner)
-    }
+  (assgn: Assign)          => {
+    val lhs = assign((assgn.lhs, owner)).asInstanceOf[Expr]
+    val rhs = assign((assgn.rhs, owner)).asInstanceOf[Expr]
+    assgn.copy(lhs = lhs, rhs = rhs, owner = owner)
   }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: Assign, _)  => true
-    case _               => false
-  }
-  def isDefinedAt(tree: Tree): Boolean = defines(tree, "Assign")
 }
 
 
+@component(tree, owner)
 trait TernarySymbolAssignerComponent extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case tern: Ternary          =>
-        val cond = assign((tern.cond, owner)).asInstanceOf[Expr]
-        val thenp = assign((tern.thenp, owner)).asInstanceOf[Expr]
-        val elsep = assign((tern.elsep, owner)).asInstanceOf[Expr]
-        tern.copy(cond = cond, thenp = thenp, elsep = elsep, owner = owner)
-    }
-  }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: Ternary, _) => true
-    case _               => false
+  (tern: Ternary)          => {
+    val cond = assign((tern.cond, owner)).asInstanceOf[Expr]
+    val thenp = assign((tern.thenp, owner)).asInstanceOf[Expr]
+    val elsep = assign((tern.elsep, owner)).asInstanceOf[Expr]
+    tern.copy(cond = cond, thenp = thenp, elsep = elsep, owner = owner)
   }
 }
 
+@component(tree, owner)
 trait IfSymbolAssignerComponent extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case ifelse: If          =>
-        val cond = assign((ifelse.cond, owner)).asInstanceOf[Expr]
-        val thenp = assign((ifelse.thenp, owner)).asInstanceOf[Expr]
-        val elsep = assign((ifelse.elsep, owner)).asInstanceOf[Expr]
-        ifelse.copy(cond = cond, thenp = thenp,
-          elsep = elsep, owner = owner)
-    }
-  }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: If, _)    => true
-    case _             => false
+  (ifelse: If)          => {
+    val cond = assign((ifelse.cond, owner)).asInstanceOf[Expr]
+    val thenp = assign((ifelse.thenp, owner)).asInstanceOf[Expr]
+    val elsep = assign((ifelse.elsep, owner)).asInstanceOf[Expr]
+    ifelse.copy(cond = cond, thenp = thenp,
+      elsep = elsep, owner = owner)
   }
 }
 
+@component(tree, owner)
 trait WhileSymbolAssignerComponent extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case wile: While          =>
-        val cond = assign((wile.cond, owner)).asInstanceOf[Expr]
-        val body = assign((wile.body, owner)).asInstanceOf[Expr]
-        wile.copy(cond = cond, body = body, owner = owner)
-    }
-  }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: While, _) => true
-    case _             => false
+  (wile: While)          => {
+    val cond = assign((wile.cond, owner)).asInstanceOf[Expr]
+    val body = assign((wile.body, owner)).asInstanceOf[Expr]
+    wile.copy(cond = cond, body = body, owner = owner)
   }
 }
 
+@component(tree, owner)
 trait ApplySymbolAssignerComponent extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case apply: Apply          =>
-        val fun = assign((apply.fun, owner)).asInstanceOf[Expr]
-        val args = apply.args.map { arg =>
-          assign((arg, owner)).asInstanceOf[Expr]
-        }
-        apply.copy(fun = fun, args = args, owner = owner)
+  (apply: Apply)          => {
+    val fun = assign((apply.fun, owner)).asInstanceOf[Expr]
+    val args = apply.args.map { arg =>
+      assign((arg, owner)).asInstanceOf[Expr]
     }
-  }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: Apply, _) => true
-    case _             => false
+    apply.copy(fun = fun, args = args, owner = owner)
   }
 }
 
+@component(tree, owner)
 trait LiteralSymbolAssignerComponent extends SymbolAssignerComponent {
-  def apply(p: (Tree, Option[Symbol])): Tree = {
-    val (tree, owner) = p
-    tree match {
-      case lit: Literal => lit
-    }
-  }
-
-  def isDefinedAt(p: (Tree, Option[Symbol])): Boolean = p match {
-    case (_: Literal, _) => true
-    case _               => false
-  }
+  (lit: Literal) => lit
 }
 
