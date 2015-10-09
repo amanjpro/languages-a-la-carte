@@ -294,7 +294,7 @@ trait SimplePrettyPrinterFamily extends PrettyPrinterFamily {
   private[this] final val CMP = "IntLit,Add" //Array("IntLit", "Add")
   override val components = {
     generateComponents[Expr, String](CMP,
-      "PrettyPrinterComponent", "pprint")
+      "PrettyPrinterComponent", "pprint", "")
   }
 
 
