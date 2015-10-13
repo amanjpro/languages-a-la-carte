@@ -44,57 +44,36 @@ trait TypeCheckerComponent extends TransformationComponent[Expr, Expr] {
   def typeCheck: Expr => Expr
 }
 
+@component
 trait IntLitTypeCheckerComponent extends TypeCheckerComponent {
-
-  def apply(expr: Expr): Expr = expr match {
-    case lit: IntLit          => lit
-  }
-
-  def isDefinedAt(expr: Expr): Boolean   = expr match {
-    case lit: IntLit          => true
-    case _                 => false
-  }
+  (lit: IntLit)          => lit
 }
 
+@component
 trait AddTypeCheckerComponent extends TypeCheckerComponent {
-
-  def apply(expr: Expr): Expr = expr match {
-    case Add(l, r, _)         =>
-      val nl = typeCheck(l)
-      val nr = typeCheck(r)
-      val ty1 = nl.tpe
-      val ty2 = nr.tpe
-      if(ty1 == IntType && ty2 == IntType)
-        Add(nl, nr, IntType)
-      else
-        Add(nl, nr, ErrorType)
-  }
-
-
-  def isDefinedAt(expr: Expr): Boolean   = expr match {
-    case add: Add          => true
-    case _                 => false
+  (add: Add)         => {
+    val nl = typeCheck(add.lhs)
+    val nr = typeCheck(add.rhs)
+    val ty1 = nl.tpe
+    val ty2 = nr.tpe
+    if(ty1 == IntType && ty2 == IntType)
+      Add(nl, nr, IntType)
+    else
+      Add(nl, nr, ErrorType)
   }
 }
 
+@component
 trait MulTypeCheckerComponent extends TypeCheckerComponent {
-
-  def apply(expr: Expr): Expr = expr match {
-    case Mul(l, r, _)         =>
-      val nl = typeCheck(l)
-      val nr = typeCheck(r)
-      val ty1 = nl.tpe
-      val ty2 = nr.tpe
-      if(ty1 == IntType && ty2 == IntType)
-        Mul(nl, nr, IntType)
-      else
-        Mul(nl, nr, ErrorType)
-  }
-
-
-  def isDefinedAt(expr: Expr): Boolean   = expr match {
-    case mul: Mul          => true
-    case _                 => false
+  (mul: Mul)         => {
+    val nl = typeCheck(mul.lhs)
+    val nr = typeCheck(mul.rhs)
+    val ty1 = nl.tpe
+    val ty2 = nr.tpe
+    if(ty1 == IntType && ty2 == IntType)
+      Mul(nl, nr, IntType)
+    else
+      Mul(nl, nr, ErrorType)
   }
 }
 
@@ -103,45 +82,26 @@ trait PrettyPrinterComponent extends TransformationComponent[Expr, String] {
   def pprint: Expr => String
 }
 
+@component
 trait IntLitPrettyPrinterComponent extends PrettyPrinterComponent {
-
-  def apply(expr: Expr): String = expr match {
-    case IntLit(v)          => v.toString
-  }
-
-  def isDefinedAt(expr: Expr): Boolean   = expr match {
-    case lit: IntLit          => true
-    case _                 => false
-  }
+  (lit: IntLit)          => lit.value.toString
 }
 
+@component
 trait AddPrettyPrinterComponent extends PrettyPrinterComponent {
-
-  def apply(expr: Expr): String = expr match {
-    case Add(l, r, _)         =>
-      val sl = pprint(l)
-      val sr = pprint(r)
-      s"($sl + $sr)"
-  }
-
-  def isDefinedAt(expr: Expr): Boolean   = expr match {
-    case add: Add          => true
-    case _                 => false
+  (add: Add)         => {
+    val sl = pprint(add.lhs)
+    val sr = pprint(add.rhs)
+    s"($sl + $sr)"
   }
 }
 
+@component
 trait MulPrettyPrinterComponent extends PrettyPrinterComponent {
-
-  def apply(expr: Expr): String = expr match {
-    case Mul(l, r, _)         =>
-      val sl = pprint(l)
-      val sr = pprint(r)
-      s"($sl * $sr)"
-  }
-
-  def isDefinedAt(expr: Expr): Boolean   = expr match {
-    case mul: Mul          => true
-    case _                 => false
+  (mul: Mul)         => {
+    val sl = pprint(mul.lhs)
+    val sr = pprint(mul.rhs)
+    s"($sl * $sr)"
   }
 }
 
@@ -151,45 +111,26 @@ trait TestCheckerComponent extends CheckerComponent[Expr] {
   def check: Expr => Unit
 }
 
+@component
 trait IntLitTestCheckerComponent extends TestCheckerComponent {
-
-  def apply(expr: Expr): Unit = expr match {
-    case IntLit(v)          => println(v.toString)
-  }
-
-  def isDefinedAt(expr: Expr): Boolean   = expr match {
-    case lit: IntLit          => true
-    case _                 => false
-  }
+  (lit: IntLit)          => println(lit.value.toString)
 }
 
+@component
 trait AddTestCheckerComponent extends TestCheckerComponent {
-
-  def apply(expr: Expr): Unit = expr match {
-    case Add(l, r, _)         =>
-      val sl = check(l)
-      val sr = check(r)
-      println(s"($sl + $sr)")
-  }
-
-  def isDefinedAt(expr: Expr): Boolean   = expr match {
-    case add: Add          => true
-    case _                 => false
+  (add: Add)         => {
+    val sl = check(add.lhs)
+    val sr = check(add.rhs)
+    println(s"($sl + $sr)")
   }
 }
 
+@component
 trait MulTestCheckerComponent extends TestCheckerComponent {
-
-  def apply(expr: Expr): Unit = expr match {
-    case Mul(l, r, _)         =>
-      val sl = check(l)
-      val sr = check(r)
-      println(s"($sl * $sr)")
-  }
-
-  def isDefinedAt(expr: Expr): Boolean   = expr match {
-    case mul: Mul          => true
-    case _                 => false
+  (mul: Mul)         => {
+    val sl = check(mul.lhs)
+    val sr = check(mul.rhs)
+    println(s"($sl * $sr)")
   }
 }
 
@@ -209,7 +150,7 @@ trait TypeCheckerFamily extends TransformationFamily[Expr, Expr] {
 
   def components: List[PartialFunction[Expr, Expr]] =
     generateComponents[Expr, Expr](ComplexLangs.langs,
-      "TypeCheckerComponent", "typeCheck")
+      "TypeCheckerComponent", "typeCheck", "")
   def typeCheck: Expr => Expr = family
 }
 
@@ -221,7 +162,7 @@ trait PrettyPrinterFamily extends TransformationFamily[Expr, String] {
 
   def components: List[PartialFunction[Expr, String]] =
     generateComponents[Expr, String](ComplexLangs.langs,
-      "PrettyPrinterComponent", "pprint")
+      "PrettyPrinterComponent", "pprint", "")
 
   def pprint: Expr => String = family
 }
@@ -236,7 +177,7 @@ trait TestCheckerFamily extends CheckerFamily[Expr] {
 
   def components: List[PartialFunction[Expr, Unit]] =
     generateComponents[Expr, Unit](ComplexLangs.langs,
-      "TestCheckerComponent", "check")
+      "TestCheckerComponent", "check", "")
 
   def check: Expr => Unit = family
 }
@@ -255,17 +196,17 @@ trait ComplexExprLang extends LanguageModule[Expr, String] {
 object ComplexExprLang extends ComplexExprLang
 
 
-object SimpleLang {
-  final val langs = "Add, IntLit"
-}
+// object SimpleLang {
+//   final val langs = "Add, IntLit"
+// }
 
 // Make the language simpler (reduce its elements)
 trait SimpleTypeCheckerFamily extends TypeCheckerFamily {
   self =>
 
   override def components: List[PartialFunction[Expr, Expr]] =
-    generateComponents[Expr, Expr](SimpleLang.langs,
-      "TypeCheckerComponent", "typeCheck")
+    generateComponents[Expr, Expr](ComplexLangs.langs,
+      "TypeCheckerComponent", "typeCheck", "Mul")
 }
 
 object SimpleTypeCheckerFamily extends SimpleTypeCheckerFamily
@@ -273,8 +214,8 @@ object SimpleTypeCheckerFamily extends SimpleTypeCheckerFamily
 trait SimplePrettyPrinterFamily extends PrettyPrinterFamily {
   self =>
   override val components = {
-    generateComponents[Expr, String](SimpleLang.langs,
-      "PrettyPrinterComponent", "pprint")
+    generateComponents[Expr, String](ComplexLangs.langs,
+      "PrettyPrinterComponent", "pprint", "Mul")
   }
 
 
@@ -296,24 +237,24 @@ object SimpleExprLang extends SimpleExprLang
 
 
 
-object Main {
-  def main(args: Array[String]): Unit = {
-    // Testing complex lang
-    val expr1 = Add(Mul(IntLit(1), IntLit(2)), IntLit(3))
-    val res   = ComplexExprLang.compile(expr1)
-    println(expr1)
-    println("Evaluates to...")
-    println(res)
-    // Testing simple
-    // Testing complex lang
-    val expr2 = Add(Add(IntLit(1), IntLit(2)), IntLit(3))
-    val res1 = SimpleExprLang.compile(expr2)
-    val res2 = ComplexExprLang.compile(expr2)
-    println(expr2)
-    println("Using simple lang, evaluates to...")
-    println(res1)
-    println("Using complex lang, evaluates to...")
-    println(res2)
-
-  }
-}
+// object Main {
+//   def main(args: Array[String]): Unit = {
+//     // Testing complex lang
+//     val expr1 = Add(Mul(IntLit(1), IntLit(2)), IntLit(3))
+//     val res   = ComplexExprLang.compile(expr1)
+//     println(expr1)
+//     println("Evaluates to...")
+//     println(res)
+//     // Testing simple
+//     // Testing complex lang
+//     val expr2 = Add(Add(IntLit(1), IntLit(2)), IntLit(3))
+//     val res1 = SimpleExprLang.compile(expr2)
+//     val res2 = ComplexExprLang.compile(expr2)
+//     println(expr2)
+//     println("Using simple lang, evaluates to...")
+//     println(res1)
+//     println("Using complex lang, evaluates to...")
+//     println(res2)
+//
+//   }
+// }
