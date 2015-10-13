@@ -72,11 +72,11 @@ object MacroImpls {
                   ${head match {
                       case Some(v) =>
                         q"""${v.name} match {
-                          case p: ${param.tpt} => ${pf}.apply(p)
+                          case a: ${param.tpt} => ${pf}.apply(a)
                         }"""
                       case _   =>
                         q"""p match {
-                          case p: ${param.tpt} => ${pf}.apply(p)
+                          case a: ${param.tpt} => ${pf}.apply(a)
                         }
                         """
                       }
@@ -89,12 +89,12 @@ object MacroImpls {
                   ${head match {
                       case Some(v) =>
                         q"""p match {
-                          case (p: ${v.tpt}, _)         => true
+                          case (a: ${param.tpt}, _)     => true
                           case _                        => false
                         }"""
                       case _   =>
                         q"""p match {
-                          case p: ${param.tpt}          => true
+                          case a: ${param.tpt}          => true
                           case _                        => false
                         }"""
                   }
