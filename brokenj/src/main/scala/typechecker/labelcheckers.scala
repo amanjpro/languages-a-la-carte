@@ -51,10 +51,63 @@ Continue: DONE
 
 
 trait LabelNameCheckerComponent extends
-  CheckerComponent[(Tree, List[Name])] {
-  def check: ((Tree, List[Name])) => Unit
+  CheckerComponent[(Tree, List[Label])] {
+  def check: ((Tree, List[Label])) => Unit
 }
 
+
+@component(tree, labelNames)
+trait ContinueLabelNameCheckerComponent extends LabelNameCheckerComponent {
+  (cont: Continue) => cont.label match {
+    case None       => ()
+    case Some(name) =>
+      labelNames.filter(_.name == name) match {
+        case Nil                                =>
+          error(NO_LABEL_DEF,
+            cont.toString, cont.toString, cont.pos, cont)
+        case (x::xs)   if isContinuable(x.stmt) =>
+          ()
+        case _                                  =>
+          error(BAD_CONTINUE_STMT,
+            cont.toString, cont.toString, cont.pos, cont)
+      }
+  }
+
+  private def isContinuable(tree: Tree): Boolean =
+    TreeUtils.isContinuable(tree)
+}
+
+@component(tree, labelNames)
+trait BreakLabelNameCheckerComponent extends LabelNameCheckerComponent {
+  (break: Break) => break.label match {
+    case None       => ()
+    case Some(name) =>
+      labelNames.filter(_.name == name) match {
+        case Nil                             =>
+          error(NO_LABEL_DEF,
+            break.toString, break.toString, break.pos, break)
+        case _                               =>
+          ()
+      }
+  }
+}
+
+
+
+@component(tree, labelNames)
+trait LabelLabelNameCheckerComponent extends LabelNameCheckerComponent {
+  (label: Label) => {
+    val name = label.name
+    if(labelNames.exists(_.name == name)) {
+      error(DOUBLE_LABEL_DEF,
+        label.toString, label.toString, label.pos, label)
+    } else ()
+    check((label.stmt, label::labelNames))
+  }
+}
+
+
+// boring cases
 @component(tree, labelNames)
 trait ProgramLabelNameCheckerComponent extends LabelNameCheckerComponent {
   (prog: Program) =>
@@ -177,20 +230,7 @@ trait CaseLabelNameCheckerComponent extends LabelNameCheckerComponent {
   }
 }
 
-@component(tree, labelNames)
-trait LabelLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (label: Label) => {
-    val name = label.name
-    if(labelNames.contains(name)) {
-      error(DOUBLE_LABEL_DEF,
-        label.toString, label.toString, label.pos, label)
-    } else ()
-    check((label.stmt, name::labelNames))
-  }
-}
-
-
-// boring cases
+// even more boring cases
 @component(tree, labelNames)
 trait IdentLabelNameCheckerComponent extends LabelNameCheckerComponent {
   (ident: Ident) => ident
@@ -201,15 +241,7 @@ trait TypeUseLabelNameCheckerComponent extends LabelNameCheckerComponent {
   (tuse: TypeUse) => tuse
 }
 
-@component(tree, labelNames)
-trait ContinueLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (cont: Continue) => cont
-}
 
-@component(tree, labelNames)
-trait BreakLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (break: Break) => break
-}
 
 @component(tree, labelNames)
 trait LiteralLabelNameCheckerComponent extends LabelNameCheckerComponent {
