@@ -17,6 +17,10 @@ trait ErrorCodes extends primj.errors.ErrorCodes {
   case object BAD_CONTINUE_STMT extends ErrorCode {
     val message: String = "Continue can only appear in iterative statements"
   }
+
+  case object BAD_BREAK_STMT extends ErrorCode {
+    val message: String = "Break can only appear in breakable statements"
+  }
 }
 
 object ErrorCodes extends ErrorCodes
