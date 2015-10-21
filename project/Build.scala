@@ -106,16 +106,24 @@ object build extends Build {
       // ++
       // site.settings ++ ghpages.settings: _*) ++ settings ),
     aggregate = Seq(framework, macros, testLang, tiny, calcj, primj,
-                   brokenj)
+                   brokenj, ooj, dcct)
       // arrayj)
   ) settings (unidocSettings: _*)
 
 
-  lazy val framework = project("framework")
-  lazy val macros    = project("macros", Seq(framework))
-  lazy val testLang  = project("testLang", Seq(macros))
-  lazy val tiny      = project("tiny", Seq(macros))
-  lazy val calcj     = project("calcj", Seq(tiny))
-  lazy val primj     = project("primj", Seq(calcj), Seq(antlrSetting("primj")))
-  lazy val brokenj   = project("brokenj", Seq(primj))
+  lazy val framework   = project("framework")
+  lazy val macros      = project("macros", Seq(framework))
+  lazy val testLang    = project("testLang", Seq(macros))
+  lazy val tiny        = project("tiny", Seq(macros))
+  lazy val calcj       = project("calcj", Seq(tiny))
+  lazy val primj       = project("primj", Seq(calcj), Seq(antlrSetting("primj")))
+  lazy val brokenj     = project("brokenj", Seq(primj))
+  lazy val ooj         = project("ooj", Seq(brokenj), Seq(antlrSetting("ooj")))
+
+
+
+
+
+  // Consistency language example
+  lazy val dcct        = project("dcct", Seq(primj), Seq(antlrSetting("dcct")))
 }
