@@ -1,6 +1,10 @@
-package ch.usi.inf.l3.sana.tiny
+package ch.usi.inf.l3.sana.tiny.names
 
-package object names {
+trait StdNames {
   val noname = Name("")
 }
+
+
+
+object StdNames extends StdNames
 

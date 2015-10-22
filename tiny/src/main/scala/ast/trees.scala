@@ -5,7 +5,8 @@ import ch.usi.inf.l3.sana
 import sana.tiny.types.Type
 import sana.tiny.source.Position
 import sana.tiny.symbols.Symbol
-import sana.tiny.names._
+import sana.tiny.names.StdNames._
+import sana.tiny.names.Name
 
 
 
@@ -67,6 +68,7 @@ class TypeUse protected[ast](val name: Name, val pos: Option[Position],
       this.owner.hashCode +
       this.name.hashCode * 13
 }
+
 object TypeUse {
   def unapply(tuse: TypeUse): Option[Symbol] = tuse match {
     case null               => None

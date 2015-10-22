@@ -42,6 +42,7 @@ Unary: DONE
 
 trait NamerComponent extends TransformationComponent[Tree, Tree] {
   def name: Tree => Tree
+  //def name[A <: Tree]: A => A = (a: A) => a
 }
 
 @component

@@ -6,7 +6,8 @@ import sana.primj.types.VoidType
 import sana.tiny.symbols.{Symbol, TermSymbol, TypeSymbol}
 import sana.tiny.modifiers.Flags
 import sana.tiny.modifiers.Ops.noflags
-import sana.tiny.names.{Name, noname}
+import sana.tiny.names.Name
+import sana.tiny.names.StdNames.noname
 
 
 
