@@ -35,7 +35,7 @@ trait TypeTree extends DefTree
 
 trait Expr extends Tree
 
-trait UseTree extends Expr with SymTree {
+trait UseTree extends Expr with NamedTree {
   val symbol: Option[Symbol]
 }
 
