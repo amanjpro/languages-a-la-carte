@@ -1,0 +1,162 @@
+package ch.usi.inf.l3.sana.primj.ast
+
+import ch.usi.inf.l3.sana
+import sana.tiny.types.Type
+import sana.tiny.source.Position
+import sana.tiny.symbols.Symbol
+import sana.tiny.names.Name
+import sana.tiny.ast.Implicits._
+import sana.tiny.modifiers.Flags
+import sana.tiny.ast._
+import sana.calcj.ast._
+import sana.primj.ast._
+import sana.primj.types._
+
+
+
+trait TreeFactories extends sana.calcj.ast.TreeFactories {
+
+  def mkProgram(members: List[DefTree], sourceName: String,
+              symbol: Option[Symbol] = None): Program = {
+    val res = Program(members, sourceName)
+    symbol.foreach( sym => {
+      res.symbol = sym
+      sym.owner.foreach(res.owner = _)
+    })
+    res
+  }
+
+
+  def mkAssign(lhs: Expr, rhs: Expr,
+    pos: Option[Position] = None,
+    owner: Option[Symbol] = None): Assign = {
+    val res = Assign(lhs, rhs)
+    pos.foreach(res.pos = _)
+    owner.foreach(res.owner = _)
+    lhs.tpe.foreach(res.tpe = _)
+    res
+  }
+
+
+  def mkIf(cond: Expr, thenp: Expr, elsep: Expr,
+    pos: Option[Position] = None,
+    owner: Option[Symbol] = None): If = {
+    val res = If(cond, thenp, elsep)
+    pos.foreach(res.pos = _)
+    owner.foreach(res.owner = _)
+    res.tpe = VoidType
+    res
+  }
+
+
+  def mkWhile(isDoWhile: Boolean, cond: Expr, body: Expr,
+    pos: Option[Position] = None,
+    owner: Option[Symbol] = None): While = {
+    val res = While(isDoWhile, cond, body)
+    pos.foreach(res.pos = _)
+    owner.foreach(res.owner = _)
+    res.tpe = VoidType
+    res
+  }
+
+  def mkFor(inits: List[Tree], cond: Expr, steps: List[Expr],
+    body: Expr, pos: Option[Position] = None,
+    symbol: Option[Symbol] = None): For = {
+    val res = For(inits, cond, steps, body)
+    pos.foreach(res.pos = _)
+    symbol.foreach( sym => {
+      res.symbol = sym
+      sym.owner.foreach(res.owner = _)
+    })
+    res.tpe = VoidType
+    res
+  }
+  def mkBlock(stmts: List[Tree],
+    pos: Option[Position] = None,
+    symbol: Option[Symbol] = None): Block = {
+    val res = Block(stmts)
+    pos.foreach(res.pos = _)
+    symbol.foreach( sym => {
+      res.symbol = sym
+      sym.owner.foreach(res.owner = _)
+    })
+    stmts match {
+      case Nil    =>
+        res.tpe = VoidType
+      case _      =>
+        stmts.last.tpe.foreach(res.tpe = _)
+    }
+    res
+  }
+
+  def mkTernary(cond: Expr, thenp: Expr, elsep: Expr,
+    pos: Option[Position] = None,
+    tpe: Option[Type]     = None,
+    owner: Option[Symbol] = None): Ternary = {
+    val res = Ternary(cond, thenp, elsep)
+    pos.foreach(res.pos = _)
+    owner.foreach(res.owner = _)
+    tpe.foreach(res.tpe = _)
+    res
+  }
+
+
+  def mkApply(fun: Expr, args: List[Expr],
+    pos: Option[Position] = None,
+    owner: Option[Symbol] = None): Apply = {
+
+    val res = Apply(fun, args)
+    pos.foreach(res.pos = _)
+    owner.foreach(res.owner = _)
+    fun.tpe match {
+      case Some(MethodType(r, _)) =>
+        res.tpe = r
+      case _                      =>
+        ()
+    }
+    res
+  }
+
+  def mkReturn(expr: Option[Expr],
+    pos: Option[Position] = None,
+    owner: Option[Symbol] = None): Return = {
+    val res = Return(expr)
+    pos.foreach(res.pos = _)
+    owner.foreach(res.owner = _)
+    expr.flatMap(_.tpe).foreach(res.tpe = _)
+    res
+  }
+
+
+  def mkMethodDef(ret: UseTree,
+    name: Name, params: List[ValDef],
+    body: Expr, pos: Option[Position] = None,
+    symbol: Option[Symbol] = None): MethodDef = {
+    val res = MethodDef(ret, name, params, body)
+    pos.foreach(res.pos = _)
+    symbol.foreach( sym => {
+      res.symbol = sym
+      sym.owner.foreach(res.owner = _)
+    })
+    val tys = params.flatMap(_.tpe)
+    ret.tpe.foreach(t => res.tpe = MethodType(t, tys))
+    res
+  }
+
+  def mkValDef(mods: Flags, tpt: UseTree, name: Name,
+    rhs: Expr, pos: Option[Position] = None,
+    symbol: Option[Symbol] = None): ValDef = {
+
+    val res = ValDef(mods, tpt, name, rhs)
+    pos.foreach(res.pos = _)
+    symbol.foreach( sym => {
+      res.symbol = sym
+      sym.owner.foreach(res.owner = _)
+    })
+    tpt.tpe.foreach(res.tpe = _)
+    res
+  }
+
+}
+
+object TreeFactories extends TreeFactories

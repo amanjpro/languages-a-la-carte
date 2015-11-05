@@ -8,6 +8,7 @@ import sana.calcj
 import sana.core.CheckerComponent
 import sana.dsl._
 import tiny.ast._
+import tiny.ast.Implicits._
 import calcj.ast._
 import calcj.ast.operators.{Inc, Dec}
 import tiny.errors.ErrorReporting.{error,warning}

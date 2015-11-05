@@ -8,12 +8,13 @@ import sana.calcj
 
 import sana.core.TransformationComponent
 import sana.dsl._
-import tiny.ast._
+import tiny.ast.{TreeCopiers => _, _}
+import tiny.ast.Implicits._
 import tiny.symbols._
 import brokenj.ast._
 import calcj.ast.operators.{Inc, Dec}
 import tiny.errors.ErrorReporting.{error,warning}
-import primj.ast._
+import primj.ast.{TreeCopiers => _, _}
 import primj.ast.TreeUtils
 import primj.symbols._
 import primj.namers.NamerComponent
@@ -56,7 +57,7 @@ trait CaseNamerComponent extends NamerComponent {
     val guards =
       cse.guards.map(x => name(x).asInstanceOf[Expr])
     val body   = name(cse.body)
-    cse.copy(guards = guards, body = body)
+    TreeCopiers.copyCase(cse)(guards = guards, body = body)
   }
 }
 
@@ -66,7 +67,7 @@ trait SwitchNamerComponent extends NamerComponent {
     val cases =
       switch.cases.map(x => name(x).asInstanceOf[CaseApi])
     val expr   = name(switch.expr).asInstanceOf[Expr]
-    switch.copy(cases = cases, expr = expr)
+    TreeCopiers.copySwitch(switch)(cases = cases, expr = expr)
   }
 }
 
@@ -74,7 +75,7 @@ trait SwitchNamerComponent extends NamerComponent {
 trait LabelNamerComponent extends NamerComponent {
   (label: Label)            => {
     val stmt   = name(label.stmt).asInstanceOf[Expr]
-    label.copy(stmt = stmt)
+    TreeCopiers.copyLabel(label)(stmt = stmt)
   }
 }
 

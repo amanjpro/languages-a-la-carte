@@ -1,0 +1,50 @@
+package ch.usi.inf.l3.sana.calcj.ast
+
+import ch.usi.inf.l3.sana
+import sana.tiny.types.Type
+import sana.tiny.source.Position
+import sana.tiny.symbols.Symbol
+import sana.tiny.names.Name
+import sana.tiny.ast.Implicits._
+import sana.tiny.ast._
+import sana.calcj.ast._
+import operators._
+
+
+
+trait TreeCopiers extends sana.tiny.ast.TreeCopiers {
+
+  def copyCast(template: Cast)(
+      tpt: UseTree = template.tpt,
+      expr: Expr = template.expr): Cast = {
+    val res = Cast(tpt, expr)
+    copyProperties(template, res)
+    res
+  }
+
+
+  def copyLiteral(template: Literal)
+      (constant: Constant): Literal = {
+    val res = Literal(constant)
+    copyProperties(template, res)
+    res
+  }
+
+
+  def copyBinary(template: Binary)(lhs: Expr = template.lhs,
+      op: BOp = template.op, rhs: Expr = template.rhs): Binary = {
+    val res = Binary(lhs, op, rhs)
+    copyProperties(template, res)
+    res
+  }
+
+  def copyUnary(template: Unary)(isPostfix: Boolean = template.isPostfix,
+    op: UOp = template.op, expr: Expr = template.expr): Unary = {
+    val res = Unary(isPostfix, op, expr)
+    copyProperties(template, res)
+    res
+  }
+
+}
+
+object TreeCopiers extends TreeCopiers

@@ -6,7 +6,8 @@ import sana.tiny
 import sana.calcj
 
 import sana.dsl._
-import tiny.ast._
+import tiny.ast.{TreeCopiers => _, _}
+import sana.tiny.ast.Implicits._
 import tiny.types._
 import tiny.errors.ErrorCodes._
 import tiny.errors.ErrorReporting.{error,warning}
@@ -35,7 +36,9 @@ trait BinaryTyperComponent extends TyperComponent {
               e1tpe, e1.tpe.get)
             val expr2 = TypePromotions.castIfNeeded(e2,
               e2tpe, e2.tpe.get)
-            bin.copy(lhs = expr1, rhs = expr2, tpe = Some(rtpe))
+            val res = TreeCopiers.copyBinary(bin)(lhs = expr1, rhs = expr2)
+            res.tpe = rtpe
+            res
           case _                                    =>
             // errors are already reported
             bin
@@ -168,7 +171,9 @@ trait UnaryTyperComponent extends TyperComponent {
           case Some((etpe, rtpe))            =>
             val expr2 = TypePromotions.castIfNeeded(expr,
               etpe, expr.tpe.get)
-            unary.copy(expr = expr2, tpe = Some(rtpe))
+            val res = TreeCopiers.copyUnary(unary)(expr = expr2)
+            res.tpe = rtpe
+            res
           case _                             =>
             // errors are already reported
             unary
@@ -222,7 +227,7 @@ trait CastTyperComponent extends TyperComponent {
     val expr = typed(cast.expr)
     (tpt, expr) match {
       case (tpt: UseTree, expr: Expr)   =>
-        cast.copy(tpt = tpt, expr = expr)
+        TreeCopiers.copyCast(cast)(tpt = tpt, expr = expr)
       case _                            =>
         // errors are already reported
         cast
@@ -233,5 +238,8 @@ trait CastTyperComponent extends TyperComponent {
 
 @component
 trait LiteralTyperComponent extends TyperComponent {
-  (lit: Literal)     => lit
+  (lit: Literal)     => {
+    lit.tpe = lit.constant.tpe
+    lit
+  }
 }

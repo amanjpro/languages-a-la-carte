@@ -17,14 +17,10 @@ import operators._
 
 trait CastApi extends Expr {
   def tpt: UseTree
-  def expr: Expr
-  def tpe   = tpt.tpe
 }
 
 trait LiteralApi extends Expr {
   def constant: Constant
-  def tpe = Some(constant.tpe)
-  def owner = None
 }
 
 trait BinaryApi extends Expr {
@@ -41,20 +37,14 @@ trait UnaryApi extends Expr {
 
 
 
-case class Cast(tpt: UseTree, expr: Expr,
-  pos: Option[Position],
-  owner: Option[Symbol]) extends CastApi
+case class Cast protected[ast](tpt: UseTree, expr: Expr) extends CastApi
 
 
-case class Literal(constant: Constant,
-  pos: Option[Position]) extends LiteralApi
+case class Literal protected[ast](constant: Constant) extends LiteralApi
 
 
-case class Binary(lhs: Expr, op: BOp, rhs: Expr,
-  tpe: Option[Type], owner: Option[Symbol], pos: Option[Position])
-  extends BinaryApi
+case class Binary protected[ast](lhs: Expr, op: BOp, rhs: Expr) extends BinaryApi
 
-case class Unary(isPostfix: Boolean, op: UOp, expr: Expr,
-  tpe: Option[Type], owner: Option[Symbol], pos: Option[Position])
-  extends UnaryApi
+case class Unary protected[ast](isPostfix: Boolean,
+  op: UOp, expr: Expr) extends UnaryApi
 

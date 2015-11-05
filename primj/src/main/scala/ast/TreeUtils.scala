@@ -6,6 +6,7 @@ import sana.calcj
 import sana.primj
 
 import tiny.ast._
+import tiny.ast.Implicits._
 import calcj.ast._
 import primj.ast._
 
@@ -22,19 +23,18 @@ trait TreeUtils {
 
   def isVariable(tree: Tree): Boolean = tree match {
     case _: ValDef                    => true
-    case st: SymTree                  =>
-      st.symbol match {
+    case _                            =>
+      tree.symbol match {
         case Some(_: VariableSymbol) => true
         case _                       => false
       }
-    case _                            => false
   }
 
 
   // make sure that the guards are constant expressions Section 15.27
   def isConstantExpression(e: Tree): Boolean = e match {
     case lit: Literal                                 => true
-    case Cast(tpt, e, _, _)                           =>
+    case Cast(tpt, e)                           =>
       // permit casts to primitive and string
       // TODO: Change this in OOJ, to handle String too
       tpt.tpe match {
@@ -55,11 +55,8 @@ trait TreeUtils {
   }
 
 
-  def isFinal(tree: Tree): Boolean = tree match {
-    case st: SymTree                  =>
-      st.symbol.map(_.mods.isFinal).getOrElse(false)
-    case _                            => false
-  }
+  def isFinal(tree: Tree): Boolean =
+    tree.symbol.map(_.mods.isFinal).getOrElse(false)
 
 
   def isValidStatement(e: Tree): Boolean = {
@@ -74,8 +71,8 @@ trait TreeUtils {
   }
 
   def isValidStatementExpression(e: Tree): Boolean = e match {
-    case Unary(_, Inc, _, _, _, _)      => true
-    case Unary(_, Dec, _, _, _, _)      => true
+    case Unary(_, Inc, _)               => true
+    case Unary(_, Dec, _)               => true
     case _: Apply                       => true
     // case _: New                         => true
     case _: Assign                      => true

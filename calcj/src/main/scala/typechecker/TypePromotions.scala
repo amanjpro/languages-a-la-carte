@@ -2,6 +2,8 @@ package ch.usi.inf.l3.sana.calcj.typechecker
 
 import ch.usi.inf.l3.sana
 import sana.tiny.ast._
+import sana.tiny.ast.Implicits._
+import sana.calcj.ast.TreeFactories._
 import sana.tiny.types._
 import sana.calcj.types._
 import sana.calcj.ast._
@@ -34,8 +36,11 @@ object TypePromotions {
       val pos = e.pos
       getSymbol(t1) match {
         case Some(sym) =>
-          val tuse = TypeUse(sym, pos)
-          Cast(tuse, e, pos, e.owner)
+          val tuse = mkTypeUse(sym.name,
+                            pos, Some(sym),
+                            sym.owner)
+
+          mkCast(tuse, e)
         case _         =>
           e
       }

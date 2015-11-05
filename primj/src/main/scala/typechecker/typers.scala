@@ -7,7 +7,8 @@ import sana.tiny
 import sana.calcj
 
 import sana.dsl._
-import tiny.ast._
+import tiny.ast.{TreeCopiers => _, _}
+import tiny.ast.Implicits._
 import tiny.types._
 import tiny.types.TypeUtils._
 import tiny.symbols.{TypeSymbol, TermSymbol}
@@ -18,6 +19,7 @@ import calcj.types._
 import calcj.ast.Unary
 import calcj.ast.operators._
 import primj.ast._
+import primj.ast.TreeFactories._
 import primj.symbols._
 import primj.errors.ErrorCodes._
 import primj.types._
@@ -29,7 +31,7 @@ trait ProgramTyperComponent extends TyperComponent {
 
   (program: Program)          => {
     val newMembers = program.members.map(x => typed(x).asInstanceOf[DefTree])
-    program.copy(members = newMembers)
+    TreeCopiers.copyProgram(program)(members = newMembers)
   }
 }
 
@@ -52,12 +54,14 @@ trait AssignTyperComponent extends TyperComponent {
       case (lhs: Expr, rhs: Expr)                        =>
         (lhs.tpe, rhs.tpe) match {
           case (Some(ltpe), Some(rtpe)) if ltpe >:> rtpe =>
-            assign.copy(lhs = lhs, rhs = rhs)
+            lhs.tpe.foreach(assign.tpe = _)
+            TreeCopiers.copyAssign(assign)(lhs = lhs, rhs = rhs)
           case (Some(ltpe), Some(rtpe))                  =>
             error(TYPE_MISMATCH,
               ltpe.toString, rtpe.toString, rhs.pos, assign)
             assign
           case _                                         =>
+            println("KKKKLKAJF" + lhs.tpe + "  " + rhs.tpe)
             error(TYPE_MISMATCH,
               lhs.toString, rhs.toString, rhs.pos, assign)
             assign
@@ -80,7 +84,7 @@ trait IfTyperComponent extends TyperComponent {
       case (cond: Expr, thenp: Expr, elsep: Expr)     =>
         cond.tpe match {
           case Some(tpe) if tpe =:= BooleanType         =>
-            ifelse.copy(cond = cond, thenp = thenp,
+            TreeCopiers.copyIf(ifelse)(cond = cond, thenp = thenp,
               elsep = elsep)
           case tpe                                      =>
             error(TYPE_MISMATCH,
@@ -105,7 +109,7 @@ trait WhileTyperComponent extends TyperComponent {
       case (cond: Expr, body: Expr)  =>
         cond.tpe match {
           case Some(tpe) if tpe =:= BooleanType         =>
-            wile.copy(cond = cond, body = body)
+            TreeCopiers.copyWhile(wile)(cond = cond, body = body)
           case tpe                                      =>
             error(TYPE_MISMATCH,
               tpeToString(tpe),
@@ -125,7 +129,13 @@ trait WhileTyperComponent extends TyperComponent {
 trait BlockTyperComponent extends TyperComponent {
   (block: Block)           => {
     val stmts  = block.stmts.map(typed(_))
-    block.copy(stmts = stmts)
+    stmts match {
+      case Nil    =>
+        block.tpe = VoidType
+      case _      =>
+        stmts.last.tpe.foreach(block.tpe = _)
+    }
+    TreeCopiers.copyBlock(block)(stmts = stmts)
   }
 
 }
@@ -142,7 +152,7 @@ trait ForTyperComponent extends TyperComponent {
       case (cond: Expr, body: Expr)  =>
         cond.tpe match {
           case Some(tpe) if tpe =:= BooleanType         =>
-            forloop.copy(inits = inits,
+            TreeCopiers.copyFor(forloop)(inits = inits,
                          cond  = cond,
                          steps = steps,
                          body  = body)
@@ -180,8 +190,9 @@ trait TernaryTyperComponent extends TyperComponent {
                   ternary.cond.pos, ternary.cond)
                 ternary
               case _                        =>
-                ternary.copy(cond = cond, thenp = thenp,
-                  elsep = elsep, tpe = rtpe)
+                rtpe.foreach(ternary.tpe = _)
+                TreeCopiers.copyTernary(ternary)(cond = cond,
+                  thenp = thenp, elsep = elsep)
             }
           case tpe                                      =>
             error(TYPE_MISMATCH,
@@ -242,7 +253,13 @@ trait ApplyTyperComponent extends TyperComponent {
     (funty, argtys) match {
       case (Some(mt: MethodType), argtys) =>
         if(checkList(argtys, mt.params, _ <:< _)) {
-          apply.copy(fun = fun, args = args)
+          funty match {
+            case Some(MethodType(r, _)) =>
+              apply.tpe = r
+            case _                      =>
+              ()
+          }
+          TreeCopiers.copyApply(apply)(fun = fun, args = args)
         } else {
           // TODO: Fix the error message
           error(TYPE_MISMATCH, "", "", apply.pos, apply)
@@ -302,7 +319,7 @@ trait ReturnTyperComponent extends TyperComponent {
 trait UnaryTyperComponent extends calcj.typechecker.UnaryTyperComponent {
   (unary: Unary) => {
     super.apply(unary) match {
-      case unary@Unary(_, op, expr, _, _, _) if op == Inc || op == Dec    =>
+      case unary@Unary(_, op, expr) if op == Inc || op == Dec    =>
         if(! TreeUtils.isVariable(expr))
           error(ASSIGNING_NOT_TO_VARIABLE,
             expr.toString, expr.toString, expr.pos, expr)
@@ -311,7 +328,7 @@ trait UnaryTyperComponent extends calcj.typechecker.UnaryTyperComponent {
             expr.toString, expr.toString, expr.pos, expr)
         else ()
         unary
-      case _                                                              =>
+      case _                                                     =>
         unary
     }
   }
@@ -340,9 +357,7 @@ trait ValDefTyperComponent extends TyperComponent {
             rtpe.toString, ttpe.toString, rhs.pos, valdef)
           valdef
         case _                             =>
-          val res = valdef.copy(tpt = tpt, rhs = rhs)
-          res.symbol.foreach(_.tpe = Some(ttpe))
-          res
+          TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
       }
   }
 }
@@ -353,16 +368,6 @@ trait MethodDefTyperComponent extends TyperComponent {
   (mthd: MethodDef)          => {
     val tpt     = typed(mthd.ret).asInstanceOf[UseTree]
     val params  = mthd.params.map(typed(_).asInstanceOf[ValDef])
-    val mtpe    = {
-      val ptpes = params.flatMap(_.tpe)
-      if(ptpes.size == params.size) {
-        for {
-          rtpe <- tpt.tpe
-        } yield MethodType(rtpe, ptpes)
-      } else None
-    }
-    mthd.symbol.foreach(_.tpe = mtpe)
-
     val body    = typed(mthd.body).asInstanceOf[Expr]
     val tparams = params.map(_.tpe.getOrElse(ErrorType))
     val rtpe    = tpt.tpe.getOrElse(ErrorType)
@@ -378,9 +383,8 @@ trait MethodDefTyperComponent extends TyperComponent {
           body.toString, body.toString, body.pos, mthd)
         mthd
       } else {
-        val res = mthd.copy(ret = tpt,
+        TreeCopiers.copyMethodDef(mthd)(ret = tpt,
           params = params, body = body)
-        res
       }
     }
   }
@@ -396,6 +400,7 @@ trait IdentTyperComponent extends TyperComponent {
     val symbol = id.symbol
     symbol match {
       case Some(sym: TermSymbol)  =>
+        sym.tpe.foreach(id.tpe = _)
         id
       case _                      =>
         error(NAME_NOT_FOUND,
@@ -413,6 +418,7 @@ trait TypeUseTyperComponent extends TyperComponent {
     val symbol = tuse.symbol
     symbol match {
       case Some(sym: TypeSymbol)  =>
+        sym.tpe.foreach(tuse.tpe = _)
         tuse
       case Some(_)                =>
         error(TYPE_NAME_EXPECTED,

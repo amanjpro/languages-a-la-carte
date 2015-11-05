@@ -14,6 +14,7 @@ import tiny.debug.logger
 import calcj.ast._
 import calcj.ast.operators._
 import primj.ast._
+import primj.ast.TreeFactories._
 import primj.antlr._
 import primj.modifiers._
 import primj.modifiers.Ops._
@@ -61,9 +62,9 @@ class Parser extends parsers.Parser {
       }
       (e1, op) match {
         case (e: Expr, op: POp) if isPostfix =>
-          Unary(true, op, e, None, None, pos(ctx))
+          mkUnary(true, op, e, pos(ctx))
         case (e: Expr, op: UOp) =>
-          Unary(false, op, e, None, None, pos(ctx))
+          mkUnary(false, op, e, pos(ctx))
         case _                  =>
           // TODO: report an error
           throw new Exception(
@@ -98,7 +99,7 @@ class Parser extends parsers.Parser {
       val e2 = visit(es.get(1))
       (e1, e2) match {
         case (x: Expr, y: Expr) =>
-          Binary(x, op, y, None, None, pos(ctx))
+          mkBinary(x, op, y, pos(ctx))
         case _                  =>
           // TODO: report an error
           throw new Exception("Expression is expected but got: " + e1 + " " + e2)
@@ -107,7 +108,7 @@ class Parser extends parsers.Parser {
 
     override def visitAssign(@NotNull ctx: PrimjParser.AssignContext): Tree = {
       val name   = ctx.Identifier.getText
-      val id     = Ident(Name(name), pos(ctx))
+      val id     = mkIdent(Name(name), pos(ctx))
       val e2     = visit(ctx.expression).asInstanceOf[Expr]
       val op: Option[BOp] = ctx.op.getText match {
         case "+="   => Some(Add)
@@ -125,10 +126,10 @@ class Parser extends parsers.Parser {
       }
       op match {
         case None     =>
-          Assign(id, e2, pos(ctx), None)
+          mkAssign(id, e2, pos(ctx))
         case Some(op) =>
-          val rhs = Binary(id, op, e2, None, None, pos(ctx))
-          Assign(id, rhs, pos(ctx), None)
+          val rhs = mkBinary(id, op, e2, pos(ctx))
+          mkAssign(id, rhs, pos(ctx))
       }
     }
 
@@ -150,7 +151,7 @@ class Parser extends parsers.Parser {
         case tu: TypeUse =>
           names.zip(exprs).map {
             case (name, expr) =>
-              ValDef(mods1, tu, Name(name), expr, pos(ctx), None, None)
+              mkValDef(mods1, tu, Name(name), expr, pos(ctx))
           }
         case _           =>
           // TODO: report an error
@@ -175,7 +176,7 @@ class Parser extends parsers.Parser {
         case tu: TypeUse =>
           names.zip(exprs).map {
             case (name, expr) =>
-              ValDef(mods1, tu, Name(name), expr, pos(ctx), None, None)
+              mkValDef(mods1, tu, Name(name), expr, pos(ctx))
           }
         case _           =>
           // TODO: report an error
@@ -190,7 +191,7 @@ class Parser extends parsers.Parser {
         else //if (kid.variableDeclaration != null)
           createVarDecls(kid.variableDeclaration, Flags(FIELD))
       }
-      Program(defs, None, "")
+      mkProgram(defs, "")
     }
 
     override def visitFormalParameter(@NotNull ctx:
@@ -199,9 +200,9 @@ class Parser extends parsers.Parser {
                       PARAM | FINAL
                     else
                       Flags(PARAM)
-      val tpe = TypeUse(Name(ctx.`type`.getText), pos(ctx))
+      val tpe = mkTypeUse(Name(ctx.`type`.getText), pos(ctx))
       val name = Name(ctx.Identifier.getText)
-      ValDef(mods, tpe, name, NoTree, pos(ctx), None, None)
+      mkValDef(mods, tpe, name, NoTree, pos(ctx))
     }
 
 
@@ -220,8 +221,8 @@ class Parser extends parsers.Parser {
       val body   = visit(ctx.methodBody)
       (tpe, body) match {
         case (tu: TypeUse, b: Block) =>
-          MethodDef(tu, Name(name), params, b,
-            pos(ctx), None, None)
+          mkMethodDef(tu, Name(name), params, b,
+            pos(ctx))
         case _                       =>
           // TODO: report an error
           throw new Exception("Bad tree shape")
@@ -235,7 +236,7 @@ class Parser extends parsers.Parser {
 
 
 		override def visitVoidType(@NotNull ctx: PrimjParser.VoidTypeContext): Tree = {
-      TypeUse(Name("void"), pos(ctx))
+      mkTypeUse(Name("void"), pos(ctx))
     }
 
 		override def visitBlock(@NotNull ctx: PrimjParser.BlockContext): Tree = {
@@ -251,7 +252,7 @@ class Parser extends parsers.Parser {
           }
         }
       }
-      Block(stmts, pos(ctx), None, None)
+      mkBlock(stmts, pos(ctx))
     }
 
 		override def visitIf(@NotNull ctx: PrimjParser.IfContext): Tree = {
@@ -263,7 +264,7 @@ class Parser extends parsers.Parser {
       }
       (cond, thenp, elsep) match {
         case (c: Expr, t: Expr, e: Expr) =>
-          If(c, t, e, pos(ctx), None)
+          mkIf(c, t, e, pos(ctx))
         case _                           =>
           // TODO: report an error
           throw new Exception("Bad tree shape")
@@ -294,7 +295,7 @@ class Parser extends parsers.Parser {
       val body  = visit(ctx.statement)
       (cond, body) match {
         case (c: Expr, b: Expr) =>
-          For(inits, c, steps, b, pos(ctx), None, None)
+          mkFor(inits, c, steps, b, pos(ctx))
         case _                  =>
           // TODO: report an error
           throw new Exception("Bad tree shape")
@@ -305,7 +306,7 @@ class Parser extends parsers.Parser {
       val body = visit(ctx.statement)
       (cond, body) match {
         case (c: Expr, b: Expr) =>
-          While(false, c, b, pos(ctx), None)
+          mkWhile(false, c, b, pos(ctx))
         case _                  =>
           // TODO: report an error
           throw new Exception("Bad tree shape")
@@ -316,7 +317,7 @@ class Parser extends parsers.Parser {
       val body = visit(ctx.statement)
       (cond, body) match {
         case (c: Expr, b: Expr) =>
-          While(true, c, b, pos(ctx), None)
+          mkWhile(true, c, b, pos(ctx))
         case _                  =>
           // TODO: report an error
           throw new Exception("Bad tree shape")
@@ -326,12 +327,12 @@ class Parser extends parsers.Parser {
 		override def visitReturn(@NotNull ctx: PrimjParser.ReturnContext): Tree = {
       ctx.expression match {
         case null                =>
-          Return(None, pos(ctx), None)
+          mkReturn(None, pos(ctx))
         case expr                =>
           val e = visit(expr)
           e match {
             case e: Expr         =>
-              Return(Some(e), pos(ctx), None)
+              mkReturn(Some(e), pos(ctx))
           case _                 =>
             // TODO: report an error
             throw new Exception("Bad tree shape")
@@ -366,7 +367,7 @@ class Parser extends parsers.Parser {
       val elsep = visit(ctx.expression.get(1))
       (cond, thenp, elsep) match {
         case (c: Expr, t: Expr, e: Expr) =>
-          Ternary(c, t, e, None, pos(ctx), None)
+          mkTernary(c, t, e, pos(ctx))
         case _                           =>
           // TODO: report an error
           throw new Exception("Bad tree shape")
@@ -374,7 +375,7 @@ class Parser extends parsers.Parser {
     }
 		override def visitApply(@NotNull ctx: PrimjParser.ApplyContext): Tree = {
       val name   = ctx.Identifier.getText
-      val id     = Ident(Name(name), pos(ctx))
+      val id     = mkIdent(Name(name), pos(ctx))
       val args   = ctx.arguments.expressionList match {
         case null           => Nil
         case args           =>
@@ -382,7 +383,7 @@ class Parser extends parsers.Parser {
             case e => visit(e).asInstanceOf[Expr]
           }
         }
-      Apply(id, args, pos(ctx), None)
+      mkApply(id, args, pos(ctx))
     }
 
 
@@ -399,12 +400,12 @@ class Parser extends parsers.Parser {
     }
 
     override def visitId(@NotNull ctx: PrimjParser.IdContext): Tree = {
-      Ident(Name(ctx.getText), pos(ctx))
+      mkIdent(Name(ctx.getText), pos(ctx))
     }
 
     override def visitPrimitiveType(
       @NotNull ctx: PrimjParser.PrimitiveTypeContext): Tree = {
-      TypeUse(Name(ctx.getText), pos(ctx))
+      mkTypeUse(Name(ctx.getText), pos(ctx))
     }
 
     override def visitCast(@NotNull ctx: PrimjParser.CastContext): Tree = {
@@ -412,7 +413,7 @@ class Parser extends parsers.Parser {
       val tpt = visit(ctx.primitiveType)
       (tpt, e) match {
         case (tpt: TypeUse, e: Expr) =>
-          Cast(tpt, e, pos(ctx), None)
+          mkCast(tpt, e, pos(ctx))
         case _               =>
           // TODO: report an error
           throw new Exception("(TypeUse) Expression is expected")
@@ -470,21 +471,21 @@ class Parser extends parsers.Parser {
     override def visitIntLit(@NotNull ctx: PrimjParser.IntLitContext): Tree = {
       val txt = ctx.getText
       (txt.endsWith("l") || txt.endsWith("L")) match {
-        case true  => Literal(LongConstant(ctx.getText.toInt), pos(ctx))
-        case false => Literal(IntConstant(ctx.getText.toInt), pos(ctx))
+        case true  => mkLiteral(LongConstant(ctx.getText.toInt), pos(ctx))
+        case false => mkLiteral(IntConstant(ctx.getText.toInt), pos(ctx))
       }
     }
 
     override def visitFloatLit(@NotNull ctx: PrimjParser.FloatLitContext): Tree = {
       val txt = ctx.getText
       (txt.endsWith("f") || txt.endsWith("F")) match {
-        case true  => Literal(FloatConstant(ctx.getText.toInt), pos(ctx))
-        case false => Literal(DoubleConstant(ctx.getText.toInt), pos(ctx))
+        case true  => mkLiteral(FloatConstant(ctx.getText.toInt), pos(ctx))
+        case false => mkLiteral(DoubleConstant(ctx.getText.toInt), pos(ctx))
       }
     }
 
     override def visitCharLit(@NotNull ctx: PrimjParser.CharLitContext): Tree = {
-      Literal(CharConstant(ctx.getText.head), pos(ctx))
+      mkLiteral(CharConstant(ctx.getText.head), pos(ctx))
     }
 
     // override def visitStrLit(@NotNull ctx: PrimjParser.StrLitContext): Tree = {
@@ -493,7 +494,7 @@ class Parser extends parsers.Parser {
 
 
     override def visitBoolLit(@NotNull ctx: PrimjParser.BoolLitContext): Tree = {
-      Literal(BooleanConstant(ctx.getText.toBoolean), pos(ctx))
+      mkLiteral(BooleanConstant(ctx.getText.toBoolean), pos(ctx))
     }
   }
 }

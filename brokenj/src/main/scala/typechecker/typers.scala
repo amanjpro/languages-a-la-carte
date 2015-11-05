@@ -8,8 +8,9 @@ import sana.tiny
 import sana.calcj
 
 import sana.dsl._
-import tiny.ast._
+import tiny.ast.{TreeCopiers => _, _}
 import tiny.types._
+import tiny.ast.Implicits._
 import tiny.types.TypeUtils._
 import tiny.symbols.{TypeSymbol, TermSymbol}
 import tiny.source.Position
@@ -37,7 +38,7 @@ trait CaseTyperComponent extends TyperComponent {
   (cse: Case) => {
     val guards = cse.guards.map(typed(_).asInstanceOf[Expr])
     val body   = typed(cse.body)
-    cse.copy(guards = guards, body = body)
+    TreeCopiers.copyCase(cse)(guards = guards, body = body)
   }
 }
 
@@ -76,7 +77,7 @@ trait SwitchTyperComponent extends TyperComponent {
               "char, byte, short or int",
               expr.pos, expr)
     }
-    switch.copy(expr = expr, cases = cases)
+    TreeCopiers.copySwitch(switch)(expr = expr, cases = cases)
   }
 }
 
@@ -85,7 +86,7 @@ trait SwitchTyperComponent extends TyperComponent {
 trait LabelTyperComponent extends TyperComponent {
   (label: Label) => {
     val stmt   = typed(label.stmt).asInstanceOf[Expr]
-    label.copy(stmt =stmt)
+    TreeCopiers.copyLabel(label)(stmt = stmt)
   }
 }
 

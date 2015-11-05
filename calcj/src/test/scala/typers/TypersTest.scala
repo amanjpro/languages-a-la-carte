@@ -7,11 +7,13 @@ import sana.core._
 import sana.dsl._
 import sana.core.Implicits._
 import sana.tiny.ast._
+import sana.tiny.ast.Implicits._
 import sana.tiny.types._
 import sana.calcj.ast._
 import sana.calcj.ast.operators._
 import sana.calcj.types._
 import sana.calcj.typechecker._
+import sana.calcj.ast.TreeFactories._
 
 
 
@@ -25,11 +27,11 @@ class TyperTest extends FlatSpec with Matchers {
   trait TyperFamily extends TransformationFamily[Tree, Tree] {
     self =>
 
-    def default: Tree = NoTree
+    override def default: Tree = NoTree
 
     def components: List[PartialFunction[Tree, Tree]] =
       generateComponents[Tree, Tree](langs,
-        "TyperComponent", "typed")
+        "TyperComponent", "typed", "")
     def typed: Tree => Tree = family
   }
 
@@ -45,119 +47,82 @@ class TyperTest extends FlatSpec with Matchers {
   val typer = new TyperFamily {}
 
   "1L >> 2" should "Long" in {
-    val b = Binary(
-              Literal(LongConstant(1), None),
+    val b = mkBinary(
+              mkLiteral(LongConstant(1)),
               SHR,
-              Literal(IntConstant(2), None),
-              None,
-              None,
-              None)
+              mkLiteral(IntConstant(2)))
     val tpe = getTpe(typer.typed(b))
     (tpe =:= LongType) should be (true)
   }
 
   "(short) 1 >>> 1L" should "Int" in {
-    val b = Binary(
-              Literal(ShortConstant(1), None),
+    val b = mkBinary(
+              mkLiteral(ShortConstant(1)),
               USHR,
-              Literal(LongConstant(1), None),
-              None,
-              None,
-              None)
+              mkLiteral(LongConstant(1)))
     val tpe = getTpe(typer.typed(b))
     (tpe =:= IntType) should be (true)
   }
 
   "1 << 1.0f" should "not type check" in {
-    val b = Binary(
-              Literal(IntConstant(1), None),
+    val b = mkBinary(
+              mkLiteral(IntConstant(1)),
               SHL,
-              Literal(FloatConstant(1.0f), None),
-              None,
-              None,
-              None)
+              mkLiteral(FloatConstant(1.0f)))
     val tpe = getTpe(typer.typed(b))
     (tpe == NoType) should be (true)
   }
 
   "(short) 1 >>> true" should "not type check" in {
-    val b = Binary(
-              Literal(ShortConstant(1), None),
+    val b = mkBinary(
+              mkLiteral(ShortConstant(1)),
               USHR,
-              Literal(BooleanConstant(true), None),
-              None,
-              None,
-              None)
+              mkLiteral(BooleanConstant(true)))
     val tpe = getTpe(typer.typed(b))
     (tpe == NoType) should be (true)
   }
 
   "(short) 1 + -((byte) 2) * 4" should "be int" in {
-    val b = Binary(
-              Literal(ShortConstant(1), None),
+    val b = mkBinary(
+              mkLiteral(ShortConstant(1)),
               Add,
-              Binary(
-                Unary(false, Neg,
-                  Literal(ByteConstant(2), None),
-                  None,
-                  None,
-                  None),
+              mkBinary(
+                mkUnary(false, Neg,
+                  mkLiteral(ByteConstant(2))),
                 Mul,
-                Literal(IntConstant(4), None),
-                None,
-                None,
-                None),
-              None,
-              None,
-              None)
+                mkLiteral(IntConstant(4))))
     val tpe = getTpe(typer.typed(b))
     (tpe =:= IntType) should be (true)
   }
 
 
   "-('a') * 2.2D" should "be double" in {
-    val b = Binary(
-              Unary(false,
+    val b = mkBinary(
+              mkUnary(false,
                 Neg,
-                Literal(CharConstant('a'), None),
-                None,
-                None,
-                None),
+                mkLiteral(CharConstant('a'))),
               Mul,
-              Literal(DoubleConstant(2.2D), None),
-              None,
-              None,
-              None
-            )
+              mkLiteral(DoubleConstant(2.2D)))
     val tpe = getTpe(typer.typed(b))
     (tpe =:= DoubleType) should be (true)
   }
 
   "(short) 1 + (byte) 2 + 2.5" should "be Double" in {
-    val b = Binary(
-              Literal(ShortConstant(1), None),
+    val b = mkBinary(
+              mkLiteral(ShortConstant(1)),
               Add,
-              Binary(
-                Literal(ByteConstant(2), None),
+              mkBinary(
+                mkLiteral(ByteConstant(2)),
                 Add,
-                Literal(DoubleConstant(2.5), None),
-                None,
-                None,
-                None),
-              None,
-              None,
-              None)
+                mkLiteral(DoubleConstant(2.5))))
     val tpe = getTpe(typer.typed(b))
     (tpe =:= DoubleType) should be (true)
   }
 
   "+((short) 1)" should "be int" in {
-    val b = Unary(false,
+    val b = mkUnary(false,
               Pos,
-              Literal(ByteConstant(1), None),
-              None,
-              None,
-              None)
+              mkLiteral(ByteConstant(1)))
     val tpe = getTpe(typer.typed(b))
     (tpe =:= IntType) should be (true)
   }

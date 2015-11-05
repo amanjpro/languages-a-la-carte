@@ -20,27 +20,19 @@ import primj.types.VoidType
 trait LabelApi extends Expr with NamedTree {
   def name: Name
   def stmt: Expr
-  val symbol: Option[Symbol] = None
-  val tpe: Option[Type] = stmt.tpe
 }
 
 trait BreakApi extends Expr {
   def label: Option[Name]
-  val tpe: Option[Type] = Some(VoidType)
-  val symbol: Option[Symbol] = None
 }
 
 trait ContinueApi extends Expr {
   def label: Option[Name]
-  val tpe: Option[Type] = Some(VoidType)
-  val symbol: Option[Symbol] = None
 }
 
 trait CaseApi extends Tree {
   def guards: List[Expr]
   def body: Tree
-  def tpe: Option[Type] = Some(VoidType)
-  val symbol: Option[Symbol] = None
 }
 
 // trait DefaultCaseApi extends CaseApi {
@@ -50,25 +42,20 @@ trait CaseApi extends Tree {
 trait SwitchApi extends Expr {
   def expr: Expr
   def cases: List[CaseApi]
-
-  val tpe: Option[Type] = Some(VoidType)
 }
 
 
-case class Label(name: Name, stmt: Expr, pos: Option[Position],
-  owner: Option[Symbol]) extends LabelApi
+case class Label protected[ast](name: Name, stmt: Expr) extends LabelApi
 
-case class Break(label: Option[Name], pos: Option[Position],
-  owner: Option[Symbol]) extends BreakApi
+case class Break protected[ast](label: Option[Name]) extends BreakApi
 
-case class Continue(label: Option[Name], pos: Option[Position],
-  owner: Option[Symbol]) extends ContinueApi
+case class Continue protected[ast](label: Option[Name]) extends ContinueApi
 
-case class Case(guards: List[Expr], body: Tree,
-  pos: Option[Position], owner: Option[Symbol]) extends CaseApi
+case class Case protected[ast](guards: List[Expr],
+  body: Tree) extends CaseApi
 
-case class Switch(expr: Expr, cases: List[CaseApi],
-  pos: Option[Position], owner: Option[Symbol]) extends SwitchApi
+case class Switch protected[ast](expr: Expr,
+  cases: List[CaseApi]) extends SwitchApi
 
 // case class DefaultCase() extends DefaultCaseApi
 // /***************************** Extractors **************************/

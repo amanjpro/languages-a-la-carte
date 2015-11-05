@@ -8,11 +8,12 @@ import sana.brokenj
 
 import sana.core.TransformationComponent
 import sana.dsl._
-import tiny.ast._
+import tiny.ast.{TreeCopiers => _, _}
+import tiny.ast.Implicits._
 import tiny.errors.ErrorReporting.{error,warning}
 import tiny.symbols._
-import calcj.ast._
-import primj.ast._
+import calcj.ast.{TreeCopiers => _, _}
+import primj.ast.{TreeCopiers => _, _}
 import primj.symbols._
 import primj.modifiers.Ops._
 import primj.errors.ErrorCodes._
@@ -57,7 +58,8 @@ trait CaseSymbolAssigner extends SymbolAssignerComponent {
       assign((guard, owner)).asInstanceOf[Expr]
     }
     val body   = assign((cse.body, owner))
-    cse.copy(guards = guards, body = body, owner = owner)
+    owner.foreach(cse.owner = _)
+    TreeCopiers.copyCase(cse)(guards = guards, body= body)
   }
 }
 
@@ -69,7 +71,8 @@ trait SwitchSymbolAssigner extends SymbolAssignerComponent {
     val cases = switch.cases.map { guard =>
       assign((guard, owner)).asInstanceOf[CaseApi]
     }
-    switch.copy(cases = cases, expr = expr, owner = owner)
+    owner.foreach(switch.owner = _)
+    TreeCopiers.copySwitch(switch)(cases = cases, expr = expr)
   }
 }
 
@@ -78,20 +81,23 @@ trait SwitchSymbolAssigner extends SymbolAssignerComponent {
 trait LabelSymbolAssigner extends SymbolAssignerComponent {
   (label: Label)     => {
     val stmt  = assign((label.stmt, owner)).asInstanceOf[Expr]
-    label.copy(stmt = stmt, owner = owner)
+    owner.foreach(label.owner = _)
+    TreeCopiers.copyLabel(label)(stmt = stmt)
   }
 }
 
 @component(tree, owner)
 trait BreakSymbolAssigner extends SymbolAssignerComponent {
   (break: Break)     => {
-    break.copy(owner = owner)
+    owner.foreach(break.owner = _)
+    break
   }
 }
 
 @component(tree, owner)
 trait ContinueSymbolAssigner extends SymbolAssignerComponent {
   (continue: Continue)     => {
-    continue.copy(owner = owner)
+    owner.foreach(continue.owner = _)
+    continue
   }
 }
