@@ -17,6 +17,7 @@ import operators._
 
 trait CastApi extends Expr {
   def tpt: UseTree
+  def expr: Expr
 }
 
 trait LiteralApi extends Expr {

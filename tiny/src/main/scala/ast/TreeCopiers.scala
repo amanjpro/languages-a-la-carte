@@ -14,14 +14,14 @@ trait TreeCopiers {
   protected def copyProperties(template: Tree,
       newTree: Tree): Unit = newTree.attributes = template.attributes
 
-  def copyIdent(template: Ident)
-            (name: Name): Ident = {
+  def copyIdent(template: IdentApi)
+            (name: Name): IdentApi = {
     val res = Ident(name)
     copyProperties(template, res)
     res
   }
 
-  def copyTypeUse(template: TypeUse)(name: Name): TypeUse = {
+  def copyTypeUse(template: TypeUseApi)(name: Name): TypeUseApi = {
     val res = TypeUse(name)
     copyProperties(template, res)
     res

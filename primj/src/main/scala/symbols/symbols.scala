@@ -16,10 +16,15 @@ import sana.tiny.names.StdNames.noname
 object ProgramSymbol extends Symbol {
   decls = decls ++ SymbolUtils.standardDefinitions
 
-  var name: Name = noname
-  var mods: Flags = noflags
-  var tpe: Option[Type] = None
-  var owner: Option[Symbol] = None
+  def name: Name = noname
+  def mods: Flags = noflags
+  def tpe: Option[Type] = None
+  def owner: Option[Symbol] = None
+
+  def name_=(name: Name): Unit = ???
+  def mods_=(mods: Flags): Unit = ???
+  def tpe_=(tpe: Option[Type]): Unit = ???
+  def owner_=(owner: Option[Symbol]): Unit = ???
 }
 
 case class VariableSymbol(var mods: Flags, var name: Name,

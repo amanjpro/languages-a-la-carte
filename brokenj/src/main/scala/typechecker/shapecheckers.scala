@@ -24,7 +24,7 @@ import brokenj.ast.TreeUtils
 
 @component
 trait LabelShapeCheckerComponent extends ShapeCheckerComponent {
-  (lbl: Label) => {
+  (lbl: LabelApi) => {
     if(canHaveLabel(lbl.stmt)) {
       ()
     } else {
@@ -43,7 +43,7 @@ trait LabelShapeCheckerComponent extends ShapeCheckerComponent {
 
 @component
 trait SwitchShapeCheckerComponent extends ShapeCheckerComponent {
-  (switch: Switch) => {
+  (switch: SwitchApi) => {
     check(switch.expr)
     switch.cases.foreach(check(_))
   }
@@ -52,7 +52,7 @@ trait SwitchShapeCheckerComponent extends ShapeCheckerComponent {
 
 @component
 trait CaseShapeCheckerComponent extends ShapeCheckerComponent {
-  (cse: Case) => {
+  (cse: CaseApi) => {
     check(cse.body)
     cse.guards.foreach(check(_))
   }

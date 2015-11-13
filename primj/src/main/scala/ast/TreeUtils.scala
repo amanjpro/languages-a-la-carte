@@ -17,12 +17,12 @@ import primj.modifiers.Ops._
 
 trait TreeUtils {
   def isTypeUse(tree: UseTree): Boolean = tree match {
-    case _: Ident                    => false
-    case _: TypeUse                  => true
+    case _: IdentApi                    => false
+    case _: TypeUseApi                  => true
   }
 
   def isVariable(tree: Tree): Boolean = tree match {
-    case _: ValDef                    => true
+    case _: ValDefApi                    => true
     case _                            =>
       tree.symbol match {
         case Some(_: VariableSymbol) => true
@@ -33,20 +33,20 @@ trait TreeUtils {
 
   // make sure that the guards are constant expressions Section 15.27
   def isConstantExpression(e: Tree): Boolean = e match {
-    case lit: Literal                                 => true
-    case Cast(tpt, e)                           =>
+    case lit: LiteralApi                              => true
+    case cst: CastApi                                 =>
       // permit casts to primitive and string
       // TODO: Change this in OOJ, to handle String too
-      tpt.tpe match {
-        case Some(_: PrimitiveType) => isConstantExpression(e)
+      cst.tpt.tpe match {
+        case Some(_: PrimitiveType) => isConstantExpression(cst.expr)
         case _                      => false
       }
-    case u: Unary    if u.op != Inc && u.op != Dec    =>
+    case u: UnaryApi    if u.op != Inc && u.op != Dec    =>
       isConstantExpression(u.expr)
-    case b: Binary                                    =>
+    case b: BinaryApi                                    =>
       isConstantExpression(b.lhs) &&
         isConstantExpression(b.rhs)
-    case id: Ident                                    =>
+    case id: IdentApi                                    =>
       isFinal(id) && isVariable(id)
     case _                                            => false
     // TODO: Add qualified Select later in ooj
@@ -63,51 +63,50 @@ trait TreeUtils {
     lazy val isStmt = e match {
       // Statements in primj: if, while, for, block, return, valdef
       // brokenj adds: Switch, continue, break
-      case _: If | _: While | _: For | _: Block |
-         _: Return | _: ValDef | NoTree     => true
+      case _: IfApi | _: WhileApi | _: ForApi | _: BlockApi |
+         _: ReturnApi | _: ValDefApi | NoTree     => true
       case _                                => false
     }
     isValidStatementExpression(e) || isStmt
   }
 
   def isValidStatementExpression(e: Tree): Boolean = e match {
-    case Unary(_, Inc, _)               => true
-    case Unary(_, Dec, _)               => true
-    case _: Apply                       => true
+    case u: UnaryApi  if u.op == Inc || u.op == Dec => true
+    case _: ApplyApi                       => true
     // case _: New                         => true
-    case _: Assign                      => true
+    case _: AssignApi                      => true
     case NoTree                         => true
     case _                              => false
   }
 
   def isValDefOrStatementExpression(v: Tree): Boolean = v match {
-    case s: ValDef => true
+    case s: ValDefApi => true
     case e: Expr   => isValidStatementExpression(e)
     case _         => false
   }
 
   // INFO: Update this to Java as we go
   def isValidExpression(e: Tree): Boolean = e match {
-    case _: Literal | _: Ident | _: Binary | _: Unary |
-         _: Assign | _: Ternary | _: Apply              => true
+    case _: LiteralApi | _: IdentApi | _: BinaryApi | _: UnaryApi |
+         _: AssignApi | _: TernaryApi | _: ApplyApi              => true
     case _                                              => false
   }
 
 
   def allPathsReturn(expr: Tree): Boolean = expr match {
-    case wile: While                     =>
+    case wile: WhileApi                     =>
       allPathsReturn(wile.body)
-    case forloop: For                    =>
+    case forloop: ForApi                    =>
       allPathsReturn(forloop.body)
-    case ifelse: If                      =>
+    case ifelse: IfApi                      =>
       allPathsReturn(ifelse.thenp) &&
       allPathsReturn(ifelse.elsep)
-    case block: Block                    =>
+    case block: BlockApi                    =>
       block.stmts match {
         case Nil         => false
         case stmts       => allPathsReturn(stmts.last)
       }
-    case ret: Return                     =>
+    case ret: ReturnApi                     =>
       true
     case _                               =>
       false
@@ -115,15 +114,15 @@ trait TreeUtils {
 
 
   def isSimpleExpression(tree: Tree): Boolean = tree match {
-    case _: While                 => false
-    case _: For                   => false
-    case _: ValDef                => false
-    case _: MethodDef             => false
-    case _: Program               => false
-    case _: Return                => false
-    case _: If                    => false
-    case _: Block                 => false
-    case _: TypeUse               => false
+    case _: WhileApi                 => false
+    case _: ForApi                   => false
+    case _: ValDefApi                => false
+    case _: MethodDefApi             => false
+    case _: ProgramApi               => false
+    case _: ReturnApi                => false
+    case _: IfApi                    => false
+    case _: BlockApi                 => false
+    case _: TypeUseApi               => false
     case _                        => true
   }
 }

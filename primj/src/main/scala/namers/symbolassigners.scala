@@ -59,7 +59,7 @@ trait SymbolAssignerComponent extends
 
 @component(tree, owner)
 trait ProgramSymbolAssignerComponent extends SymbolAssignerComponent {
-  (program: Program)          => {
+  (program: ProgramApi)          => {
     val symbol = ProgramSymbol
     val newMembers =
       program.members.map(x => assign((x, Some(symbol))).asInstanceOf[DefTree])
@@ -72,14 +72,14 @@ trait ProgramSymbolAssignerComponent extends SymbolAssignerComponent {
 
 @component(tree, owner)
 trait MethodDefSymbolAssignerComponent extends SymbolAssignerComponent {
-  (mthd: MethodDef)          => {
+  (mthd: MethodDefApi)          => {
     val symbol  = MethodSymbol(noflags, mthd.name,
       Nil, None, owner)
     owner.foreach(sym => sym.declare(symbol))
     val opsym   = Some(symbol)
     val tpt     = assign((mthd.ret, owner)).asInstanceOf[UseTree]
     val params  = mthd.params.map((x) =>
-        assign((x, opsym)).asInstanceOf[ValDef])
+        assign((x, opsym)).asInstanceOf[ValDefApi])
     val body    = assign((mthd.body, opsym)).asInstanceOf[Expr]
     symbol.params = params.map(_.symbol).flatten
     mthd.symbol = symbol
@@ -92,7 +92,7 @@ trait MethodDefSymbolAssignerComponent extends SymbolAssignerComponent {
 
 @component(tree, owner)
 trait ValDefSymbolAssignerComponent extends SymbolAssignerComponent {
-  (valdef: ValDef)          => {
+  (valdef: ValDefApi)          => {
     val tpt     = assign((valdef.tpt, owner)).asInstanceOf[UseTree]
     val rhs     = assign((valdef.rhs, owner)).asInstanceOf[Expr]
 
@@ -108,7 +108,7 @@ trait ValDefSymbolAssignerComponent extends SymbolAssignerComponent {
 
 @component(tree, owner)
 trait TypeUseSymbolAssignerComponent extends SymbolAssignerComponent {
-  (tuse: TypeUse)          => {
+  (tuse: TypeUseApi)          => {
     val symbol = owner.flatMap(_.getSymbol(tuse.name,
       _.isInstanceOf[TypeSymbol]))
     symbol match {
@@ -122,7 +122,7 @@ trait TypeUseSymbolAssignerComponent extends SymbolAssignerComponent {
 
 @component(tree, owner)
 trait ForSymbolAssignerComponent extends SymbolAssignerComponent {
-  (forloop: For)          => {
+  (forloop: ForApi)          => {
     val symbol  = ScopeSymbol(owner)
     val opsym   = Some(symbol)
     val inits = forloop.inits.map { init =>
@@ -142,7 +142,7 @@ trait ForSymbolAssignerComponent extends SymbolAssignerComponent {
 
 @component(tree, owner)
 trait BlockSymbolAssignerComponent extends SymbolAssignerComponent {
-  (block: Block)          => {
+  (block: BlockApi)          => {
     val symbol  = ScopeSymbol(owner)
     val stmts = block.stmts.map { stmt =>
       assign((stmt, Some(symbol)))
@@ -157,7 +157,7 @@ trait BlockSymbolAssignerComponent extends SymbolAssignerComponent {
 // all the trees that can have an owner
 @component(tree, owner)
 trait IdentSymbolAssignerComponent extends SymbolAssignerComponent {
-  (id: Ident)          => {
+  (id: IdentApi)          => {
     owner.foreach(id.owner = _)
     id
   }
@@ -165,7 +165,7 @@ trait IdentSymbolAssignerComponent extends SymbolAssignerComponent {
 
 @component(tree, owner)
 trait BinarySymbolAssignerComponent extends SymbolAssignerComponent {
-  (bin: Binary)          => {
+  (bin: BinaryApi)          => {
     val lhs = assign((bin.lhs, owner)).asInstanceOf[Expr]
     val rhs = assign((bin.rhs, owner)).asInstanceOf[Expr]
     owner.foreach(bin.owner = _)
@@ -175,7 +175,7 @@ trait BinarySymbolAssignerComponent extends SymbolAssignerComponent {
 
 @component(tree, owner)
 trait UnarySymbolAssignerComponent extends SymbolAssignerComponent {
-  (unary: Unary)          => {
+  (unary: UnaryApi)          => {
     val expr = assign((unary.expr, owner)).asInstanceOf[Expr]
     owner.foreach(unary.owner = _)
     TreeCopiers.copyUnary(unary)(expr = expr)
@@ -184,7 +184,7 @@ trait UnarySymbolAssignerComponent extends SymbolAssignerComponent {
 
 @component(tree, owner)
 trait CastSymbolAssignerComponent extends SymbolAssignerComponent {
-  (cast: Cast)          => {
+  (cast: CastApi)          => {
     val expr = assign((cast.expr, owner)).asInstanceOf[Expr]
     owner.foreach(cast.owner = _)
     TreeCopiers.copyCast(cast)(expr = expr)
@@ -193,7 +193,7 @@ trait CastSymbolAssignerComponent extends SymbolAssignerComponent {
 
 @component(tree, owner)
 trait ReturnSymbolAssignerComponent extends SymbolAssignerComponent {
-  (ret: Return)          => {
+  (ret: ReturnApi)          => {
     val expr = ret.expr.map( x =>
       assign((x, owner)).asInstanceOf[Expr])
     owner.foreach(ret.owner = _)
@@ -203,7 +203,7 @@ trait ReturnSymbolAssignerComponent extends SymbolAssignerComponent {
 
 @component(tree, owner)
 trait AssignSymbolAssignerComponent extends SymbolAssignerComponent {
-  (assgn: Assign)          => {
+  (assgn: AssignApi)          => {
     val lhs = assign((assgn.lhs, owner)).asInstanceOf[Expr]
     val rhs = assign((assgn.rhs, owner)).asInstanceOf[Expr]
     owner.foreach(assgn.owner = _)
@@ -214,7 +214,7 @@ trait AssignSymbolAssignerComponent extends SymbolAssignerComponent {
 
 @component(tree, owner)
 trait TernarySymbolAssignerComponent extends SymbolAssignerComponent {
-  (tern: Ternary)          => {
+  (tern: TernaryApi)          => {
     val cond = assign((tern.cond, owner)).asInstanceOf[Expr]
     val thenp = assign((tern.thenp, owner)).asInstanceOf[Expr]
     val elsep = assign((tern.elsep, owner)).asInstanceOf[Expr]
@@ -226,7 +226,7 @@ trait TernarySymbolAssignerComponent extends SymbolAssignerComponent {
 
 @component(tree, owner)
 trait IfSymbolAssignerComponent extends SymbolAssignerComponent {
-  (ifelse: If)          => {
+  (ifelse: IfApi)          => {
     val cond = assign((ifelse.cond, owner)).asInstanceOf[Expr]
     val thenp = assign((ifelse.thenp, owner)).asInstanceOf[Expr]
     val elsep = assign((ifelse.elsep, owner)).asInstanceOf[Expr]
@@ -238,7 +238,7 @@ trait IfSymbolAssignerComponent extends SymbolAssignerComponent {
 
 @component(tree, owner)
 trait WhileSymbolAssignerComponent extends SymbolAssignerComponent {
-  (wile: While)          => {
+  (wile: WhileApi)          => {
     val cond = assign((wile.cond, owner)).asInstanceOf[Expr]
     val body = assign((wile.body, owner)).asInstanceOf[Expr]
     owner.foreach(wile.owner = _)
@@ -248,7 +248,7 @@ trait WhileSymbolAssignerComponent extends SymbolAssignerComponent {
 
 @component(tree, owner)
 trait ApplySymbolAssignerComponent extends SymbolAssignerComponent {
-  (apply: Apply)          => {
+  (apply: ApplyApi)          => {
     val fun = assign((apply.fun, owner)).asInstanceOf[Expr]
     val args = apply.args.map { arg =>
       assign((arg, owner)).asInstanceOf[Expr]
@@ -260,6 +260,6 @@ trait ApplySymbolAssignerComponent extends SymbolAssignerComponent {
 
 @component(tree, owner)
 trait LiteralSymbolAssignerComponent extends SymbolAssignerComponent {
-  (lit: Literal) => lit
+  (lit: LiteralApi) => lit
 }
 

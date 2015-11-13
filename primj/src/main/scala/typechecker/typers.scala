@@ -16,7 +16,7 @@ import tiny.source.Position
 import tiny.errors.ErrorReporting.{error,warning}
 import calcj.typechecker.{TyperComponent, TypePromotions}
 import calcj.types._
-import calcj.ast.Unary
+import calcj.ast.UnaryApi
 import calcj.ast.operators._
 import primj.ast._
 import primj.ast.TreeFactories._
@@ -29,7 +29,7 @@ import primj.modifiers.Ops._
 @component
 trait ProgramTyperComponent extends TyperComponent {
 
-  (program: Program)          => {
+  (program: ProgramApi)          => {
     val newMembers = program.members.map(x => typed(x).asInstanceOf[DefTree])
     TreeCopiers.copyProgram(program)(members = newMembers)
   }
@@ -39,7 +39,7 @@ trait ProgramTyperComponent extends TyperComponent {
 @component
 trait AssignTyperComponent extends TyperComponent {
 
-  (assign: Assign)          => {
+  (assign: AssignApi)          => {
     val lhs = typed(assign.lhs)
     val rhs = typed(assign.rhs)
     (lhs, rhs) match {
@@ -61,7 +61,6 @@ trait AssignTyperComponent extends TyperComponent {
               ltpe.toString, rtpe.toString, rhs.pos, assign)
             assign
           case _                                         =>
-            println("KKKKLKAJF" + lhs.tpe + "  " + rhs.tpe)
             error(TYPE_MISMATCH,
               lhs.toString, rhs.toString, rhs.pos, assign)
             assign
@@ -76,7 +75,7 @@ trait AssignTyperComponent extends TyperComponent {
 
 @component
 trait IfTyperComponent extends TyperComponent {
-  (ifelse: If)           => {
+  (ifelse: IfApi)           => {
     val cond  = typed(ifelse.cond)
     val thenp = typed(ifelse.thenp)
     val elsep = typed(ifelse.elsep)
@@ -102,7 +101,7 @@ trait IfTyperComponent extends TyperComponent {
 
 @component
 trait WhileTyperComponent extends TyperComponent {
-  (wile: While)           => {
+  (wile: WhileApi)           => {
     val cond  = typed(wile.cond)
     val body  = typed(wile.body)
     (cond, body) match {
@@ -127,7 +126,7 @@ trait WhileTyperComponent extends TyperComponent {
 
 @component
 trait BlockTyperComponent extends TyperComponent {
-  (block: Block)           => {
+  (block: BlockApi)           => {
     val stmts  = block.stmts.map(typed(_))
     stmts match {
       case Nil    =>
@@ -143,7 +142,7 @@ trait BlockTyperComponent extends TyperComponent {
 
 @component
 trait ForTyperComponent extends TyperComponent {
-  (forloop: For)           => {
+  (forloop: ForApi)           => {
     val inits = forloop.inits.map(typed(_))
     val cond  = typed(forloop.cond)
     val steps = forloop.steps.map(typed(_).asInstanceOf[Expr])
@@ -173,7 +172,7 @@ trait ForTyperComponent extends TyperComponent {
 
 @component
 trait TernaryTyperComponent extends TyperComponent {
-  (ternary: Ternary)                               => {
+  (ternary: TernaryApi)                               => {
     val cond  = typed(ternary.cond)
     val thenp = typed(ternary.thenp)
     val elsep = typed(ternary.elsep)
@@ -245,7 +244,7 @@ trait TernaryTyperComponent extends TyperComponent {
 @component
 trait ApplyTyperComponent extends TyperComponent {
   // FIXME: Apply doesn't work with method overloading
-  (apply: Apply)   => {
+  (apply: ApplyApi)   => {
     val fun    = typed(apply.fun).asInstanceOf[Expr]
     val funty  = fun.tpe
     val args   = apply.args.map(typed(_).asInstanceOf[Expr])
@@ -276,7 +275,7 @@ trait ApplyTyperComponent extends TyperComponent {
 
 @component
 trait ReturnTyperComponent extends TyperComponent {
-  (ret: Return)          => {
+  (ret: ReturnApi)          => {
     val expr  = ret.expr.map(typed(_).asInstanceOf[Expr]).getOrElse(NoTree)
     val tpe   = expr.tpe
     SymbolUtils.enclosingMethod(ret.owner) match {
@@ -317,18 +316,20 @@ trait ReturnTyperComponent extends TyperComponent {
 
 @component
 trait UnaryTyperComponent extends calcj.typechecker.UnaryTyperComponent {
-  (unary: Unary) => {
+  (unary: UnaryApi) => {
     super.apply(unary) match {
-      case unary@Unary(_, op, expr) if op == Inc || op == Dec    =>
-        if(! TreeUtils.isVariable(expr))
+      case unary: UnaryApi if unary.op == Inc || unary.op == Dec    =>
+        if(! TreeUtils.isVariable(unary.expr))
           error(ASSIGNING_NOT_TO_VARIABLE,
-            expr.toString, expr.toString, expr.pos, expr)
-        else if(TreeUtils.isFinal(expr))
+            unary.expr.toString, unary.expr.toString,
+            unary.expr.pos, unary.expr)
+        else if(TreeUtils.isFinal(unary.expr))
           error(REASSIGNING_FINAL_VARIABLE,
-            expr.toString, expr.toString, expr.pos, expr)
+            unary.expr.toString, unary.expr.toString, unary.expr.pos,
+            unary.expr)
         else ()
         unary
-      case _                                                     =>
+      case _                                                        =>
         unary
     }
   }
@@ -337,7 +338,7 @@ trait UnaryTyperComponent extends calcj.typechecker.UnaryTyperComponent {
 
 @component
 trait ValDefTyperComponent extends TyperComponent {
-  (valdef: ValDef)          => {
+  (valdef: ValDefApi)          => {
     val tpt    = typed(valdef.tpt).asInstanceOf[UseTree]
     val rhs    = typed(valdef.rhs).asInstanceOf[Expr]
     val rtpe   = rhs.tpe.getOrElse(ErrorType)
@@ -365,9 +366,9 @@ trait ValDefTyperComponent extends TyperComponent {
 
 @component
 trait MethodDefTyperComponent extends TyperComponent {
-  (mthd: MethodDef)          => {
+  (mthd: MethodDefApi)          => {
     val tpt     = typed(mthd.ret).asInstanceOf[UseTree]
-    val params  = mthd.params.map(typed(_).asInstanceOf[ValDef])
+    val params  = mthd.params.map(typed(_).asInstanceOf[ValDefApi])
     val body    = typed(mthd.body).asInstanceOf[Expr]
     val tparams = params.map(_.tpe.getOrElse(ErrorType))
     val rtpe    = tpt.tpe.getOrElse(ErrorType)
@@ -396,7 +397,7 @@ trait MethodDefTyperComponent extends TyperComponent {
 
 @component
 trait IdentTyperComponent extends TyperComponent {
-  (id: Ident)     => {
+  (id: IdentApi)     => {
     val symbol = id.symbol
     symbol match {
       case Some(sym: TermSymbol)  =>
@@ -414,7 +415,7 @@ trait IdentTyperComponent extends TyperComponent {
 
 @component
 trait TypeUseTyperComponent extends TyperComponent {
-  (tuse: TypeUse)     => {
+  (tuse: TypeUseApi)     => {
     val symbol = tuse.symbol
     symbol match {
       case Some(sym: TypeSymbol)  =>

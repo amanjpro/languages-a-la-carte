@@ -6,12 +6,12 @@ import sana.calcj
 import sana.primj
 import tiny.source.{SourceFile, Position}
 import tiny.symbols._
-import tiny.ast._
+import tiny.ast.{TreeCopiers => _, _}
 import tiny.names.Name
 import tiny.modifiers.Flags
 import tiny.parsers
 import tiny.debug.logger
-import calcj.ast._
+import calcj.ast.{TreeCopiers => _, _}
 import calcj.ast.operators._
 import primj.ast._
 import primj.ast.TreeFactories._
@@ -36,8 +36,8 @@ class Parser extends parsers.Parser {
     logger.debug(tree.toString)
     // Program(tree, None, source.name)
     tree match {
-      case program: Program =>
-        program.copy(sourceName = source.name)
+      case program: ProgramApi =>
+        TreeCopiers.copyProgram(program)(sourceName = source.name)
       case _                => tree
     }
   }
@@ -137,7 +137,7 @@ class Parser extends parsers.Parser {
 
     def createVarDecls(@NotNull ctx:
       PrimjParser.VariableDeclarationContext,
-      mods: Flags): List[ValDef] = {
+      mods: Flags): List[ValDefApi] = {
       val mods1   = if(ctx.mods != null)
                       mods | FINAL
                     else mods
@@ -161,7 +161,7 @@ class Parser extends parsers.Parser {
 
     def createVarDefs(@NotNull ctx:
       PrimjParser.VariableDefinitionContext,
-      mods: Flags): List[ValDef] = {
+      mods: Flags): List[ValDefApi] = {
 
       val mods1   = if(ctx.mods != null)
                       mods | FINAL
@@ -173,7 +173,7 @@ class Parser extends parsers.Parser {
         case es => visit(es).asInstanceOf[Expr]
       }
       tpe match {
-        case tu: TypeUse =>
+        case tu: TypeUseApi =>
           names.zip(exprs).map {
             case (name, expr) =>
               mkValDef(mods1, tu, Name(name), expr, pos(ctx))
@@ -214,13 +214,13 @@ class Parser extends parsers.Parser {
         case null                                      => List()
         case ps if ps.formalParameter != null          =>
           ps.formalParameter.asScala.toList.map {
-            case e  => visit(e).asInstanceOf[ValDef]
+            case e  => visit(e).asInstanceOf[ValDefApi]
           }
         case _                                         => List()
       }
       val body   = visit(ctx.methodBody)
       (tpe, body) match {
-        case (tu: TypeUse, b: Block) =>
+        case (tu: TypeUseApi, b: BlockApi) =>
           mkMethodDef(tu, Name(name), params, b,
             pos(ctx))
         case _                       =>
@@ -412,7 +412,7 @@ class Parser extends parsers.Parser {
       val e = visit(ctx.expression)
       val tpt = visit(ctx.primitiveType)
       (tpt, e) match {
-        case (tpt: TypeUse, e: Expr) =>
+        case (tpt: TypeUseApi, e: Expr) =>
           mkCast(tpt, e, pos(ctx))
         case _               =>
           // TODO: report an error

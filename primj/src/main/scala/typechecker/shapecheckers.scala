@@ -26,7 +26,7 @@ trait ShapeCheckerComponent extends CheckerComponent[Tree] {
 
 @component
 trait BlockShapeCheckerComponent extends ShapeCheckerComponent {
-  (block: Block)          => {
+  (block: BlockApi)          => {
     block.stmts.foreach { tree =>
       if(!isValidStmt(tree)) {
         error(BAD_STATEMENT,
@@ -44,7 +44,7 @@ trait BlockShapeCheckerComponent extends ShapeCheckerComponent {
 
 @component
 trait IfShapeCheckerComponent extends ShapeCheckerComponent {
-  (ifelse: If)            => {
+  (ifelse: IfApi)            => {
     check(ifelse.cond)
     check(ifelse.thenp)
     check(ifelse.elsep)
@@ -76,7 +76,7 @@ trait IfShapeCheckerComponent extends ShapeCheckerComponent {
 
 @component
 trait WhileShapeCheckerComponent extends ShapeCheckerComponent {
-  (wile: While)            => {
+  (wile: WhileApi)            => {
     check(wile.cond)
     check(wile.body)
 
@@ -103,7 +103,7 @@ trait WhileShapeCheckerComponent extends ShapeCheckerComponent {
 
 @component
 trait ForShapeCheckerComponent extends ShapeCheckerComponent {
-  (forloop: For)            => {
+  (forloop: ForApi)            => {
     forloop.inits.foreach(check(_))
     check(forloop.cond)
     forloop.steps.foreach(check(_))
@@ -131,11 +131,11 @@ trait ForShapeCheckerComponent extends ShapeCheckerComponent {
   }
 
   protected def allValDefsOrNone(trees: List[Tree]): Boolean = {
-    val valdefs = trees.filter(_.isInstanceOf[ValDef])
+    val valdefs = trees.filter(_.isInstanceOf[ValDefApi])
     valdefs.size == trees.size || valdefs.size == 0
   }
 
-  protected def isValidInitStatements(forloop: For): Unit = {
+  protected def isValidInitStatements(forloop: ForApi): Unit = {
     if(!allValDefsOrNone(forloop.inits))
       error(UNEXPETED_TREE,
         forloop.toString, "an expression", forloop.pos, forloop)
@@ -160,7 +160,7 @@ trait ForShapeCheckerComponent extends ShapeCheckerComponent {
 
 @component
 trait CastShapeCheckerComponent extends ShapeCheckerComponent {
-  (cast: Cast)            => {
+  (cast: CastApi)            => {
     check(cast.expr)
 
     if(!isTypeUse(cast.tpt)) {
@@ -177,14 +177,14 @@ trait CastShapeCheckerComponent extends ShapeCheckerComponent {
 
 @component
 trait ProgramShapeCheckerComponent extends ShapeCheckerComponent {
-  (prg: Program) => {
+  (prg: ProgramApi) => {
     prg.members.foreach(check(_))
   }
 
 }
 @component
 trait MethodDefShapeCheckerComponent extends ShapeCheckerComponent {
-  (meth: MethodDef)  => {
+  (meth: MethodDefApi)  => {
     if(!TreeUtils.isTypeUse(meth.ret)) {
       error(TYPE_NAME_EXPECTED,
         meth.ret.toString, "a type", meth.ret.pos, meth.ret)
@@ -198,7 +198,7 @@ trait MethodDefShapeCheckerComponent extends ShapeCheckerComponent {
 @component
 trait UnaryShapeCheckerComponent extends ShapeCheckerComponent {
   // postfix flag can only be set if the operator is postfix
-  (unary: Unary) => {
+  (unary: UnaryApi) => {
     if(unary.isPostfix && (unary.op != Inc && unary.op != Dec))
       error(BAD_STATEMENT,
         unary.toString, "a postfix operation", unary.pos, unary)
@@ -210,7 +210,7 @@ trait UnaryShapeCheckerComponent extends ShapeCheckerComponent {
 
 @component
 trait ValDefShapeCheckerComponent extends ShapeCheckerComponent {
-  (valdef: ValDef) => {
+  (valdef: ValDefApi) => {
     if(!TreeUtils.isTypeUse(valdef.tpt)) {
       // TODO: Better error message
       error(TYPE_NAME_EXPECTED,

@@ -53,7 +53,7 @@ Continue: DONE
 
 @component
 trait CaseNamerComponent extends NamerComponent {
-  (cse: Case)            => {
+  (cse: CaseApi)            => {
     val guards =
       cse.guards.map(x => name(x).asInstanceOf[Expr])
     val body   = name(cse.body)
@@ -63,7 +63,7 @@ trait CaseNamerComponent extends NamerComponent {
 
 @component
 trait SwitchNamerComponent extends NamerComponent {
-  (switch: Switch)            => {
+  (switch: SwitchApi)            => {
     val cases =
       switch.cases.map(x => name(x).asInstanceOf[CaseApi])
     val expr   = name(switch.expr).asInstanceOf[Expr]
@@ -73,7 +73,7 @@ trait SwitchNamerComponent extends NamerComponent {
 
 @component
 trait LabelNamerComponent extends NamerComponent {
-  (label: Label)            => {
+  (label: LabelApi)            => {
     val stmt   = name(label.stmt).asInstanceOf[Expr]
     TreeCopiers.copyLabel(label)(stmt = stmt)
   }
@@ -81,11 +81,11 @@ trait LabelNamerComponent extends NamerComponent {
 
 @component
 trait BreakNamerComponent extends NamerComponent {
-  (break: Break)            => break
+  (break: BreakApi)            => break
 }
 
 @component
 trait ContinueNamerComponent extends NamerComponent {
-  (continue: Continue) => continue
+  (continue: ContinueApi) => continue
 }
 

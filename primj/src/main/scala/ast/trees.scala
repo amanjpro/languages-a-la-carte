@@ -23,7 +23,7 @@ trait ProgramApi extends Tree {
 // Variable and Method definitions
 trait MethodDefApi extends TermTree {
   def ret: UseTree
-  def params: List[ValDef]
+  def params: List[ValDefApi]
   def body: Expr
 }
 
@@ -112,7 +112,7 @@ case class Apply protected[ast](fun: Expr, args: List[Expr]) extends ApplyApi
 case class Return protected[ast](expr: Option[Expr]) extends ReturnApi
 
 case class MethodDef protected[ast](ret: UseTree,
-  name: Name, params: List[ValDef],
+  name: Name, params: List[ValDefApi],
   body: Expr) extends MethodDefApi
 
 case class ValDef protected[ast](mods: Flags,

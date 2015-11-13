@@ -14,7 +14,7 @@ trait TreeFactories {
   def mkIdent(name: Name,
             pos: Option[Position] = None,
             symbol: Option[Symbol] = None,
-            owner: Option[Symbol] = None): Ident = {
+            owner: Option[Symbol] = None): IdentApi = {
     val res = Ident(name)
     pos.foreach(res.pos = _)
     owner.foreach(res.owner = _)
@@ -28,7 +28,7 @@ trait TreeFactories {
   def mkTypeUse(name: Name,
             pos: Option[Position] = None,
             symbol: Option[Symbol] = None,
-            owner: Option[Symbol] = None): TypeUse = {
+            owner: Option[Symbol] = None): TypeUseApi = {
     val res = TypeUse(name)
     pos.foreach(res.pos = _)
     owner.foreach(res.owner = _)

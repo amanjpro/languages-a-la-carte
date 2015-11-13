@@ -59,7 +59,7 @@ trait JumpCheckerComponent extends
 
 @component(tree, encls)
 trait ContinueJumpCheckerComponent extends JumpCheckerComponent {
-  (cont: Continue) =>
+  (cont: ContinueApi) =>
     if(encls.filter(isContinuable(_)) != Nil)
       error(BAD_CONTINUE_STMT,
         cont.toString, cont.toString, cont.pos, cont)
@@ -72,7 +72,7 @@ trait ContinueJumpCheckerComponent extends JumpCheckerComponent {
 
 @component(tree, encls)
 trait BreakJumpCheckerComponent extends JumpCheckerComponent {
-  (break: Break) =>
+  (break: BreakApi) =>
     if(encls.filter(isBreakable(_)) != Nil)
       error(BAD_BREAK_STMT,
         break.toString, break.toString, break.pos, break)
@@ -87,32 +87,32 @@ trait BreakJumpCheckerComponent extends JumpCheckerComponent {
 
 @component(tree, encls)
 trait LabelJumpCheckerComponent extends JumpCheckerComponent {
-  (label: Label) => check((label.stmt, encls))
+  (label: LabelApi) => check((label.stmt, encls))
 }
 
 
 // boring cases
 @component(tree, encls)
 trait ProgramJumpCheckerComponent extends JumpCheckerComponent {
-  (prog: Program) =>
+  (prog: ProgramApi) =>
     prog.members.map(member => check((member, Nil)))
 }
 
 @component(tree, encls)
 trait MethodDefJumpCheckerComponent extends JumpCheckerComponent {
-  (mthd: MethodDef) =>
+  (mthd: MethodDefApi) =>
     check((mthd.body, encls))
 }
 
 @component(tree, encls)
 trait ValDefJumpCheckerComponent extends JumpCheckerComponent {
-  (vdef: ValDef) =>
+  (vdef: ValDefApi) =>
     check((vdef.rhs, encls))
 }
 
 @component(tree, encls)
 trait AssignJumpCheckerComponent extends JumpCheckerComponent {
-  (assgn: Assign) => {
+  (assgn: AssignApi) => {
     check((assgn.lhs, encls))
     check((assgn.rhs, encls))
   }
@@ -120,12 +120,12 @@ trait AssignJumpCheckerComponent extends JumpCheckerComponent {
 
 @component(tree, encls)
 trait ReturnJumpCheckerComponent extends JumpCheckerComponent {
-  (ret: Return) => ret.expr.foreach(expr => check((expr, encls)))
+  (ret: ReturnApi) => ret.expr.foreach(expr => check((expr, encls)))
 }
 
 @component(tree, encls)
 trait IfJumpCheckerComponent extends JumpCheckerComponent {
-  (ifelse: If) => {
+  (ifelse: IfApi) => {
     check((ifelse.cond, encls))
     check((ifelse.thenp, encls))
     check((ifelse.elsep, encls))
@@ -134,7 +134,7 @@ trait IfJumpCheckerComponent extends JumpCheckerComponent {
 
 @component(tree, encls)
 trait WhileJumpCheckerComponent extends JumpCheckerComponent {
-  (wile: While) => {
+  (wile: WhileApi) => {
     check((wile.cond, encls))
     check((wile.body, wile::encls))
   }
@@ -142,14 +142,14 @@ trait WhileJumpCheckerComponent extends JumpCheckerComponent {
 
 @component(tree, encls)
 trait BlockJumpCheckerComponent extends JumpCheckerComponent {
-  (block: Block) => {
+  (block: BlockApi) => {
     block.stmts.foreach(stmt => check((stmt, encls)))
   }
 }
 
 @component(tree, encls)
 trait ForJumpCheckerComponent extends JumpCheckerComponent {
-  (forloop: For) => {
+  (forloop: ForApi) => {
     forloop.inits.foreach(init => check((init, encls)))
     check((forloop.cond, encls))
     forloop.steps.foreach(step => check((step, encls)))
@@ -159,7 +159,7 @@ trait ForJumpCheckerComponent extends JumpCheckerComponent {
 
 @component(tree, encls)
 trait TernaryJumpCheckerComponent extends JumpCheckerComponent {
-  (ternary: Ternary) => {
+  (ternary: TernaryApi) => {
     check((ternary.cond, encls))
     check((ternary.thenp, encls))
     check((ternary.elsep, encls))
@@ -168,7 +168,7 @@ trait TernaryJumpCheckerComponent extends JumpCheckerComponent {
 
 @component(tree, encls)
 trait ApplyJumpCheckerComponent extends JumpCheckerComponent {
-  (apply: Apply) => {
+  (apply: ApplyApi) => {
     check((apply.fun, encls))
     apply.args.foreach(arg => check((arg, encls)))
   }
@@ -176,21 +176,21 @@ trait ApplyJumpCheckerComponent extends JumpCheckerComponent {
 
 @component(tree, encls)
 trait CastJumpCheckerComponent extends JumpCheckerComponent {
-  (cast: Cast) => {
+  (cast: CastApi) => {
     check((cast.expr, encls))
   }
 }
 
 @component(tree, encls)
 trait UnaryJumpCheckerComponent extends JumpCheckerComponent {
-  (unary: Unary) => {
+  (unary: UnaryApi) => {
     check((unary.expr, encls))
   }
 }
 
 @component(tree, encls)
 trait BinaryJumpCheckerComponent extends JumpCheckerComponent {
-  (binary: Binary) => {
+  (binary: BinaryApi) => {
     check((binary.lhs, encls))
     check((binary.rhs, encls))
   }
@@ -199,7 +199,7 @@ trait BinaryJumpCheckerComponent extends JumpCheckerComponent {
 
 @component(tree, encls)
 trait SwitchJumpCheckerComponent extends JumpCheckerComponent {
-  (switch: Switch) => {
+  (switch: SwitchApi) => {
     check((switch.expr, encls))
     switch.cases.foreach(cse => check((cse, switch::encls)))
   }
@@ -208,7 +208,7 @@ trait SwitchJumpCheckerComponent extends JumpCheckerComponent {
 
 @component(tree, encls)
 trait CaseJumpCheckerComponent extends JumpCheckerComponent {
-  (cse: Case) => {
+  (cse: CaseApi) => {
     cse.guards.foreach(guard => check((guard, encls)))
     check((cse.body, encls))
   }
@@ -217,19 +217,19 @@ trait CaseJumpCheckerComponent extends JumpCheckerComponent {
 // even more boring cases
 @component(tree, encls)
 trait IdentJumpCheckerComponent extends JumpCheckerComponent {
-  (ident: Ident) => ident
+  (ident: IdentApi) => ident
 }
 
 @component(tree, encls)
 trait TypeUseJumpCheckerComponent extends JumpCheckerComponent {
-  (tuse: TypeUse) => tuse
+  (tuse: TypeUseApi) => tuse
 }
 
 
 
 @component(tree, encls)
 trait LiteralJumpCheckerComponent extends JumpCheckerComponent {
-  (lit: Literal) => lit
+  (lit: LiteralApi) => lit
 }
 
 // @component(tree, encls)

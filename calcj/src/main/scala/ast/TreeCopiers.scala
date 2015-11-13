@@ -14,32 +14,32 @@ import operators._
 
 trait TreeCopiers extends sana.tiny.ast.TreeCopiers {
 
-  def copyCast(template: Cast)(
+  def copyCast(template: CastApi)(
       tpt: UseTree = template.tpt,
-      expr: Expr = template.expr): Cast = {
+      expr: Expr = template.expr): CastApi = {
     val res = Cast(tpt, expr)
     copyProperties(template, res)
     res
   }
 
 
-  def copyLiteral(template: Literal)
-      (constant: Constant): Literal = {
+  def copyLiteral(template: LiteralApi)
+      (constant: Constant): LiteralApi = {
     val res = Literal(constant)
     copyProperties(template, res)
     res
   }
 
 
-  def copyBinary(template: Binary)(lhs: Expr = template.lhs,
-      op: BOp = template.op, rhs: Expr = template.rhs): Binary = {
+  def copyBinary(template: BinaryApi)(lhs: Expr = template.lhs,
+      op: BOp = template.op, rhs: Expr = template.rhs): BinaryApi = {
     val res = Binary(lhs, op, rhs)
     copyProperties(template, res)
     res
   }
 
-  def copyUnary(template: Unary)(isPostfix: Boolean = template.isPostfix,
-    op: UOp = template.op, expr: Expr = template.expr): Unary = {
+  def copyUnary(template: UnaryApi)(isPostfix: Boolean = template.isPostfix,
+    op: UOp = template.op, expr: Expr = template.expr): UnaryApi = {
     val res = Unary(isPostfix, op, expr)
     copyProperties(template, res)
     res

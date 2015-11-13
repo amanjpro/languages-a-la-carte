@@ -24,7 +24,7 @@ trait TyperComponent extends TransformationComponent[Tree, Tree] {
 @component
 trait BinaryTyperComponent extends TyperComponent {
 
-  (bin: Binary)           => {
+  (bin: BinaryApi)           => {
     val e1 = typed(bin.lhs)
     val e2 = typed(bin.rhs)
     (e1, e2) match {
@@ -51,7 +51,7 @@ trait BinaryTyperComponent extends TyperComponent {
 
 
   def binaryTyper(ltpe: Type,
-    rtpe: Type, bin: Binary): Option[(Type, Type, Type)] = bin.op match {
+    rtpe: Type, bin: BinaryApi): Option[(Type, Type, Type)] = bin.op match {
       case Gt | Lt | Le | Ge                      =>
         (ltpe, rtpe) match {
           case (x: NumericType, y: NumericType)   =>
@@ -153,7 +153,7 @@ trait BinaryTyperComponent extends TyperComponent {
 @component
 trait UnaryTyperComponent extends TyperComponent {
 
-  (unary: Unary)          => {
+  (unary: UnaryApi)          => {
     // TODO:
     // Pos unary operator, should ideally perform the cast and return
     // the containing expression not the whole unary expression (the
@@ -185,7 +185,7 @@ trait UnaryTyperComponent extends TyperComponent {
   }
 
   protected def unaryTyper(tpe: Type,
-    unary: Unary): Option[(Type, Type)] = {
+    unary: UnaryApi): Option[(Type, Type)] = {
     (unary.op, tpe)  match {
       case (Not, BooleanType)                              =>
         Some((BooleanType, BooleanType))
@@ -222,7 +222,7 @@ trait UnaryTyperComponent extends TyperComponent {
 @component
 trait CastTyperComponent extends TyperComponent {
 
-  (cast: Cast)           => {
+  (cast: CastApi)           => {
     val tpt  = typed(cast.tpt)
     val expr = typed(cast.expr)
     (tpt, expr) match {
@@ -238,7 +238,7 @@ trait CastTyperComponent extends TyperComponent {
 
 @component
 trait LiteralTyperComponent extends TyperComponent {
-  (lit: Literal)     => {
+  (lit: LiteralApi)     => {
     lit.tpe = lit.constant.tpe
     lit
   }

@@ -52,14 +52,14 @@ Continue: DONE
 
 
 trait LabelNameCheckerComponent extends
-  CheckerComponent[(Tree, List[Label])] {
-  def check: ((Tree, List[Label])) => Unit
+  CheckerComponent[(Tree, List[LabelApi])] {
+  def check: ((Tree, List[LabelApi])) => Unit
 }
 
 
 @component(tree, labelNames)
 trait ContinueLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (cont: Continue) => cont.label match {
+  (cont: ContinueApi) => cont.label match {
     case None       => ()
     case Some(name) =>
       labelNames.filter(_.name == name) match {
@@ -80,7 +80,7 @@ trait ContinueLabelNameCheckerComponent extends LabelNameCheckerComponent {
 
 @component(tree, labelNames)
 trait BreakLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (break: Break) => break.label match {
+  (break: BreakApi) => break.label match {
     case None       => ()
     case Some(name) =>
       labelNames.filter(_.name == name) match {
@@ -97,7 +97,7 @@ trait BreakLabelNameCheckerComponent extends LabelNameCheckerComponent {
 
 @component(tree, labelNames)
 trait LabelLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (label: Label) => {
+  (label: LabelApi) => {
     val name = label.name
     if(labelNames.exists(_.name == name)) {
       error(DOUBLE_LABEL_DEF,
@@ -111,25 +111,25 @@ trait LabelLabelNameCheckerComponent extends LabelNameCheckerComponent {
 // boring cases
 @component(tree, labelNames)
 trait ProgramLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (prog: Program) =>
+  (prog: ProgramApi) =>
     prog.members.map(member => check((member, Nil)))
 }
 
 @component(tree, labelNames)
 trait MethodDefLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (mthd: MethodDef) =>
+  (mthd: MethodDefApi) =>
     check((mthd.body, labelNames))
 }
 
 @component(tree, labelNames)
 trait ValDefLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (vdef: ValDef) =>
+  (vdef: ValDefApi) =>
     check((vdef.rhs, labelNames))
 }
 
 @component(tree, labelNames)
 trait AssignLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (assgn: Assign) => {
+  (assgn: AssignApi) => {
     check((assgn.lhs, labelNames))
     check((assgn.rhs, labelNames))
   }
@@ -137,12 +137,12 @@ trait AssignLabelNameCheckerComponent extends LabelNameCheckerComponent {
 
 @component(tree, labelNames)
 trait ReturnLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (ret: Return) => ret.expr.foreach(expr => check((expr, labelNames)))
+  (ret: ReturnApi) => ret.expr.foreach(expr => check((expr, labelNames)))
 }
 
 @component(tree, labelNames)
 trait IfLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (ifelse: If) => {
+  (ifelse: IfApi) => {
     check((ifelse.cond, labelNames))
     check((ifelse.thenp, labelNames))
     check((ifelse.elsep, labelNames))
@@ -151,7 +151,7 @@ trait IfLabelNameCheckerComponent extends LabelNameCheckerComponent {
 
 @component(tree, labelNames)
 trait WhileLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (wile: While) => {
+  (wile: WhileApi) => {
     check((wile.cond, labelNames))
     check((wile.body, labelNames))
   }
@@ -159,14 +159,14 @@ trait WhileLabelNameCheckerComponent extends LabelNameCheckerComponent {
 
 @component(tree, labelNames)
 trait BlockLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (block: Block) => {
+  (block: BlockApi) => {
     block.stmts.foreach(stmt => check((stmt, labelNames)))
   }
 }
 
 @component(tree, labelNames)
 trait ForLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (forloop: For) => {
+  (forloop: ForApi) => {
     forloop.inits.foreach(init => check((init, labelNames)))
     check((forloop.cond, labelNames))
     forloop.steps.foreach(step => check((step, labelNames)))
@@ -176,7 +176,7 @@ trait ForLabelNameCheckerComponent extends LabelNameCheckerComponent {
 
 @component(tree, labelNames)
 trait TernaryLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (ternary: Ternary) => {
+  (ternary: TernaryApi) => {
     check((ternary.cond, labelNames))
     check((ternary.thenp, labelNames))
     check((ternary.elsep, labelNames))
@@ -185,7 +185,7 @@ trait TernaryLabelNameCheckerComponent extends LabelNameCheckerComponent {
 
 @component(tree, labelNames)
 trait ApplyLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (apply: Apply) => {
+  (apply: ApplyApi) => {
     check((apply.fun, labelNames))
     apply.args.foreach(arg => check((arg, labelNames)))
   }
@@ -193,21 +193,21 @@ trait ApplyLabelNameCheckerComponent extends LabelNameCheckerComponent {
 
 @component(tree, labelNames)
 trait CastLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (cast: Cast) => {
+  (cast: CastApi) => {
     check((cast.expr, labelNames))
   }
 }
 
 @component(tree, labelNames)
 trait UnaryLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (unary: Unary) => {
+  (unary: UnaryApi) => {
     check((unary.expr, labelNames))
   }
 }
 
 @component(tree, labelNames)
 trait BinaryLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (binary: Binary) => {
+  (binary: BinaryApi) => {
     check((binary.lhs, labelNames))
     check((binary.rhs, labelNames))
   }
@@ -216,7 +216,7 @@ trait BinaryLabelNameCheckerComponent extends LabelNameCheckerComponent {
 
 @component(tree, labelNames)
 trait SwitchLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (switch: Switch) => {
+  (switch: SwitchApi) => {
     check((switch.expr, labelNames))
     switch.cases.foreach(cse => check((cse, labelNames)))
   }
@@ -225,7 +225,7 @@ trait SwitchLabelNameCheckerComponent extends LabelNameCheckerComponent {
 
 @component(tree, labelNames)
 trait CaseLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (cse: Case) => {
+  (cse: CaseApi) => {
     cse.guards.foreach(guard => check((guard, labelNames)))
     check((cse.body, labelNames))
   }
@@ -234,19 +234,19 @@ trait CaseLabelNameCheckerComponent extends LabelNameCheckerComponent {
 // even more boring cases
 @component(tree, labelNames)
 trait IdentLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (ident: Ident) => ident
+  (ident: IdentApi) => ident
 }
 
 @component(tree, labelNames)
 trait TypeUseLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (tuse: TypeUse) => tuse
+  (tuse: TypeUseApi) => tuse
 }
 
 
 
 @component(tree, labelNames)
 trait LiteralLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (lit: Literal) => lit
+  (lit: LiteralApi) => lit
 }
 
 // @component(tree, labelNames)
