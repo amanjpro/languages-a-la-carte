@@ -13,7 +13,7 @@ import sana.primj.ast._
 
 
 
-trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
+trait TreeCopiers extends sana.primj.ast.TreeCopiers {
 
   def copyLabel(template: Label)(name: Name = template.name,
     stmt: Expr = template.stmt): Label = {
