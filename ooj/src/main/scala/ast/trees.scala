@@ -29,9 +29,16 @@ import ooj.names.StdNames._
 
 /********************* AST Nodes *********************************/
 
-trait PackageDefApi extends NamedTree with SymTree {
-  def members: List[DefTree]
-  val tpe: Option[Type] = None
+trait CompilationUnitApi extends Tree {
+  def module: PackageDefApi
+  def sourceName: String
+  // the head of the list contains the inner most directory
+  def sourcePath: List[String]
+}
+
+trait PackageDefApi extends NamedTree {
+  def mods: Flags
+  def members: List[Tree]
 }
 
 
@@ -41,7 +48,6 @@ trait ClassDefApi extends TypeTree {
   def parents: List[UseTree]
   def body: TemplateApi
 
-  val tpe: Option[Type] = symbol.flatMap(_.tpe)
   // {
   //   val ptpes = parents.flatMap(_.tpe).toSet
   //   // Is it Object? (No java.lang.Object is defined at this module level)
@@ -55,13 +61,15 @@ trait ClassDefApi extends TypeTree {
 
 trait TemplateApi extends Tree {
   def members: List[Tree]
-  val tpe: Option[Type] = None
+}
+
+trait MethodDefApi extends primj.ast.MethodDefApi {
+  def mods: Flags
 }
 
 trait NewApi extends Expr {
   def tpt: UseTree
   def args: List[Expr]
-  val tpe: Option[Type] = tpt.tpe
 }
 
 trait SelectApi extends UseTree with Expr {
@@ -69,18 +77,17 @@ trait SelectApi extends UseTree with Expr {
   def tree: SimpleUseTree
 
   // override val name: ContextState[Name] = tree.name
-  def uses: Option[Symbol] = tree.symbol
+  // def uses: Option[Symbol] = tree.symbol
   def name: Name           = tree.name
 }
 
 trait ThisApi extends Expr {
-  def enclosingClassSymbol: Option[Symbol]
+  // def enclosingClassSymbol: Option[Symbol]
 
-  val tpe: Option[Type] = enclosingClassSymbol.flatMap(_.tpe)
 }
 
 trait SuperApi extends Expr {
-  def enclosingClassSymbol: Option[Symbol]
+  // def enclosingClassSymbol: Option[Symbol]
 
   // val tpe: TypeState[Type] = for {
   //   ctx       <- get
@@ -108,12 +115,26 @@ trait SuperApi extends Expr {
 
 
 // case class ClassDef() extends ClassDefApi
-case class PackageDef(members: List[DefTree], tpe: Option[Type],
-  pos: Option[Position], symbol: Option[Symbol], owner: Option[Symbol])
+case class CompilationUnit protected[ast](module: PackageDefApi,
+  sourceName: String, sourcePath: List[String]) extends CompilationUnitApi
 
-case class ClassDef(mods: Flags, name: Name, parents: List[UseTree],
-  body: TemplateApi, pos: Option[Position], symbol: Option[Symbol],
-  owner: Option[Symbol]) extends ClassDefApi
+case class PackageDef protected[ast](mods: Flags, name: Name,
+  members: List[Tree]) extends PackageDefApi
 
-case class Tempalte(members: List[Tree], pos: Option[Position], owner:
-  Option[Symbol]) extends TemplateApi
+case class ClassDef protected[ast](mods: Flags,
+  name: Name, parents: List[UseTree],
+  body: TemplateApi) extends ClassDefApi
+
+case class Template protected[ast](members: List[Tree]) extends TemplateApi
+
+case class New protected[ast](tpt: UseTree, args: List[Expr]) extends NewApi
+case class Select protected[ast](qual: Tree,
+  tree: SimpleUseTree) extends SelectApi
+class This protected[ast]() extends ThisApi
+class Super protected[ast]() extends SuperApi
+
+
+case class MethodDef protected[ast](mods: Flags,
+  ret: UseTree,
+  name: Name, params: List[ValDefApi],
+  body: Expr) extends MethodDefApi
