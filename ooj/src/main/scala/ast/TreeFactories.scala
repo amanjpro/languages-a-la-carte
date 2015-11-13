@@ -16,6 +16,16 @@ import sana.ooj.ast.Implicits._
 
 trait TreeFactories {
 
+  def mkCompilationUnit(module: PackageDefApi, sourceName: String,
+    sourcePath: List[String],
+    pos: Option[Position] = None,
+    symbol: Option[Symbol] = None): CompilationUnitApi = {
+    val res = CompilationUnit(module, sourceName, sourcePath)
+    pos.foreach(res.pos = _)
+    symbol.foreach(res.symbol = _)
+    res
+  }
+
   def mkPackageDef(mods: Flags, name: Name, members: List[Tree],
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None): PackageDefApi = {
