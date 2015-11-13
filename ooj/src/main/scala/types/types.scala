@@ -20,8 +20,10 @@ trait RefType extends Type {
 
 
 trait ClassTypeApi extends RefType {
+  def qual: String
   def parents: Set[Type]
 
+  def qualifiedName: String = s"$qual.${name.asString}"
   def allParents: Set[Type] = parents.flatMap {
     case ctpe:ClassTypeApi  => ctpe.allParents
     case _                  => Set.empty[Type]
@@ -32,14 +34,14 @@ trait ClassTypeApi extends RefType {
       lazy val res = this.allParents.foldLeft(true)((z, y) => {
         z && ct.allParents.exists(_ =:= y)
       })
-      this.name == ct.name && res
+      this.qualifiedName == ct.qualifiedName && res
     case _                  => false
   }
 
   def <:<(t: Type): Boolean = t match {
-    case ObjectType         => true
+    // case ObjectType         => true
     case ct: ClassTypeApi   =>
-      this.allParents.filter(_ =:= ct).size != 0
+      this.allParents.exists(_ =:= ct)
     case _                  => false
   }
 }
@@ -71,24 +73,25 @@ trait ClassTypeApi extends RefType {
 // }
 
 
-case class ClassType(name: Name, parents: Set[Type])
+case class ClassType(qual: String, name: Name, parents: Set[Type])
   extends ClassTypeApi
 
-object ObjectType extends ClassTypeApi {
-  val parents: Set[Type] = Set.empty
-
-  override def <:<(t: Type): Boolean = t match {
-    case ObjectType         => true
-    case _                  => false
-  }
-
-  override def >:>(t: Type): Boolean = t match {
-    case _: RefType         => true
-    case _                  => false
-  }
-
-  def name: Name = OBJECT_TYPE_NAME
-}
+// object ObjectType extends ClassTypeApi {
+//   val qual: String       = "java.lang"
+//   val parents: Set[Type] = Set.empty
+//
+//   override def <:<(t: Type): Boolean = t match {
+//     case ObjectType         => true
+//     case _                  => false
+//   }
+//
+//   override def >:>(t: Type): Boolean = t match {
+//     case _: RefType         => true
+//     case _                  => false
+//   }
+//
+//   def name: Name = OBJECT_TYPE_NAME
+// }
 
 object NullType extends RefType {
   def =:=(t: Type): Boolean = this == t
