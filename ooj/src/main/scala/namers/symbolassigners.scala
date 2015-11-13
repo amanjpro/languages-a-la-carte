@@ -36,18 +36,15 @@ Super: DONE
 MethodDef: DONE
 */
 
-// @component(tree, owner)
-// trait CompilationUnitSymbolAssigner extends SymbolAssignerComponent {
-//   (pkg: PackageDefApi) => {
-//     val sym     = CompilationUnit(pkg.mods, pkg.name, owner)
-//     val members = pkg.members.map { member =>
-//       assign((member, Some(sym)))
-//     }
-//     pkg.symbol = sym
-//     owner.foreach(pkg.owner = _)
-//     TreeCopiers.copyPackageDef(pkg)(members = members)
-//   }
-// }
+@component(tree, owner)
+trait CompilationUnitSymbolAssigner extends SymbolAssignerComponent {
+  (cunit: CompilationUnitApi) => {
+    val sym     = CompilationUnitSymbol(None, cunit.sourceName, cunit.sourcePath)
+    val pkg     = assign((cunit.module, Some(sym))).asInstanceOf[PackageDefApi]
+    sym.module  = pkg.symbol
+    TreeCopiers.copyCompilationUnit(cunit)(module = pkg)
+  }
+}
 
 @component(tree, owner)
 trait PackageDefSymbolAssigner extends SymbolAssignerComponent {
