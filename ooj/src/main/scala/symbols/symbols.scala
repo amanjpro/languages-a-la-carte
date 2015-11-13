@@ -59,3 +59,22 @@ case class ClassSymbol(var mods: Flags, var name: Name,
   override def toString(): String = s"Class symbol: $name"
   override def hashCode(): Int = name.hashCode * 43 + tpe.hashCode
 }
+
+case class CompilationUnitSymbol(var module: Option[Symbol],
+  sourceName: String, sourcePath: List[String]) extends Symbol {
+
+  def owner: Option[Symbol] = None
+  def owner_=(tpe: Option[Symbol]): Unit = ???
+
+  def mods: Flags = noflags
+  def mods_=(tpe: Flags) = ???
+
+  def name: Name = Name(sourceName)
+  def name_=(nme: Name): Unit = ???
+
+  def tpe: Option[Type] = None
+  def tpe_=(tpe: Option[Type]): Unit = ???
+
+  override def toString(): String = s"CompilationUnit symbol: $sourceName"
+  override def hashCode(): Int = sourceName.hashCode * 43 + sourcePath.hashCode
+}
