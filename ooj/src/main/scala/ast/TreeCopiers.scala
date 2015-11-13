@@ -20,6 +20,14 @@ trait TreeCopiers extends {
   protected def copyProperties(template: Tree,
       newTree: Tree): Unit = newTree.attributes = template.attributes
 
+  def copyCompilationUnit(template: CompilationUnitApi)(
+    module: PackageDefApi = template.module,
+    sourceName: String = template.sourceName,
+    sourcePath: List[String] = template.sourcePath): CompilationUnitApi = {
+    val res = CompilationUnit(module, sourceName, sourcePath)
+    copyProperties(template, res)
+    res
+  }
 
   def copyPackageDef(template: PackageDefApi)(mods: Flags = template.mods,
       name: Name = template.name,
