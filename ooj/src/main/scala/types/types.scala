@@ -6,6 +6,7 @@ import sana.primj
 import sana.tiny
 import sana.calcj
 import sana.ooj
+import tiny.symbols.Symbol
 import tiny.names.Name
 import tiny.types.Type
 import calcj.types.PrimitiveType
@@ -21,12 +22,14 @@ trait RefType extends Type {
 
 trait ClassTypeApi extends RefType {
   def qual: String
-  def parents: Set[Type]
+  def parents: Set[Symbol]
 
   def qualifiedName: String = s"$qual.${name.asString}"
-  def allParents: Set[Type] = parents.flatMap {
-    case ctpe:ClassTypeApi  => ctpe.allParents
-    case _                  => Set.empty[Type]
+  def allParents: Set[Type] = parents.flatMap { parent =>
+    parent.tpe match {
+      case Some(ctpe: ClassTypeApi)  => ctpe.allParents
+      case _                         => Set.empty[Type]
+    }
   }
 
   def =:=(t: Type): Boolean = t match {
@@ -73,7 +76,7 @@ trait ClassTypeApi extends RefType {
 // }
 
 
-case class ClassType(qual: String, name: Name, parents: Set[Type])
+case class ClassType(qual: String, name: Name, parents: Set[Symbol])
   extends ClassTypeApi
 
 // object ObjectType extends ClassTypeApi {
