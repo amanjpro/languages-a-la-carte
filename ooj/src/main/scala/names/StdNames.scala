@@ -1,9 +1,12 @@
 package ch.usi.inf.l3.sana.ooj.names
 
-import ch.usi.inf.l3.sana.tiny
+import ch.usi.inf.l3.sana
+import sana.primj
+import sana.tiny
 import tiny.names.Name
 
-trait StdNames extends tiny.names.StdNames {
+trait StdNames extends primj.names.StdNames {
+  val CONSTRUCTOR_NAME  = Name("<init>")
   val JAVA_PACKAGE_NAME = Name("java")
   val LANG_PACKAGE_NAME = Name("lang")
   val OBJECT_TYPE_NAME  = Name("Object")
