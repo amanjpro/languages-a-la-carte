@@ -34,7 +34,7 @@ Template: DONE
 MethodDef: DONE
 New:
 Select:
-This:
+This: DONE
 Super:
 TypeUse:
 Ident:
@@ -132,7 +132,9 @@ trait ThisTyperComponent extends TyperComponent {
         ()
     }
 
-    owner.foreach { sym => sym.mods.isStatic match {
+    val enclosing = SymbolUtils.enclosingNonLocal(owner)
+
+    enclosing.foreach { sym => sym.mods.isStatic match {
         case true                  =>
           error(ACCESSING_THIS_IN_STATIC,
                 ths.toString, "", ths.pos, ths)
