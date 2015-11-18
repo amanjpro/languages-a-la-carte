@@ -8,7 +8,7 @@ import sana.tiny.names.Name
 import sana.ooj.names.StdNames
 import sana.ooj.modifiers.Ops._
 import sana.ooj.types.TypeUtils
-import sana.primj.symbols.MethodSymbol
+import sana.primj.symbols.{MethodSymbol, VariableSymbol}
 
 trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
 
@@ -26,6 +26,19 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
       case sym               => enclosingClass(sym.owner)
     }
 
+
+  def enclosingNonLocal(symbol: Option[Symbol]): Option[Symbol] =
+    symbol.flatMap { sym =>
+      sym.owner match {
+        case Some(_: ClassSymbol) =>
+          sym match {
+            case _: MethodSymbol | _: VariableSymbol => Some(sym)
+            case _                                   => None
+          }
+        case Some(sym)            => enclosingNonLocal(Some(sym))
+        case None                 => None
+      }
+    }
 
   def isConstructor(symbol: Symbol): Boolean = symbol match {
     case mthd: MethodSymbol        =>
