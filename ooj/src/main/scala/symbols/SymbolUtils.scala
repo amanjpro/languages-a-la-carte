@@ -5,7 +5,10 @@ import sana.tiny.symbols.Symbol
 import sana.tiny.modifiers.Ops.noflags
 import sana.tiny.types.Type
 import sana.tiny.names.Name
+import sana.ooj.names.StdNames
+import sana.ooj.modifiers.Ops._
 import sana.ooj.types.TypeUtils
+import sana.primj.symbols.MethodSymbol
 
 trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
 
@@ -23,6 +26,13 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
       case sym               => enclosingClass(sym.owner)
     }
 
+
+  def isConstructor(symbol: Symbol): Boolean = symbol match {
+    case mthd: MethodSymbol        =>
+      mthd.mods.isConstructor && mthd.name == StdNames.CONSTRUCTOR_NAME
+    case _                         =>
+      false
+  }
 
   def javaPackageSymbol: PackageSymbol = {
     val mods  = noflags // TODO: fix it
