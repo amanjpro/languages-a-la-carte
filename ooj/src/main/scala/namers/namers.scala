@@ -10,16 +10,18 @@ import sana.calcj
 import sana.core.TransformationComponent
 import sana.dsl._
 import tiny.ast.{TreeCopiers => _, TreeFactories => _, _}
+import tiny.names.Name
 import tiny.symbols._
+import tiny.errors.ErrorReporting.{error,warning}
 import calcj.ast.{TreeCopiers => _, TreeFactories => _, _}
 import calcj.ast.operators.{Inc, Dec}
-import tiny.errors.ErrorReporting.{error,warning}
-import primj.ast.TreeUtils
 import primj.namers.NamerComponent
 import primj.symbols.{SymbolUtils => _, _}
-import primj.modifiers.Ops._
 import primj.errors.ErrorCodes._
 import ooj.ast._
+import ooj.names.StdNames
+import ooj.modifiers._
+import ooj.modifiers.Ops._
 import ooj.symbols.{SymbolUtils, ClassSymbol}
 import ooj.ast.Implicits._
 
@@ -75,12 +77,47 @@ trait ClassDefNamerComponent extends NamerComponent {
           tuse::temp
       }
     }
-    val body    = name(clazz.body).asInstanceOf[TemplateApi]
+    val body    = {
+      val temp = name(clazz.body).asInstanceOf[TemplateApi]
+      // TODO: Do we need to have a refactoring for creating constructors?
+      // I would say yes!!!
+      // INFO: No constructors? Add it!
+      temp.members.exists(isConstructor(_)) match {
+        case true                => temp
+        case false               =>
+          val mods          = {
+            if(clazz.mods.isPublicAcc)         CONSTRUCTOR | PUBLIC_ACC
+            else if(clazz.mods.isProtectedAcc) CONSTRUCTOR | PROTECTED_ACC
+            else if(clazz.mods.isPrivateAcc)   CONSTRUCTOR | PRIVATE_ACC
+            else                               CONSTRUCTOR | PACKAGE_ACC
+          }
+          val mthdSymbol    = Some(MethodSymbol(mods, constructorName,
+            Nil, None, clazz.symbol))
+          val spr           = TreeFactories.mkSuper(clazz.pos,
+            clazz.symbol, mthdSymbol)
+          val app           = TreeFactories.mkApply(spr, Nil,
+            clazz.pos, mthdSymbol)
+          val body          = TreeFactories.mkBlock(List(app), clazz.pos,
+            mthdSymbol)
+          val name          = constructorName
+          val ret           = TreeFactories.mkTypeUse(voidName, clazz.pos,
+            voidSymbol, clazz.symbol, clazz.symbol)
+          val const        = TreeFactories.mkMethodDef(mods,
+            ret, name, Nil, body, clazz.pos, mthdSymbol)
+          TreeCopiers.copyTemplate(temp)(members = const::temp.members)
+      }
+    }
     TreeCopiers.copyClassDef(clazz)(body = body, parents = parents)
   }
 
   protected def objectClassSymbol: ClassSymbol =
     SymbolUtils.objectClassSymbol
+
+  protected def constructorName: Name       = StdNames.CONSTRUCTOR_NAME
+  protected def voidName: Name              = StdNames.VOID_NAME
+  protected def voidSymbol: Option[Symbol]  = Some(VoidSymbol)
+  protected def isConstructor(tree: Tree): Boolean =
+    TreeUtils.isConstructor(tree)
 }
 
 @component
