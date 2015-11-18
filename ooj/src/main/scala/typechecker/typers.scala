@@ -10,8 +10,7 @@ import sana.calcj
 
 import sana.dsl._
 import tiny.ast.{TreeCopiers => _, _}
-import tiny.types._
-import tiny.types.TypeUtils._
+import tiny.types.{TypeUtils => _, _}
 import tiny.symbols.{TypeSymbol, TermSymbol}
 import tiny.source.Position
 import tiny.errors.ErrorReporting.{error,warning}
@@ -143,5 +142,36 @@ trait ThisTyperComponent extends TyperComponent {
       }
     }
     ths
+  }
+}
+
+
+@component
+trait SuperTyperComponent extends TyperComponent {
+  (spr: Super)                 => {
+    val enclClass = spr.enclosingClassSymbol
+    val owner     = spr.owner
+    enclClass match {
+      case None                                                     =>
+        error(ACCESSING_SUPER_OUTSIDE_A_CLASS,
+              spr.toString, "", spr.pos, spr)
+      case Some(sym) if sym.tpe == Some(TypeUtils.objectClassType)  =>
+        error(ACCESSING_SUPER_IN_OBJECT_CLASS,
+              spr.toString, "", spr.pos, spr)
+      case _                                                        =>
+        ()
+    }
+
+    val enclosing = SymbolUtils.enclosingNonLocal(owner)
+
+    enclosing.foreach { sym => sym.mods.isStatic match {
+        case true                  =>
+          error(ACCESSING_SUPER_IN_STATIC,
+                spr.toString, "", spr.pos, spr)
+        case false                 =>
+          ()
+      }
+    }
+    spr
   }
 }
