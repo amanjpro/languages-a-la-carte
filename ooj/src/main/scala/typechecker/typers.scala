@@ -34,7 +34,7 @@ MethodDef: DONE
 New:
 Select:
 This: DONE
-Super:
+Super: DONE
 TypeUse:
 Ident:
 Apply:
