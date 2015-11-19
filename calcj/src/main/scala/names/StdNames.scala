@@ -5,16 +5,16 @@ import sana.tiny
 import tiny.names.Name
 
 trait StdNames extends tiny.names.StdNames {
-  val BYTE_NAME         = Name("byte")
-  val SHORT_NAME        = Name("short")
-  val CHAR_NAME         = Name("char")
-  val INT_NAME          = Name("int")
-  val LONG_NAME         = Name("long")
+  val BYTE_TYPE_NAME         = Name("byte")
+  val SHORT_TYPE_NAME        = Name("short")
+  val CHAR_TYPE_NAME         = Name("char")
+  val INT_TYPE_NAME          = Name("int")
+  val LONG_TYPE_NAME         = Name("long")
 
-  val FLOAT_NAME        = Name("float")
-  val DOUBLE_NAME       = Name("double")
+  val FLOAT_TYPE_NAME        = Name("float")
+  val DOUBLE_TYPE_NAME       = Name("double")
 
-  val BOOLEAN_NAME      = Name("boolean")
+  val BOOLEAN_TYPE_NAME      = Name("boolean")
 }
 
 object StdNames extends StdNames

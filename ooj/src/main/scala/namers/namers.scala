@@ -114,7 +114,7 @@ trait ClassDefNamerComponent extends NamerComponent {
     SymbolUtils.objectClassSymbol
 
   protected def constructorName: Name       = StdNames.CONSTRUCTOR_NAME
-  protected def voidName: Name              = StdNames.VOID_NAME
+  protected def voidName: Name              = StdNames.VOID_TYPE_NAME
   protected def voidSymbol: Option[Symbol]  = Some(VoidSymbol)
   protected def isConstructor(tree: Tree): Boolean =
     TreeUtils.isConstructor(tree)

@@ -6,7 +6,7 @@ import sana.calcj
 import tiny.names.Name
 
 trait StdNames extends calcj.names.StdNames {
-  val VOID_NAME         = Name("void")
+  val VOID_TYPE_NAME         = Name("void")
 }
 
 object StdNames extends StdNames
