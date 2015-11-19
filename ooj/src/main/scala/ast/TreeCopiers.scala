@@ -29,10 +29,9 @@ trait TreeCopiers extends {
     res
   }
 
-  def copyPackageDef(template: PackageDefApi)(mods: Flags = template.mods,
-      name: Name = template.name,
+  def copyPackageDef(template: PackageDefApi)(name: Name = template.name,
       members: List[Tree] = template.members): PackageDefApi = {
-    val res = PackageDef(mods, name, members)
+    val res = PackageDef(name, members)
     copyProperties(template, res)
     res
   }

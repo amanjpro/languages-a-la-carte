@@ -48,17 +48,15 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
   }
 
   def javaPackageSymbol: PackageSymbol = {
-    val mods  = noflags // TODO: fix it
     val name  = Name("java")
     val owner = None
-    PackageSymbol(mods, name, owner)
+    PackageSymbol(name, owner)
   }
 
   def langPackageSymbol: PackageSymbol = {
-    val mods  = noflags // TODO: fix it
     val name  = Name("lang")
     val owner = Some(javaPackageSymbol)
-    PackageSymbol(mods, name, owner)
+    PackageSymbol(name, owner)
   }
 
   def objectClassSymbol: ClassSymbol = {

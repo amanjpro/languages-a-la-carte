@@ -18,18 +18,16 @@ trait TreeFactories {
 
   def mkCompilationUnit(module: PackageDefApi, sourceName: String,
     sourcePath: List[String],
-    pos: Option[Position] = None,
     symbol: Option[Symbol] = None): CompilationUnitApi = {
     val res = CompilationUnit(module, sourceName, sourcePath)
-    pos.foreach(res.pos = _)
     symbol.foreach(res.symbol = _)
     res
   }
 
-  def mkPackageDef(mods: Flags, name: Name, members: List[Tree],
+  def mkPackageDef(name: Name, members: List[Tree],
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None): PackageDefApi = {
-    val res = PackageDef(mods, name, members)
+    val res = PackageDef(name, members)
     pos.foreach(res.pos = _)
     symbol.foreach(sym => {
       res.symbol = sym

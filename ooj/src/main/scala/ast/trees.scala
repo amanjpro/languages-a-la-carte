@@ -37,7 +37,6 @@ trait CompilationUnitApi extends Tree {
 }
 
 trait PackageDefApi extends NamedTree {
-  def mods: Flags
   def members: List[Tree]
 }
 
@@ -118,7 +117,7 @@ trait SuperApi extends Expr {
 case class CompilationUnit protected[ast](module: PackageDefApi,
   sourceName: String, sourcePath: List[String]) extends CompilationUnitApi
 
-case class PackageDef protected[ast](mods: Flags, name: Name,
+case class PackageDef protected[ast](name: Name,
   members: List[Tree]) extends PackageDefApi
 
 case class ClassDef protected[ast](mods: Flags,

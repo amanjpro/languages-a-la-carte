@@ -49,7 +49,7 @@ trait CompilationUnitSymbolAssigner extends SymbolAssignerComponent {
 @component(tree, owner)
 trait PackageDefSymbolAssigner extends SymbolAssignerComponent {
   (pkg: PackageDefApi) => {
-    val sym     = PackageSymbol(pkg.mods, pkg.name, owner)
+    val sym     = PackageSymbol(pkg.name, owner)
     val members = pkg.members.map { member =>
       assign((member, Some(sym)))
     }

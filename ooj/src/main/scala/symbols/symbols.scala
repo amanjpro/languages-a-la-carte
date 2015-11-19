@@ -13,8 +13,11 @@ import sana.tiny.names.StdNames.noname
 
 
 
-case class PackageSymbol(var mods: Flags, var name: Name,
+case class PackageSymbol(var name: Name,
         var owner: Option[Symbol]) extends TermSymbol {
+
+  def mods: Flags = noflags
+  def mods_=(mods: Flags): Unit = ???
 
   def tpe: Option[Type] = None
   def tpe_=(tpe: Option[Type]): Unit = ???
