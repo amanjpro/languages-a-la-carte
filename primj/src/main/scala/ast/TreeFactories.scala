@@ -18,7 +18,7 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
 
   def mkProgram(members: List[DefTree], sourceName: String,
               symbol: Option[Symbol] = None): ProgramApi = {
-    val res = Program(members, sourceName)
+    val res = new Program(members, sourceName)
     symbol.foreach( sym => {
       res.symbol = sym
       sym.owner.foreach(res.owner = _)
@@ -30,7 +30,7 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
   def mkAssign(lhs: Expr, rhs: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): AssignApi = {
-    val res = Assign(lhs, rhs)
+    val res = new Assign(lhs, rhs)
     pos.foreach(res.pos = _)
     owner.foreach(res.owner = _)
     lhs.tpe.foreach(res.tpe = _)
@@ -41,7 +41,7 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
   def mkIf(cond: Expr, thenp: Expr, elsep: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): IfApi = {
-    val res = If(cond, thenp, elsep)
+    val res = new If(cond, thenp, elsep)
     pos.foreach(res.pos = _)
     owner.foreach(res.owner = _)
     res.tpe = VoidType
@@ -52,7 +52,7 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
   def mkWhile(isDoWhile: Boolean, cond: Expr, body: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): WhileApi = {
-    val res = While(isDoWhile, cond, body)
+    val res = new While(isDoWhile, cond, body)
     pos.foreach(res.pos = _)
     owner.foreach(res.owner = _)
     res.tpe = VoidType
@@ -62,7 +62,7 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
   def mkFor(inits: List[Tree], cond: Expr, steps: List[Expr],
     body: Expr, pos: Option[Position] = None,
     symbol: Option[Symbol] = None): ForApi = {
-    val res = For(inits, cond, steps, body)
+    val res = new For(inits, cond, steps, body)
     pos.foreach(res.pos = _)
     symbol.foreach( sym => {
       res.symbol = sym
@@ -74,7 +74,7 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
   def mkBlock(stmts: List[Tree],
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None): BlockApi = {
-    val res = Block(stmts)
+    val res = new Block(stmts)
     pos.foreach(res.pos = _)
     symbol.foreach( sym => {
       res.symbol = sym
@@ -93,7 +93,7 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
     pos: Option[Position] = None,
     tpe: Option[Type]     = None,
     owner: Option[Symbol] = None): TernaryApi = {
-    val res = Ternary(cond, thenp, elsep)
+    val res = new Ternary(cond, thenp, elsep)
     pos.foreach(res.pos = _)
     owner.foreach(res.owner = _)
     tpe.foreach(res.tpe = _)
@@ -105,7 +105,7 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): ApplyApi = {
 
-    val res = Apply(fun, args)
+    val res = new Apply(fun, args)
     pos.foreach(res.pos = _)
     owner.foreach(res.owner = _)
     fun.tpe match {
@@ -120,7 +120,7 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
   def mkReturn(expr: Option[Expr],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): ReturnApi = {
-    val res = Return(expr)
+    val res = new Return(expr)
     pos.foreach(res.pos = _)
     owner.foreach(res.owner = _)
     expr.flatMap(_.tpe).foreach(res.tpe = _)
@@ -132,7 +132,7 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
     name: Name, params: List[ValDefApi],
     body: Expr, pos: Option[Position] = None,
     symbol: Option[Symbol] = None): MethodDefApi = {
-    val res = MethodDef(ret, name, params, body)
+    val res = new MethodDef(ret, name, params, body)
     pos.foreach(res.pos = _)
     symbol.foreach( sym => {
       res.symbol = sym
@@ -147,7 +147,7 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
     rhs: Expr, pos: Option[Position] = None,
     symbol: Option[Symbol] = None): ValDefApi = {
 
-    val res = ValDef(mods, tpt, name, rhs)
+    val res = new ValDef(mods, tpt, name, rhs)
     pos.foreach(res.pos = _)
     symbol.foreach( sym => {
       res.symbol = sym

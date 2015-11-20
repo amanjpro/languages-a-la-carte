@@ -24,14 +24,15 @@ trait TreeCopiers extends {
     module: PackageDefApi = template.module,
     sourceName: String = template.sourceName,
     sourcePath: List[String] = template.sourcePath): CompilationUnitApi = {
-    val res = CompilationUnit(module, sourceName, sourcePath)
+    val res = TreeFactories.mkCompilationUnit(module,
+      sourceName, sourcePath)
     copyProperties(template, res)
     res
   }
 
   def copyPackageDef(template: PackageDefApi)(name: Name = template.name,
       members: List[Tree] = template.members): PackageDefApi = {
-    val res = PackageDef(name, members)
+    val res = TreeFactories.mkPackageDef(name, members)
     copyProperties(template, res)
     res
   }
@@ -40,7 +41,7 @@ trait TreeCopiers extends {
       name: Name = template.name,
       parents: List[UseTree] = template.parents,
       body: TemplateApi = template.body): ClassDefApi = {
-    val res = ClassDef(mods, name, parents, body)
+    val res = TreeFactories.mkClassDef(mods, name, parents, body)
     copyProperties(template, res)
     res
   }
@@ -48,7 +49,7 @@ trait TreeCopiers extends {
 
   def copyTemplate(template: TemplateApi)(
       members: List[Tree] = template.members): TemplateApi = {
-    val res = Template(members)
+    val res = TreeFactories.mkTemplate(members)
     copyProperties(template, res)
     res
   }
@@ -56,7 +57,7 @@ trait TreeCopiers extends {
 
   def copyNew(template: NewApi)(tpt: UseTree = template.tpt,
     args: List[Expr] = template.args): NewApi = {
-    val res = New(tpt, args)
+    val res = TreeFactories.mkNew(tpt, args)
     copyProperties(template, res)
     res
   }
@@ -64,19 +65,19 @@ trait TreeCopiers extends {
 
   def copySelect(template: SelectApi)(qual: Tree = template.qual,
     tree: SimpleUseTree = template.tree): SelectApi = {
-    val res = Select(qual, tree)
+    val res = TreeFactories.mkSelect(qual, tree)
     copyProperties(template, res)
     res
   }
 
   def copyThis(template: ThisApi)(): ThisApi = {
-    val res = new This
+    val res = TreeFactories.mkThis()
     copyProperties(template, res)
     res
   }
 
   def copySuper(template: SuperApi)(): SuperApi = {
-    val res = new Super
+    val res = TreeFactories.mkSuper()
     copyProperties(template, res)
     res
   }
@@ -86,7 +87,7 @@ trait TreeCopiers extends {
     ret: UseTree = template.ret,
     name: Name = template.name, params: List[ValDefApi]  = template.params,
     body: Expr = template.body): MethodDefApi = {
-    val res = MethodDef(mods, ret, name, params, body)
+    val res = TreeFactories.mkMethodDef(mods, ret, name, params, body)
     copyProperties(template, res)
     res
   }

@@ -114,26 +114,26 @@ trait SuperApi extends Expr {
 
 
 // case class ClassDef() extends ClassDefApi
-case class CompilationUnit protected[ast](module: PackageDefApi,
-  sourceName: String, sourcePath: List[String]) extends CompilationUnitApi
+protected[ast] class CompilationUnit(val module: PackageDefApi,
+  val sourceName: String, val sourcePath: List[String]) extends CompilationUnitApi
 
-case class PackageDef protected[ast](name: Name,
-  members: List[Tree]) extends PackageDefApi
+protected[ast] class PackageDef(val name: Name,
+  val members: List[Tree]) extends PackageDefApi
 
-case class ClassDef protected[ast](mods: Flags,
-  name: Name, parents: List[UseTree],
-  body: TemplateApi) extends ClassDefApi
+protected[ast] class ClassDef(val mods: Flags,
+  val name: Name, val parents: List[UseTree],
+  val body: TemplateApi) extends ClassDefApi
 
-case class Template protected[ast](members: List[Tree]) extends TemplateApi
+protected[ast] class Template(val members: List[Tree]) extends TemplateApi
 
-case class New protected[ast](tpt: UseTree, args: List[Expr]) extends NewApi
-case class Select protected[ast](qual: Tree,
-  tree: SimpleUseTree) extends SelectApi
-class This protected[ast]() extends ThisApi
-class Super protected[ast]() extends SuperApi
+protected[ast] class New(val tpt: UseTree, val args: List[Expr]) extends NewApi
+protected[ast] class Select(val qual: Tree,
+  val tree: SimpleUseTree) extends SelectApi
+protected[ast] class This() extends ThisApi
+protected[ast] class Super() extends SuperApi
 
 
-case class MethodDef protected[ast](mods: Flags,
-  ret: UseTree,
-  name: Name, params: List[ValDefApi],
-  body: Expr) extends MethodDefApi
+protected[ast] class MethodDef(val mods: Flags,
+  val ret: UseTree,
+  val name: Name, val params: List[ValDefApi],
+  val body: Expr) extends MethodDefApi

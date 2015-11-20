@@ -16,13 +16,13 @@ trait TreeCopiers {
 
   def copyIdent(template: IdentApi)
             (name: Name): IdentApi = {
-    val res = Ident(name)
+    val res = TreeFactories.mkIdent(name)
     copyProperties(template, res)
     res
   }
 
   def copyTypeUse(template: TypeUseApi)(name: Name): TypeUseApi = {
-    val res = TypeUse(name)
+    val res = TreeFactories.mkTypeUse(name)
     copyProperties(template, res)
     res
   }

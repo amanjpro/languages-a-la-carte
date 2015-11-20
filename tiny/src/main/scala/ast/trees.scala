@@ -38,9 +38,9 @@ trait SimpleUseTree extends UseTree
 trait TypeUseApi extends SimpleUseTree
 trait IdentApi extends SimpleUseTree
 
-case class TypeUse protected[ast](val name: Name) extends TypeUseApi
+protected[ast] class TypeUse(val name: Name) extends TypeUseApi
 
-case class Ident protected[ast](val name: Name) extends IdentApi
+protected[ast] class Ident(val name: Name) extends IdentApi
 
 case object NoTree extends Expr
 

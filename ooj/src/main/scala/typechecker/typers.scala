@@ -120,7 +120,7 @@ trait MethodDefTyperComponent
 
 @component
 trait ThisTyperComponent extends TyperComponent {
-  (ths: This)                 => {
+  (ths: ThisApi)                 => {
     val enclClass = ths.enclosingClassSymbol
     val owner     = ths.owner
     enclClass match {
@@ -148,7 +148,7 @@ trait ThisTyperComponent extends TyperComponent {
 
 @component
 trait SuperTyperComponent extends TyperComponent {
-  (spr: Super)                 => {
+  (spr: SuperApi)                 => {
     val enclClass = spr.enclosingClassSymbol
     val owner     = spr.owner
     enclClass match {

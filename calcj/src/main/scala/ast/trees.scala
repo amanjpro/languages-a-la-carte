@@ -38,14 +38,16 @@ trait UnaryApi extends Expr {
 
 
 
-case class Cast protected[ast](tpt: UseTree, expr: Expr) extends CastApi
+protected[ast] class Cast(val tpt: UseTree,
+  val expr: Expr) extends CastApi
 
 
-case class Literal protected[ast](constant: Constant) extends LiteralApi
+protected[ast] class Literal(val constant: Constant) extends LiteralApi
 
 
-case class Binary protected[ast](lhs: Expr, op: BOp, rhs: Expr) extends BinaryApi
+protected[ast] class Binary(val lhs: Expr,
+  val op: BOp, val rhs: Expr) extends BinaryApi
 
-case class Unary protected[ast](isPostfix: Boolean,
-  op: UOp, expr: Expr) extends UnaryApi
+protected[ast] class Unary(val isPostfix: Boolean,
+  val op: UOp, val expr: Expr) extends UnaryApi
 

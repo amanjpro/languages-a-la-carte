@@ -16,7 +16,7 @@ trait TreeFactories extends sana.tiny.ast.TreeFactories {
 
   def mkCast(tpt: UseTree, expr: Expr,
            pos: Option[Position] = None): CastApi = {
-    val res = Cast(tpt, expr)
+    val res = new Cast(tpt, expr)
     tpt.tpe.foreach(res.tpe = _)
     expr.owner.foreach(res.owner = _)
     pos.foreach(res.pos = _)
@@ -27,7 +27,7 @@ trait TreeFactories extends sana.tiny.ast.TreeFactories {
   def mkLiteral(constant: Constant,
               pos: Option[Position] = None,
               owner: Option[Symbol] = None): LiteralApi = {
-    val res = Literal(constant)
+    val res = new Literal(constant)
     res.tpe = constant.tpe
     owner.foreach(res.owner = _)
     pos.foreach(res.pos = _)
@@ -39,7 +39,7 @@ trait TreeFactories extends sana.tiny.ast.TreeFactories {
               pos: Option[Position] = None,
               tpe: Option[Type]     = None,
               owner: Option[Symbol] = None): BinaryApi = {
-    val res = Binary(lhs, op, rhs)
+    val res = new Binary(lhs, op, rhs)
     owner.foreach(res.owner = _)
     tpe.foreach(res.tpe = _)
     pos.foreach(res.pos = _)
@@ -50,7 +50,7 @@ trait TreeFactories extends sana.tiny.ast.TreeFactories {
               pos: Option[Position] = None,
               tpe: Option[Type]     = None,
               owner: Option[Symbol] = None): UnaryApi = {
-    val res = Unary(isPostfix, op, expr)
+    val res = new Unary(isPostfix, op, expr)
     owner.foreach(res.owner = _)
     tpe.foreach(res.tpe = _)
     pos.foreach(res.pos = _)

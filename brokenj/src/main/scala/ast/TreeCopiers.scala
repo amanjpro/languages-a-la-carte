@@ -17,35 +17,35 @@ trait TreeCopiers extends sana.primj.ast.TreeCopiers {
 
   def copyLabel(template: LabelApi)(name: Name = template.name,
     stmt: Expr = template.stmt): LabelApi = {
-    val res = Label(name, stmt)
+    val res = TreeFactories.mkLabel(name, stmt)
     copyProperties(template, res)
     res
   }
 
   def copyBreak(template: BreakApi)(label: Option[Name] =
     template.label): BreakApi = {
-    val res = Break(label)
+    val res = TreeFactories.mkBreak(label)
     copyProperties(template, res)
     res
   }
 
   def copyContinue(template: ContinueApi)(label: Option[Name] =
         template.label): ContinueApi = {
-    val res = Continue(label)
+    val res = TreeFactories.mkContinue(label)
     copyProperties(template, res)
     res
   }
 
   def copyCase(template: CaseApi)(guards: List[Expr] = template.guards,
     body: Tree = template.body): CaseApi = {
-    val res = Case(guards, body)
+    val res = TreeFactories.mkCase(guards, body)
     copyProperties(template, res)
     res
   }
 
   def copySwitch(template: SwitchApi)(expr: Expr = template.expr,
     cases: List[CaseApi] = template.cases): SwitchApi = {
-    val res = Switch(expr, cases)
+    val res = TreeFactories.mkSwitch(expr, cases)
     copyProperties(template, res)
     res
   }

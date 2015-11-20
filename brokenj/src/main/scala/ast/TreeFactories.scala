@@ -18,7 +18,7 @@ trait TreeFactories extends sana.primj.ast.TreeFactories {
   def mkLabel(name: Name, stmt: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): LabelApi = {
-    val res = Label(name, stmt)
+    val res = new Label(name, stmt)
     pos.foreach(res.pos = _)
     owner.foreach(res.owner = _)
     stmt.tpe.foreach(res.tpe = _)
@@ -28,7 +28,7 @@ trait TreeFactories extends sana.primj.ast.TreeFactories {
   def mkBreak(label: Option[Name],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): BreakApi = {
-    val res = Break(label)
+    val res = new Break(label)
     pos.foreach(res.pos = _)
     owner.foreach(res.owner = _)
     res.tpe = VoidType
@@ -38,7 +38,7 @@ trait TreeFactories extends sana.primj.ast.TreeFactories {
   def mkContinue(label: Option[Name],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): ContinueApi = {
-    val res = Continue(label)
+    val res = new Continue(label)
     pos.foreach(res.pos = _)
     owner.foreach(res.owner = _)
     res.tpe = VoidType
@@ -48,7 +48,7 @@ trait TreeFactories extends sana.primj.ast.TreeFactories {
   def mkCase(guards: List[Expr], body: Tree,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): CaseApi = {
-    val res = Case(guards, body)
+    val res = new Case(guards, body)
     pos.foreach(res.pos = _)
     owner.foreach(res.owner = _)
     res.tpe = VoidType
@@ -58,7 +58,7 @@ trait TreeFactories extends sana.primj.ast.TreeFactories {
   def mkSwitch(expr: Expr, cases: List[CaseApi],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): SwitchApi = {
-    val res = Switch(expr, cases)
+    val res = new Switch(expr, cases)
     pos.foreach(res.pos = _)
     owner.foreach(res.owner = _)
     res.tpe = VoidType

@@ -17,7 +17,7 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
   def copyProgram(template: ProgramApi)(members: List[DefTree] =
     template.members,
     sourceName: String = template.sourceName): ProgramApi = {
-    val res = Program(members, sourceName)
+    val res = TreeFactories.mkProgram(members, sourceName)
     copyProperties(template, res)
     res
   }
@@ -25,7 +25,7 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
 
   def copyAssign(template: AssignApi)(lhs: Expr = template.lhs,
     rhs: Expr = template.rhs): AssignApi = {
-    val res = Assign(lhs, rhs)
+    val res = TreeFactories.mkAssign(lhs, rhs)
     copyProperties(template, res)
     res
   }
@@ -33,7 +33,7 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
 
   def copyIf(template: IfApi)(cond: Expr = template.cond,
     thenp: Expr = template.thenp, elsep: Expr = template.elsep): IfApi = {
-    val res = If(cond, thenp, elsep)
+    val res = TreeFactories.mkIf(cond, thenp, elsep)
     copyProperties(template, res)
     res
   }
@@ -41,7 +41,7 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
 
   def copyWhile(template: WhileApi)(isDoWhile: Boolean = template.isDoWhile,
     cond: Expr = template.cond, body: Expr = template.body): WhileApi = {
-    val res = While(isDoWhile, cond, body)
+    val res = TreeFactories.mkWhile(isDoWhile, cond, body)
     copyProperties(template, res)
     res
   }
@@ -49,14 +49,14 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
   def copyFor(template: ForApi)(inits: List[Tree] = template.inits,
     cond: Expr = template.cond, steps: List[Expr] = template.steps,
     body: Expr = template.body): ForApi = {
-    val res = For(inits, cond, steps, body)
+    val res = TreeFactories.mkFor(inits, cond, steps, body)
     copyProperties(template, res)
     res
   }
 
   def copyBlock(template: BlockApi)(stmts: List[Tree] =
     template.stmts): BlockApi = {
-    val res = Block(stmts)
+    val res = TreeFactories.mkBlock(stmts)
     copyProperties(template, res)
     res
   }
@@ -64,7 +64,7 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
   def copyTernary(template: TernaryApi)(cond: Expr = template.cond,
     thenp: Expr = template.thenp,
     elsep: Expr = template.elsep): TernaryApi = {
-    val res = Ternary(cond, thenp, elsep)
+    val res = TreeFactories.mkTernary(cond, thenp, elsep)
     copyProperties(template, res)
     res
   }
@@ -73,14 +73,14 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
   def copyApply(template: ApplyApi)(fun: Expr = template.fun,
     args: List[Expr] = template.args): ApplyApi = {
 
-    val res = Apply(fun, args)
+    val res = TreeFactories.mkApply(fun, args)
     copyProperties(template, res)
     res
   }
 
   def copyReturn(template: ReturnApi)(expr: Option[Expr] =
       template.expr): ReturnApi = {
-    val res = Return(expr)
+    val res = TreeFactories.mkReturn(expr)
     copyProperties(template, res)
     res
   }
@@ -89,7 +89,7 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
   def copyMethodDef(template: MethodDefApi)(ret: UseTree = template.ret,
     name: Name = template.name, params: List[ValDefApi]  = template.params,
     body: Expr = template.body): MethodDefApi = {
-    val res = MethodDef(ret, name, params, body)
+    val res = TreeFactories.mkMethodDef(ret, name, params, body)
     copyProperties(template, res)
     res
   }
@@ -97,7 +97,7 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
   def copyValDef(template: ValDefApi)(mods: Flags = template.mods,
     tpt: UseTree = template.tpt, name: Name = template.name,
     rhs: Expr = template.rhs): ValDefApi = {
-    val res = ValDef(mods, tpt, name, rhs)
+    val res = TreeFactories.mkValDef(mods, tpt, name, rhs)
     copyProperties(template, res)
     res
   }

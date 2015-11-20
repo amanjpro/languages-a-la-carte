@@ -15,7 +15,7 @@ trait TreeFactories {
             pos: Option[Position] = None,
             symbol: Option[Symbol] = None,
             owner: Option[Symbol] = None): IdentApi = {
-    val res = Ident(name)
+    val res = new Ident(name)
     pos.foreach(res.pos = _)
     owner.foreach(res.owner = _)
     symbol.foreach(sym => {
@@ -29,7 +29,7 @@ trait TreeFactories {
             pos: Option[Position] = None,
             symbol: Option[Symbol] = None,
             owner: Option[Symbol] = None): TypeUseApi = {
-    val res = TypeUse(name)
+    val res = new TypeUse(name)
     pos.foreach(res.pos = _)
     owner.foreach(res.owner = _)
     symbol.foreach(sym => {

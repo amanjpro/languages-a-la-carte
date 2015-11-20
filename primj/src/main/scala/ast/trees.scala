@@ -87,33 +87,33 @@ trait ApplyApi extends Expr {
   def args: List[Expr]
 }
 
-case class Program protected[ast](members: List[DefTree],
-  sourceName: String) extends ProgramApi
+protected[ast] class Program(val members: List[DefTree],
+  val sourceName: String) extends ProgramApi
 
-case class Assign protected[ast](lhs: Expr, rhs: Expr) extends AssignApi
+protected[ast] class Assign(val lhs: Expr, val rhs: Expr) extends AssignApi
 
-case class If protected[ast](cond: Expr, thenp: Expr,
-  elsep: Expr) extends IfApi
+protected[ast] class If(val cond: Expr, val thenp: Expr,
+  val elsep: Expr) extends IfApi
 
 
-case class While protected[ast](isDoWhile: Boolean, cond: Expr,
-  body: Expr) extends WhileApi
+protected[ast] class While(val isDoWhile: Boolean, val cond: Expr,
+  val body: Expr) extends WhileApi
 
-case class Block protected[ast](stmts: List[Tree]) extends BlockApi
+protected[ast] class Block(val stmts: List[Tree]) extends BlockApi
 
-case class For protected[ast](inits: List[Tree],
-  cond: Expr, steps: List[Expr], body: Expr) extends ForApi
+protected[ast] class For(val inits: List[Tree],
+  val cond: Expr, val steps: List[Expr], val body: Expr) extends ForApi
 
-case class Ternary protected[ast](cond: Expr, thenp: Expr,
-  elsep: Expr) extends TernaryApi
+protected[ast] class Ternary(val cond: Expr, val thenp: Expr,
+  val elsep: Expr) extends TernaryApi
 
-case class Apply protected[ast](fun: Expr, args: List[Expr]) extends ApplyApi
+protected[ast] class Apply(val fun: Expr, val args: List[Expr]) extends ApplyApi
 
-case class Return protected[ast](expr: Option[Expr]) extends ReturnApi
+protected[ast] class Return(val expr: Option[Expr]) extends ReturnApi
 
-case class MethodDef protected[ast](ret: UseTree,
-  name: Name, params: List[ValDefApi],
-  body: Expr) extends MethodDefApi
+protected[ast] class MethodDef(val ret: UseTree,
+  val name: Name, val params: List[ValDefApi],
+  val body: Expr) extends MethodDefApi
 
-case class ValDef protected[ast](mods: Flags,
-  tpt: UseTree, name: Name, rhs: Expr) extends ValDefApi
+protected[ast] class ValDef(val mods: Flags,
+  val tpt: UseTree, val name: Name, val rhs: Expr) extends ValDefApi

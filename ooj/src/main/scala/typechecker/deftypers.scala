@@ -89,7 +89,7 @@ trait CompilationUnitDefTyperComponent extends DefTyperComponent {
 
 @component
 trait PackageDefDefTyperComponent extends DefTyperComponent {
-  (pkg: PackageDef) => {
+  (pkg: PackageDefApi) => {
     val members =
       pkg.members.map(x => typed(x).asInstanceOf[DefTree])
     TreeCopiers.copyPackageDef(pkg)(members = members)

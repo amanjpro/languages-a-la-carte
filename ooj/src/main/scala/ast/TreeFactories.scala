@@ -19,7 +19,7 @@ trait TreeFactories {
   def mkCompilationUnit(module: PackageDefApi, sourceName: String,
     sourcePath: List[String],
     symbol: Option[Symbol] = None): CompilationUnitApi = {
-    val res = CompilationUnit(module, sourceName, sourcePath)
+    val res = new CompilationUnit(module, sourceName, sourcePath)
     symbol.foreach(res.symbol = _)
     res
   }
@@ -27,7 +27,7 @@ trait TreeFactories {
   def mkPackageDef(name: Name, members: List[Tree],
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None): PackageDefApi = {
-    val res = PackageDef(name, members)
+    val res = new PackageDef(name, members)
     pos.foreach(res.pos = _)
     symbol.foreach(sym => {
       res.symbol = sym
@@ -41,7 +41,7 @@ trait TreeFactories {
       pos: Option[Position] = None,
       symbol: Option[Symbol] = None,
       tpe: Option[Type] = None): ClassDefApi = {
-    val res = ClassDef(mods, name, parents, body)
+    val res = new ClassDef(mods, name, parents, body)
     pos.foreach(res.pos = _)
     symbol.foreach(sym => {
       res.symbol = sym
@@ -55,7 +55,7 @@ trait TreeFactories {
   def mkTemplate(members: List[Tree],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): TemplateApi = {
-    val res = Template(members)
+    val res = new Template(members)
     pos.foreach(res.pos = _)
     owner.foreach(res.owner = _)
     res
@@ -66,7 +66,7 @@ trait TreeFactories {
     args: List[Expr],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): NewApi = {
-    val res = New(tpt, args)
+    val res = new New(tpt, args)
     pos.foreach(res.pos = _)
     owner.foreach(res.owner = _)
     tpt.tpe.foreach(res.tpe = _)
@@ -78,7 +78,7 @@ trait TreeFactories {
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None,
     owner: Option[Symbol] = None): SelectApi = {
-    val res = Select(qual, tree)
+    val res = new Select(qual, tree)
     pos.foreach(res.pos = _)
     symbol.foreach(res.symbol = _)
     owner.foreach(res.owner = _)
@@ -158,7 +158,7 @@ trait TreeFactories {
     name: Name, params: List[ValDefApi],
     body: Expr, pos: Option[Position] = None,
     symbol: Option[Symbol] = None): MethodDefApi = {
-    val res = MethodDef(mods, ret, name, params, body)
+    val res = new MethodDef(mods, ret, name, params, body)
     pos.foreach(res.pos = _)
     symbol.foreach( sym => {
       res.symbol = sym

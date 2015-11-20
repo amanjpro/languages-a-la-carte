@@ -308,12 +308,17 @@ class Parser extends parsers.Parser {
     override def visitClassOrInterfaceType(ctx:
       Java1Parser.ClassOrInterfaceTypeContext): Tree = {
       visitChildren(ctx) match {
-        case id: Ident                                     =>
+        case id: IdentApi                                  =>
           TreeFactories.mkTypeUse(id.name, id.pos)
-        case s@Select(qual, id: Ident)                     =>
-          val tuse =
-            TreeFactories.mkTypeUse(id.name, id.pos)
-          TreeFactories.mkSelect(qual, tuse, s.pos)
+        case s: SelectApi                                  =>
+          s.tree match {
+            case id: IdentApi   =>
+              val tuse =
+                TreeFactories.mkTypeUse(id.name, id.pos)
+              TreeFactories.mkSelect(s.qual, tuse, s.pos)
+            case _              =>
+              s
+          }
         case t                                             =>
           t
       }
@@ -618,7 +623,7 @@ class Parser extends parsers.Parser {
       val interfaces = interfacesContextToTypeUses(
         ctx.extendsInterfaces())
       val body       =
-        visitChildren(ctx.interfaceBody()).asInstanceOf[Template]
+        visitChildren(ctx.interfaceBody()).asInstanceOf[TemplateApi]
       TreeFactories.mkClassDef(mods, name, interfaces, body, pos(ctx))
     }
 
