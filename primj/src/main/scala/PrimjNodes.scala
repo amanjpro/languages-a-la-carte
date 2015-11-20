@@ -8,7 +8,6 @@ object PrimjNodes {
        ValDef,
        Ident,
        TypeUse,
-       Assign,
        If,
        While,
        Block,
