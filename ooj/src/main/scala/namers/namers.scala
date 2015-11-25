@@ -31,11 +31,12 @@ CompilationUnit: DONE
 PackageDef: DONE
 ClassDef: DONE
 Template: DONE
-New:
-Select:
+New: DONE
+Select: DONE
 This: DONE
 Super: DONE -- I think
 MethodDef: DONE
+Apply:
 */
 
 
@@ -152,4 +153,53 @@ trait SuperNamerComponent extends NamerComponent {
   (spr: SuperApi) => spr
 }
 
-// Re-implement Apply, TypeUse, and Ident to support overloading
+@component
+trait SelectNamerComponent extends NamerComponent {
+  (select: SelectApi) => {
+    val qual    = name(select.qual)
+    val tree    = name(select.tree).asInstanceOf[SimpleUseTree]
+    TreeCopiers.copySelect(select)(qual = qual, tree = tree)
+  }
+}
+
+@component
+trait NewNamerComponent extends NamerComponent {
+  (nw: New) => {
+    val app     = name(nw.app).asInstanceOf[ApplyApi]
+    TreeCopiers.copyApply(nw)(app = app)
+  }
+}
+
+trait IdentNamerComponent extends primj.namers.IdentNamerComponent {
+  (id: IdentApi)       => {
+    // At the beginning: we treat all (Ident)s as ambiguous names.
+    // Can we see any (VariableSymbol)s with this name from the current scope?
+    val temp = id.owner.flatMap(_.getSymbol(id.name,
+      _.isInstanceOf[VariableSymbol]))
+    temp match {
+      case None        =>
+        // Can we see any (TypeSymbol)s with this name from the current scope?
+        val temp = id.owner.flatMap(_.getSymbol(id.name,
+          _.isInstanceOf[TypeSymbol]))
+          temp match {
+            case None        =>
+              // TODO: Look for imports later when we introduce
+              // them: Section 6.5.2
+              id
+            case Some(sym)   =>
+              id.symbol = sym
+              sym.tpe.foreach(id.tpe = _)
+              val tuse = TreeFactories.mkTypeUse(id.name, id.pos, id.symbol, id.owner)
+              tuse.attributes = id.attributes
+              tuse
+          }
+      case Some(sym)   =>
+        id.symbol = sym
+        sym.tpe.foreach(id.tpe = _)
+        id
+    }
+  }
+}
+
+
+
