@@ -15,7 +15,7 @@ import calcj.ast.Constant
 case object NullConstant extends Constant {
   type Value = Null
 
-  val value: Null = ???
+  def value: Null = ???
 
   val tpe: Type = NullType
 }
