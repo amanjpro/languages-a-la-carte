@@ -12,15 +12,16 @@ import tiny.source.SourceFile
 import tiny.source.Position
 import tiny.symbols._
 import tiny.parsers
-import tiny.ast.{TreeFactories => _, _}
+import tiny.ast.{TreeFactories => _, TreeCopiers => _, _}
 import tiny.modifiers.Flags
 import tiny.names.Name
 
 
-import calcj.ast.{TreeFactories => _, _}
+import calcj.ast.{TreeFactories => _, TreeCopiers => _, _}
 import primj.modifiers._
-import primj.ast.{MethodDefApi => _, TreeFactories => _, _}
-import brokenj.ast.{TreeFactories => _, _}
+import primj.ast.{MethodDefApi => _, TreeFactories => _,
+  TreeCopiers =>_,  _}
+import brokenj.ast.{TreeFactories => _, TreeCopiers => _, _}
 import ooj.modifiers._
 import ooj.modifiers.Ops._
 
@@ -94,8 +95,9 @@ class Parser extends parsers.Parser {
         // case "volatile"                   => VOLATILE
       }
 
+
     def interfacesContextToTypeUses(interfaceContext:
-        Java1Parser.ExtendsInterfacesContext): List[TypeUseApi] =
+        Java1Parser.ExtendsInterfacesContext): List[UseTree] =
       interfaceContext match {
         case null                       => Nil
         case ctx                        =>
@@ -104,7 +106,7 @@ class Parser extends parsers.Parser {
 
 
     def interfacesContextToTypeUses(interfaceContext:
-      Java1Parser.InterfacesContext): List[TypeUseApi] =
+      Java1Parser.InterfacesContext): List[UseTree] =
       interfaceContext match {
         case null                     => Nil
         case ctx                      =>
@@ -113,14 +115,13 @@ class Parser extends parsers.Parser {
 
     def interfacesContextToTypeUses(interfaces:
       Java1Parser.ClassOrInterfaceTypeListContext):
-        List[TypeUseApi] = interfaces
+        List[UseTree] = interfaces
                         .classOrInterfaceType
                         .asScala
                         .toList
                         .map {
                           case ctx =>
-                            TreeFactories.mkTypeUse(Name(ctx.name().getText),
-                              pos(ctx.name()))
+                            visit(ctx).asInstanceOf[UseTree]
                         }
 
     def dimsToArrayType(use: UseTree,
@@ -332,7 +333,7 @@ class Parser extends parsers.Parser {
 
 
     override def visitName(ctx: Java1Parser.NameContext): Tree = {
-      namesToTree(ctx.Identifier.asScala.toList)
+      namesToTree(ctx.Identifier.asScala.toList.reverse)
     }
 
     override def visitPackageDeclaration(ctx:
@@ -384,8 +385,7 @@ class Parser extends parsers.Parser {
           TreeFactories.mkSelect(TreeFactories.mkSelect(javaPkg, langPkg, ps),
                 objType, ps)
         case _                     =>
-          TreeFactories.mkTypeUse(Name(ctx.parent().getText),
-            pos(ctx.parent()))
+          visit(ctx.parent().classOrInterfaceType()).asInstanceOf[UseTree]
       }
       val body       = visit(ctx.classBody()).asInstanceOf[TemplateApi]
       val interfaces = interfacesContextToTypeUses(ctx.interfaces())
@@ -1187,7 +1187,8 @@ class Parser extends parsers.Parser {
             visit(x).asInstanceOf[Expr]
           }
       }
-      TreeFactories.mkNew(fun, args, ps)
+      val app = TreeFactories.mkApply(fun, args, ps)
+      TreeFactories.mkNew(app, ps)
     }
 
     override def visitArgumentList(ctx:
@@ -1412,3 +1413,6 @@ class Parser extends parsers.Parser {
     }
   }
 }
+
+
+object Parser extends Parser
