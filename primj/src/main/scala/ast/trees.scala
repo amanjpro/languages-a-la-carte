@@ -88,32 +88,66 @@ trait ApplyApi extends Expr {
 }
 
 protected[ast] class Program(val members: List[DefTree],
-  val sourceName: String) extends ProgramApi
+  val sourceName: String) extends ProgramApi {
+  override def toString: String =
+    s"Program($members, $sourceName)"
+}
 
-protected[ast] class Assign(val lhs: Expr, val rhs: Expr) extends AssignApi
+protected[ast] class Assign(val lhs: Expr, val rhs: Expr) extends AssignApi {
+  override def toString: String =
+    s"Assign($lhs, $rhs)"
+}
 
 protected[ast] class If(val cond: Expr, val thenp: Expr,
-  val elsep: Expr) extends IfApi
+  val elsep: Expr) extends IfApi {
+  override def toString: String =
+    s"If(${cond.toString}, ${thenp.toString}, ${elsep.toString})"
+}
 
 
 protected[ast] class While(val isDoWhile: Boolean, val cond: Expr,
-  val body: Expr) extends WhileApi
+  val body: Expr) extends WhileApi {
+  override def toString: String =
+    s"While(${cond.toString}, ${body.toString})"
+}
 
-protected[ast] class Block(val stmts: List[Tree]) extends BlockApi
+protected[ast] class Block(val stmts: List[Tree]) extends BlockApi {
+  override def toString: String =
+    s"Block(${stmts.toString})"
+}
 
 protected[ast] class For(val inits: List[Tree],
-  val cond: Expr, val steps: List[Expr], val body: Expr) extends ForApi
+  val cond: Expr, val steps: List[Expr], val body: Expr) extends ForApi {
+  override def toString: String =
+    s"For($inits, $cond, $steps, $body)"
+}
 
 protected[ast] class Ternary(val cond: Expr, val thenp: Expr,
-  val elsep: Expr) extends TernaryApi
+  val elsep: Expr) extends TernaryApi {
+  override def toString: String =
+    s"Ternary($cond, $thenp, $elsep)"
+}
 
-protected[ast] class Apply(val fun: Expr, val args: List[Expr]) extends ApplyApi
+protected[ast] class Apply(val fun: Expr,
+  val args: List[Expr]) extends ApplyApi {
+  override def toString: String =
+    s"Apply($fun, $args)"
+}
 
-protected[ast] class Return(val expr: Option[Expr]) extends ReturnApi
+protected[ast] class Return(val expr: Option[Expr]) extends ReturnApi {
+  override def toString: String =
+    s"Return($expr)"
+}
 
 protected[ast] class MethodDef(val ret: UseTree,
   val name: Name, val params: List[ValDefApi],
-  val body: Expr) extends MethodDefApi
+  val body: Expr) extends MethodDefApi {
+  override def toString: String =
+    s"MethodDef($ret, $name, $params, $body)"
+}
 
 protected[ast] class ValDef(val mods: Flags,
-  val tpt: UseTree, val name: Name, val rhs: Expr) extends ValDefApi
+  val tpt: UseTree, val name: Name, val rhs: Expr) extends ValDefApi {
+  override def toString: String =
+    s"ValDef($mods, $tpt, $name, $rhs)"
+}

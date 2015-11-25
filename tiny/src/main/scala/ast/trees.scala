@@ -38,9 +38,13 @@ trait SimpleUseTree extends UseTree
 trait TypeUseApi extends SimpleUseTree
 trait IdentApi extends SimpleUseTree
 
-protected[ast] class TypeUse(val name: Name) extends TypeUseApi
+protected[ast] class TypeUse(val name: Name) extends TypeUseApi {
+  override def toString: String = s"TypeUse($name)"
+}
 
-protected[ast] class Ident(val name: Name) extends IdentApi
+protected[ast] class Ident(val name: Name) extends IdentApi {
+  override def toString: String = s"Ident($name)"
+}
 
 case object NoTree extends Expr
 

@@ -67,8 +67,7 @@ trait MethodDefApi extends primj.ast.MethodDefApi {
 }
 
 trait NewApi extends Expr {
-  def tpt: UseTree
-  def args: List[Expr]
+  def app: ApplyApi
 }
 
 trait SelectApi extends UseTree with Expr {
@@ -115,25 +114,53 @@ trait SuperApi extends Expr {
 
 // case class ClassDef() extends ClassDefApi
 protected[ast] class CompilationUnit(val module: PackageDefApi,
-  val sourceName: String, val sourcePath: List[String]) extends CompilationUnitApi
+  val sourceName: String,
+  val sourcePath: List[String]) extends CompilationUnitApi {
+  override def toString: String =
+    s"CompilationUnit($module, $sourceName, $sourcePath)"
+}
 
 protected[ast] class PackageDef(val name: Name,
-  val members: List[Tree]) extends PackageDefApi
+  val members: List[Tree]) extends PackageDefApi {
+  override def toString: String =
+    s"PackageDef($name, $members)"
+}
 
 protected[ast] class ClassDef(val mods: Flags,
   val name: Name, val parents: List[UseTree],
-  val body: TemplateApi) extends ClassDefApi
+  val body: TemplateApi) extends ClassDefApi {
+  override def toString: String =
+    s"ClassDef($mods, $name, $parents, $body)"
+}
 
-protected[ast] class Template(val members: List[Tree]) extends TemplateApi
+protected[ast] class Template(val members: List[Tree]) extends TemplateApi {
+  override def toString: String =
+    s"Template($members)"
+}
 
-protected[ast] class New(val tpt: UseTree, val args: List[Expr]) extends NewApi
+protected[ast] class New(val app: ApplyApi) extends NewApi {
+  override def toString: String =
+    s"New($app)"
+}
 protected[ast] class Select(val qual: Tree,
-  val tree: SimpleUseTree) extends SelectApi
-protected[ast] class This() extends ThisApi
-protected[ast] class Super() extends SuperApi
+  val tree: SimpleUseTree) extends SelectApi {
+  override def toString: String =
+    s"Select($qual, $tree)"
+}
+protected[ast] class This() extends ThisApi {
+  override def toString: String =
+    s"This"
+}
+protected[ast] class Super() extends SuperApi {
+  override def toString: String =
+    s"Super"
+}
 
 
 protected[ast] class MethodDef(val mods: Flags,
   val ret: UseTree,
   val name: Name, val params: List[ValDefApi],
-  val body: Expr) extends MethodDefApi
+  val body: Expr) extends MethodDefApi {
+  override def toString: String =
+    s"MethodDef($mods, $ret, $name, $params, $body)"
+}

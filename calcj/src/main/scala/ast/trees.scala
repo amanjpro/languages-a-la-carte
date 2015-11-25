@@ -39,15 +39,27 @@ trait UnaryApi extends Expr {
 
 
 protected[ast] class Cast(val tpt: UseTree,
-  val expr: Expr) extends CastApi
+  val expr: Expr) extends CastApi {
+  override def toString: String =
+    s"Cast(${tpt.toString}, ${expr.toString})"
+}
 
 
-protected[ast] class Literal(val constant: Constant) extends LiteralApi
+protected[ast] class Literal(val constant: Constant) extends LiteralApi {
+  override def toString: String =
+    s"Literal(${constant.toString})"
+}
 
 
 protected[ast] class Binary(val lhs: Expr,
-  val op: BOp, val rhs: Expr) extends BinaryApi
+  val op: BOp, val rhs: Expr) extends BinaryApi {
+  override def toString: String =
+    s"Binary(${lhs.toString}, ${op.toString}, ${rhs.toString})"
+}
 
 protected[ast] class Unary(val isPostfix: Boolean,
-  val op: UOp, val expr: Expr) extends UnaryApi
+  val op: UOp, val expr: Expr) extends UnaryApi {
+  override def toString: String =
+    s"Unary(${isPostfix.toString}, ${op.toString}, ${expr.toString})"
+}
 
