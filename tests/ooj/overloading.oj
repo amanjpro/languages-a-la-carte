@@ -1,0 +1,69 @@
+// passes
+
+/* TODO: Test default constructor later */
+/* TODO: Later test implicit java extension */
+/* TODO: Test String return later */
+/* TODO: Parameterized constructor has bugs, test it */
+/* TODO: test no package too */
+
+
+
+package test;
+
+class A extends java.lang.Object {
+  public A() {}
+  int m () {
+    return 1;
+  }
+}
+
+class B extends java.lang.Object {
+  public B() {}
+  double f () {
+    return 1.2;
+  }
+}
+
+
+class Test extends java.lang.Object {
+
+  /* private */
+  private A k(int i) {
+    return new A();
+  }
+
+  /* private */
+  B k(boolean b) {
+    return new B();
+  }
+
+
+  int test() {
+    return k(true).f();
+  }
+
+  void test(int m) {
+    super.equals(null);
+    // these should work
+    /* TODO: equals(null); */
+    /* TODO: super.equals(new java.lang.Object()); */
+    /* TODO: super.equals(new Test2()); */
+    equals(new Test2());
+    this.k(1).m();
+  }
+
+  // TODO: Test this method later
+  // void test(int m) {
+  //   return k(1).m();
+  // }
+}
+
+
+class Test2 extends Test {
+  // this should work, but it doesn't
+  public Test2() {}
+  private void d() {
+    super.test();
+  }
+}
+
