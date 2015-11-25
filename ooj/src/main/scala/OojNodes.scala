@@ -13,7 +13,7 @@ object OojNodes {
        Super,
        New,
        Label,
-       Swtich,
+       Switch,
        Case,
        Break,
        Continue,
