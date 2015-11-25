@@ -76,7 +76,7 @@ trait ClassDefTyperComponent extends TyperComponent {
 @component
 trait TemplateTyperComponent extends TyperComponent {
   (tmpl: TemplateApi) => {
-    val members = tmpl.members.map(typed(_).asInstanceOf[DefTree])
+    val members = tmpl.members.map(typed(_))
     TreeCopiers.copyTemplate(tmpl)(members = members)
   }
 }
