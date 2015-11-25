@@ -52,7 +52,7 @@ Continue: DONE
 
 
 @component(tree, owner)
-trait CaseSymbolAssigner extends SymbolAssignerComponent {
+trait CaseSymbolAssignerComponent extends SymbolAssignerComponent {
   (cse: CaseApi)     => {
     val guards = cse.guards.map { guard =>
       assign((guard, owner)).asInstanceOf[Expr]
@@ -65,7 +65,7 @@ trait CaseSymbolAssigner extends SymbolAssignerComponent {
 
 
 @component(tree, owner)
-trait SwitchSymbolAssigner extends SymbolAssignerComponent {
+trait SwitchSymbolAssignerComponent extends SymbolAssignerComponent {
   (switch: SwitchApi)     => {
     val expr  = assign((switch.expr, owner)).asInstanceOf[Expr]
     val cases = switch.cases.map { guard =>
@@ -78,7 +78,7 @@ trait SwitchSymbolAssigner extends SymbolAssignerComponent {
 
 
 @component(tree, owner)
-trait LabelSymbolAssigner extends SymbolAssignerComponent {
+trait LabelSymbolAssignerComponent extends SymbolAssignerComponent {
   (label: LabelApi)     => {
     val stmt  = assign((label.stmt, owner)).asInstanceOf[Expr]
     owner.foreach(label.owner = _)
@@ -87,7 +87,7 @@ trait LabelSymbolAssigner extends SymbolAssignerComponent {
 }
 
 @component(tree, owner)
-trait BreakSymbolAssigner extends SymbolAssignerComponent {
+trait BreakSymbolAssignerComponent extends SymbolAssignerComponent {
   (break: BreakApi)     => {
     owner.foreach(break.owner = _)
     break
@@ -95,7 +95,7 @@ trait BreakSymbolAssigner extends SymbolAssignerComponent {
 }
 
 @component(tree, owner)
-trait ContinueSymbolAssigner extends SymbolAssignerComponent {
+trait ContinueSymbolAssignerComponent extends SymbolAssignerComponent {
   (continue: ContinueApi)     => {
     owner.foreach(continue.owner = _)
     continue
