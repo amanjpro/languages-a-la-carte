@@ -37,7 +37,7 @@ MethodDef: DONE
 */
 
 @component(tree, owner)
-trait CompilationUnitSymbolAssigner extends SymbolAssignerComponent {
+trait CompilationUnitSymbolAssignerComponent extends SymbolAssignerComponent {
   (cunit: CompilationUnitApi) => {
     val sym     = CompilationUnitSymbol(None, cunit.sourceName, cunit.sourcePath)
     val pkg     = assign((cunit.module, Some(sym))).asInstanceOf[PackageDefApi]
@@ -47,7 +47,7 @@ trait CompilationUnitSymbolAssigner extends SymbolAssignerComponent {
 }
 
 @component(tree, owner)
-trait PackageDefSymbolAssigner extends SymbolAssignerComponent {
+trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
   (pkg: PackageDefApi) => {
     val sym     = PackageSymbol(pkg.name, owner)
     val members = pkg.members.map { member =>
@@ -60,7 +60,7 @@ trait PackageDefSymbolAssigner extends SymbolAssignerComponent {
 }
 
 @component(tree, owner)
-trait ClassDefSymbolAssigner extends SymbolAssignerComponent {
+trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
   (clazz: ClassDefApi) => {
     val parents  = clazz.parents.map(parent =>
         assign((parent, owner)).asInstanceOf[UseTree])
@@ -74,7 +74,7 @@ trait ClassDefSymbolAssigner extends SymbolAssignerComponent {
 }
 
 @component(tree, owner)
-trait TemplateSymbolAssigner extends SymbolAssignerComponent {
+trait TemplateSymbolAssignerComponent extends SymbolAssignerComponent {
   (tmpl: TemplateApi) => {
     val members  = tmpl.members.map(member =>
         assign((member, owner)))
@@ -84,18 +84,16 @@ trait TemplateSymbolAssigner extends SymbolAssignerComponent {
 }
 
 @component(tree, owner)
-trait NewSymbolAssigner extends SymbolAssignerComponent {
+trait NewSymbolAssignerComponent extends SymbolAssignerComponent {
   (nu: NewApi) => {
-    val tpt      = assign((nu.tpt, owner)).asInstanceOf[UseTree]
-    val args     = nu.args.map(arg =>
-        assign((arg, owner)).asInstanceOf[Expr])
+    val app      = assign((nu.app, owner)).asInstanceOf[ApplyApi]
     owner.foreach(nu.owner = _)
-    TreeCopiers.copyNew(nu)(args = args, tpt = tpt)
+    TreeCopiers.copyNew(nu)(app = app)
   }
 }
 
 @component(tree, owner)
-trait SelectSymbolAssigner extends SymbolAssignerComponent {
+trait SelectSymbolAssignerComponent extends SymbolAssignerComponent {
   (select: SelectApi) => {
     val qual           = assign((select.qual, owner))
     val slctdOwner     = qual.symbol
@@ -109,7 +107,7 @@ trait SelectSymbolAssigner extends SymbolAssignerComponent {
 }
 
 @component(tree, owner)
-trait ThisSymbolAssigner extends SymbolAssignerComponent {
+trait ThisSymbolAssignerComponent extends SymbolAssignerComponent {
   (ths: ThisApi) => {
     owner.foreach(ths.owner = _)
     val enclosingClass = SymbolUtils.enclosingClass(owner)
@@ -119,7 +117,7 @@ trait ThisSymbolAssigner extends SymbolAssignerComponent {
 }
 
 @component(tree, owner)
-trait SuperSymbolAssigner extends SymbolAssignerComponent {
+trait SuperSymbolAssignerComponent extends SymbolAssignerComponent {
   (ths: SuperApi) => {
     owner.foreach(ths.owner = _)
     val enclosingClass = SymbolUtils.enclosingClass(owner)

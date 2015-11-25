@@ -13,6 +13,7 @@ import sana.primj.ast.{MethodDef => _, _}
 import sana.brokenj.ast.{TreeFactories => TF, _}
 import sana.primj.types._
 import sana.ooj.ast.Implicits._
+import sana.ooj.ast.TreeExtractors._
 
 trait TreeFactories {
 
@@ -62,14 +63,18 @@ trait TreeFactories {
   }
 
 
-  def mkNew(tpt: UseTree,
-    args: List[Expr],
+  def mkNew(app: ApplyApi,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): NewApi = {
-    val res = new New(tpt, args)
+    val res = new New(app)
     pos.foreach(res.pos = _)
     owner.foreach(res.owner = _)
-    tpt.tpe.foreach(res.tpe = _)
+    app.fun match {
+      case Apply(Select(qual, _), _) =>
+        qual.tpe.foreach(res.tpe = _)
+      case _                      =>
+        ()
+    }
     res
   }
 

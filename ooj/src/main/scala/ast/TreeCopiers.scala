@@ -55,9 +55,8 @@ trait TreeCopiers extends {
   }
 
 
-  def copyNew(template: NewApi)(tpt: UseTree = template.tpt,
-    args: List[Expr] = template.args): NewApi = {
-    val res = TreeFactories.mkNew(tpt, args)
+  def copyNew(template: NewApi)(app: ApplyApi = template.app): NewApi = {
+    val res = TreeFactories.mkNew(app)
     copyProperties(template, res)
     res
   }
