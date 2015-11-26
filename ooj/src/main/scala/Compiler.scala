@@ -3,7 +3,6 @@ package ch.usi.inf.l3.sana.ooj
 import ch.usi.inf.l3.sana
 import sana.core.Implicits._
 import sana.tiny
-import sana.primj
 import sana.ooj
 import tiny.settings.SanaConfig
 import tiny.ast.Tree
