@@ -59,6 +59,49 @@ case class ClassSymbol(var mods: Flags, var name: Name,
       false
   }
 
+
+  override def declarations: Set[Symbol] = parents.flatMap(_.declarations).toSet ++ decls
+
+
+  // Override this method to look for definitions in the parents too.
+  // First local defs, then parent defs then defs in enclosing symbol
+  override def defines(symbol: Symbol): Boolean =
+    decls.contains(symbol) ||
+      parents.foldLeft(false)((z, y) => y.defines(symbol) || z) ||
+      owner.map { sym =>
+        sym.defines(symbol)
+      }.getOrElse(false)
+
+
+  // Handling scoping, does this defines a name with a predicate? If
+  // not see if one of the parents defines it, lastly try the owner
+  // of this symbol
+  override def getSymbol(name: Name, p: Symbol => Boolean): Option[Symbol] = {
+    val thisSym = decls.find { sym =>
+      sym.name == name && p(sym)
+    }
+    thisSym match {
+      case None =>
+        val sym = parents.foldLeft(None:Option[Symbol])((z, y) => {
+          z match {
+            case None        =>
+              y.getSymbol(name, p)
+            case _           =>
+              z
+          }
+        })
+        sym match {
+          case None =>
+            owner.flatMap { sym =>
+              sym.getSymbol(name, p)
+            }
+          case _    =>
+            sym
+        }
+      case _    => thisSym
+    }
+  }
+
   override def toString(): String = s"Class symbol: $name"
   override def hashCode(): Int = name.hashCode * 43 + tpe.hashCode
 }
