@@ -20,7 +20,7 @@ trait TyperFamily extends TransformationFamily[Tree, Tree] {
 
   def components: List[PartialFunction[Tree, Tree]] =
     generateComponents[Tree, Tree](OojNodes.nodes,
-      "TyperComponent", "typed", "Select,New")
+      "TyperComponent", "typed", "Select")
 
   def typed: Tree => Tree = family
 }
