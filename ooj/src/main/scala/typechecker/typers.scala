@@ -16,7 +16,7 @@ import tiny.source.Position
 import tiny.errors.ErrorReporting.{error,warning}
 import calcj.typechecker.{TyperComponent, TypePromotions}
 import calcj.types._
-// import primj.symbols._
+import primj.ast.ApplyApi
 import primj.types._
 import ooj.modifiers.Ops._
 import ooj.ast._
@@ -24,6 +24,7 @@ import ooj.symbols._
 import ooj.types._
 import ooj.ast.Implicits._
 import ooj.errors.ErrorCodes._
+import sana.ooj.ast.TreeExtractors._
 
 /*
 CompilationUnit: DONE
@@ -173,5 +174,21 @@ trait SuperTyperComponent extends TyperComponent {
       }
     }
     spr
+  }
+}
+
+
+@component
+trait NewTyperComponent extends TyperComponent {
+  (nw: NewApi) => {
+    val app     = typed(nw.app).asInstanceOf[ApplyApi]
+    val tpe     = app.fun match {
+      case Apply(Select(qual, _), _) =>
+        qual.tpe
+      case _                      =>
+        Some(ErrorType)
+    }
+    tpe.foreach(nw.tpe = _)
+    TreeCopiers.copyNew(nw)(app = app)
   }
 }
