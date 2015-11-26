@@ -18,6 +18,7 @@ import calcj.ast.operators.{Inc, Dec}
 import primj.namers.NamerComponent
 import primj.symbols.{SymbolUtils => _, _}
 import primj.errors.ErrorCodes._
+import primj.ast.ApplyApi
 import ooj.ast._
 import ooj.names.StdNames
 import ooj.modifiers._
@@ -164,9 +165,9 @@ trait SelectNamerComponent extends NamerComponent {
 
 @component
 trait NewNamerComponent extends NamerComponent {
-  (nw: New) => {
+  (nw: NewApi) => {
     val app     = name(nw.app).asInstanceOf[ApplyApi]
-    TreeCopiers.copyApply(nw)(app = app)
+    TreeCopiers.copyNew(nw)(app = app)
   }
 }
 
