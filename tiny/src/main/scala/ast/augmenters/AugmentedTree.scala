@@ -1,7 +1,8 @@
-package ch.usi.inf.l3.sana.tiny.ast
+package ch.usi.inf.l3.sana.tiny.ast.augmenters
 
 import ch.usi.inf.l3.sana
 import sana.tiny.types.Type
+import sana.tiny.ast.Tree
 import sana.tiny.symbols.Symbol
 import sana.tiny.source.Position
 

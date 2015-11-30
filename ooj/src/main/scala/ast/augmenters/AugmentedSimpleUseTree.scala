@@ -1,4 +1,4 @@
-package ch.usi.inf.l3.sana.ooj.ast
+package ch.usi.inf.l3.sana.ooj.ast.augmenters
 
 import ch.usi.inf.l3.sana
 import sana.tiny.ast.SimpleUseTree
