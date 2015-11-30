@@ -3,10 +3,13 @@ package ch.usi.inf.l3.sana.ooj.ast.augmenters
 import ch.usi.inf.l3.sana
 import sana.tiny.types.Type
 import sana.tiny.symbols.Symbol
+import sana.ooj.ast.ThisApi
 
 
 
-trait AugmentedTree extends sana.tiny.ast.augmenters.AugmentedTree {
+trait AugmentedThis {
+
+  def tree: ThisApi
 
   def enclosingClassSymbol: Option[Symbol] =
     tree.attributes.get('enclosingClassSymbol).map(_.asInstanceOf[Symbol])
