@@ -24,6 +24,12 @@ trait AugmentedSimpleUseTree {
     tree.attributes = tree.attributes + ('shouldBeStatic -> shouldBeStatic)
 
 
+  def isQualified: Boolean =
+    tree.attributes.get('isQualified)
+      .map(_.asInstanceOf[Boolean]).getOrElse(false)
+
+  def isQualified_=(isQualified: Boolean): Unit =
+    tree.attributes = tree.attributes + ('isQualified -> isQualified)
 
 }
 
