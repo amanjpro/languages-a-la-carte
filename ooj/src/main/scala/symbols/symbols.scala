@@ -101,7 +101,7 @@ case class ClassSymbol(var mods: Flags, var name: Name,
     case that: ClassSymbol    =>
       this.owner == that.owner &&
         this.parents == that.parents &&
-        this.name == that.name
+        this.name == that.name &&
         this.tpe  == that.tpe
     case _                    =>
       false
