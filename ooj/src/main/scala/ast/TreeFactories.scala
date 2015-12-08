@@ -9,7 +9,7 @@ import sana.tiny.modifiers.Flags
 import sana.tiny.ast._
 import sana.calcj.ast._
 import sana.calcj.ast.operators.{UOp, BOp}
-import sana.primj.ast.{MethodDef => _, _}
+import sana.primj.ast.{MethodDefApi => _, _}
 import sana.brokenj.ast.{TreeFactories => TF, _}
 import sana.primj.types._
 import sana.ooj.ast.Implicits._
