@@ -12,14 +12,14 @@ trait Symbol {
   var tpe: Option[Type]
   var owner: Option[Symbol]
 
-  protected[this] var decls: Set[Symbol] = Set.empty
+  protected[this] var decls: List[Symbol] = Nil
 
-  def declarations: Set[Symbol] = decls
+  def declarations: List[Symbol] = decls
 
 
-  def declare(symbol: Symbol): Unit = decls = decls + symbol
+  def declare(symbol: Symbol): Unit = decls = symbol :: decls
 
-  def delete(symbol: Symbol): Unit = decls = decls - symbol
+  def delete(symbol: Symbol): Unit = decls = decls.filter(_ != symbol)
 
 
   // Handling scoping, does this defines a symbol? If not see if
