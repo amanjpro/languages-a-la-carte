@@ -44,7 +44,7 @@ trait ClassTypeApi extends RefType {
   def <:<(t: Type): Boolean = t match {
     // case ObjectType         => true
     case ct: ClassTypeApi   =>
-      this.allParents.exists(_ =:= ct)
+      this =:= ct || this.allParents.exists(_ <:< ct)
     case _                  => false
   }
 }
