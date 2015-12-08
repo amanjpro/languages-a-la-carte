@@ -294,7 +294,7 @@ class Parser extends parsers.Parser {
       case "double"              =>
         TreeFactories.mkTypeUse(DOUBLE_TYPE_NAME, pos(ctx))
       case "boolean"             =>
-        TreeFactories.mkTypeUse(CHAR_TYPE_NAME, pos(ctx))
+        TreeFactories.mkTypeUse(BOOLEAN_TYPE_NAME, pos(ctx))
     }
 
     override def visitReferenceType(ctx:
