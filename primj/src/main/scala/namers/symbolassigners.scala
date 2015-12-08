@@ -82,6 +82,7 @@ trait MethodDefSymbolAssignerComponent extends SymbolAssignerComponent {
         assign((x, opsym)).asInstanceOf[ValDefApi])
     val body    = assign((mthd.body, opsym)).asInstanceOf[Expr]
     symbol.params = params.map(_.symbol).flatten
+    symbol.ret    = tpt.symbol
     mthd.symbol = symbol
     symbol.owner.foreach(mthd.owner = _)
 
