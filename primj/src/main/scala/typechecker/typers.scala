@@ -278,6 +278,7 @@ trait ReturnTyperComponent extends TyperComponent {
   (ret: ReturnApi)          => {
     val expr  = ret.expr.map(typed(_).asInstanceOf[Expr]).getOrElse(NoTree)
     val tpe   = expr.tpe
+    tpe.foreach(ret.tpe = _)
     SymbolUtils.enclosingMethod(ret.owner) match {
       case Some(mthd) =>
         mthd.tpe match {
