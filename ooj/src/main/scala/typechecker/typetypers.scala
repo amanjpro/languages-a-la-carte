@@ -111,8 +111,9 @@ trait ClassDefTypeTyperComponent extends TypeTyperComponent {
       case _                       =>
         ()
     }
-    val body    = typed(clazz.body).asInstanceOf[TemplateApi]
-    TreeCopiers.copyClassDef(clazz)(body = body)
+    // val body    = typed(clazz.body).asInstanceOf[TemplateApi]
+    // TreeCopiers.copyClassDef(clazz)(body = body)
+    clazz
   }
 
 
