@@ -23,7 +23,7 @@ import ooj.ast._
 import ooj.names.StdNames
 import ooj.modifiers._
 import ooj.modifiers.Ops._
-import ooj.symbols.{SymbolUtils, ClassSymbol}
+import ooj.symbols.{SymbolUtils, ClassSymbol, PackageSymbol}
 import ooj.ast.Implicits._
 
 
@@ -79,47 +79,22 @@ trait ClassDefNamerComponent extends NamerComponent {
           tuse::temp
       }
     }
-    val body    = {
-      val temp = name(clazz.body).asInstanceOf[TemplateApi]
-      // TODO: Do we need to have a refactoring for creating constructors?
-      // I would say yes!!!
-      // INFO: No constructors? Add it!
-      temp.members.exists(isConstructor(_)) match {
-        case true                => temp
-        case false               =>
-          val mods          = {
-            if(clazz.mods.isPublicAcc)         CONSTRUCTOR | PUBLIC_ACC
-            else if(clazz.mods.isProtectedAcc) CONSTRUCTOR | PROTECTED_ACC
-            else if(clazz.mods.isPrivateAcc)   CONSTRUCTOR | PRIVATE_ACC
-            else                               CONSTRUCTOR | PACKAGE_ACC
-          }
-          val mthdSymbol    = Some(MethodSymbol(mods, constructorName,
-            Nil, None, clazz.symbol))
-          val spr           = TreeFactories.mkSuper(clazz.pos,
-            clazz.symbol, mthdSymbol)
-          val app           = TreeFactories.mkApply(spr, Nil,
-            clazz.pos, mthdSymbol)
-          val body          = TreeFactories.mkBlock(List(app), clazz.pos,
-            mthdSymbol)
-          val name          = constructorName
-          val ret           = TreeFactories.mkTypeUse(voidName, clazz.pos,
-            voidSymbol, clazz.symbol, clazz.symbol)
-          val const        = TreeFactories.mkMethodDef(mods,
-            ret, name, Nil, body, clazz.pos, mthdSymbol)
-          TreeCopiers.copyTemplate(temp)(members = const::temp.members)
-      }
-    }
+    val parentSymbols = parents.flatMap(_.symbol match {
+      case Some(cs: ClassSymbol) => Some(cs)
+      case _                     => None
+    })
+    clazz.symbol.foreach(_ match {
+      case cs: ClassSymbol =>
+        cs.parents = parentSymbols
+      case _               => ()
+    })
+    val body    = name(clazz.body).asInstanceOf[TemplateApi]
     TreeCopiers.copyClassDef(clazz)(body = body, parents = parents)
   }
 
   protected def objectClassSymbol: ClassSymbol =
     SymbolUtils.objectClassSymbol
 
-  protected def constructorName: Name       = StdNames.CONSTRUCTOR_NAME
-  protected def voidName: Name              = StdNames.VOID_TYPE_NAME
-  protected def voidSymbol: Option[Symbol]  = Some(VoidSymbol)
-  protected def isConstructor(tree: Tree): Boolean =
-    TreeUtils.isConstructor(tree)
 }
 
 @component
@@ -132,7 +107,8 @@ trait TemplateNamerComponent extends NamerComponent {
 
 
 @component
-trait MethodDefNamerComponent extends primj.namers.MethodDefNamerComponent {
+trait MethodDefNamerComponent extends
+    primj.namers.MethodDefNamerComponent {
   (mthd: MethodDefApi) => {
     val res  = super.apply(mthd).asInstanceOf[primj.ast.MethodDefApi]
     // INFO: a bit of hack, but works
@@ -146,19 +122,44 @@ trait MethodDefNamerComponent extends primj.namers.MethodDefNamerComponent {
 
 @component
 trait ThisNamerComponent extends NamerComponent {
-  (ths: ThisApi) => ths
+  (ths: ThisApi) => {
+    ths.enclosingClassSymbol.foreach(ths.symbol = _)
+    ths
+  }
 }
 
 @component
 trait SuperNamerComponent extends NamerComponent {
-  (spr: SuperApi) => spr
+  (spr: SuperApi) => {
+    spr.enclosingClassSymbol match {
+      case Some(csym: ClassSymbol)    =>
+        csym.parents.filter(! _.mods.isInterface) match {
+          case List(s)        =>
+            spr.symbol = s
+          case List(x, y)     =>
+            if(x == SymbolUtils.objectClassSymbol) {
+              spr.symbol = y
+            } else if (y == SymbolUtils.objectClassSymbol) {
+              spr.symbol = x
+            }
+          case _              =>
+            ()
+        }
+      case _                          =>
+        ()
+    }
+    spr
+  }
 }
 
 @component
 trait SelectNamerComponent extends NamerComponent {
   (select: SelectApi) => {
     val qual    = name(select.qual)
+    val slctdOwner     = qual.symbol
+    slctdOwner.foreach(select.tree.owner = _)
     val tree    = name(select.tree).asInstanceOf[SimpleUseTree]
+    tree.symbol.foreach(select.symbol = _)
     TreeCopiers.copySelect(select)(qual = qual, tree = tree)
   }
 }
@@ -171,6 +172,7 @@ trait NewNamerComponent extends NamerComponent {
   }
 }
 
+@component
 trait IdentNamerComponent extends primj.namers.IdentNamerComponent {
   (id: IdentApi)       => {
     // At the beginning: we treat all (Ident)s as ambiguous names.
@@ -184,13 +186,23 @@ trait IdentNamerComponent extends primj.namers.IdentNamerComponent {
           _.isInstanceOf[TypeSymbol]))
           temp match {
             case None        =>
-              // TODO: Look for imports later when we introduce
-              // them: Section 6.5.2
-              id
+              val temp = id.owner.flatMap(_.getSymbol(id.name,
+                _.isInstanceOf[PackageSymbol]))
+              temp match {
+                case None      =>
+                  // TODO: Look for imports later when we introduce
+                  // them: Section 6.5.2
+                  id
+                case Some(sym) =>
+                  id.symbol = sym
+                  sym.tpe.foreach(id.tpe = _)
+                  id
+              }
             case Some(sym)   =>
               id.symbol = sym
               sym.tpe.foreach(id.tpe = _)
-              val tuse = TreeFactories.mkTypeUse(id.name, id.pos, id.symbol, id.owner)
+              val tuse =
+                TreeFactories.mkTypeUse(id.name, id.pos, id.symbol, id.owner)
               tuse.attributes = id.attributes
               tuse
           }
