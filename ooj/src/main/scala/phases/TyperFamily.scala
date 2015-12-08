@@ -6,7 +6,10 @@ import sana.core._
 import sana.core.Implicits._
 import sana.tiny.ast.{Tree, NoTree}
 import sana.ooj.OojNodes
-import sana.primj.typechecker.{MethodDefTyperComponent => _, _}
+import sana.primj.typechecker.{MethodDefTyperComponent => _,
+                               ApplyTyperComponent => _,
+                               TypeUseTyperComponent => _,
+                               IdentTyperComponent => _, _}
 import sana.calcj.typechecker.{UnaryTyperComponent => _, _}
 import sana.brokenj.typechecker._
 import sana.ooj.typechecker._
@@ -20,7 +23,7 @@ trait TyperFamily extends TransformationFamily[Tree, Tree] {
 
   def components: List[PartialFunction[Tree, Tree]] =
     generateComponents[Tree, Tree](OojNodes.nodes,
-      "TyperComponent", "typed", "Select")
+      "TyperComponent", "typed", "")
 
   def typed: Tree => Tree = family
 }
