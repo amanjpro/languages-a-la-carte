@@ -27,6 +27,11 @@ trait TreeUtils extends ast.TreeUtils {
         }
     }
 
+  def isType(tree: Tree): Boolean = tree match {
+    case _: TypeUseApi                   => true
+    case Select(_, _: TypeUseApi)        => true
+    case _                               => false
+  }
 }
 
 object TreeUtils extends TreeUtils
