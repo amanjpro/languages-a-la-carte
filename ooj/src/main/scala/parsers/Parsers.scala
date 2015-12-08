@@ -562,7 +562,7 @@ class Parser extends parsers.Parser {
       val declCtx    = ctx.constructorDeclarator.methodDeclaratorNoDims()
       val tpt        = {
         val id = declCtx.Identifier
-        TreeFactories.mkTypeUse(Name(id.getText), pos(id.getSymbol))
+        TreeFactories.mkTypeUse(Name("void"), pos(id.getSymbol))
       }
       val name       = CONSTRUCTOR_NAME
       val params     = formalParameterListToValDefs(declCtx.formalParameterList)
