@@ -33,6 +33,15 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
       "``super'' cannot be accessed inside Object class"
   }
 
+
+  case object AMBIGUOUS_METHOD_INVOCATION extends ErrorCode {
+    val message: String = "Method invocation is ambiguous"
+  }
+
+
+  case object INSTANCE_METHOD_IN_STATIC_CONTEXT_INVOK extends ErrorCode {
+    val message: String = "Invoking an instance method in a static context"
+  }
 }
 
 object ErrorCodes extends ErrorCodes
