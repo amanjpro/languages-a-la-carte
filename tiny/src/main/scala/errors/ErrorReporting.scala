@@ -30,13 +30,17 @@ object ErrorReporting {
         case None    => 0
         case Some(p) => 4 + p.col
       }
-      val caret = if(col == 0) {
-        (col * ' ') + "^\n"
+      val caret = if(col != 0) {
+        (" " * col) + "^"
       } else ""
-      s"""|$msg\n
-      |${2 * ' '}$found\n
-      |${2 * ' '}$required\n
-      |$col$t\n
+      val source = pos.map(_.source).getOrElse("")
+      val row    = pos.map(_.row.toString).getOrElse("")
+      val c      = pos.map(_.col.toString).getOrElse("")
+      s"""|Source: ${source}, Line: ${row}, Column: ${c}
+      |$msg
+      |${" " * 2}$found
+      |${" " * 2}$required
+      |${" " * col}$t
       |$caret""".stripMargin
   }
 
