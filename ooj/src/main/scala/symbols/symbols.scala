@@ -108,7 +108,8 @@ case class ClassSymbol(var mods: Flags, var name: Name,
   }
 
 
-  override def declarations: Set[Symbol] = parents.flatMap(_.declarations).toSet ++ decls
+  override def declarations: List[Symbol] =
+    parents.flatMap(_.declarations) ++ decls
 
   def directlyDefines(symbol: Symbol): Boolean = decls.contains(symbol)
 
@@ -118,10 +119,10 @@ case class ClassSymbol(var mods: Flags, var name: Name,
     }
 
 
-  def getAllSymbols(name: Name, p: Symbol => Boolean): Set[Symbol] = {
+  def getAllSymbols(name: Name, p: Symbol => Boolean): List[Symbol] = {
     val fromParents = parents.flatMap(_.getAllSymbols(name, p))
     val fromThis    = decls.filter(sym => sym.name == name && p(sym))
-    fromThis ++ fromParents
+    fromThis ++ fromParents.filter(s => !fromThis.contains(s))
   }
 
   // Override this method to look for definitions in the parents too.
