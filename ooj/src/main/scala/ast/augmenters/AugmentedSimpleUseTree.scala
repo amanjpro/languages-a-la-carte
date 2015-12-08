@@ -16,5 +16,14 @@ trait AugmentedSimpleUseTree {
   def enclosing_=(enclosing: Symbol): Unit =
     tree.attributes = tree.attributes + ('enclosing -> enclosing)
 
+  def shouldBeStatic: Boolean =
+    tree.attributes.get('shouldBeStatic)
+      .map(_.asInstanceOf[Boolean]).getOrElse(false)
+
+  def shouldBeStatic_=(shouldBeStatic: Boolean): Unit =
+    tree.attributes = tree.attributes + ('shouldBeStatic -> shouldBeStatic)
+
+
+
 }
 
