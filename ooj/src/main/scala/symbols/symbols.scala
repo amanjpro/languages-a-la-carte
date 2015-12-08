@@ -3,15 +3,63 @@ package ch.usi.inf.l3.sana.ooj.symbols
 import ch.usi.inf.l3.sana
 import sana.tiny.types.Type
 import sana.primj.types.VoidType
+import sana.primj
 import sana.tiny.symbols.{Symbol, TermSymbol, TypeSymbol}
 import sana.tiny.modifiers.Flags
 import sana.tiny.modifiers.Ops.noflags
 import sana.tiny.names.Name
 import sana.tiny.names.StdNames.noname
+import sana.ooj.modifiers._
+import sana.ooj.types.TypeUtils
 
 
 
 
+object ProgramSymbol extends Symbol {
+
+  private val javaPackageSymbol: PackageSymbol = {
+    val name  = Name("java")
+    val owner = Some(ProgramSymbol)
+    PackageSymbol(name, owner)
+  }
+
+  private val langPackageSymbol: PackageSymbol = {
+    val name  = Name("lang")
+    val owner = Some(javaPackageSymbol)
+    PackageSymbol(name, owner)
+  }
+
+  private val objectClassSymbol: ClassSymbol = {
+    val mods    = Flags(PUBLIC_ACC)
+    val name    = Name("Object")
+    val parents = Nil
+    val owner   = Some(langPackageSymbol)
+    val tpe     = Some(TypeUtils.objectClassType)
+    ClassSymbol(mods, name, parents, owner, tpe)
+  }
+
+  langPackageSymbol.declare(objectClassSymbol)
+  javaPackageSymbol.declare(langPackageSymbol)
+
+  decls = (decls ++ List(javaPackageSymbol) ++
+      primj.symbols.SymbolUtils.standardDefinitions)
+
+  def name: Name = noname
+  def name_=(sym: Name): Unit = ???
+
+  def owner: Option[Symbol] = None
+  def owner_=(sym: Option[Symbol]): Unit = ???
+
+  def mods: Flags = noflags
+  def mods_=(mods: Flags): Unit = ???
+
+  def tpe: Option[Type] = None
+  def tpe_=(tpe: Option[Type]): Unit = ???
+
+  override def toString(): String = s"Package symbol: $name"
+  override def hashCode(): Int = name.hashCode * 43
+
+}
 
 case class PackageSymbol(var name: Name,
         var owner: Option[Symbol]) extends TermSymbol {
