@@ -286,24 +286,28 @@ trait ReturnTyperComponent extends TyperComponent {
             ret
           case Some(MethodType(VoidType, _))                            =>
             error(NON_VOID_RETURN,
-              ret.toString, ret.toString, ret.pos, ret)
+              ret.tpe.map(_.toString).getOrElse(""),
+              VoidType.toString, ret.pos, ret)
             ret
-          case Some(MethodType(_, _)) if expr == None                   =>
+          case Some(MethodType(t, _)) if expr == None                   =>
             error(VOID_RETURN,
-              ret.toString, ret.toString, ret.pos, ret)
+              ret.tpe.map(_.toString).getOrElse(""),
+              t.toString, ret.pos, ret)
             ret
           case Some(MethodType(rtpe, _))                                =>
             expr.tpe.map(_ <:< rtpe) match {
               case Some(true)          =>
                 ret
-              case _                   =>
+              case l                   =>
                 error(TYPE_MISMATCH,
-                  ret.toString, ret.toString, ret.pos, ret)
+                  expr.tpe.map(_.toString).getOrElse("<error>"),
+                  rtpe.toString, ret.pos, ret)
                 ret
             }
-          case _                                                        =>
+          case t                                                        =>
             error(TYPE_MISMATCH,
-              tpe.toString, ret.toString, ret.pos, ret)
+              tpe.toString, t.map(_.toString).getOrElse("A method type"),
+              ret.pos, ret)
             ret
         }
       case _          =>
