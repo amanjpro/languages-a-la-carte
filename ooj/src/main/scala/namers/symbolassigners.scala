@@ -78,7 +78,33 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
         assign((parent, owner)).asInstanceOf[UseTree])
     val sym      = ClassSymbol(clazz.mods, clazz.name,
       Nil, owner, None)
-    val template = assign((clazz.body, Some(sym))).asInstanceOf[TemplateApi]
+    val template = {
+      clazz.body.members.exists(isConstructor(_)) match {
+        case true                =>
+          assign((clazz.body, Some(sym))).asInstanceOf[TemplateApi]
+        case false               =>
+          // TODO: Do we need to have a refactoring for creating constructors?
+          // I would say yes!!!
+          // INFO: No constructors? Add it!
+          val mods          = {
+            if(clazz.mods.isPublicAcc)         CONSTRUCTOR | PUBLIC_ACC
+            else if(clazz.mods.isProtectedAcc) CONSTRUCTOR | PROTECTED_ACC
+            else if(clazz.mods.isPrivateAcc)   CONSTRUCTOR | PRIVATE_ACC
+            else                               CONSTRUCTOR | PACKAGE_ACC
+          }
+          val spr           = TreeFactories.mkSuper(clazz.pos)
+          val id            = TreeFactories.mkIdent(constructorName, clazz.pos)
+          val slct          = TreeFactories.mkSelect(spr, id, clazz.pos)
+          val app           = TreeFactories.mkApply(slct, Nil, clazz.pos)
+          val body          = TreeFactories.mkBlock(List(app), clazz.pos)
+          val ret           = TreeFactories.mkTypeUse(voidName, clazz.pos)
+          val const         = TreeFactories.mkMethodDef(mods, ret,
+            constructorName, Nil, body, clazz.pos)
+          val temp          = TreeCopiers.copyTemplate(clazz.body)(members =
+            const::clazz.body.members)
+          assign((temp, Some(sym))).asInstanceOf[TemplateApi]
+      }
+    }
     clazz.symbol = sym
     owner.foreach(owner => {
       clazz.owner = owner
@@ -86,6 +112,14 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
     })
     TreeCopiers.copyClassDef(clazz)(parents = parents, body = template)
   }
+
+
+  protected def constructorName: Name       = StdNames.CONSTRUCTOR_NAME
+  protected def voidName: Name              = StdNames.VOID_TYPE_NAME
+  protected def voidSymbol: Option[Symbol]  = Some(VoidSymbol)
+
+  protected def isConstructor(tree: Tree): Boolean =
+    TreeUtils.isConstructor(tree)
 }
 
 @component(tree, owner)
