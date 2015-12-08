@@ -9,6 +9,7 @@ import tiny.ast.Tree
 import tiny.source.SourceReader
 import tiny.errors.ErrorReporting
 import ooj.phases._
+import ooj.symbols.ProgramSymbol
 import ooj.antlr._
 
 import org.antlr.v4.runtime._
@@ -44,9 +45,11 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
       (x: Tree) => {
         val f = (SymbolAssignerFamily.assign join
                   (NamerFamily.name join
-                    (TyperFamily.typed join
-                      ShapeCheckerFamily.check)))
-        f((x, None))
+                    (TypeTyperFamily.typed join
+                      (DefTyperFamily.typed join
+                        (TyperFamily.typed join
+                          ShapeCheckerFamily.check)))))
+        f((x, Some(ProgramSymbol)))
       }
   }
 
