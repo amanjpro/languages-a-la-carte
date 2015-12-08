@@ -169,10 +169,9 @@ case class ClassSymbol(var mods: Flags, var name: Name,
 }
 
 case class CompilationUnitSymbol(var module: Option[Symbol],
-  sourceName: String, sourcePath: List[String]) extends Symbol {
+  var sourceName: String, var sourcePath: List[String],
+  var owner: Option[Symbol]) extends Symbol {
 
-  def owner: Option[Symbol] = None
-  def owner_=(tpe: Option[Symbol]): Unit = ???
 
   def mods: Flags = noflags
   def mods_=(tpe: Flags) = ???
