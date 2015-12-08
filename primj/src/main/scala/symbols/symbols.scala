@@ -110,4 +110,6 @@ object VoidSymbol extends TypeSymbol {
   override def defines(symbol: Symbol): Boolean = false
   override def getSymbol(name: Name,
     p: Symbol => Boolean): Option[Symbol] = None
+
+  override def toString(): String = s"Void Symbol"
 }
