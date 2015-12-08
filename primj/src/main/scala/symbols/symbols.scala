@@ -55,6 +55,7 @@ case class VariableSymbol(var mods: Flags, var name: Name,
 
 case class MethodSymbol(var mods: Flags, var name: Name,
   var params: List[Symbol],
+  var ret: Option[Symbol],
   var tpe: Option[Type],
   var owner: Option[Symbol])
   extends TermSymbol {
@@ -63,12 +64,14 @@ case class MethodSymbol(var mods: Flags, var name: Name,
     case null                 => false
     case that: MethodSymbol   =>
       this.name == that.name &&
-        this.tpe == that.tpe
+        this.tpe == that.tpe &&
+        this.ret == that.ret
     case _                    =>
       false
   }
   override def toString(): String = s"Method symbol: $name"
-  override def hashCode(): Int = name.hashCode * 43 + tpe.hashCode
+  override def hashCode(): Int = name.hashCode * 43 + (41 * tpe.hashCode *
+    ret.hashCode)
 }
 
 
