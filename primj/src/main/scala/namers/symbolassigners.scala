@@ -74,7 +74,7 @@ trait ProgramSymbolAssignerComponent extends SymbolAssignerComponent {
 trait MethodDefSymbolAssignerComponent extends SymbolAssignerComponent {
   (mthd: MethodDefApi)          => {
     val symbol  = MethodSymbol(noflags, mthd.name,
-      Nil, None, owner)
+      Nil, None, None, owner)
     owner.foreach(sym => sym.declare(symbol))
     val opsym   = Some(symbol)
     val tpt     = assign((mthd.ret, owner)).asInstanceOf[UseTree]
