@@ -7,14 +7,26 @@ import sana.primj
 import sana.brokenj
 import sana.ooj
 import brokenj.ast
-import tiny.ast.{Tree, NoTree}
+import tiny.ast.{Tree, NoTree, TypeUseApi}
 import Implicits._
 import ooj.symbols.SymbolUtils
+import ooj.modifiers.Ops._
+import ooj.ast.TreeExtractors._
 
 
 trait TreeUtils extends ast.TreeUtils {
   def isConstructor(tree: Tree): Boolean =
-    tree.symbol.map(SymbolUtils.isConstructor(_)).getOrElse(false)
+    tree.symbol.map(SymbolUtils.isConstructor(_)) match {
+      case Some(v)                                  => v
+      case None                                     =>
+        tree match {
+          case mthd: MethodDefApi =>
+            mthd.mods.isConstructor
+          case _                  =>
+            false
+        }
+    }
+
 }
 
 object TreeUtils extends TreeUtils
