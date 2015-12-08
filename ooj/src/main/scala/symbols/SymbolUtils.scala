@@ -53,25 +53,19 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
       false
   }
 
-  def javaPackageSymbol: PackageSymbol = {
+  def javaPackageSymbol: PackageSymbol =  {
     val name  = Name("java")
-    val owner = None
-    PackageSymbol(name, owner)
+    ProgramSymbol.getSymbol(name, _ => true).get.asInstanceOf[PackageSymbol]
   }
 
   def langPackageSymbol: PackageSymbol = {
     val name  = Name("lang")
-    val owner = Some(javaPackageSymbol)
-    PackageSymbol(name, owner)
+    javaPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[PackageSymbol]
   }
 
   def objectClassSymbol: ClassSymbol = {
-    val mods    = noflags // TODO: fix it
     val name    = Name("Object")
-    val parents = Nil
-    val owner   = Some(langPackageSymbol)
-    val tpe     = Some(TypeUtils.objectClassType)
-    ClassSymbol(mods, name, parents, owner, tpe)
+    langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
   }
 
 }
