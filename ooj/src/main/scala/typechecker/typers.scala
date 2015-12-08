@@ -11,12 +11,14 @@ import sana.calcj
 import sana.dsl._
 import tiny.ast.{TreeCopiers => _, _}
 import tiny.types.{TypeUtils => _, _}
-import tiny.symbols.{TypeSymbol, TermSymbol}
+import tiny.symbols.{TypeSymbol, TermSymbol, Symbol}
 import tiny.source.Position
+import tiny.names.Name
 import tiny.errors.ErrorReporting.{error,warning}
 import calcj.typechecker.{TyperComponent, TypePromotions}
 import calcj.types._
 import primj.ast.ApplyApi
+import primj.symbols.MethodSymbol
 import primj.types._
 import ooj.modifiers.Ops._
 import ooj.ast._
@@ -32,7 +34,7 @@ PackageDef: DONE
 ClassDef: DONE
 Template: DONE
 MethodDef: DONE
-New:
+New: DONE
 Select:
 This: DONE
 Super: DONE
@@ -87,35 +89,26 @@ trait TemplateTyperComponent extends TyperComponent {
 @component
 trait MethodDefTyperComponent
   extends primj.typechecker.MethodDefTyperComponent {
-  (mthd: MethodDefApi)             => {
-    super.apply(mthd)
+  (mthd: MethodDefApi)          => {
+    val body    = typed(mthd.body).asInstanceOf[Expr]
+    val rtpe    = mthd.ret.tpe.getOrElse(ErrorType)
+    val btpe    = body.tpe.getOrElse(ErrorType)
+    if(!(btpe <:< rtpe) && rtpe =/= VoidType) {
+      error(TYPE_MISMATCH,
+          rtpe.toString, btpe.toString, body.pos, mthd)
+      mthd
+    } else {
+      // TODO: Check if all paths eventually return
+      if(rtpe =/= VoidType && !allPathsReturn(body)) {
+        error(MISSING_RETURN_STATEMENT,
+          body.toString, body.toString, body.pos, mthd)
+        mthd
+      } else {
+        TreeCopiers.copyMethodDef(mthd)(body = body)
+      }
+    }
   }
-  // (mthd: MethodDefApi)          => {
-  //   val tpt     = typed(mthd.ret).asInstanceOf[UseTree]
-  //   val params  = mthd.params.map(typed(_).asInstanceOf[ValDefApi])
-  //   val body    = typed(mthd.body).asInstanceOf[Expr]
-  //   val tparams = params.map(_.tpe.getOrElse(ErrorType))
-  //   val rtpe    = tpt.tpe.getOrElse(ErrorType)
-  //   val btpe    = body.tpe.getOrElse(ErrorType)
-  //   if(!(btpe <:< rtpe) && rtpe =/= VoidType) {
-  //     error(TYPE_MISMATCH,
-  //         rtpe.toString, btpe.toString, body.pos, mthd)
-  //     mthd
-  //   } else {
-  //     // TODO: Check if all paths eventually return
-  //     if(rtpe =/= VoidType && !allPathsReturn(body)) {
-  //       error(MISSING_RETURN_STATEMENT,
-  //         body.toString, body.toString, body.pos, mthd)
-  //       mthd
-  //     } else {
-  //       TreeCopiers.copyMethodDef(mthd)(ret = tpt,
-  //         params = params, body = body)
-  //     }
-  //   }
-  // }
 
-
-  // def allPathsReturn(expr: Tree): Boolean = TreeUtils.allPathsReturn(expr)
 }
 
 
@@ -182,7 +175,7 @@ trait SuperTyperComponent extends TyperComponent {
 trait NewTyperComponent extends TyperComponent {
   (nw: NewApi) => {
     val app     = typed(nw.app).asInstanceOf[ApplyApi]
-    val tpe     = app.fun match {
+    val tpe     = app match {
       case Apply(Select(qual, _), _) =>
         qual.tpe
       case _                      =>
@@ -191,4 +184,159 @@ trait NewTyperComponent extends TyperComponent {
     tpe.foreach(nw.tpe = _)
     TreeCopiers.copyNew(nw)(app = app)
   }
+}
+
+
+@component
+trait ApplyTyperComponent extends TyperComponent {
+  (apply: ApplyApi) => {
+    val args   = apply.args.map(typed(_).asInstanceOf[Expr])
+    val fun    = {
+      apply.fun match {
+        case fun@Select(qual, f: IdentApi)   =>
+          f.isMethodIdent = true
+          f.argumentTypes = args.flatMap(_.tpe)
+          typed(fun).asInstanceOf[SelectApi]
+        case f: Ident                        =>
+          f.isMethodIdent = true
+          f.argumentTypes = args.flatMap(_.tpe)
+          typed(f).asInstanceOf[IdentApi]
+      }
+    }
+    fun.tpe match {
+      case Some(mtpe: MethodType) =>
+        apply.tpe = mtpe.ret
+      case _                      =>
+        ()
+    }
+    fun.symbol match {
+      case Some(m: MethodSymbol)   =>
+        m.ret.foreach(apply.symbol = _)
+      case _                       =>
+        ()
+    }
+    TreeCopiers.copyApply(apply)(fun = fun, args = args)
+  }
+}
+
+
+@component
+trait TypeUseTyperComponent extends primj.typechecker.TypeUseTyperComponent {
+  (tuse: TypeUseApi) => {
+    tuse.owner.foreach(sym => {
+      sym.getSymbol(tuse.name, _.isInstanceOf[TypeSymbol]) match {
+        case Some(sym) => tuse.symbol = sym
+        case _         => ()
+      }
+    })
+    super.apply(tuse)
+  }
+}
+
+@component
+trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
+  (id: IdentApi) => {
+    if(id.isMethodIdent) {
+      val allCandidateMethods = (enclosingClass(id.owner),
+            id.argumentTypes) match {
+        case (Some(cs: ClassSymbol), Some(tpes)) =>
+          cs.getAllSymbols(id.name,
+            (sym) => {
+              id.enclosing match {
+                case Some(from)     =>
+                  applicableMethod(sym, tpes) && isAccessible(sym, from)
+                case _              =>
+                  id.owner match {
+                    case Some(from)     =>
+                      applicableMethod(sym, tpes) &&
+                          isAccessible(sym, from)
+                    case _              =>
+                      false
+                  }
+              }
+            }).toList
+        case _                     =>
+          Nil
+      }
+      val candidateMethods = mostSpecificMethods(allCandidateMethods)
+
+
+      candidateMethods match {
+        case List(mthd)                =>
+          if(id.isQualified) {
+            if(mthd.mods.isStatic && !id.shouldBeStatic) {
+              error(INSTANCE_METHOD_IN_STATIC_CONTEXT_INVOK,
+                id.toString, "a method name", id.pos, id)
+            } else {
+              id.symbol = mthd
+              id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
+            }
+          } else {
+            enclosingNonLocal(id.owner).foreach { owner =>
+              if(owner.mods.isStatic && !mthd.mods.isStatic) {
+                error(INSTANCE_METHOD_IN_STATIC_CONTEXT_INVOK,
+                  id.toString, "a method name", id.pos, id)
+              } else {
+                id.symbol = mthd
+                id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
+              }
+            }
+          }
+        case (x::xs)                   =>
+          error(AMBIGUOUS_METHOD_INVOCATION,
+              id.toString, "a method name", id.pos, id)
+        case Nil                       =>
+          error(NAME_NOT_FOUND,
+              id.toString, "a method name", id.pos, id)
+      }
+      id
+    } else {
+      super.apply(id)
+    }
+  }
+
+
+  protected def enclosingNonLocal(sym: Option[Symbol]): Option[Symbol] =
+    SymbolUtils.enclosingNonLocal(sym)
+  protected def enclosingClass(sym: Option[Symbol]): Option[Symbol] =
+    SymbolUtils.enclosingClass(sym)
+
+  protected def isAccessible(symbol: Symbol, from: Symbol): Boolean =
+    SymbolUtils.isAccessible(symbol, from)
+
+  protected def mostSpecificMethods(symbols: List[Symbol]): List[Symbol] =
+    SymbolUtils.mostSpecificMethods(symbols)
+
+  protected def applicableMethod(symbol: Symbol,
+    atpes: List[Type]): Boolean = symbol match {
+    case ms: MethodSymbol =>
+      ms.tpe match {
+        case Some(mt: MethodType)   =>
+          SymbolUtils.methodCanBeApplied(mt.params, atpes)
+        case _                      =>
+          false
+      }
+    case _                =>
+      false
+  }
+}
+
+
+
+@component
+trait SelectTyperComponent extends TyperComponent {
+  (select: SelectApi) => {
+    val qual = typed(select.qual)
+    qual.symbol.foreach(select.tree.owner = _)
+    val tree = typed(select.tree).asInstanceOf[SimpleUseTree]
+    tree.tpe.foreach(select.tpe = _)
+    tree.symbol.foreach(select.symbol = _)
+    if(isType(qual)) {
+      tree.shouldBeStatic = true
+    }
+    TreeCopiers.copySelect(select)(qual, tree)
+  }
+
+
+  def isType(tree: Tree): Boolean = TreeUtils.isType(tree)
 }
