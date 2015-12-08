@@ -109,14 +109,8 @@ trait ValDefSymbolAssignerComponent extends SymbolAssignerComponent {
 @component(tree, owner)
 trait TypeUseSymbolAssignerComponent extends SymbolAssignerComponent {
   (tuse: TypeUseApi)          => {
-    val symbol = owner.flatMap(_.getSymbol(tuse.name,
-      _.isInstanceOf[TypeSymbol]))
-    symbol match {
-      case Some(sym)      =>
-        owner.foreach(tuse.owner = _)
-        tuse
-      case _              => tuse
-    }
+    owner.foreach(tuse.owner = _)
+    tuse
   }
 }
 
