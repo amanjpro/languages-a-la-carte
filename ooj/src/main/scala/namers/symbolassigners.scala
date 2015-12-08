@@ -9,14 +9,18 @@ import sana.ooj
 
 import sana.core.TransformationComponent
 import sana.dsl._
-import tiny.ast.{TreeCopiers => _, _}
+import tiny.ast.{TreeCopiers => _, TreeFactories => _, _}
 import tiny.errors.ErrorReporting.{error,warning}
 import tiny.symbols._
-import calcj.ast.{TreeCopiers => _, _}
-import primj.ast.{TreeCopiers => _, MethodDefApi => _, _}
-import primj.modifiers.Ops._
+import tiny.names.Name
+import calcj.ast.{TreeCopiers => _, TreeFactories => _, _}
+import primj.ast.{TreeCopiers => _, MethodDefApi => _,
+                  TreeFactories => _, TreeUtils => _, _}
 import primj.errors.ErrorCodes._
-import primj.symbols.MethodSymbol
+import primj.symbols.{MethodSymbol, VoidSymbol}
+import ooj.names.StdNames
+import ooj.modifiers._
+import ooj.modifiers.Ops._
 import primj.namers.SymbolAssignerComponent
 import ooj.ast._
 import ooj.ast.Implicits._
@@ -39,9 +43,14 @@ MethodDef: DONE
 @component(tree, owner)
 trait CompilationUnitSymbolAssignerComponent extends SymbolAssignerComponent {
   (cunit: CompilationUnitApi) => {
-    val sym     = CompilationUnitSymbol(None, cunit.sourceName, cunit.sourcePath)
+    val sym     = CompilationUnitSymbol(None, cunit.sourceName,
+                                  cunit.sourcePath, owner)
     val pkg     = assign((cunit.module, Some(sym))).asInstanceOf[PackageDefApi]
     sym.module  = pkg.symbol
+    owner.foreach(owner => {
+      cunit.owner = owner
+      owner.declare(sym)
+    })
     TreeCopiers.copyCompilationUnit(cunit)(module = pkg)
   }
 }
@@ -54,7 +63,10 @@ trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
       assign((member, Some(sym)))
     }
     pkg.symbol = sym
-    owner.foreach(pkg.owner = _)
+    owner.foreach(owner => {
+      pkg.owner = owner
+      owner.declare(sym)
+    })
     TreeCopiers.copyPackageDef(pkg)(members = members)
   }
 }
@@ -68,7 +80,10 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
       Nil, owner, None)
     val template = assign((clazz.body, Some(sym))).asInstanceOf[TemplateApi]
     clazz.symbol = sym
-    owner.foreach(clazz.owner = _)
+    owner.foreach(owner => {
+      clazz.owner = owner
+      owner.declare(sym)
+    })
     TreeCopiers.copyClassDef(clazz)(parents = parents, body = template)
   }
 }
@@ -95,14 +110,15 @@ trait NewSymbolAssignerComponent extends SymbolAssignerComponent {
 @component(tree, owner)
 trait SelectSymbolAssignerComponent extends SymbolAssignerComponent {
   (select: SelectApi) => {
+    owner.foreach(select.owner = _)
     val qual           = assign((select.qual, owner))
     val slctdOwner     = qual.symbol
     val slctdEnclosing = owner
     slctdEnclosing.foreach(select.tree.enclosing = _)
-    val slctd          =
+    select.tree.isQualified = true
+    val tree           =
       assign((select.tree, slctdOwner)).asInstanceOf[SimpleUseTree]
-    owner.foreach(select.owner = _)
-    TreeCopiers.copySelect(select)(tree = slctd, qual = qual)
+    TreeCopiers.copySelect(select)(tree = tree, qual = qual)
   }
 }
 
@@ -110,10 +126,13 @@ trait SelectSymbolAssignerComponent extends SymbolAssignerComponent {
 trait ThisSymbolAssignerComponent extends SymbolAssignerComponent {
   (ths: ThisApi) => {
     owner.foreach(ths.owner = _)
-    val enclosingClass = SymbolUtils.enclosingClass(owner)
-    enclosingClass.foreach(ths.enclosingClassSymbol = _)
+    val encl = enclosingClass(owner)
+    encl.foreach(ths.enclosingClassSymbol = _)
     ths
   }
+
+  def enclosingClass(owner: Option[Symbol]): Option[Symbol] =
+    SymbolUtils.enclosingClass(owner)
 }
 
 @component(tree, owner)
@@ -130,8 +149,8 @@ trait SuperSymbolAssignerComponent extends SymbolAssignerComponent {
 trait MethodDefSymbolAssignerComponent
     extends primj.namers.MethodDefSymbolAssignerComponent {
 
-  (mthd: primj.ast.MethodDefApi)          => {
-    val res = super.apply((mthd, owner))
+  (mthd: MethodDefApi)          => {
+    val res = super.apply((mthd, owner)).asInstanceOf[primj.ast.MethodDefApi]
     res match {
       case m: MethodDefApi =>
         res.symbol.foreach(_.mods = m.mods)
@@ -139,6 +158,10 @@ trait MethodDefSymbolAssignerComponent
       case _               =>
         res
     }
+    val res2 = TreeFactories.mkMethodDef(mthd.mods, res.ret, res.name,
+      res.params, res.body)
+    res2.attributes = res.attributes
+    res2
   }
 }
 
