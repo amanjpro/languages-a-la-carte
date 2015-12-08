@@ -20,7 +20,7 @@ trait NamerFamily extends TransformationFamily[Tree, Tree] {
 
   def components: List[PartialFunction[Tree, Tree]] =
     generateComponents[Tree, Tree](OojNodes.nodes,
-      "NamerComponent", "name", "New")
+      "NamerComponent", "name", "")
       // "Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal")
 
   def name: Tree => Tree = family
