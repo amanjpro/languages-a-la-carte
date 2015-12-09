@@ -93,20 +93,20 @@ trait MethodDefTyperComponent
     val body    = typed(mthd.body).asInstanceOf[Expr]
     val rtpe    = mthd.ret.tpe.getOrElse(ErrorType)
     val btpe    = body.tpe.getOrElse(ErrorType)
-    if(!(btpe <:< rtpe) && rtpe =/= VoidType) {
-      error(TYPE_MISMATCH,
-          rtpe.toString, btpe.toString, body.pos, mthd)
+    // if(!(btpe <:< rtpe) && rtpe =/= VoidType) {
+    //   error(TYPE_MISMATCH,
+    //       rtpe.toString, btpe.toString, body.pos, mthd)
+    //   mthd
+    // } else {
+    // Check if all paths eventually return
+    if(rtpe =/= VoidType && !allPathsReturn(body)) {
+      error(MISSING_RETURN_STATEMENT,
+        body.toString, body.toString, body.pos, mthd)
       mthd
     } else {
-      // TODO: Check if all paths eventually return
-      if(rtpe =/= VoidType && !allPathsReturn(body)) {
-        error(MISSING_RETURN_STATEMENT,
-          body.toString, body.toString, body.pos, mthd)
-        mthd
-      } else {
-        TreeCopiers.copyMethodDef(mthd)(body = body)
-      }
+      TreeCopiers.copyMethodDef(mthd)(body = body)
     }
+    // }
   }
 
 }

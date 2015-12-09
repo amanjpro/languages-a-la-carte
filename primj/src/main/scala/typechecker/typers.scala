@@ -378,21 +378,21 @@ trait MethodDefTyperComponent extends TyperComponent {
     val tparams = params.map(_.tpe.getOrElse(ErrorType))
     val rtpe    = tpt.tpe.getOrElse(ErrorType)
     val btpe    = body.tpe.getOrElse(ErrorType)
-    if(!(btpe <:< rtpe) && rtpe =/= VoidType) {
-      error(TYPE_MISMATCH,
-          rtpe.toString, btpe.toString, body.pos, mthd)
+    // if(!(btpe <:< rtpe) && rtpe =/= VoidType) {
+    //   error(TYPE_MISMATCH,
+    //       rtpe.toString, btpe.toString, body.pos, mthd)
+    //   mthd
+    // } else {
+    // Check if all paths eventually return
+    if(rtpe =/= VoidType && !allPathsReturn(body)) {
+      error(MISSING_RETURN_STATEMENT,
+        body.toString, body.toString, body.pos, mthd)
       mthd
     } else {
-      // TODO: Check if all paths eventually return
-      if(rtpe =/= VoidType && !allPathsReturn(body)) {
-        error(MISSING_RETURN_STATEMENT,
-          body.toString, body.toString, body.pos, mthd)
-        mthd
-      } else {
-        TreeCopiers.copyMethodDef(mthd)(ret = tpt,
-          params = params, body = body)
-      }
+      TreeCopiers.copyMethodDef(mthd)(ret = tpt,
+        params = params, body = body)
     }
+    // }
   }
 
 
