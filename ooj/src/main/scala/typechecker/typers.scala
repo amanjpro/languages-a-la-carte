@@ -35,12 +35,12 @@ ClassDef: DONE
 Template: DONE
 MethodDef: DONE
 New: DONE
-Select:
+Select: DONE
 This: DONE
 Super: DONE
-TypeUse:
-Ident:
-Apply:
+TypeUse: DONE
+Ident: DONE
+Apply: DONE
 */
 
 // Set class type information in a separate phase, then
@@ -177,6 +177,7 @@ trait NewTyperComponent extends TyperComponent {
     val app     = typed(nw.app).asInstanceOf[ApplyApi]
     val tpe     = app match {
       case Apply(Select(qual, _), _) =>
+        qual.symbol.foreach(nw.symbol = _)
         qual.tpe
       case _                      =>
         Some(ErrorType)
@@ -275,7 +276,7 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
             enclosingNonLocal(id.owner).foreach { owner =>
               if(owner.mods.isStatic && !mthd.mods.isStatic) {
                 error(INSTANCE_METHOD_IN_STATIC_CONTEXT_INVOK,
-                  id.toString, "a method name", id.pos, id)
+                  id.toString, "a static method name", id.pos, id)
               } else {
                 id.symbol = mthd
                 id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
@@ -291,7 +292,34 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
       }
       id
     } else {
-      super.apply(id)
+      val symbol = id.owner.flatMap(_.getSymbol(id.name,
+          _.isInstanceOf[TermSymbol]))
+      symbol match {
+        case Some(sym)                        =>
+          enclosingNonLocal(id.owner).foreach { owner =>
+            if(owner.mods.isStatic && !sym.mods.isStatic) {
+              error(INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK,
+                id.toString, "a static name", id.pos, id)
+            } else {
+              id.symbol = sym
+              id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
+            }
+            if(id.isQualified) {
+              id.enclosing match {
+                case Some(from) if !isAccessible(sym, from)   =>
+                  error(FIELD_NOT_ACCESSIBLE,
+                    id.toString, "an accessible name", id.pos, id)
+                case _                                        =>
+                  ()
+              }
+            }
+          }
+        case _                                =>
+          error(NAME_NOT_FOUND,
+              id.toString, "a variable name", id.pos, id)
+      }
+      id
+
     }
   }
 

@@ -168,6 +168,7 @@ trait SelectNamerComponent extends NamerComponent {
 trait NewNamerComponent extends NamerComponent {
   (nw: NewApi) => {
     val app     = name(nw.app).asInstanceOf[ApplyApi]
+    nw.app.symbol.foreach(nw.symbol = _)
     TreeCopiers.copyNew(nw)(app = app)
   }
 }

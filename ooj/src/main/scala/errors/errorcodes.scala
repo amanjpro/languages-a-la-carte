@@ -42,6 +42,15 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
   case object INSTANCE_METHOD_IN_STATIC_CONTEXT_INVOK extends ErrorCode {
     val message: String = "Invoking an instance method in a static context"
   }
+
+  case object INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK extends ErrorCode {
+    val message: String = "Accessing an instance field in a static context"
+  }
+
+
+  case object FIELD_NOT_ACCESSIBLE extends ErrorCode {
+    val message: String = "Field is not accessible from this context"
+  }
 }
 
 object ErrorCodes extends ErrorCodes
