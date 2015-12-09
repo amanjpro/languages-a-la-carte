@@ -104,6 +104,17 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
   }
 
 
+  def isOwnedBy(symbol: Symbol, owner: Symbol): Boolean = {
+    symbol.owner match {
+      case Some(ow) if ow == owner => true
+      case Some(ow)                =>
+        isOwnedBy(ow, owner)
+      case _                       =>
+        false
+    }
+
+  }
+
   def isAccessible(symbol: Symbol, from: Symbol): Boolean = {
     def areInTheSamePackages(sym1: Symbol, sym2: Symbol): Boolean = {
       val r = for {
@@ -120,7 +131,9 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
         s2 <- enclosingClass(Some(from))
       } yield {
         if(s1 == s2) true
-        else isAccessible(symbol, s2) // In case symbol is an inner class
+        else {
+          isOwnedBy(s2, s1) // In case symbol is an inner class
+        }
       }
       r.getOrElse(false)
     } else if(symbol.mods.isProtectedAcc) {
@@ -131,7 +144,7 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
         t2 <- s2.tpe
       } yield {
         if(t2 <:< t1 || s1 == s2) true
-        else isAccessible(symbol, s2) // In case symbol is an inner class
+        else isOwnedBy(s2, s1) // In case symbol is an inner class
       }
       areInTheSamePackages(symbol, from) || r.getOrElse(false)
     } else areInTheSamePackages(symbol, from)
