@@ -1,0 +1,24 @@
+// fails
+// TYPE_MISMATCH
+// TYPE_MISMATCH
+
+package test;
+
+class A extends java.lang.Object {
+  int k = 0;
+  public A() {}
+}
+
+class B extends A {
+  public B() {
+  }
+
+  int n () {
+    boolean k = true;
+    if(k) {
+      return k;  // fails
+    } else {
+      return k;  // fails
+    }
+  }
+}

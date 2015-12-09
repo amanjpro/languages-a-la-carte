@@ -1,0 +1,32 @@
+// fails
+// NAME_NOT_FOUND
+// NAME_NOT_FOUND
+
+package test;
+
+class A extends java.lang.Object {
+  public A() {}
+}
+
+class B extends A {
+  public int k = 3;
+  public B() {
+    super();
+    k = 0;
+  }
+
+  public B(int k) {
+    this();
+    this.k = k;
+  }
+
+  static void n () {
+    new B();
+    k = 0;
+    new B(1);
+    new A(2);   // should fail
+    new A();
+    new A().k;  // should fail
+    new B().k;
+  }
+}

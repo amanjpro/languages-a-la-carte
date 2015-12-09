@@ -1,0 +1,27 @@
+// fails
+// FIELD_NOT_ACCESSIBLE
+// FIELD_NOT_ACCESSIBLE
+
+class C {
+  C () {}
+}
+class A extends C {
+  private int q;
+  private int a;
+  int b;
+  protected int c;
+  public int d;
+}
+
+
+class B {
+  B () {}
+  static void m () {
+    A a = new A();
+    a.q;   // this fails
+    a.a;   // this fails
+    a.b;
+    a.c;
+    a.d;
+  }
+}

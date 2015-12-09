@@ -1,0 +1,21 @@
+// fails
+// NAME_NOT_FOUND
+
+package test;
+
+class A extends java.lang.Object {
+  public A() {}
+  int m () {
+    return 1;
+  }
+}
+
+class B extends A {
+  public B() {
+  }
+
+  int n () {
+    1 + super.k();  // fails
+    return 1 + super.m();
+  }
+}

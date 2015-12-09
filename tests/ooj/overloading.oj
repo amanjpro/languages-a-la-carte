@@ -1,9 +1,6 @@
 // passes
 
-/* TODO: Test default constructor later */
 /* TODO: Later test implicit java extension */
-/* TODO: Test String return later */
-/* TODO: Parameterized constructor has bugs, test it */
 /* TODO: test no package too */
 
 
@@ -19,6 +16,7 @@ class A extends java.lang.Object {
 
 class B extends java.lang.Object {
   public B() {}
+  public B(int k) {}
   double f () {
     return 1.2;
   }
@@ -29,6 +27,7 @@ class Test extends java.lang.Object {
 
   /* private */
   private A k(int i) {
+    new B(3);
     return new A();
   }
 
@@ -53,9 +52,9 @@ class Test extends java.lang.Object {
   }
 
   // TODO: Test this method later
-  // void test(int m) {
-  //   return k(1).m();
-  // }
+  void test(int m) {
+    return k(1).m();
+  }
 }
 
 

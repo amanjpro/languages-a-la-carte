@@ -1,0 +1,34 @@
+// fails
+// FIELD_NOT_ACCESSIBLE
+
+package test;
+
+class A extends java.lang.Object {
+  private int a;
+  public int b;
+  protected int c;
+  int d;
+  public A() {}
+}
+
+class B extends A {
+  public int z = 3;
+  private int y = 3;
+  protected int x = 3;
+  int u = 3;
+
+  public B() {}
+
+
+  static void n () {
+    B b = new B();
+    b.z;
+    b.y;
+    b.x;
+    b.u;
+    b.a; // should fail
+    b.b;
+    b.c;
+    b.d;
+  }
+}
