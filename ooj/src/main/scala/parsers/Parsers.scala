@@ -587,7 +587,7 @@ class Parser extends parsers.Parser {
         case null                           => Nil
         case list                           =>
           list.asScala.toList.map { (x) =>
-            visit(ctx)
+            visit(x)
           }
       }
       TreeFactories.mkBlock(call ++ stmts, pos(ctx))
