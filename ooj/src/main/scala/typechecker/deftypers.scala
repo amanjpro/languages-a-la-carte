@@ -22,7 +22,7 @@ import calcj.types._
 // import primj.symbols._
 import primj.errors.ErrorCodes._
 import primj.types._
-import primj.symbols.MethodSymbol
+import primj.symbols.{MethodSymbol, VariableSymbol}
 import primj.ast.{TreeCopiers => _, MethodDefApi => _, TreeUtils => _, _}
 import primj.modifiers.Ops._
 import ooj.ast.Implicits._
@@ -151,7 +151,14 @@ trait ValDefDefTyperComponent extends DefTyperComponent {
     val tpt     = typed(valdef.tpt).asInstanceOf[UseTree]
     val rtpe    = tpt.tpe.getOrElse(ErrorType)
     valdef.tpe  = rtpe
-    valdef.symbol.foreach(_.tpe = Some(rtpe))
+    valdef.symbol.foreach {sym =>
+      sym match {
+        case vs: VariableSymbol =>
+          vs.typeSymbol = tpt.symbol
+        case _                  =>
+          ()
+      }
+    }
     TreeCopiers.copyValDef(valdef)(tpt = tpt)
   }
 }

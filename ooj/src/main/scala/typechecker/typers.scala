@@ -17,8 +17,8 @@ import tiny.names.Name
 import tiny.errors.ErrorReporting.{error,warning}
 import calcj.typechecker.{TyperComponent, TypePromotions}
 import calcj.types._
-import primj.ast.ApplyApi
-import primj.symbols.MethodSymbol
+import primj.ast.{ApplyApi, ValDefApi}
+import primj.symbols.{MethodSymbol, VariableSymbol}
 import primj.types._
 import ooj.modifiers.Ops._
 import ooj.ast._
@@ -62,6 +62,21 @@ trait PackageDefTyperComponent extends TyperComponent {
   }
 }
 
+@component
+trait ValDefTyperComponent extends primj.typechecker.ValDefTyperComponent {
+  (valdef: ValDefApi)          => {
+    val res = super.apply(valdef).asInstanceOf[ValDefApi]
+    res.symbol.foreach(sym => {
+      sym match {
+        case vs: VariableSymbol =>
+          vs.typeSymbol = res.tpt.symbol
+        case _                  =>
+          ()
+      }
+    })
+    res
+  }
+}
 
 @component
 trait ClassDefTyperComponent extends TyperComponent {
@@ -265,7 +280,7 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
       candidateMethods match {
         case List(mthd)                =>
           if(id.isQualified) {
-            if(mthd.mods.isStatic && !id.shouldBeStatic) {
+            if(!mthd.mods.isStatic && id.shouldBeStatic) {
               error(INSTANCE_METHOD_IN_STATIC_CONTEXT_INVOK,
                 id.toString, "a method name", id.pos, id)
             } else {
@@ -297,13 +312,6 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
       symbol match {
         case Some(sym)                        =>
           enclosingNonLocal(id.owner).foreach { owner =>
-            if(owner.mods.isStatic && !sym.mods.isStatic) {
-              error(INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK,
-                id.toString, "a static name", id.pos, id)
-            } else {
-              id.symbol = sym
-              id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
-            }
             if(id.isQualified) {
               id.enclosing match {
                 case Some(from) if !isAccessible(sym, from)   =>
@@ -312,6 +320,20 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
                 case _                                        =>
                   ()
               }
+              if(sym.mods.isField && !sym.mods.isStatic && id.shouldBeStatic) {
+                error(INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK,
+                  id.toString, "a variable name", id.pos, id)
+              } else {
+                id.symbol = sym
+                id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
+              }
+            } else if(owner.mods.isStatic && sym.mods.isField &&
+                  !sym.mods.isStatic) {
+              error(INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK,
+                id.toString, "a static name", id.pos, id)
+            } else {
+              id.symbol = sym
+              id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
             }
           }
         case _                                =>

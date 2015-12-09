@@ -98,8 +98,10 @@ trait ValDefSymbolAssignerComponent extends SymbolAssignerComponent {
     val rhs     = assign((valdef.rhs, owner)).asInstanceOf[Expr]
 
     val symbol  = VariableSymbol(valdef.mods, valdef.name,
-      tpt.tpe, owner)
-    owner.foreach(sym => sym.declare(symbol))
+      tpt.symbol, owner)
+    owner.foreach(sym => {
+      sym.declare(symbol)
+    })
     valdef.symbol = symbol
     symbol.owner.foreach(valdef.owner = _)
     TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)

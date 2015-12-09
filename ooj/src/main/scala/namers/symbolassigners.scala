@@ -184,18 +184,21 @@ trait MethodDefSymbolAssignerComponent
     extends primj.namers.MethodDefSymbolAssignerComponent {
 
   (mthd: MethodDefApi)          => {
-    val res = super.apply((mthd, owner)).asInstanceOf[primj.ast.MethodDefApi]
-    res match {
-      case m: MethodDefApi =>
-        res.symbol.foreach(_.mods = m.mods)
-        res
-      case _               =>
-        res
-    }
-    val res2 = TreeFactories.mkMethodDef(mthd.mods, res.ret, res.name,
-      res.params, res.body)
-    res2.attributes = res.attributes
-    res2
+    val symbol  = MethodSymbol(mthd.mods, mthd.name,
+      Nil, None, None, owner)
+    owner.foreach(sym => sym.declare(symbol))
+    val opsym   = Some(symbol)
+    val tpt     = assign((mthd.ret, owner)).asInstanceOf[UseTree]
+    val params  = mthd.params.map((x) =>
+        assign((x, opsym)).asInstanceOf[ValDefApi])
+    val body    = assign((mthd.body, opsym)).asInstanceOf[Expr]
+    symbol.params = params.map(_.symbol).flatten
+    symbol.ret    = tpt.symbol
+    mthd.symbol = symbol
+    symbol.owner.foreach(mthd.owner = _)
+
+    TreeCopiers.copyMethodDef(mthd)(ret = tpt,
+      params = params, body = body)
   }
 }
 

@@ -28,29 +28,33 @@ object ProgramSymbol extends Symbol {
 }
 
 case class VariableSymbol(var mods: Flags, var name: Name,
-  var tpe: Option[Type], var owner: Option[Symbol])
+  var typeSymbol: Option[Symbol], var owner: Option[Symbol])
   extends TermSymbol {
+
+  def tpe: Option[Type] = typeSymbol.flatMap(_.tpe)
+  def tpe_=(tpe: Option[Type]): Unit = ???
 
   override def declare(symbol: Symbol): Unit = ???
   override def delete(symbol: Symbol): Unit = ???
   override def defines(symbol: Symbol): Boolean =
-    owner.map(_.defines(symbol)).getOrElse(false)
+    typeSymbol.map(_.defines(symbol)).getOrElse(false)
   override def getSymbol(name: Name,
-    p: Symbol => Boolean): Option[Symbol] =
-    owner.flatMap(_.getSymbol(name, p))
+    p: Symbol => Boolean): Option[Symbol] = {
+    typeSymbol.flatMap(_.getSymbol(name, p))
+  }
 
   override def equals(other: Any): Boolean = other match {
     case null                 => false
     case that: VariableSymbol =>
       this.mods == that.mods &&
         this.name == that.name &&
-        this.tpe == that.tpe
+        this.typeSymbol == that.typeSymbol
     case _                    =>
       false
   }
   override def toString(): String = s"Variable symbol $name"
   override def hashCode(): Int = name.hashCode * 43 +
-    tpe.hashCode * mods.hashCode
+    typeSymbol.hashCode * mods.hashCode
 }
 
 case class MethodSymbol(var mods: Flags, var name: Name,

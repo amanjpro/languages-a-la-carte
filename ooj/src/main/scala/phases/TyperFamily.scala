@@ -9,6 +9,7 @@ import sana.ooj.OojNodes
 import sana.primj.typechecker.{MethodDefTyperComponent => _,
                                ApplyTyperComponent => _,
                                TypeUseTyperComponent => _,
+                               ValDefTyperComponent => _,
                                IdentTyperComponent => _, _}
 import sana.calcj.typechecker.{UnaryTyperComponent => _, _}
 import sana.brokenj.typechecker._

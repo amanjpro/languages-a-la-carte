@@ -89,8 +89,13 @@ trait ValDefNamerComponent extends NamerComponent {
     val tpt     = name(valdef.tpt).asInstanceOf[UseTree]
     val rhs     = name(valdef.rhs).asInstanceOf[Expr]
     valdef.symbol.foreach(sym => {
-      sym.tpe = tpt.tpe
       sym.tpe.foreach(valdef.tpe = _)
+      sym match {
+        case vs: VariableSymbol =>
+          vs.typeSymbol = tpt.symbol
+        case _                  =>
+          ()
+      }
     })
     TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
   }
