@@ -74,6 +74,19 @@ trait ValDefTyperComponent extends primj.typechecker.ValDefTyperComponent {
           ()
       }
     })
+    valdef.owner match {
+      case Some(csym: ClassSymbol) if csym.mods.isInterface       =>
+        if(!valdef.mods.isStatic)
+          error(NON_STATIC_FIELD_IN_INTERFACE,
+              valdef.toString, "A static final field", valdef.pos, valdef)
+        if(!valdef.mods.isFinal)
+          error(NON_FINAL_FIELD_IN_INTERFACE,
+              valdef.toString, "A static final field", valdef.pos, valdef)
+      case _                                                      =>
+        ()
+    }
+
+
     res
   }
 }
