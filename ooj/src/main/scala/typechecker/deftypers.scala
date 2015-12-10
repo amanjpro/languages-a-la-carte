@@ -42,16 +42,17 @@ Template: DONE
 
 ClassDef: DONE
 MethodDef: DONE
-ValDef:
+ValDef: DONE
+TypeUse: DONE
+Select: DONE
+Ident: DONE
 
 
 
 
 Unneeded:
 =========
-Select:
 Ident:
-TypeUse:
 New:
 Case:
 Swtich:
@@ -196,5 +197,20 @@ trait TypeUseDefTyperComponent extends DefTyperComponent {
       }
     })
     tuse
+  }
+}
+
+@component
+trait IdentDefTyperComponent extends DefTyperComponent {
+  (id: IdentApi) => {
+    id.owner.foreach(sym => {
+      sym.getSymbol(id.name, _.isInstanceOf[TermSymbol]) match {
+        case Some(sym) =>
+          id.symbol = sym
+          sym.tpe.foreach(id.tpe = _)
+        case _         => ()
+      }
+    })
+    id
   }
 }
