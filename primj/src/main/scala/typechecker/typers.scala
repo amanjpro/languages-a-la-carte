@@ -243,7 +243,6 @@ trait TernaryTyperComponent extends TyperComponent {
 
 @component
 trait ApplyTyperComponent extends TyperComponent {
-  // FIXME: Apply doesn't work with method overloading
   (apply: ApplyApi)   => {
     val fun    = typed(apply.fun).asInstanceOf[Expr]
     val funty  = fun.tpe
@@ -348,6 +347,7 @@ trait ValDefTyperComponent extends TyperComponent {
     val rhs    = typed(valdef.rhs).asInstanceOf[Expr]
     val rtpe   = rhs.tpe.getOrElse(ErrorType)
     val ttpe   = tpt.tpe.getOrElse(ErrorType)
+    valdef.tpe = ttpe
     if(ttpe =:= VoidType) {
       error(VOID_VARIABLE_TYPE,
           ttpe.toString, ttpe.toString, rhs.pos, valdef)
@@ -374,16 +374,29 @@ trait MethodDefTyperComponent extends TyperComponent {
   (mthd: MethodDefApi)          => {
     val tpt     = typed(mthd.ret).asInstanceOf[UseTree]
     val params  = mthd.params.map(typed(_).asInstanceOf[ValDefApi])
-    val body    = typed(mthd.body).asInstanceOf[Expr]
     val tparams = params.map(_.tpe.getOrElse(ErrorType))
     val rtpe    = tpt.tpe.getOrElse(ErrorType)
-    val btpe    = body.tpe.getOrElse(ErrorType)
     // if(!(btpe <:< rtpe) && rtpe =/= VoidType) {
     //   error(TYPE_MISMATCH,
     //       rtpe.toString, btpe.toString, body.pos, mthd)
     //   mthd
     // } else {
     // Check if all paths eventually return
+    val tpe = MethodType(rtpe, tparams)
+    mthd.tpe = tpe
+    mthd.symbol.foreach( sym => {
+      sym match {
+        case m: MethodSymbol =>
+          m.ret = tpt.symbol
+        case _               =>
+          ()
+      }
+      sym.tpe = Some(tpe)
+    })
+    // }
+    val body    = typed(mthd.body).asInstanceOf[Expr]
+    val btpe    = body.tpe.getOrElse(ErrorType)
+
     if(rtpe =/= VoidType && !allPathsReturn(body)) {
       error(MISSING_RETURN_STATEMENT,
         body.toString, body.toString, body.pos, mthd)
@@ -392,7 +405,6 @@ trait MethodDefTyperComponent extends TyperComponent {
       TreeCopiers.copyMethodDef(mthd)(ret = tpt,
         params = params, body = body)
     }
-    // }
   }
 
 
