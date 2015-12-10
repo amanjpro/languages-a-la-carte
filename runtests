@@ -113,7 +113,7 @@ def start(opts: List[String]): Unit = {
         val n = x.getName
         s"sbt $n/assembly".!
         if(new File(
-          s"$n/target/scala-$VERSION/$n-assembly-$VERSION.jar").exists)
+          s"$n/target/scala-$SVERSION/$n-assembly-$VERSION.jar").exists)
 
           s"cp $n/target/scala-$SVERSION/$n-assembly-$VERSION.jar bin/$n.jar".!
         else ()
@@ -128,7 +128,7 @@ def start(opts: List[String]): Unit = {
       dirs.foreach((x) => {
         if(new File(s"bin/${x.getName}.jar").exists)
           testDir(x.getAbsolutePath, s"bin/${x.getName}.jar")
-        else println("${x.getName} skipped")
+        else println(s"${x.getName} skipped")
       })
     case List(dir)                  =>
       testDir(s"tests/$dir", s"bin/$dir.jar")
@@ -144,6 +144,7 @@ def start(opts: List[String]): Unit = {
    2- line 2 should show the compilation result, like:
       // TYPE_MISMATCH    (make sure to leave the space after //)
 */
+
 "mkdir -p bin".!!
 start(args.toList)
 System.exit(failed)
