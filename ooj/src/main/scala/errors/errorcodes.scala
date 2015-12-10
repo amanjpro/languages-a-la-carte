@@ -51,6 +51,37 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
   case object FIELD_NOT_ACCESSIBLE extends ErrorCode {
     val message: String = "Field is not accessible from this context"
   }
+
+
+
+  case object NON_STATIC_FIELD_IN_INTERFACE extends ErrorCode {
+    val message: String = "Fields in interfaces should be static final"
+  }
+
+  case object NON_FINAL_FIELD_IN_INTERFACE extends ErrorCode {
+    val message: String = "Fields in interfaces should be static final"
+  }
+
+
+  case object NON_ABSTRACT_METHOD_IN_INTERFACE extends ErrorCode {
+    val message: String = "Method is not abstract"
+  }
+
+  case object CONSTRUCTOR_IN_INTERFACE extends ErrorCode {
+    val message: String = "Interfaces cannot have constructors"
+  }
+
+  case object ABSTRACT_METHOD_CANNOT_HAVE_BODY extends ErrorCode {
+    val message: String = "Abstract methods must not have body"
+  }
+
+  case object CONSTRUCTOR_CANNOT_BE_ABSTRACT extends ErrorCode {
+    val message: String = "Constructors cannot be abstract"
+  }
+
+  case object ABSTRACT_METHOD_IN_CONCRETE_CLASS extends ErrorCode {
+    val message: String = "Abstract methods cannot occur in concrete classes"
+  }
 }
 
 object ErrorCodes extends ErrorCodes
