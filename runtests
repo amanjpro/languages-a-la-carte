@@ -61,7 +61,8 @@ def test(file: String, prg: String): Unit = {
   val source = Source.fromFile(file)
   val lines = source.getLines.toList
   lines.indexWhere((x) => ! x.startsWith("//")) match {
-    case -1 | 0 | 1                => skip(file)
+    case -1 | 0                    =>
+      skip(file)
     case n                         =>
       // Only take the first error codes
       val refErrorCodes = lines.take(n).tail.flatMap((code) => {
