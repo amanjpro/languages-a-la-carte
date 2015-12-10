@@ -127,16 +127,62 @@ trait MethodDefTyperComponent
     //   mthd
     // } else {
     // Check if all paths eventually return
-    if(rtpe =/= VoidType && !allPathsReturn(body)) {
+    val res     = if(rtpe =/= VoidType && !allPathsReturn(body)) {
       error(MISSING_RETURN_STATEMENT,
         body.toString, body.toString, body.pos, mthd)
       mthd
     } else {
       TreeCopiers.copyMethodDef(mthd)(body = body)
     }
+
+    if(mthd.mods.isAbstract && ! mthd.mods.isConstructor &&
+        mthd.body != NoTree) {
+      error(ABSTRACT_METHOD_CANNOT_HAVE_BODY,
+          mthd.toString, "No constructor", mthd.pos, mthd)
+    }
+
+    if (mthd.mods.isAbstract && mthd.mods.isConstructor) {
+      error(CONSTRUCTOR_CANNOT_BE_ABSTRACT,
+          mthd.toString, "No constructor", mthd.pos, mthd)
+    }
+
+
+    mthd.owner match {
+      case Some(sym) if mthd.mods.isInterface && mthd.mods.isConstructor =>
+        error(CONSTRUCTOR_IN_INTERFACE,
+            mthd.toString, "No constructor", mthd.pos, mthd)
+      case Some(sym) if mthd.mods.isInterface =>
+        error(NON_ABSTRACT_METHOD_IN_INTERFACE,
+            mthd.toString, "An abstract method", mthd.pos, mthd)
+      case Some(sym) if !(sym.mods.isInterface ||
+                          sym.mods.isAbstract) &&
+                          mthd.mods.isAbstract                           =>
+        error(ABSTRACT_METHOD_IN_CONCRETE_CLASS,
+            mthd.toString, "An abstract method", mthd.pos, mthd)
+      case _                                                             =>
+        ()
+    }
+
+    res
+
     // }
   }
 
+  override def allPathsReturn(expr: Tree): Boolean = {
+    enclosingMethod(expr.symbol) match {
+      case Some(mthd)                         =>
+        mthd.mods.isAbstract || TreeUtils.allPathsReturn(expr)
+      case None                               =>
+        expr == NoTree
+    }
+  }
+
+
+  protected def enclosingMethod(symbol: Option[Symbol]): Option[Symbol] =
+    SymbolUtils.enclosingMethod(symbol)
+
+  protected def enclosingClass(symbol: Option[Symbol]): Option[Symbol] =
+    SymbolUtils.enclosingClass(symbol)
 }
 
 
