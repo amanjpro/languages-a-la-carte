@@ -32,6 +32,8 @@ trait ClassTypeApi extends RefType {
     }
   }
 
+  def parentTypes: Set[Type] = parents.flatMap(_.tpe)
+
   def =:=(t: Type): Boolean = t match {
     case ct: ClassTypeApi   =>
       lazy val res = this.allParents.foldLeft(true)((z, y) => {
@@ -44,7 +46,7 @@ trait ClassTypeApi extends RefType {
   def <:<(t: Type): Boolean = t match {
     // case ObjectType         => true
     case ct: ClassTypeApi   =>
-      this =:= ct || this.allParents.exists(_ <:< ct)
+      this =:= ct || this.parentTypes.exists(_ <:< ct)
     case _                  => false
   }
 }
