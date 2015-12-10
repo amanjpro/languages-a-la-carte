@@ -65,7 +65,7 @@ class Parser extends parsers.Parser {
       // Java1 does not allow modifiers on local variables,
       // Because there were no inner class back then
       val mods       = noflags
-      val tpt        = visit(ctx.`type`()).asInstanceOf[TypeUseApi]
+      val tpt        = visit(ctx.`type`()).asInstanceOf[UseTree]
       ctx.variableDeclarators.variableDeclarator.asScala.toList.map {
         case ctx =>
           val tpt2   =
@@ -403,7 +403,7 @@ class Parser extends parsers.Parser {
                 x.classMemberDeclaration.fieldDeclaration != null) {
               val ctx = x.classMemberDeclaration.fieldDeclaration
               val mods       = modifiersTo(ctx.modifier, true)
-              val tpt        = visit(ctx.`type`()).asInstanceOf[TypeUseApi]
+              val tpt        = visit(ctx.`type`()).asInstanceOf[UseTree]
               ctx.variableDeclarators.variableDeclarator.asScala.toList.map {
                 case ctx =>
                   val tpt2   =
