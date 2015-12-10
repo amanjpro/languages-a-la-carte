@@ -18,6 +18,7 @@ import primj.ast.{TreeCopiers => _, MethodDefApi => _,
                   TreeFactories => _, TreeUtils => _, _}
 import primj.errors.ErrorCodes._
 import primj.symbols.{MethodSymbol, VoidSymbol}
+import primj.modifiers._
 import ooj.names.StdNames
 import ooj.modifiers._
 import ooj.modifiers.Ops._
@@ -79,10 +80,13 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
     val sym      = ClassSymbol(clazz.mods, clazz.name,
       Nil, owner, None)
     val template = {
-      clazz.body.members.exists(isConstructor(_)) match {
-        case true                =>
-          assign((clazz.body, Some(sym))).asInstanceOf[TemplateApi]
+      val shouldCreateConstructor =
+        !(clazz.body.members.exists(isConstructor(_))) &&
+          ! clazz.mods.isInterface
+      shouldCreateConstructor match {
         case false               =>
+          assign((clazz.body, Some(sym))).asInstanceOf[TemplateApi]
+        case true                =>
           // TODO: Do we need to have a refactoring for creating constructors?
           // I would say yes!!!
           // INFO: No constructors? Add it!
