@@ -623,7 +623,7 @@ class Parser extends parsers.Parser {
       val interfaces = interfacesContextToTypeUses(
         ctx.extendsInterfaces())
       val body       =
-        visitChildren(ctx.interfaceBody()).asInstanceOf[TemplateApi]
+        visit(ctx.interfaceBody()).asInstanceOf[TemplateApi]
       TreeFactories.mkClassDef(mods, name, interfaces, body, pos(ctx))
     }
 
@@ -639,8 +639,26 @@ class Parser extends parsers.Parser {
         case null                     =>
           TreeFactories.mkTemplate(Nil, pos(ctx))
         case body                     =>
-          val members = body.asScala.toList.map { (x) =>
-            visit(x).asInstanceOf[DefTree]
+          val members: List[Tree] = body.asScala.toList.flatMap { x =>
+            if(x.constantDeclaration != null) {
+              val ctx        = x.constantDeclaration.fieldDeclaration
+              val mods       = modifiersTo(ctx.modifier, true) | FIELD | FINAL
+              val tpt        = visit(ctx.`type`()).asInstanceOf[UseTree]
+              ctx.variableDeclarators.variableDeclarator.asScala.toList.map {
+                (ctx) => {
+                  val tpt2   =
+                    dimsToArrayType(tpt, ctx.variableDeclaratorId.dims)
+                  val name   = Name(ctx.variableDeclaratorId.Identifier.getText)
+                  val rhs    = ctx.variableInitializer match {
+                    case null          => NoTree
+                    case child         => visit(child).asInstanceOf[Expr]
+                  }
+                  TreeFactories.mkValDef(mods, tpt2, name, rhs, pos(ctx))
+                }
+              }
+            } else {
+              List(visit(x).asInstanceOf[DefTree])
+            }
           }
           TreeFactories.mkTemplate(members, pos(ctx))
       }
