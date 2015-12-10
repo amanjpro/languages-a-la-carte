@@ -1,6 +1,6 @@
 # Sana Compiler Framework
 
-[![Build Status](https://travis-ci.com/amanjpro/languages-a-la-carte.svg?branch=master)](https://travis-ci.come/amanjpro/languages-a-la-carte)
+[![Build Status](https://travis-ci.com/amanjpro/languages-a-la-carte.svg?token=xagHpp4qXzfWp5WxM1j3)](https://travis-ci.com/amanjpro/languages-a-la-carte)
 
 Sana is an extensible compiler framework written in Scala. As a research
 project, Sana aims to be both fully modular in a sense that removing a new
