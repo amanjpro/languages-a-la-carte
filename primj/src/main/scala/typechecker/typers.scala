@@ -408,7 +408,8 @@ trait MethodDefTyperComponent extends TyperComponent {
   }
 
 
-  def allPathsReturn(expr: Tree): Boolean = TreeUtils.allPathsReturn(expr)
+  protected def allPathsReturn(expr: Tree): Boolean =
+    TreeUtils.allPathsReturn(expr)
 }
 
 
