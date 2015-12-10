@@ -1,6 +1,6 @@
 # Sana Compiler Framework
 
-> [![Build Status](https://travis-ci.org/amanjpro/sana.svg?branch=master)](https://travis-ci.org/amanjpro/sana)
+[] ([![Build Status](https://travis-ci.org/amanjpro/sana.svg?branch=master)](https://travis-ci.org/amanjpro/sana))
 
 Sana is an extensible compiler framework written in Scala. As a research
 project, Sana aims to be both fully modular in a sense that removing a new
@@ -25,8 +25,8 @@ Then, using `sbt` you can build the wanted target. For example to build the
 sbt tiny/compile
 ```
 
-> Please consult the project's [wiki](https://github.com/amanjpro/sana/wiki)
-to know all possible targets.
+[] (Please consult the project's [wiki](https://github.com/amanjpro/sana/wiki)
+to know all possible targets.)
 
 You can generate a fat jar by running assembly for your target, for example for
 `tiny` it will be:
@@ -38,7 +38,7 @@ sbt tiny/assembly
 
 ## Usage
 
-> Please refer to the [wiki](https://github.com/amanjpro/sana/wiki)
+[] (Please refer to the [wiki](https://github.com/amanjpro/sana/wiki))
 
 ## Contributing
 
@@ -48,16 +48,16 @@ sbt tiny/assembly
 4. Play with Sana more and implement a language feature on top of an
    existing language.
 5. Report bugs
-> 6. Go through [wiki](https://github.com/amanjpro/sana/wiki/Contributing)
+[] (6. Go through [wiki](https://github.com/amanjpro/sana/wiki/Contributing))
 
 ## Q/A Forum
 [here](https://groups.google.com/d/forum/sana-compiler-framework)
 
 
-> (## History)
+[](## History)
 
 
-> (## Credits)
+[](## Credits)
 
 
 ## Language modules:
