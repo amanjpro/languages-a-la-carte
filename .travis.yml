@@ -1,0 +1,33 @@
+language: scala
+
+scala:
+  - 2.11.5
+
+install:
+  # scala install
+  - wget www.scala-lang.org/files/archive/scala-2.11.1.deb
+  - sudo dpkg -i scala-2.11.1.deb
+  - sudo apt-get install scala
+  # - git clone --depth=1 https://github.com/amanjpro/sana.git /tmp/sana
+  # - export PATH=$PATH:/tmp/casperjs/bin
+
+cache:
+  directories:
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt
+
+before_script:
+  - sbt antlr4:antlr4Generate
+  # - sbt primj/antlr4:antlr4Generate
+  # - sbt /antlr4:antlr4Generate
+  # - sbt calcj/assembly
+  # - sbt primj/compile
+
+
+script:
+  - sbt test
+  - "./runtests recompile all"
+
+# configure notifications (email, IRC, campfire etc)
+# notifications:
+  # irc: "irc.freenode.org#yourfavouriteroomfortravis"
