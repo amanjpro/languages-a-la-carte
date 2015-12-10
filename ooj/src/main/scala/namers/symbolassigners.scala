@@ -207,6 +207,25 @@ trait MethodDefSymbolAssignerComponent
 }
 
 
+@component(tree, owner)
+trait ValDefSymbolAssignerComponent
+  extends primj.namers.ValDefSymbolAssignerComponent {
+  (valdef: ValDefApi) => {
+    enclosingClass(owner) match {
+      case Some(sym) if sym.mods.isInterface =>
+        val mods = STATIC | FINAL | valdef.mods
+        val nv   = TreeCopiers.copyValDef(valdef)(mods = mods)
+        super.apply((nv, owner))
+      case _                                 =>
+        super.apply((valdef, owner))
+    }
+  }
+
+  protected def enclosingClass(symbol: Option[Symbol]): Option[Symbol] =
+    SymbolUtils.enclosingClass(symbol)
+}
+
+
 // @component(tree, owner)
 // trait IdentSymbolAssignerComponent extends SymbolAssignerComponent {
 //   (id: Ident)          => {
