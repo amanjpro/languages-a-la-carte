@@ -1,0 +1,42 @@
+// fails
+// UNINITIALIZED_FINAL_VARIABLE
+// UNINITIALIZED_FINAL_VARIABLE
+// CONSTRUCTOR_CANNOT_BE_ABSTRACT
+// ABSTRACT_METHOD_CANNOT_HAVE_BODY
+// ABSTRACT_METHOD_IN_CONCRETE_CLASS
+
+
+interface K {
+  // K () {}   // fails
+}
+
+interface A extends java.lang.Object {
+  int a;          // fails, (not initialized)
+  static int b;   // fails, (not initialized)
+  final static int c = 2;
+  // int m() { // this should fail
+  //   return 1;
+  // }
+  abstract int m();
+}
+
+
+abstract class B {
+  abstract B () {} // fails
+
+  abstract int m();
+  abstract int n() { // fails
+    return 1;
+  }
+}
+class Test implements A {
+  Test () {}
+  void main() {
+    A.a;
+    A.b;
+    A.c;
+    // new A(){}.k;
+  }
+  abstract int m(); // fails
+}
+
