@@ -108,8 +108,11 @@ case class ClassSymbol(var mods: Flags, var name: Name,
   }
 
 
-  override def declarations: List[Symbol] =
-    parents.flatMap(_.declarations) ++ decls
+  override def declarations: List[Symbol] = {
+    val parentDecls =
+      parents.flatMap(_.declarations).filter(!decls.contains(_))
+    decls ++ parentDecls
+  }
 
   def directlyDefines(symbol: Symbol): Boolean = decls.contains(symbol)
 
