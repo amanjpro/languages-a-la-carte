@@ -1,0 +1,41 @@
+// fails
+// IMPLEMENTING_A_CLASS
+// IMPLEMENTING_A_CLASS
+// IMPLEMENTING_A_CLASS
+
+
+class A {
+  A () {}
+}
+
+class B {
+  B () {}
+}
+
+class C extends A implements B { // fails
+  C () {}
+}
+
+
+interface Z {}
+
+interface Y {}
+
+
+class D extends A implements Z, Y {
+}
+
+class E extends A implements java.lang.Object, Z, Y { // fails
+  E () {}
+}
+
+class F extends A implements B, Z, Y { // fails
+  E () {}
+}
+
+
+
+interface G extends Z, Y {
+}
+
+
