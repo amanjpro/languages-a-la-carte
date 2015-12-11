@@ -118,7 +118,18 @@ trait ClassDefTyperComponent extends TyperComponent {
 
 
   protected def checkParents(parents: List[UseTree],
-        clazz: ClassDefApi): Unit = {
+      clazz: ClassDefApi): Unit = {
+    parents.foreach( p => {
+      if(! (isInExtendsClause(p) || isInImplementsClause(p)))
+        p match {
+          case tuse: TypeUseApi            =>
+            tuse.isInExtendsClause = true
+          case Select(_, tuse: TypeUseApi) =>
+            tuse.isInExtendsClause = true
+          case _                           =>
+            ()
+        }
+    })
     parents.filter(isInExtendsClause(_)) match {
       case List(x) if !clazz.mods.isInterface   =>
         isInterface(x.symbol) match {
