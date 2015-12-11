@@ -110,6 +110,15 @@ trait ClassDefTyperComponent extends TyperComponent {
     }
 
 
+    checkParents(parents, clazz)
+
+    TreeCopiers.copyClassDef(clazz)(body = body, parents = parents)
+  }
+
+
+
+  protected def checkParents(parents: List[UseTree],
+        clazz: ClassDefApi): Unit = {
     parents.filter(isInExtendsClause(_)) match {
       case List(x) if !clazz.mods.isInterface   =>
         isInterface(x.symbol) match {
@@ -121,6 +130,9 @@ trait ClassDefTyperComponent extends TyperComponent {
             // pass
             ()
         }
+      case List(x) if isObject(x.symbol)        =>
+        // pass
+        ()
       case List(x, y) if !clazz.mods.isInterface =>
         if(isObject(x.symbol) && ! isInterface(y.symbol)) {
           // pass
@@ -170,10 +182,7 @@ trait ClassDefTyperComponent extends TyperComponent {
           ()
       }
     }
-
-    TreeCopiers.copyClassDef(clazz)(body = body, parents = parents)
   }
-
 
 
   protected def isInterface(symbol: Option[Symbol]): Boolean =
