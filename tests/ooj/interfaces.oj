@@ -3,6 +3,8 @@
 // UNINITIALIZED_FINAL_VARIABLE
 // CONSTRUCTOR_CANNOT_BE_ABSTRACT
 // ABSTRACT_METHOD_CANNOT_HAVE_BODY
+// INSTANTIATING_NON_CONCRETE_CLASS
+// INSTANTIATING_NON_CONCRETE_CLASS
 // ABSTRACT_METHOD_IN_CONCRETE_CLASS
 
 
@@ -35,6 +37,8 @@ class Test implements A {
     A.a;
     A.b;
     A.c;
+    new B(); // fail
+    new A(); // fail
     // new A(){}.k;
   }
   abstract int m(); // fails

@@ -22,6 +22,7 @@ import primj.symbols.{MethodSymbol, VariableSymbol}
 import primj.types._
 import ooj.modifiers.Ops._
 import ooj.ast._
+import ooj.names.StdNames
 import ooj.symbols._
 import ooj.types._
 import ooj.ast.Implicits._
@@ -272,7 +273,7 @@ trait ApplyTyperComponent extends TyperComponent {
           f.isMethodIdent = true
           f.argumentTypes = args.flatMap(_.tpe)
           typed(fun).asInstanceOf[SelectApi]
-        case f: Ident                        =>
+        case f: IdentApi                     =>
           f.isMethodIdent = true
           f.argumentTypes = args.flatMap(_.tpe)
           typed(f).asInstanceOf[IdentApi]
@@ -311,7 +312,12 @@ trait TypeUseTyperComponent extends primj.typechecker.TypeUseTyperComponent {
 @component
 trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
   (id: IdentApi) => {
-    if(id.isMethodIdent) {
+    val tptMods = if(id.isQualified) {
+      id.owner.map(_.mods).getOrElse(noflags)
+    } else enclosingClass(id.owner).map(_.mods).getOrElse(noflags)
+
+    if(id.isMethodIdent && !(id.name == StdNames.CONSTRUCTOR_NAME &&
+              (tptMods.isAbstract || tptMods.isInterface))) {
       val allCandidateMethods = (enclosingClass(id.owner),
             id.argumentTypes) match {
         case (Some(cs: ClassSymbol), Some(tpes)) =>
@@ -364,6 +370,10 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
           error(NAME_NOT_FOUND,
               id.toString, "a method name", id.pos, id)
       }
+      id
+    } else if(id.isMethodIdent) {
+      error(INSTANTIATING_NON_CONCRETE_CLASS,
+        id.toString, "a concrete class", id.pos, id)
       id
     } else {
       val symbol = id.owner.flatMap(_.getSymbol(id.name,

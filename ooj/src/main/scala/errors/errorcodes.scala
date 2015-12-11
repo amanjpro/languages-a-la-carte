@@ -82,6 +82,11 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
   case object ABSTRACT_METHOD_IN_CONCRETE_CLASS extends ErrorCode {
     val message: String = "Abstract methods cannot occur in concrete classes"
   }
+
+  case object INSTANTIATING_NON_CONCRETE_CLASS extends ErrorCode {
+    val message: String =
+      "Abstract classes/interfaces cannot be instantiated"
+  }
 }
 
 object ErrorCodes extends ErrorCodes
