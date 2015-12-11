@@ -108,12 +108,89 @@ trait ClassDefTyperComponent extends TyperComponent {
             clazz.pos, clazz.name)
       }
     }
+
+
+    parents.filter(isInExtendsClause(_)) match {
+      case List(x) if !clazz.mods.isInterface   =>
+        isInterface(x.symbol) match {
+          case true                    =>
+            error(EXTENDING_AN_INTERFACE,
+              x.name.asString, "A class type",
+              x.pos, x.name)
+          case _                       =>
+            // pass
+            ()
+        }
+      case List(x, y) if !clazz.mods.isInterface =>
+        if(isObject(x.symbol) && ! isInterface(y.symbol)) {
+          // pass
+          ()
+        } else if(isObject(y.symbol) && ! isInterface(x.symbol)) {
+          // pass
+          ()
+        } else if (isObject(x.symbol)) {
+          error(EXTENDING_AN_INTERFACE,
+            x.name.asString, "A class type",
+            x.pos, x.name)
+        } else if (isObject(y.symbol)) {
+          error(EXTENDING_AN_INTERFACE,
+            y.name.asString, "A class type",
+            y.pos, y.name)
+        } else {
+          error(CLASS_SHOULD_EXTEND_EXACTlY_ONE_CLASS,
+            y.name.asString, "A class type",
+            y.pos, y.name)
+        }
+      case Nil  if !clazz.mods.isInterface &&
+                !isObject(clazz.symbol)          =>
+        error(CLASS_SHOULD_EXTEND_EXACTlY_ONE_CLASS,
+          clazz.name.asString, "A class type",
+          clazz.pos, clazz.name)
+      case _    if !clazz.mods.isInterface       =>
+        error(CLASS_SHOULD_EXTEND_EXACTlY_ONE_CLASS,
+          clazz.name.asString, "A class type",
+          clazz.pos, clazz.name)
+      case Nil                                   =>
+        // pass
+        ()
+      case _                                     =>
+        error(CLASS_SHOULD_EXTEND_EXACTlY_ONE_CLASS,
+          clazz.name.asString, "A class type",
+          clazz.pos, clazz.name)
+    }
+
+    parents.filter(isInImplementsClause(_)).foreach { tuse =>
+      tuse.symbol match {
+        case Some(sym) if !sym.mods.isInterface =>
+          error(IMPLEMENTING_A_CLASS,
+            sym.name.asString, "An interface type",
+            tuse.pos, sym.name)
+        case _                                  =>
+          // pass
+          ()
+      }
+    }
+
     TreeCopiers.copyClassDef(clazz)(body = body, parents = parents)
   }
 
 
+
+  protected def isInterface(symbol: Option[Symbol]): Boolean =
+    symbol.map(_.mods.isInterface).getOrElse(false)
+
+  protected def isObject(symbol: Option[Symbol]): Boolean =
+    symbol.map(_ == SymbolUtils.objectClassSymbol).getOrElse(false)
+
   protected def packageName(symbol: ClassSymbol): String =
     SymbolUtils.packageName(symbol)
+
+
+  protected def isInImplementsClause(tree: UseTree): Boolean =
+    TreeUtils.isInImplementsClause(tree)
+
+  protected def isInExtendsClause(tree: UseTree): Boolean =
+    TreeUtils.isInExtendsClause(tree)
 }
 
 @component

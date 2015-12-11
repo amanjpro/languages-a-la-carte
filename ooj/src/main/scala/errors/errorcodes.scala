@@ -92,6 +92,21 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
     val message: String =
       "Concrete classes cannot have abstract members"
   }
+
+  case object IMPLEMENTING_A_CLASS extends ErrorCode {
+    val message: String =
+      "Implement cannot extend an interface, it can only implement it"
+  }
+
+  case object EXTENDING_AN_INTERFACE extends ErrorCode {
+    val message: String =
+      "Classes may not be implemented, but extended"
+  }
+
+  case object CLASS_SHOULD_EXTEND_EXACTlY_ONE_CLASS extends ErrorCode {
+    val message: String =
+      "A class should extend exactly one class"
+  }
 }
 
 object ErrorCodes extends ErrorCodes
