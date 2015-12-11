@@ -6,6 +6,7 @@
 // INSTANTIATING_NON_CONCRETE_CLASS
 // INSTANTIATING_NON_CONCRETE_CLASS
 // ABSTRACT_METHOD_IN_CONCRETE_CLASS
+// NON_IMPLEMENTED_METHODS
 
 
 interface K {
@@ -20,6 +21,7 @@ interface A extends java.lang.Object {
   //   return 1;
   // }
   abstract int m();
+  abstract int n();
 }
 
 
@@ -31,7 +33,7 @@ abstract class B {
     return 1;
   }
 }
-class Test implements A {
+class Test implements A { // fails
   Test () {}
   void main() {
     A.a;

@@ -98,8 +98,19 @@ trait ClassDefTyperComponent extends TyperComponent {
     val parents =
       clazz.parents.map((parent) => typed(parent).asInstanceOf[UseTree])
     val body    = typed(clazz.body).asInstanceOf[TemplateApi]
+    if(!(clazz.mods.isInterface || clazz.mods.isAbstract)) {
+      SymbolUtils.allAbstractMembers(clazz.symbol) match {
+        case Nil                           =>
+          ()
+        case members                       =>
+          error(NON_IMPLEMENTED_METHODS,
+            clazz.name.asString, members.map(_.name).mkString(", "),
+            clazz.pos, clazz.name)
+      }
+    }
     TreeCopiers.copyClassDef(clazz)(body = body, parents = parents)
   }
+
 
   protected def packageName(symbol: ClassSymbol): String =
     SymbolUtils.packageName(symbol)

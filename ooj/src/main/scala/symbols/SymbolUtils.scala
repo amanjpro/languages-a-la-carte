@@ -68,6 +68,13 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
     langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
   }
 
+  def allAbstractMembers(symbol: Option[Symbol]): List[Symbol] = symbol match {
+    case Some(cs: ClassSymbol)          =>
+      cs.declarations.filter(_.mods.isAbstract)
+    case _                              =>
+      Nil
+  }
+
 
   // Method Overloading
   /**

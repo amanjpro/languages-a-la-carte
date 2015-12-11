@@ -87,6 +87,11 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
     val message: String =
       "Abstract classes/interfaces cannot be instantiated"
   }
+
+  case object NON_IMPLEMENTED_METHODS extends ErrorCode {
+    val message: String =
+      "Concrete classes cannot have abstract members"
+  }
 }
 
 object ErrorCodes extends ErrorCodes
