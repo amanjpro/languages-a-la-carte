@@ -76,6 +76,7 @@ trait ClassDefNamerComponent extends NamerComponent {
             Some(sym),
             None,
             sym.owner)
+          tuse.isInExtendsClause = true
           tuse::temp
       }
     }
