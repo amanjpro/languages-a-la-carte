@@ -1,6 +1,6 @@
 package ch.usi.inf.l3.sana.ooj.ast
 
-import ch.usi.inf.l3.sana.tiny.ast.{Tree, SimpleUseTree, IdentApi}
+import ch.usi.inf.l3.sana.tiny.ast.{Tree, SimpleUseTree, IdentApi, TypeUseApi}
 import ch.usi.inf.l3.sana.tiny.ast.augmenters._
 import augmenters._
 
@@ -13,5 +13,7 @@ object Implicits {
 
   implicit class AugmentedIdentImpl(val tree: IdentApi)
       extends AugmentedIdent
+  implicit class AugmentedTypeUseImpl(val tree: TypeUseApi)
+    extends AugmentedTypeUse
 }
 

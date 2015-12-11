@@ -7,7 +7,7 @@ import sana.primj
 import sana.brokenj
 import sana.ooj
 import brokenj.ast
-import tiny.ast.{Tree, NoTree, TypeUseApi}
+import tiny.ast.{Tree, NoTree, TypeUseApi, UseTree}
 import Implicits._
 import ooj.symbols.SymbolUtils
 import ooj.modifiers.Ops._
@@ -26,6 +26,29 @@ trait TreeUtils extends ast.TreeUtils {
             false
         }
     }
+
+
+  def isInExtendsClause(tree: UseTree): Boolean = {
+    tree match {
+      case Select(_, tuse: TypeUseApi) =>
+        tuse.isInExtendsClause
+      case tuse: TypeUseApi            =>
+        tuse.isInExtendsClause
+      case _                           =>
+        false
+    }
+  }
+
+  def isInImplementsClause(tree: UseTree): Boolean = {
+    tree match {
+      case Select(_, tuse: TypeUseApi) =>
+        tuse.isInImplementsClause
+      case tuse: TypeUseApi            =>
+        tuse.isInImplementsClause
+      case _                           =>
+        false
+    }
+  }
 
   def isType(tree: Tree): Boolean = tree match {
     case _: TypeUseApi                   => true

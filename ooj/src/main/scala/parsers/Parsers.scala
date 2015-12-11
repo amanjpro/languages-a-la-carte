@@ -27,6 +27,7 @@ import ooj.modifiers.Ops._
 
 import ooj.ast._
 import ooj.ast.Implicits._
+import ooj.ast.TreeExtractors._
 import calcj.ast.operators._
 import ooj.types._
 import ooj.names.StdNames._
@@ -381,14 +382,34 @@ class Parser extends parsers.Parser {
           val langPkg = TreeFactories.mkIdent(LANG_PACKAGE_NAME, ps)
           // an Identifier to point to Object type
           val objType = TreeFactories.mkTypeUse(OBJECT_TYPE_NAME, ps)
+          objType.isInExtendsClause = true
           // Create a Select out of it
           TreeFactories.mkSelect(TreeFactories.mkSelect(javaPkg, langPkg, ps),
                 objType, ps)
         case _                     =>
-          visit(ctx.parent().classOrInterfaceType()).asInstanceOf[UseTree]
+          val res =
+            visit(ctx.parent().classOrInterfaceType()).asInstanceOf[UseTree]
+          res match {
+            case tuse: TypeUseApi                =>
+              tuse.isInExtendsClause = true
+            case Select(_, tuse: TypeUseApi)     =>
+              tuse.isInExtendsClause = true
+            case _                               =>
+              ()
+          }
+          res
       }
       val body       = visit(ctx.classBody()).asInstanceOf[TemplateApi]
       val interfaces = interfacesContextToTypeUses(ctx.interfaces())
+      interfaces.foreach { t => t match {
+          case tuse: TypeUseApi                =>
+            tuse.isInImplementsClause = true
+          case Select(_, tuse: TypeUseApi)     =>
+            tuse.isInImplementsClause = true
+          case _                               =>
+            ()
+        }
+      }
       TreeFactories.mkClassDef(mods, name, parent::interfaces, body, pos(ctx))
     }
 
@@ -622,6 +643,15 @@ class Parser extends parsers.Parser {
       val name       = Name(ctx.Identifier.getText)
       val interfaces = interfacesContextToTypeUses(
         ctx.extendsInterfaces())
+      interfaces.foreach { t => t match {
+          case tuse: TypeUseApi                =>
+            tuse.isInImplementsClause = true
+          case Select(_, tuse: TypeUseApi)     =>
+            tuse.isInImplementsClause = true
+          case _                               =>
+            ()
+        }
+      }
       val body       =
         visit(ctx.interfaceBody()).asInstanceOf[TemplateApi]
       TreeFactories.mkClassDef(mods, name, interfaces, body, pos(ctx))
