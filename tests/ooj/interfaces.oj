@@ -13,7 +13,7 @@ interface K {
   // K () {}   // fails
 }
 
-interface A extends java.lang.Object {
+interface A {
   int a;          // fails, (not initialized)
   static int b;   // fails, (not initialized)
   final static int c = 2;
