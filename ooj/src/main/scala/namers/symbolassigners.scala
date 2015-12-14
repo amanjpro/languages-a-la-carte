@@ -25,6 +25,7 @@ import ooj.modifiers.Ops._
 import primj.namers.SymbolAssignerComponent
 import ooj.ast._
 import ooj.ast.Implicits._
+import ooj.ast.TreeExtractors._
 import ooj.symbols._
 
 
@@ -101,7 +102,7 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
           val slct          = TreeFactories.mkSelect(spr, id, clazz.pos)
           val app           = TreeFactories.mkApply(slct, Nil, clazz.pos)
           val body          = TreeFactories.mkBlock(List(app), clazz.pos)
-          val ret           = TreeFactories.mkTypeUse(voidName, clazz.pos)
+          val ret           = TreeFactories.mkTypeUse(clazz.name, clazz.pos)
           val const         = TreeFactories.mkMethodDef(mods, ret,
             constructorName, Nil, body, clazz.pos)
           val temp          = TreeCopiers.copyTemplate(clazz.body)(members =
@@ -119,7 +120,6 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
 
 
   protected def constructorName: Name       = StdNames.CONSTRUCTOR_NAME
-  protected def voidName: Name              = StdNames.VOID_TYPE_NAME
   protected def voidSymbol: Option[Symbol]  = Some(VoidSymbol)
 
   protected def isConstructor(tree: Tree): Boolean =
@@ -192,7 +192,12 @@ trait MethodDefSymbolAssignerComponent
       Nil, None, None, owner)
     owner.foreach(sym => sym.declare(symbol))
     val opsym   = Some(symbol)
-    val tpt     = assign((mthd.ret, owner)).asInstanceOf[UseTree]
+    val tpt     = if(mthd.name == constructorName) {
+      mthd.declaredClassNameForConstructor = useName(mthd.ret)
+      assign((TreeFactories.mkTypeUse(voidName, mthd.pos), owner)).asInstanceOf[UseTree]
+    } else {
+      assign((mthd.ret, owner)).asInstanceOf[UseTree]
+    }
     val params  = mthd.params.map((x) =>
         assign((x, opsym)).asInstanceOf[ValDefApi])
     val body    = assign((mthd.body, opsym)).asInstanceOf[Expr]
@@ -204,6 +209,14 @@ trait MethodDefSymbolAssignerComponent
     TreeCopiers.copyMethodDef(mthd)(ret = tpt,
       params = params, body = body)
   }
+
+  protected def useName(use: UseTree): Name = use match {
+    case id: Ident      => id.name
+    case tuse: TypeUse  => tuse.name
+    case Select(_, i)   => i.name
+  }
+  protected def voidName: Name              = StdNames.VOID_TYPE_NAME
+  protected def constructorName: Name       = StdNames.CONSTRUCTOR_NAME
 }
 
 
