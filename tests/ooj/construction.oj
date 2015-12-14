@@ -1,6 +1,7 @@
 // fails
 // NAME_NOT_FOUND
 // NAME_NOT_FOUND
+// CONSTRUCTOR_SHOULD_HAVE_THE_SAME_TYPE_AS_CONTAINING_CLASS
 
 package test;
 
@@ -29,4 +30,9 @@ class B extends A {
     new A().k;  // should fail
     new B().k;
   }
+}
+
+
+class D extends A {
+  A () {} // fails
 }
