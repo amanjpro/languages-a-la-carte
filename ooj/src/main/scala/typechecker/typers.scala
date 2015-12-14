@@ -18,7 +18,7 @@ import tiny.errors.ErrorReporting.{error,warning}
 import calcj.typechecker.{TyperComponent, TypePromotions}
 import calcj.types._
 import primj.ast.{ApplyApi, ValDefApi}
-import primj.symbols.{MethodSymbol, VariableSymbol}
+import primj.symbols.{MethodSymbol, VariableSymbol, ScopeSymbol}
 import primj.types._
 import ooj.modifiers.Ops._
 import ooj.ast._
@@ -85,6 +85,21 @@ trait ValDefTyperComponent extends primj.typechecker.ValDefTyperComponent {
               valdef.toString, "A static final field", valdef.pos, valdef)
       case _                                                      =>
         ()
+    }
+
+
+    if(valdef.mods.isField &&
+      valdef.owner.map(_.isInstanceOf[TypeSymbol]).getOrElse(false)) {
+      error(FIELD_OWNED_BY_NON_CLASS,
+        valdef.toString, "A field", valdef.pos, valdef)
+    } else if(valdef.mods.isParam &&
+      valdef.owner.map(_.isInstanceOf[MethodSymbol]).getOrElse(false)) {
+      error(PARAM_OWNED_BY_NON_METHOD,
+        valdef.toString, "A parameter", valdef.pos, valdef)
+    } else if(valdef.mods.isLocalVariable &&
+      valdef.owner.map(_.isInstanceOf[ScopeSymbol]).getOrElse(false)) {
+      error(LOCAL_VARIABLE_OWNED_BY_NON_LOCAL,
+        valdef.toString, "A local variable", valdef.pos, valdef)
     }
 
 

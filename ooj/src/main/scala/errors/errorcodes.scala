@@ -112,6 +112,21 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
     val message: String =
       "Constructors should have the same type as their containing class"
   }
+
+  case object FIELD_OWNED_BY_NON_CLASS extends ErrorCode {
+    val message: String =
+      "Field can only appear in class bodies"
+  }
+
+  case object PARAM_OWNED_BY_NON_METHOD extends ErrorCode {
+    val message: String =
+      "Parameter can only appear in method parameter contexts"
+  }
+
+  case object LOCAL_VARIABLE_OWNED_BY_NON_LOCAL extends ErrorCode {
+    val message: String =
+      "Local variable can only appear in local contexts"
+  }
 }
 
 object ErrorCodes extends ErrorCodes
