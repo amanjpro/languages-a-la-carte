@@ -30,7 +30,7 @@ class E extends A implements java.lang.Object, Z, Y { // fails
 }
 
 class F extends A implements B, Z, Y { // fails
-  E () {}
+  F () {}
 }
 
 
