@@ -107,6 +107,11 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
     val message: String =
       "A class should extend exactly one class"
   }
+
+  case object CONSTRUCTOR_SHOULD_HAVE_THE_SAME_TYPE_AS_CONTAINING_CLASS extends ErrorCode {
+    val message: String =
+      "Constructors should have the same type as their containing class"
+  }
 }
 
 object ErrorCodes extends ErrorCodes
