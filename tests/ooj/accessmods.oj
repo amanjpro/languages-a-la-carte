@@ -1,5 +1,7 @@
 // fails
 // FIELD_NOT_ACCESSIBLE
+// NAME_NOT_FOUND
+// FIELD_NOT_ACCESSIBLE
 
 package test;
 
@@ -9,6 +11,11 @@ class A extends java.lang.Object {
   protected int c;
   int d;
   public A() {}
+
+  private void f1() {}
+  public void f2(int p) {}
+  protected void f3(int p) {}
+  void f4(int p) {}
 }
 
 class B extends A {
@@ -30,5 +37,14 @@ class B extends A {
     b.b;
     b.c;
     b.d;
+  }
+
+  void m () {
+    f1(); // fails
+    f2(a); // fails
+    f2(b);
+    f3(c);
+    f4(d);
+
   }
 }
