@@ -89,15 +89,15 @@ trait ValDefTyperComponent extends primj.typechecker.ValDefTyperComponent {
 
 
     if(valdef.mods.isField &&
-      valdef.owner.map(_.isInstanceOf[TypeSymbol]).getOrElse(false)) {
+      valdef.owner.map(! _.isInstanceOf[TypeSymbol]).getOrElse(false)) {
       error(FIELD_OWNED_BY_NON_CLASS,
         valdef.toString, "A field", valdef.pos, valdef)
     } else if(valdef.mods.isParam &&
-      valdef.owner.map(_.isInstanceOf[MethodSymbol]).getOrElse(false)) {
+      valdef.owner.map(! _.isInstanceOf[MethodSymbol]).getOrElse(false)) {
       error(PARAM_OWNED_BY_NON_METHOD,
         valdef.toString, "A parameter", valdef.pos, valdef)
     } else if(valdef.mods.isLocalVariable &&
-      valdef.owner.map(_.isInstanceOf[ScopeSymbol]).getOrElse(false)) {
+      valdef.owner.map(! _.isInstanceOf[ScopeSymbol]).getOrElse(false)) {
       error(LOCAL_VARIABLE_OWNED_BY_NON_LOCAL,
         valdef.toString, "A local variable", valdef.pos, valdef)
     }
