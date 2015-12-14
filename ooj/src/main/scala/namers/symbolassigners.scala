@@ -93,8 +93,6 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
           // INFO: No constructors? Add it!
           val mods          = {
             if(clazz.mods.isPublicAcc)         CONSTRUCTOR | PUBLIC_ACC
-            else if(clazz.mods.isProtectedAcc) CONSTRUCTOR | PROTECTED_ACC
-            else if(clazz.mods.isPrivateAcc)   CONSTRUCTOR | PRIVATE_ACC
             else                               CONSTRUCTOR | PACKAGE_ACC
           }
           val spr           = TreeFactories.mkSuper(clazz.pos)
