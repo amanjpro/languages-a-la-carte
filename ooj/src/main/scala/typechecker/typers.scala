@@ -514,8 +514,21 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
         id.toString, "a concrete class", id.pos, id)
       id
     } else {
-      val symbol = id.owner.flatMap(_.getSymbol(id.name,
-          _.isInstanceOf[TermSymbol]))
+      val symbol = id.owner.flatMap(
+        _.getSymbol(id.name, _.isInstanceOf[TermSymbol]))
+
+      //       s => {
+      //         enclosingClass(id.owner) match {
+      //           case Some(enc: ClassSymbol) =>
+      //             s.isInstanceOf[TermSymbol] &&
+      //             ((s.mods.isPrivateAcc && enc.directlyDefines(s)) ||
+      //               !s.mods.isPrivateAcc)
+      //           case _                      =>
+      //             s.isInstanceOf[TermSymbol]
+      //         }
+      //       })
+      // }
+
       symbol match {
         case Some(sym)                        =>
           enclosingNonLocal(id.owner).foreach { owner =>
@@ -539,8 +552,20 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
               error(INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK,
                 id.toString, "a static name", id.pos, id)
             } else {
-              id.symbol = sym
-              id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
+              if(!id.isQualified) {
+                enclosingClass(id.owner) match {
+                  case Some(encl: ClassSymbol) if !encl.directlyDefines(sym) &&
+                                             sym.mods.isPrivateAcc           =>
+                      error(FIELD_NOT_ACCESSIBLE,
+                        id.toString, "an accessible name", id.pos, id)
+                  case _                                                     =>
+                    id.symbol = sym
+                    id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
+                }
+              } else {
+                id.symbol = sym
+                id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
+              }
             }
           }
         case _                                =>
