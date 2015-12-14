@@ -244,20 +244,33 @@ trait MethodDefTyperComponent
       TreeCopiers.copyMethodDef(mthd)(body = body)
     }
 
-    if(mthd.mods.isAbstract && ! mthd.mods.isConstructor &&
+    if(mthd.mods.isAbstract && ! isConstructor(mthd.symbol) &&
         mthd.body != NoTree) {
       error(ABSTRACT_METHOD_CANNOT_HAVE_BODY,
-          mthd.toString, "No constructor", mthd.pos, mthd)
+          mthd.toString, "No body", mthd.pos, mthd)
     }
 
-    if (mthd.mods.isAbstract && mthd.mods.isConstructor) {
+    if (mthd.mods.isAbstract && isConstructor(mthd.symbol)) {
       error(CONSTRUCTOR_CANNOT_BE_ABSTRACT,
-          mthd.toString, "No constructor", mthd.pos, mthd)
+          mthd.toString, "A concrete constructor", mthd.pos, mthd)
     }
+
+
+    mthd.declaredClassNameForConstructor.foreach( nme => {
+      val cnme = enclosingClass(mthd.symbol).map(_.name)
+      if(cnme != Some(nme)) {
+        println(cnme + "   "  + nme)
+        error(CONSTRUCTOR_SHOULD_HAVE_THE_SAME_TYPE_AS_CONTAINING_CLASS,
+          nme.asString,
+          cnme.map(_.asString).getOrElse(StdNames.noname.asString),
+          mthd.ret.pos, mthd.ret)
+      }
+    })
 
 
     mthd.owner match {
-      case Some(sym) if mthd.mods.isInterface && mthd.mods.isConstructor =>
+      case Some(sym) if mthd.mods.isInterface &&
+                        isConstructor(mthd.symbol)                       =>
         error(CONSTRUCTOR_IN_INTERFACE,
             mthd.toString, "No constructor", mthd.pos, mthd)
       case Some(sym) if mthd.mods.isInterface =>
@@ -286,6 +299,8 @@ trait MethodDefTyperComponent
     }
   }
 
+  protected def isConstructor(symbol: Option[Symbol]): Boolean =
+    symbol.map(SymbolUtils.isConstructor(_)).getOrElse(false)
 
   protected def enclosingMethod(symbol: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingMethod(symbol)
