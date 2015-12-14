@@ -11,6 +11,8 @@ object Implicits {
   implicit class AugmentedSimpleUseTreeImpl(val tree: SimpleUseTree)
       extends AugmentedSimpleUseTree
 
+  implicit class AugmentedMethodDefImpl(val tree: MethodDefApi)
+      extends AugmentedMethodDef
   implicit class AugmentedIdentImpl(val tree: IdentApi)
       extends AugmentedIdent
   implicit class AugmentedTypeUseImpl(val tree: TypeUseApi)
