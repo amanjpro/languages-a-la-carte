@@ -124,6 +124,22 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
     TreeUtils.isConstructor(tree)
 }
 
+
+@component(tree, owner)
+trait BlockSymbolAssignerComponent extends
+  primj.namers.BlockSymbolAssignerComponent {
+  (block: BlockApi)          => {
+    val res = super.apply((block, owner)).asInstanceOf[BlockApi]
+    owner match {
+      case Some(_: ClassSymbol)   =>
+        res.isStaticInit = true
+      case _                      =>
+        ()
+    }
+    res
+  }
+}
+
 @component(tree, owner)
 trait TemplateSymbolAssignerComponent extends SymbolAssignerComponent {
   (tmpl: TemplateApi) => {

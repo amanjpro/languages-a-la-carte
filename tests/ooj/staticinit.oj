@@ -1,0 +1,15 @@
+// fails
+// NAME_NOT_FOUND
+
+
+
+package test;
+
+
+class A {
+  int a;
+  static {
+    a = 2;
+    b = 2; // fails
+  }
+}

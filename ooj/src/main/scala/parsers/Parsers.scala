@@ -234,7 +234,7 @@ class Parser extends parsers.Parser {
       val members = ctx.typeDeclaration match {
         case null                           => Nil
         case types                          =>
-          types.asScala.toList.map((x) => visit(x).asInstanceOf[DefTree])
+          types.asScala.toList.map((x) => visit(x))
       }
       TreeFactories.mkPackageDef(pkgName, members, pos(ctx))
     }
@@ -437,7 +437,7 @@ class Parser extends parsers.Parser {
                   TreeFactories.mkValDef(mods, tpt2, name, rhs, pos(ctx))
               }
             } else {
-              List(visit(x).asInstanceOf[DefTree])
+              List(visit(x))
             }
           }
           TreeFactories.mkTemplate(members, pos(ctx))
@@ -573,8 +573,9 @@ class Parser extends parsers.Parser {
 
     override def visitStaticInitializer(ctx:
       Java1Parser.StaticInitializerContext): Tree = {
-      // TODO: Implement this when you support it
-      visitChildren(ctx)
+      val res = visit(ctx.block).asInstanceOf[BlockApi]
+      res.isStaticInit = true
+      res
     }
 
     override def visitConstructorDeclaration(ctx:
@@ -687,7 +688,7 @@ class Parser extends parsers.Parser {
                 }
               }
             } else {
-              List(visit(x).asInstanceOf[DefTree])
+              List(visit(x))
             }
           }
           TreeFactories.mkTemplate(members, pos(ctx))
