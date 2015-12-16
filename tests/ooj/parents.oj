@@ -1,6 +1,8 @@
 // fails
+// NAME_NOT_FOUND
 // IMPLEMENTING_A_CLASS
 // IMPLEMENTING_A_CLASS
+// NAME_NOT_FOUND
 // IMPLEMENTING_A_CLASS
 
 
@@ -13,7 +15,7 @@ class B {
 }
 
 class C extends A implements B { // fails
-  C () {}
+  C () {} // fails, no successful super() call
 }
 
 
@@ -30,7 +32,7 @@ class E extends A implements java.lang.Object, Z, Y { // fails
 }
 
 class F extends A implements B, Z, Y { // fails
-  F () {}
+  F () {} // fails, no successful super() call
 }
 
 
