@@ -424,7 +424,7 @@ class Parser extends parsers.Parser {
             if(x.classMemberDeclaration != null &&
                 x.classMemberDeclaration.fieldDeclaration != null) {
               val ctx = x.classMemberDeclaration.fieldDeclaration
-              val mods       = modifiersTo(ctx.modifier, true)
+              val mods       = modifiersTo(ctx.modifier, true) | FIELD
               val tpt        = visit(ctx.`type`()).asInstanceOf[UseTree]
               ctx.variableDeclarators.variableDeclarator.asScala.toList.map {
                 case ctx =>
@@ -674,7 +674,8 @@ class Parser extends parsers.Parser {
           val members: List[Tree] = body.asScala.toList.flatMap { x =>
             if(x.constantDeclaration != null) {
               val ctx        = x.constantDeclaration.fieldDeclaration
-              val mods       = modifiersTo(ctx.modifier, true) | FIELD | FINAL
+              val mods       =
+                modifiersTo(ctx.modifier, true) | FIELD | FINAL | STATIC
               val tpt        = visit(ctx.`type`()).asInstanceOf[UseTree]
               ctx.variableDeclarators.variableDeclarator.asScala.toList.map {
                 (ctx) => {
