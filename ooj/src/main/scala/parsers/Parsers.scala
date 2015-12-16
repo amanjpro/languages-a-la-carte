@@ -69,7 +69,7 @@ class Parser extends parsers.Parser {
       ctx: Java1Parser.LocalVariableDeclarationContext): List[ValDefApi] = {
       // Java1 does not allow modifiers on local variables,
       // Because there were no inner class back then
-      val mods       = noflags
+      val mods       = noflags | LOCAL_VARIABLE
       val tpt        = visit(ctx.`type`()).asInstanceOf[UseTree]
       ctx.variableDeclarators.variableDeclarator.asScala.toList.map {
         case ctx =>
