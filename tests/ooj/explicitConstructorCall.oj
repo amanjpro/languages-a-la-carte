@@ -1,0 +1,29 @@
+// fails
+// NAME_NOT_FOUND
+
+
+package test;
+
+
+class A {
+  A(int k) {
+  }
+}
+
+
+class B extends A {
+  B(int k) {
+    super();
+  } // fails, bad super.init() call
+  B() {
+    this(1);
+  }
+}
+
+
+class C extends B {
+  C(int k) {
+    super();
+  }
+}
+
