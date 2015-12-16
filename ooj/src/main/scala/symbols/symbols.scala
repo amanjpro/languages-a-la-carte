@@ -217,7 +217,7 @@ case class ClassSymbol(var mods: Flags, var name: Name,
         val sym = parents.foldLeft(None:Option[Symbol])((z, y) => {
           z match {
             case None        =>
-              y.getSymbol(name, p)
+              y.getSymbol(name, s => (p(s) && !s.mods.isConstructor))
             case _           =>
               z
           }
