@@ -274,7 +274,6 @@ trait MethodDefTyperComponent
     mthd.declaredClassNameForConstructor.foreach( nme => {
       val cnme = enclosingClass(mthd.symbol).map(_.name)
       if(cnme != Some(nme)) {
-        println(cnme + "   "  + nme)
         error(CONSTRUCTOR_SHOULD_HAVE_THE_SAME_TYPE_AS_CONTAINING_CLASS,
           nme.asString,
           cnme.map(_.asString).getOrElse(StdNames.noname.asString),
@@ -501,7 +500,7 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
               }
             }
           }
-        case (x::xs)                   =>
+        case _                         =>
           error(AMBIGUOUS_METHOD_INVOCATION,
               id.toString, "a method name", id.pos, id)
         case Nil                       =>
