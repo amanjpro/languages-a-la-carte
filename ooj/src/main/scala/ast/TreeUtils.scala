@@ -7,6 +7,7 @@ import sana.primj
 import sana.brokenj
 import sana.ooj
 import brokenj.ast
+import primj.ast.{ValDefApi, BlockApi}
 import tiny.ast.{Tree, NoTree, TypeUseApi, UseTree}
 import Implicits._
 import ooj.symbols.SymbolUtils
@@ -55,6 +56,41 @@ trait TreeUtils extends ast.TreeUtils {
     case Select(_, _: TypeUseApi)        => true
     case _                               => false
   }
+
+  def isValidClassMember(tree: Tree): Boolean = tree match {
+    case _: MethodDefApi                 => true
+    case _: ValDefApi                    => true
+    case _: BlockApi                     => true
+    case _                               => false
+  }
+
+  override def isValidStatementExpression(e: Tree): Boolean = e match {
+    case _: NewApi                       => true
+    case s: SelectApi                    =>
+      isValidStatementExpression(s.qual)
+    case _                               =>
+      super.isValidStatementExpression(e)
+  }
+
+  override def isValidExpression(e: Tree): Boolean = e match {
+    case _: NewApi                   => true
+    case _: ThisApi                  => true
+    case _: SuperApi                 => true
+    case _: SelectApi                => true
+    case _                               =>
+      super.isValidExpression(e)
+  }
+
+  override def isSimpleExpression(tree: Tree): Boolean = tree match {
+    case _: SelectApi                                   => true
+    case _: SuperApi                                    => true
+    case _: ThisApi                                     => true
+    case _: NewApi                                      => true
+    case _                                              =>
+      super.isSimpleExpression(tree)
+  }
+
+
 }
 
 object TreeUtils extends TreeUtils
