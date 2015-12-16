@@ -134,6 +134,7 @@ trait BlockSymbolAssignerComponent extends
     owner match {
       case Some(_: ClassSymbol)   =>
         res.isStaticInit = true
+        res.symbol.foreach(s => s.mods = s.mods | STATIC_INIT | STATIC)
       case _                      =>
         ()
     }
