@@ -5,11 +5,18 @@ import sana.tiny.types.Type
 import sana.primj.types.VoidType
 import sana.primj
 import sana.tiny.symbols.{Symbol, TermSymbol, TypeSymbol}
+import sana.calcj.symbols.BooleanSymbol
+import sana.calcj.types.BooleanType
+import sana.primj.types.MethodType
+import sana.primj.symbols.{MethodSymbol, VariableSymbol}
+import sana.primj.types.VoidType
 import sana.tiny.modifiers.Flags
-import sana.tiny.modifiers.Ops.noflags
+import sana.primj.modifiers.PARAM
 import sana.tiny.names.Name
 import sana.tiny.names.StdNames.noname
+import sana.ooj.names.StdNames.CONSTRUCTOR_NAME
 import sana.ooj.modifiers._
+import sana.ooj.modifiers.Ops._
 import sana.ooj.types.TypeUtils
 
 
@@ -35,8 +42,31 @@ object ProgramSymbol extends Symbol {
     val parents = Nil
     val owner   = Some(langPackageSymbol)
     val tpe     = Some(TypeUtils.objectClassType)
-    ClassSymbol(mods, name, parents, owner, tpe)
+    val res = ClassSymbol(mods, name, parents, owner, tpe)
+
+
+
+
+    // cnstr tpe:
+    val cnstrTpe = Some(MethodType(VoidType, Nil))
+    val cnstr = MethodSymbol(PUBLIC_ACC | CONSTRUCTOR,
+      CONSTRUCTOR_NAME, Nil, Some(res),
+      cnstrTpe, Some(res))
+
+    // eqls tpe:
+    val eqlsTpe = Some(MethodType(BooleanType, tpe.toList))
+    val eqls = MethodSymbol(PUBLIC_ACC | noflags,
+      Name("equals"), Nil, Some(BooleanSymbol), eqlsTpe, Some(res))
+    val psym    = VariableSymbol(PARAM | noflags,
+      Name("other"), Some(res), Some(eqls))
+
+    eqls.params = List(psym)
+
+    res.declare(cnstr)
+    res.declare(eqls)
+    res
   }
+
 
   langPackageSymbol.declare(objectClassSymbol)
   javaPackageSymbol.declare(langPackageSymbol)
