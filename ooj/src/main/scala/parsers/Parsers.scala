@@ -141,17 +141,18 @@ class Parser extends parsers.Parser {
 
     def modifiersTo(modifiers:
       java.util.List[Java1Parser.ModifierContext],
-      packageIsDefault: Boolean = false):  Flags = modifiers match {
-        case null if packageIsDefault    => Flags(PACKAGE_ACC)
-        case null                        => noflags
-        case mods                        =>
-          mods.asScala.toList match {
-            case Nil  if packageIsDefault => Flags(PACKAGE_ACC)
-            case mods                     =>
-              mods.foldLeft(noflags)((z, y) =>
-                  z | modifierToFlag(y))
-          }
-      }
+      packageIsDefault: Boolean = false):  Flags =
+        modifiers match {
+          case null if packageIsDefault    => Flags(PACKAGE_ACC)
+          case null                        => noflags
+          case mods                        =>
+            mods.asScala.toList match {
+              case Nil  if packageIsDefault => Flags(PACKAGE_ACC)
+              case mods                     =>
+                mods.foldLeft(noflags)((z, y) =>
+                    z | modifierToFlag(y))
+            }
+        }
 
 
     def namesToTree(names: List[TerminalNode]): Tree =
@@ -371,7 +372,7 @@ class Parser extends parsers.Parser {
 
     override def visitClassDeclaration(ctx:
       Java1Parser.ClassDeclarationContext): Tree = {
-      val mods       = modifiersTo(ctx.modifier, true)
+      val mods       = modifiersTo(ctx.modifier, true) | CLASS
       val name       = Name(ctx.Identifier.getText)
       val parent     = ctx.parent() match {
         case null                  =>
