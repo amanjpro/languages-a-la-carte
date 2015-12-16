@@ -64,9 +64,31 @@ trait PackageDefTyperComponent extends TyperComponent {
 }
 
 @component
-trait ValDefTyperComponent extends primj.typechecker.ValDefTyperComponent {
+trait ValDefTyperComponent extends TyperComponent {
   (valdef: ValDefApi)          => {
-    val res = super.apply(valdef).asInstanceOf[ValDefApi]
+    val tpt    = typed(valdef.tpt).asInstanceOf[UseTree]
+    val rhs    = typed(valdef.rhs).asInstanceOf[Expr]
+    val rtpe   = rhs.tpe.getOrElse(ErrorType)
+    val ttpe   = tpt.tpe.getOrElse(ErrorType)
+    valdef.tpe = ttpe
+    val res = if(ttpe =:= VoidType) {
+      error(VOID_VARIABLE_TYPE,
+          ttpe.toString, ttpe.toString, rhs.pos, valdef)
+      valdef
+    // } else if(valdef.mods.isFinal && !valdef.mods.isParam &&
+    //           rhs == NoTree) {
+    //   error(UNINITIALIZED_FINAL_VARIABLE,
+    //       valdef.toString, "", valdef.pos, valdef)
+    //   valdef
+    } else (rtpe <:< ttpe) match {
+        case false if rhs != NoTree        =>
+          error(TYPE_MISMATCH,
+            rtpe.toString, ttpe.toString, rhs.pos, valdef)
+          valdef
+        case _                             =>
+          TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
+      }
+
     res.symbol.foreach(sym => {
       sym match {
         case vs: VariableSymbol =>
@@ -75,12 +97,13 @@ trait ValDefTyperComponent extends primj.typechecker.ValDefTyperComponent {
           ()
       }
     })
-    valdef.owner match {
+
+    res.owner match {
       case Some(csym: ClassSymbol) if csym.mods.isInterface       =>
-        if(!valdef.mods.isStatic)
+        if(!res.mods.isStatic)
           error(NON_STATIC_FIELD_IN_INTERFACE,
               valdef.toString, "A static final field", valdef.pos, valdef)
-        if(!valdef.mods.isFinal)
+        if(!res.mods.isFinal)
           error(NON_FINAL_FIELD_IN_INTERFACE,
               valdef.toString, "A static final field", valdef.pos, valdef)
       case _                                                      =>
@@ -88,16 +111,16 @@ trait ValDefTyperComponent extends primj.typechecker.ValDefTyperComponent {
     }
 
 
-    if(valdef.mods.isField &&
-      valdef.owner.map(! _.isInstanceOf[TypeSymbol]).getOrElse(false)) {
+    if(res.mods.isField &&
+      res.owner.map(! _.isInstanceOf[TypeSymbol]).getOrElse(false)) {
       error(FIELD_OWNED_BY_NON_CLASS,
         valdef.toString, "A field", valdef.pos, valdef)
-    } else if(valdef.mods.isParam &&
-      valdef.owner.map(! _.isInstanceOf[MethodSymbol]).getOrElse(false)) {
+    } else if(res.mods.isParam &&
+      res.owner.map(! _.isInstanceOf[MethodSymbol]).getOrElse(false)) {
       error(PARAM_OWNED_BY_NON_METHOD,
         valdef.toString, "A parameter", valdef.pos, valdef)
-    } else if(valdef.mods.isLocalVariable &&
-      valdef.owner.map(! _.isInstanceOf[ScopeSymbol]).getOrElse(false)) {
+    } else if(res.mods.isLocalVariable &&
+      res.owner.map(! _.isInstanceOf[ScopeSymbol]).getOrElse(false)) {
       error(LOCAL_VARIABLE_OWNED_BY_NON_LOCAL,
         valdef.toString, "A local variable", valdef.pos, valdef)
     }
