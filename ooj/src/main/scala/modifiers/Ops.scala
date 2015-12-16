@@ -18,10 +18,13 @@ object Ops {
     val isInterface: Boolean           = mask.hasFlag(INTERFACE)
     val isStatic: Boolean              = mask.hasFlag(STATIC)
     val isAbstract: Boolean            = mask.hasFlag(ABSTRACT)
+    val isClass: Boolean               = mask.hasFlag(CLASS)
 
     val isPacakgeAcc: Boolean          = mask.hasFlag(PACKAGE_ACC)
     val isPrivateAcc: Boolean          = mask.hasFlag(PRIVATE_ACC)
     val isPublicAcc: Boolean           = mask.hasFlag(PUBLIC_ACC)
     val isProtectedAcc: Boolean        = mask.hasFlag(PROTECTED_ACC)
+
+    val isStaticInit: Boolean          = mask.hasFlag(STATIC_INIT)
   }
 }
