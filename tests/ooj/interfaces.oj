@@ -1,6 +1,4 @@
 // fails
-// UNINITIALIZED_FINAL_VARIABLE
-// UNINITIALIZED_FINAL_VARIABLE
 // CONSTRUCTOR_CANNOT_BE_ABSTRACT
 // ABSTRACT_METHOD_CANNOT_HAVE_BODY
 // INSTANTIATING_NON_CONCRETE_CLASS
@@ -14,8 +12,8 @@ interface K {
 }
 
 interface A {
-  int a;          // fails, (not initialized)
-  static int b;   // fails, (not initialized)
+  int a;          // (FUTURE) fails, (not initialized)
+  static int b;   // (FUTURE)  fails, (not initialized)
   final static int c = 2;
   // int m() { // this should fail
   //   return 1;

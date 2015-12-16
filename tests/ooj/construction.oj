@@ -1,4 +1,5 @@
 // fails
+// INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK
 // NAME_NOT_FOUND
 // NAME_NOT_FOUND
 // CONSTRUCTOR_SHOULD_HAVE_THE_SAME_TYPE_AS_CONTAINING_CLASS
@@ -23,7 +24,7 @@ class B extends A {
 
   static void n () {
     new B();
-    k = 0;
+    k = 0;      // should fail
     new B(1);
     new A(2);   // should fail
     new A();
