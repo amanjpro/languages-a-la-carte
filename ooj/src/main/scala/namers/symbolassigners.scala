@@ -12,6 +12,7 @@ import sana.dsl._
 import tiny.ast.{TreeCopiers => _, TreeFactories => _, _}
 import tiny.errors.ErrorReporting.{error,warning}
 import tiny.symbols._
+import tiny.source.Position
 import tiny.names.Name
 import calcj.ast.{TreeCopiers => _, TreeFactories => _, _}
 import primj.ast.{TreeCopiers => _, MethodDefApi => _,
@@ -214,8 +215,27 @@ trait MethodDefSymbolAssignerComponent
     }
     val params  = mthd.params.map((x) =>
         assign((x, opsym)).asInstanceOf[ValDefApi])
-    val body    = assign((mthd.body, opsym)).asInstanceOf[Expr]
-    symbol.params = params.map(_.symbol).flatten
+    val body    = if(mthd.name == constructorName) {
+      mthd.body match {
+        case Block(List(Apply(Select(_: ThisApi,
+                    Ident(`constructorName`)), _), _*)) |
+             Block(List(Apply(Select(_: SuperApi,
+                    Ident(`constructorName`)), _), _*))                     =>
+          assign((mthd.body, opsym)).asInstanceOf[Expr]
+        case body: BlockApi                                                 =>
+          val newBody = TreeCopiers.copyBlock(body)(
+            stmts = constructorCall(body.pos)::body.stmts)
+          assign((newBody, opsym)).asInstanceOf[Expr]
+        case expr                                                           =>
+          val newBody = TreeFactories.mkBlock(
+            List(constructorCall(expr.pos), expr), expr.pos)
+          assign((newBody, opsym)).asInstanceOf[Expr]
+
+      }
+    } else {
+      assign((mthd.body, opsym)).asInstanceOf[Expr]
+    }
+    symbol.params = params.flatMap(_.symbol)
     symbol.ret    = tpt.symbol
     mthd.symbol = symbol
     symbol.owner.foreach(mthd.owner = _)
@@ -224,13 +244,20 @@ trait MethodDefSymbolAssignerComponent
       params = params, body = body)
   }
 
+  protected def constructorCall(pos: Option[Position]): Expr =
+    TreeFactories.mkApply(
+      TreeFactories.mkSelect(
+        TreeFactories.mkSuper(pos),
+        TreeFactories.mkIdent(constructorName, pos), pos), Nil, pos)
+
   protected def useName(use: UseTree): Name = use match {
-    case id: Ident      => id.name
+    case id: IdentApi   => id.name
     case tuse: TypeUse  => tuse.name
     case Select(_, i)   => i.name
   }
+
   protected def voidName: Name              = StdNames.VOID_TYPE_NAME
-  protected def constructorName: Name       = StdNames.CONSTRUCTOR_NAME
+  protected val constructorName: Name       = StdNames.CONSTRUCTOR_NAME
 }
 
 
