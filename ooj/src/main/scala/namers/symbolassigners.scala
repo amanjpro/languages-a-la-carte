@@ -266,9 +266,13 @@ trait MethodDefSymbolAssignerComponent
 trait ValDefSymbolAssignerComponent
   extends primj.namers.ValDefSymbolAssignerComponent {
   (valdef: ValDefApi) => {
-    enclosingClass(owner) match {
+    owner match {
       case Some(sym) if sym.mods.isInterface =>
-        val mods = STATIC | FINAL | valdef.mods
+        val mods = STATIC | FINAL | FIELD | valdef.mods
+        val nv   = TreeCopiers.copyValDef(valdef)(mods = mods)
+        super.apply((nv, owner))
+      case Some(sym) if sym.mods.isClass     =>
+        val mods = FIELD | valdef.mods
         val nv   = TreeCopiers.copyValDef(valdef)(mods = mods)
         super.apply((nv, owner))
       case _                                 =>
