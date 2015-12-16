@@ -8,7 +8,7 @@ import sana.tiny.names.Name
 import sana.ooj.names.StdNames
 import sana.ooj.modifiers.Ops._
 import sana.ooj.types.TypeUtils
-import sana.primj.symbols.{MethodSymbol, VariableSymbol}
+import sana.primj.symbols.{MethodSymbol, VariableSymbol, ScopeSymbol}
 
 trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
 
@@ -38,8 +38,9 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
       sym.owner match {
         case Some(_: ClassSymbol) =>
           sym match {
-            case _: MethodSymbol | _: VariableSymbol => Some(sym)
-            case _                                   => None
+            case _: MethodSymbol | _: VariableSymbol   => Some(sym)
+            case s: ScopeSymbol if s.mods.isStaticInit => Some(sym)
+            case _                                     => None
           }
         case Some(sym)            => enclosingNonLocal(Some(sym))
         case None                 => None
