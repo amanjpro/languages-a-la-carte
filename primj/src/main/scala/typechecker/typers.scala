@@ -45,11 +45,11 @@ trait AssignTyperComponent extends TyperComponent {
     (lhs, rhs) match {
       case (lhs: Tree, _) if ! TreeUtils.isVariable(lhs) =>
         error(ASSIGNING_NOT_TO_VARIABLE,
-          lhs.toString, lhs.toString, lhs.pos, lhs)
+          lhs.toString, lhs.toString, lhs.pos)
         assign
       case (lhs: Tree, _)  if TreeUtils.isFinal(lhs)     =>
         error(REASSIGNING_FINAL_VARIABLE,
-          lhs.toString, lhs.toString, lhs.pos, lhs)
+          lhs.toString, lhs.toString, lhs.pos)
         assign
       case (lhs: Expr, rhs: Expr)                        =>
         (lhs.tpe, rhs.tpe) match {
@@ -58,11 +58,11 @@ trait AssignTyperComponent extends TyperComponent {
             TreeCopiers.copyAssign(assign)(lhs = lhs, rhs = rhs)
           case (Some(ltpe), Some(rtpe))                  =>
             error(TYPE_MISMATCH,
-              ltpe.toString, rtpe.toString, rhs.pos, assign)
+              ltpe.toString, rtpe.toString, rhs.pos)
             assign
           case _                                         =>
             error(TYPE_MISMATCH,
-              lhs.toString, rhs.toString, rhs.pos, assign)
+              lhs.toString, rhs.toString, rhs.pos)
             assign
         }
       case _                                             =>
@@ -88,7 +88,7 @@ trait IfTyperComponent extends TyperComponent {
           case tpe                                      =>
             error(TYPE_MISMATCH,
               tpeToString(tpe),
-              "boolean", ifelse.cond.pos, ifelse.cond)
+              "boolean", ifelse.cond.pos)
             ifelse
         }
       case _                                          =>
@@ -112,7 +112,7 @@ trait WhileTyperComponent extends TyperComponent {
           case tpe                                      =>
             error(TYPE_MISMATCH,
               tpeToString(tpe),
-              "boolean", wile.cond.pos, wile.cond)
+              "boolean", wile.cond.pos)
             wile
         }
       case _                =>
@@ -158,7 +158,7 @@ trait ForTyperComponent extends TyperComponent {
           case tpe                                      =>
             error(TYPE_MISMATCH,
               tpeToString(tpe),
-              "boolean", forloop.cond.pos, forloop.cond)
+              "boolean", forloop.cond.pos)
             forloop
         }
       case _                  =>
@@ -186,7 +186,7 @@ trait TernaryTyperComponent extends TyperComponent {
                 error(TYPE_MISMATCH,
                   tpeToString(elsep.tpe),
                   tpeToString(thenp.tpe),
-                  ternary.cond.pos, ternary.cond)
+                  ternary.cond.pos)
                 ternary
               case _                        =>
                 rtpe.foreach(ternary.tpe = _)
@@ -196,7 +196,7 @@ trait TernaryTyperComponent extends TyperComponent {
           case tpe                                      =>
             error(TYPE_MISMATCH,
               tpeToString(tpe),
-              "boolean", ternary.cond.pos, ternary.cond)
+              "boolean", ternary.cond.pos)
             ternary
         }
       case _                                          =>
@@ -260,12 +260,12 @@ trait ApplyTyperComponent extends TyperComponent {
           TreeCopiers.copyApply(apply)(fun = fun, args = args)
         } else {
           // TODO: Fix the error message
-          error(TYPE_MISMATCH, "", "", apply.pos, apply)
+          error(TYPE_MISMATCH, "", "", apply.pos)
           apply
         }
       case _                                    =>
         error(BAD_STATEMENT,
-          funty.toString, "function/method type", apply.pos, apply)
+          funty.toString, "function/method type", apply.pos)
         apply
     }
   }
@@ -286,12 +286,12 @@ trait ReturnTyperComponent extends TyperComponent {
           case Some(MethodType(VoidType, _))                            =>
             error(NON_VOID_RETURN,
               ret.tpe.map(_.toString).getOrElse(""),
-              VoidType.toString, ret.pos, ret)
+              VoidType.toString, ret.pos)
             ret
           case Some(MethodType(t, _)) if expr == None                   =>
             error(VOID_RETURN,
               ret.tpe.map(_.toString).getOrElse(""),
-              t.toString, ret.pos, ret)
+              t.toString, ret.pos)
             ret
           case Some(MethodType(rtpe, _))                                =>
             expr.tpe.map(_ <:< rtpe) match {
@@ -300,13 +300,13 @@ trait ReturnTyperComponent extends TyperComponent {
               case l                   =>
                 error(TYPE_MISMATCH,
                   expr.tpe.map(_.toString).getOrElse("<error>"),
-                  rtpe.toString, ret.pos, ret)
+                  rtpe.toString, ret.pos)
                 ret
             }
           case t                                                        =>
             error(TYPE_MISMATCH,
               tpe.toString, t.map(_.toString).getOrElse("A method type"),
-              ret.pos, ret)
+              ret.pos)
             ret
         }
       case _          =>
@@ -326,11 +326,10 @@ trait UnaryTyperComponent extends calcj.typechecker.UnaryTyperComponent {
         if(! TreeUtils.isVariable(unary.expr))
           error(ASSIGNING_NOT_TO_VARIABLE,
             unary.expr.toString, unary.expr.toString,
-            unary.expr.pos, unary.expr)
+            unary.expr.pos)
         else if(TreeUtils.isFinal(unary.expr))
           error(REASSIGNING_FINAL_VARIABLE,
-            unary.expr.toString, unary.expr.toString, unary.expr.pos,
-            unary.expr)
+            unary.expr.toString, unary.expr.toString, unary.expr.pos)
         else ()
         unary
       case _                                                        =>
@@ -350,17 +349,17 @@ trait ValDefTyperComponent extends TyperComponent {
     valdef.tpe = ttpe
     if(ttpe =:= VoidType) {
       error(VOID_VARIABLE_TYPE,
-          ttpe.toString, ttpe.toString, rhs.pos, valdef)
+          ttpe.toString, ttpe.toString, rhs.pos)
       valdef
     } else if(valdef.mods.isFinal && !valdef.mods.isParam &&
               rhs == NoTree) {
       error(UNINITIALIZED_FINAL_VARIABLE,
-          valdef.toString, "", valdef.pos, valdef)
+          valdef.toString, "", valdef.pos)
       valdef
     } else (rtpe <:< ttpe) match {
         case false if rhs != NoTree        =>
           error(TYPE_MISMATCH,
-            rtpe.toString, ttpe.toString, rhs.pos, valdef)
+            rtpe.toString, ttpe.toString, rhs.pos)
           valdef
         case _                             =>
           TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
@@ -399,7 +398,7 @@ trait MethodDefTyperComponent extends TyperComponent {
 
     if(rtpe =/= VoidType && !allPathsReturn(body)) {
       error(MISSING_RETURN_STATEMENT,
-        body.toString, body.toString, body.pos, mthd)
+        body.toString, body.toString, body.pos)
       mthd
     } else {
       TreeCopiers.copyMethodDef(mthd)(ret = tpt,
@@ -423,7 +422,7 @@ trait IdentTyperComponent extends TyperComponent {
         id
       case _                      =>
         error(NAME_NOT_FOUND,
-          id.toString, "a term", id.pos, id)
+          id.toString, "a term", id.pos)
         id
     }
   }
@@ -441,11 +440,11 @@ trait TypeUseTyperComponent extends TyperComponent {
         tuse
       case Some(_)                =>
         error(TYPE_NAME_EXPECTED,
-          tuse.toString, "a type", tuse.pos, tuse)
+          tuse.toString, "a type", tuse.pos)
         tuse
       case _                      =>
         error(TYPE_NOT_FOUND,
-          tuse.toString, "a type", tuse.pos, tuse)
+          tuse.toString, "a type", tuse.pos)
         tuse
     }
   }

@@ -22,9 +22,8 @@ object ErrorReporting {
 
 
 
-  protected def createMessage[T](code: ErrorCode, found: String,
-    required: String, pos: Option[Position],
-    t: T): String = {
+  protected def createMessage(code: ErrorCode, found: String,
+    required: String, pos: Option[Position]): String = {
       val msg = code.message
       val col = pos match {
         case None    => 0
@@ -36,49 +35,47 @@ object ErrorReporting {
       val source = pos.map(_.source).getOrElse("")
       val row    = pos.map(_.row.toString).getOrElse("")
       val c      = pos.map(_.col.toString).getOrElse("")
+      val line   = pos.map(_.line).getOrElse("")
       s"""|Source: ${source}, Line: ${row}, Column: ${c}
       |$msg
       |${" " * 2}$found
       |${" " * 2}$required
-      |${" " * col}$t
+      |${" " * col}${line.trim}
       |$caret""".stripMargin
   }
 
 
 
-  protected def createMessageOrGetCode[T](code: ErrorCode, found: String,
-    required: String, pos: Option[Position],
-    t: T): String = if(isTest) code.code
-                    else
-                      createMessage(code, found, required, pos, t)
+  protected def createMessageOrGetCode(code: ErrorCode, found: String,
+    required: String, pos: Option[Position]): String =
+      if(isTest) code.code
+      else
+        createMessage(code, found, required, pos)
 
-  def genError[T](code: ErrorCode, found: String, required: String,
-    pos: Option[Position],
-    t: T): Report = Report(Error,
-      createMessageOrGetCode(code, found, required, pos, t),
+  def genError(code: ErrorCode, found: String, required: String,
+    pos: Option[Position]): Report = Report(Error,
+      createMessageOrGetCode(code, found, required, pos),
       isTest)
 
-  def genWarning[T](code: ErrorCode, found: String, required: String,
-    pos: Option[Position], t: T): Report =
+  def genWarning(code: ErrorCode, found: String, required: String,
+    pos: Option[Position]): Report =
       Report(Warning,
-        createMessageOrGetCode(code, found, required, pos, t),
+        createMessageOrGetCode(code, found, required, pos),
         isTest)
 
 
 
-  def error[T](code: ErrorCode, found: String, required: String,
-    pos: Option[Position],
-    t: T): Unit = {
+  def error(code: ErrorCode, found: String, required: String,
+    pos: Option[Position]): Unit = {
       messages = messages :+ Report(Error,
-        createMessageOrGetCode(code, found, required, pos, t),
+        createMessageOrGetCode(code, found, required, pos),
         isTest)
   }
 
-  def warning[T](code: ErrorCode, found: String, required: String,
-    pos: Option[Position],
-    t: T): Unit = {
+  def warning(code: ErrorCode, found: String, required: String,
+    pos: Option[Position]): Unit = {
       messages = messages :+ Report(Warning,
-        createMessageOrGetCode(code, found, required, pos, t),
+        createMessageOrGetCode(code, found, required, pos),
         isTest)
   }
 }

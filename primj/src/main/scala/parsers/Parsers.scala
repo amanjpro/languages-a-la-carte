@@ -32,7 +32,8 @@ class Parser extends parsers.Parser {
 
 
   def parse(source: SourceFile): Tree = {
-    val tree = new PrimjVisitor(source.name).visit(source.content)
+    val tree = new PrimjVisitor(source.name,
+      source.lines).visit(source.content)
     logger.debug(tree.toString)
     // Program(tree, None, source.name)
     tree match {
@@ -42,10 +43,12 @@ class Parser extends parsers.Parser {
     }
   }
 
-  class PrimjVisitor(val source: String) extends PrimjBaseVisitor[Tree] {
+  class PrimjVisitor(val source: String,
+    lines: Array[String]) extends PrimjBaseVisitor[Tree] {
     def pos(ctx: ParserRuleContext): Option[Position] = {
       val token = ctx.getStart
-      Some(Position(source, token.getLine, token.getCharPositionInLine + 1))
+      Some(Position(source, lines,
+        token.getLine, token.getCharPositionInLine + 1))
     }
 
     def createUnaryOrPostfix[T <: ParserRuleContext](isPostfix: Boolean,

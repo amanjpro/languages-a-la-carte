@@ -59,11 +59,11 @@ trait BinaryTyperComponent extends TyperComponent {
             Some((t, t, BooleanType))
           case (_: NumericType, _)                =>
             error(TYPE_MISMATCH,
-                rtpe.toString, "a numerical type", bin.rhs.pos, bin.rhs)
+                rtpe.toString, "a numerical type", bin.rhs.pos)
             None
           case _                                  =>
             error(TYPE_MISMATCH,
-                ltpe.toString, "a numerical type", bin.lhs.pos, bin.lhs)
+                ltpe.toString, "a numerical type", bin.lhs.pos)
             None
         }
       case Eq | Neq                               =>
@@ -75,7 +75,7 @@ trait BinaryTyperComponent extends TyperComponent {
             Some((t, t, BooleanType))
           case _                                  =>
             error(TYPE_MISMATCH,
-                ltpe.toString, "a primitive type", bin.pos, bin)
+                ltpe.toString, "a primitive type", bin.pos)
             None
         }
       case And | Or | Amp | Pipe | Xor            =>
@@ -84,11 +84,11 @@ trait BinaryTyperComponent extends TyperComponent {
             Some((BooleanType, BooleanType, BooleanType))
           case (BooleanType, _)                   =>
             error(TYPE_MISMATCH,
-              rtpe.toString, "bolean", bin.rhs.pos, bin.rhs)
+              rtpe.toString, "bolean", bin.rhs.pos)
             None
           case _                                  =>
             error(TYPE_MISMATCH,
-              ltpe.toString, "bolean", bin.lhs.pos, bin.lhs)
+              ltpe.toString, "bolean", bin.lhs.pos)
             None
         }
       case Add                                    =>
@@ -98,11 +98,11 @@ trait BinaryTyperComponent extends TyperComponent {
             Some((t, t, t))
           case (_: NumericType, _)                =>
             error(TYPE_MISMATCH,
-              rtpe.toString, "a numerical type", bin.rhs.pos, bin.rhs)
+              rtpe.toString, "a numerical type", bin.rhs.pos)
             None
           case _                                  =>
             error(TYPE_MISMATCH,
-              ltpe.toString, "a numerical type", bin.lhs.pos, bin.lhs)
+              ltpe.toString, "a numerical type", bin.lhs.pos)
             None
         }
       case Sub | Mul | Div | Mod                  =>
@@ -112,11 +112,11 @@ trait BinaryTyperComponent extends TyperComponent {
             Some((t, t, t))
           case (_: NumericType, _)                =>
             error(TYPE_MISMATCH,
-              rtpe.toString, "a numerical type", bin.rhs.pos, bin.rhs)
+              rtpe.toString, "a numerical type", bin.rhs.pos)
             None
           case _                                  =>
             error(TYPE_MISMATCH,
-              ltpe.toString, "a numerical type", bin.lhs.pos, bin.lhs)
+              ltpe.toString, "a numerical type", bin.lhs.pos)
             None
         }
 
@@ -128,7 +128,7 @@ trait BinaryTyperComponent extends TyperComponent {
           case _                                  =>
             error(TYPE_MISMATCH,
               bin.toString, "both operands should be integral types",
-                bin.pos, bin)
+                bin.pos)
             None
         }
       case SHL | SHR | USHR                       =>
@@ -139,11 +139,11 @@ trait BinaryTyperComponent extends TyperComponent {
             Some((t1, t2, t1))
           case (_: IntegralType, _)               =>
             error(TYPE_MISMATCH,
-              rtpe.toString, "an integral type", bin.rhs.pos, bin.rhs)
+              rtpe.toString, "an integral type", bin.rhs.pos)
             None
           case _                                  =>
             error(TYPE_MISMATCH,
-              ltpe.toString, "an integral type", bin.lhs.pos, bin.lhs)
+              ltpe.toString, "an integral type", bin.lhs.pos)
             None
         }
       }
@@ -204,15 +204,15 @@ trait UnaryTyperComponent extends TyperComponent {
         Some((x, x))
       case (Not, _)                                        =>
         error(TYPE_MISMATCH,
-        tpe.toString, "boolean", unary.expr.pos, unary.expr)
+        tpe.toString, "boolean", unary.expr.pos)
         None
       case (Pos, _) | (Neg, _) | (Inc, _) | (Dec, _)       =>
         error(TYPE_MISMATCH,
-            tpe.toString, "a numeric type", unary.expr.pos, unary.expr)
+            tpe.toString, "a numeric type", unary.expr.pos)
         None
       case _                                               =>
         error(TYPE_MISMATCH,
-            tpe.toString, "an integral type", unary.expr.pos, unary.expr)
+            tpe.toString, "an integral type", unary.expr.pos)
         None
     }
   }

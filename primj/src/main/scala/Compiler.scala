@@ -25,7 +25,7 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
 
   ErrorReporting.isTest = config.isTest
 
-  def sourceReader: SourceReader =new SourceReader {
+  def sourceReader: SourceReader = new SourceReader {
     type P = PrimjParser
     def newLexer(is: ANTLRInputStream): Lexer =
       new PrimjLexer(is)

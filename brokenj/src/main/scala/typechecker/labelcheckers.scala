@@ -65,12 +65,12 @@ trait ContinueLabelNameCheckerComponent extends LabelNameCheckerComponent {
       labelNames.filter(_.name == name) match {
         case Nil                                =>
           error(NO_LABEL_DEF,
-            cont.toString, cont.toString, cont.pos, cont)
+            cont.toString, cont.toString, cont.pos)
         case (x::xs)   if isContinuable(x.stmt) =>
           ()
         case _                                  =>
           error(BAD_CONTINUE_STMT,
-            cont.toString, cont.toString, cont.pos, cont)
+            cont.toString, cont.toString, cont.pos)
       }
   }
 
@@ -86,7 +86,7 @@ trait BreakLabelNameCheckerComponent extends LabelNameCheckerComponent {
       labelNames.filter(_.name == name) match {
         case Nil                             =>
           error(NO_LABEL_DEF,
-            break.toString, break.toString, break.pos, break)
+            break.toString, break.toString, break.pos)
         case _                               =>
           ()
       }
@@ -101,7 +101,7 @@ trait LabelLabelNameCheckerComponent extends LabelNameCheckerComponent {
     val name = label.name
     if(labelNames.exists(_.name == name)) {
       error(DOUBLE_LABEL_DEF,
-        label.toString, label.toString, label.pos, label)
+        label.toString, label.toString, label.pos)
     } else ()
     check((label.stmt, label::labelNames))
   }

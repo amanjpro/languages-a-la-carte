@@ -73,7 +73,7 @@ trait ValDefTyperComponent extends TyperComponent {
     valdef.tpe = ttpe
     val res = if(ttpe =:= VoidType) {
       error(VOID_VARIABLE_TYPE,
-          ttpe.toString, ttpe.toString, rhs.pos, valdef)
+          ttpe.toString, ttpe.toString, rhs.pos)
       valdef
     // } else if(valdef.mods.isFinal && !valdef.mods.isParam &&
     //           rhs == NoTree) {
@@ -83,7 +83,7 @@ trait ValDefTyperComponent extends TyperComponent {
     } else (rtpe <:< ttpe) match {
         case false if rhs != NoTree        =>
           error(TYPE_MISMATCH,
-            rtpe.toString, ttpe.toString, rhs.pos, valdef)
+            rtpe.toString, ttpe.toString, rhs.pos)
           valdef
         case _                             =>
           TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
@@ -102,10 +102,10 @@ trait ValDefTyperComponent extends TyperComponent {
       case Some(csym: ClassSymbol) if csym.mods.isInterface       =>
         if(!res.mods.isStatic)
           error(NON_STATIC_FIELD_IN_INTERFACE,
-              valdef.toString, "A static final field", valdef.pos, valdef)
+              valdef.toString, "A static final field", valdef.pos)
         if(!res.mods.isFinal)
           error(NON_FINAL_FIELD_IN_INTERFACE,
-              valdef.toString, "A static final field", valdef.pos, valdef)
+              valdef.toString, "A static final field", valdef.pos)
       case _                                                      =>
         ()
     }
@@ -114,15 +114,15 @@ trait ValDefTyperComponent extends TyperComponent {
     if(res.mods.isField &&
       res.owner.map(! _.isInstanceOf[TypeSymbol]).getOrElse(false)) {
       error(FIELD_OWNED_BY_NON_CLASS,
-        valdef.toString, "A field", valdef.pos, valdef)
+        valdef.toString, "A field", valdef.pos)
     } else if(res.mods.isParam &&
       res.owner.map(! _.isInstanceOf[MethodSymbol]).getOrElse(false)) {
       error(PARAM_OWNED_BY_NON_METHOD,
-        valdef.toString, "A parameter", valdef.pos, valdef)
+        valdef.toString, "A parameter", valdef.pos)
     } else if(res.mods.isLocalVariable &&
       res.owner.map(! _.isInstanceOf[ScopeSymbol]).getOrElse(false)) {
       error(LOCAL_VARIABLE_OWNED_BY_NON_LOCAL,
-        valdef.toString, "A local variable", valdef.pos, valdef)
+        valdef.toString, "A local variable", valdef.pos)
     }
 
 
@@ -143,7 +143,7 @@ trait ClassDefTyperComponent extends TyperComponent {
         case members                       =>
           error(NON_IMPLEMENTED_METHODS,
             clazz.name.asString, members.map(_.name).mkString(", "),
-            clazz.pos, clazz.name)
+            clazz.pos)
       }
     }
 
@@ -174,7 +174,7 @@ trait ClassDefTyperComponent extends TyperComponent {
           case true                    =>
             error(EXTENDING_AN_INTERFACE,
               x.name.asString, "A class type",
-              x.pos, x.name)
+              x.pos)
           case _                       =>
             // pass
             ()
@@ -192,32 +192,32 @@ trait ClassDefTyperComponent extends TyperComponent {
         } else if (isObject(x.symbol)) {
           error(EXTENDING_AN_INTERFACE,
             x.name.asString, "A class type",
-            x.pos, x.name)
+            x.pos)
         } else if (isObject(y.symbol)) {
           error(EXTENDING_AN_INTERFACE,
             y.name.asString, "A class type",
-            y.pos, y.name)
+            y.pos)
         } else {
           error(CLASS_SHOULD_EXTEND_EXACTlY_ONE_CLASS,
             y.name.asString, "A class type",
-            y.pos, y.name)
+            y.pos)
         }
       case Nil  if !clazz.mods.isInterface &&
                 !isObject(clazz.symbol)          =>
         error(CLASS_SHOULD_EXTEND_EXACTlY_ONE_CLASS,
           clazz.name.asString, "A class type",
-          clazz.pos, clazz.name)
+          clazz.pos)
       case _    if !clazz.mods.isInterface       =>
         error(CLASS_SHOULD_EXTEND_EXACTlY_ONE_CLASS,
           clazz.name.asString, "A class type",
-          clazz.pos, clazz.name)
+          clazz.pos)
       case Nil                                   =>
         // pass
         ()
       case _                                     =>
         error(CLASS_SHOULD_EXTEND_EXACTlY_ONE_CLASS,
           clazz.name.asString, "A class type",
-          clazz.pos, clazz.name)
+          clazz.pos)
     }
 
     parents.filter(isInImplementsClause(_)).foreach { tuse =>
@@ -225,7 +225,7 @@ trait ClassDefTyperComponent extends TyperComponent {
         case Some(sym) if !sym.mods.isInterface =>
           error(IMPLEMENTING_A_CLASS,
             sym.name.asString, "An interface type",
-            tuse.pos, sym.name)
+            tuse.pos)
         case _                                  =>
           // pass
           ()
@@ -276,7 +276,7 @@ trait MethodDefTyperComponent
     // Check if all paths eventually return
     val res     = if(rtpe =/= VoidType && !allPathsReturn(body)) {
       error(MISSING_RETURN_STATEMENT,
-        body.toString, body.toString, body.pos, mthd)
+        body.toString, body.toString, body.pos)
       mthd
     } else {
       TreeCopiers.copyMethodDef(mthd)(body = body)
@@ -285,12 +285,12 @@ trait MethodDefTyperComponent
     if(mthd.mods.isAbstract && ! isConstructor(mthd.symbol) &&
         mthd.body != NoTree) {
       error(ABSTRACT_METHOD_CANNOT_HAVE_BODY,
-          mthd.toString, "No body", mthd.pos, mthd)
+          mthd.toString, "No body", mthd.pos)
     }
 
     if (mthd.mods.isAbstract && isConstructor(mthd.symbol)) {
       error(CONSTRUCTOR_CANNOT_BE_ABSTRACT,
-          mthd.toString, "A concrete constructor", mthd.pos, mthd)
+          mthd.toString, "A concrete constructor", mthd.pos)
     }
 
 
@@ -300,7 +300,7 @@ trait MethodDefTyperComponent
         error(CONSTRUCTOR_SHOULD_HAVE_THE_SAME_TYPE_AS_CONTAINING_CLASS,
           nme.asString,
           cnme.map(_.asString).getOrElse(StdNames.noname.asString),
-          mthd.ret.pos, mthd.ret)
+          mthd.ret.pos)
       }
     })
 
@@ -309,15 +309,15 @@ trait MethodDefTyperComponent
       case Some(sym) if mthd.mods.isInterface &&
                         isConstructor(mthd.symbol)                       =>
         error(CONSTRUCTOR_IN_INTERFACE,
-            mthd.toString, "No constructor", mthd.pos, mthd)
+            mthd.toString, "No constructor", mthd.pos)
       case Some(sym) if mthd.mods.isInterface =>
         error(NON_ABSTRACT_METHOD_IN_INTERFACE,
-            mthd.toString, "An abstract method", mthd.pos, mthd)
+            mthd.toString, "An abstract method", mthd.pos)
       case Some(sym) if !(sym.mods.isInterface ||
                           sym.mods.isAbstract) &&
                           mthd.mods.isAbstract                           =>
         error(ABSTRACT_METHOD_IN_CONCRETE_CLASS,
-            mthd.toString, "An abstract method", mthd.pos, mthd)
+            mthd.toString, "An abstract method", mthd.pos)
       case _                                                             =>
         ()
     }
@@ -355,7 +355,7 @@ trait ThisTyperComponent extends TyperComponent {
     enclClass match {
       case None                  =>
         error(ACCESSING_THIS_OUTSIDE_A_CLASS,
-              ths.toString, "", ths.pos, ths)
+              ths.toString, "", ths.pos)
       case _                     =>
         ()
     }
@@ -365,7 +365,7 @@ trait ThisTyperComponent extends TyperComponent {
     enclosing.foreach { sym => sym.mods.isStatic match {
         case true                  =>
           error(ACCESSING_THIS_IN_STATIC,
-                ths.toString, "", ths.pos, ths)
+                ths.toString, "", ths.pos)
         case false                 =>
           ()
       }
@@ -383,10 +383,10 @@ trait SuperTyperComponent extends TyperComponent {
     enclClass match {
       case None                                                     =>
         error(ACCESSING_SUPER_OUTSIDE_A_CLASS,
-              spr.toString, "", spr.pos, spr)
+              spr.toString, "", spr.pos)
       case Some(sym) if sym.tpe == Some(TypeUtils.objectClassType)  =>
         error(ACCESSING_SUPER_IN_OBJECT_CLASS,
-              spr.toString, "", spr.pos, spr)
+              spr.toString, "", spr.pos)
       case _                                                        =>
         ()
     }
@@ -396,7 +396,7 @@ trait SuperTyperComponent extends TyperComponent {
     enclosing.foreach { sym => sym.mods.isStatic match {
         case true                  =>
           error(ACCESSING_SUPER_IN_STATIC,
-                spr.toString, "", spr.pos, spr)
+                spr.toString, "", spr.pos)
         case false                 =>
           ()
       }
@@ -507,7 +507,7 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
           if(id.isQualified) {
             if(!mthd.mods.isStatic && id.shouldBeStatic) {
               error(INSTANCE_METHOD_IN_STATIC_CONTEXT_INVOK,
-                id.toString, "a method name", id.pos, id)
+                id.toString, "a method name", id.pos)
             } else {
               id.symbol = mthd
               id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
@@ -516,7 +516,7 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
             enclosingNonLocal(id.owner).foreach { owner =>
               if(owner.mods.isStatic && !mthd.mods.isStatic) {
                 error(INSTANCE_METHOD_IN_STATIC_CONTEXT_INVOK,
-                  id.toString, "a static method name", id.pos, id)
+                  id.toString, "a static method name", id.pos)
               } else {
                 id.symbol = mthd
                 id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
@@ -525,15 +525,15 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
           }
         case (_::_)                    =>
           error(AMBIGUOUS_METHOD_INVOCATION,
-              id.toString, "a method name", id.pos, id)
+              id.toString, "a method name", id.pos)
         case Nil                       =>
           error(NAME_NOT_FOUND,
-              id.toString, "a method name", id.pos, id)
+              id.toString, "a method name", id.pos)
       }
       id
     } else if(id.isMethodIdent) {
       error(INSTANTIATING_NON_CONCRETE_CLASS,
-        id.toString, "a concrete class", id.pos, id)
+        id.toString, "a concrete class", id.pos)
       id
     } else {
       val symbol = id.owner.flatMap(
@@ -558,13 +558,13 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
               id.enclosing match {
                 case Some(from) if !isAccessible(sym, from)   =>
                   error(FIELD_NOT_ACCESSIBLE,
-                    id.toString, "an accessible name", id.pos, id)
+                    id.toString, "an accessible name", id.pos)
                 case _                                        =>
                   ()
               }
               if(sym.mods.isField && !sym.mods.isStatic && id.shouldBeStatic) {
                 error(INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK,
-                  id.toString, "a variable name", id.pos, id)
+                  id.toString, "a variable name", id.pos)
               } else {
                 id.symbol = sym
                 id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
@@ -572,14 +572,14 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
             } else if(isStaticContext(id.owner) && sym.mods.isField &&
                   !sym.mods.isStatic) {
               error(INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK,
-                id.toString, "a static name", id.pos, id)
+                id.toString, "a static name", id.pos)
             } else {
               if(!id.isQualified) {
                 enclosingClass(id.owner) match {
                   case Some(encl: ClassSymbol) if !encl.directlyDefines(sym) &&
                                              sym.mods.isPrivateAcc           =>
                       error(FIELD_NOT_ACCESSIBLE,
-                        id.toString, "an accessible name", id.pos, id)
+                        id.toString, "an accessible name", id.pos)
                   case _                                                     =>
                     id.symbol = sym
                     id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
@@ -592,7 +592,7 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
           }
         case _                                =>
           error(NAME_NOT_FOUND,
-              id.toString, "a variable name", id.pos, id)
+              id.toString, "a variable name", id.pos)
       }
       id
 

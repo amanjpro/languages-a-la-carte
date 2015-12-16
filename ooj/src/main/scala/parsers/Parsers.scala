@@ -45,20 +45,24 @@ class Parser extends parsers.Parser {
 
 
   def parse(source: SourceFile): Tree = {
-    val tree = new OOJVisitor(source.name).visit(source.content)
+    val tree = new OOJVisitor(source.name,
+      source.lines).visit(source.content)
     TreeFactories.mkCompilationUnit(tree.asInstanceOf[PackageDefApi],
       source.fileName, source.filePath)
   }
 
-  class OOJVisitor(val source: String) extends Java1BaseVisitor[Tree] {
+  class OOJVisitor(val source: String,
+        lines: Array[String]) extends Java1BaseVisitor[Tree] {
 
     def pos(token: Token): Option[Position] = {
-      Some(Position(source, token.getLine, token.getCharPositionInLine + 1))
+      Some(Position(source,
+        lines, token.getLine, token.getCharPositionInLine + 1))
     }
 
     def pos(ctx: ParserRuleContext): Option[Position] = {
       val token = ctx.getStart
-      Some(Position(source, token.getLine, token.getCharPositionInLine + 1))
+      Some(Position(source, lines,
+        token.getLine, token.getCharPositionInLine + 1))
     }
 
     def localVariableDeclaration(

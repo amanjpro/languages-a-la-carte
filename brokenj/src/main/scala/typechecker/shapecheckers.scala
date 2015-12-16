@@ -29,7 +29,7 @@ trait LabelShapeCheckerComponent extends ShapeCheckerComponent {
       ()
     } else {
       error(UNEXPETED_TREE,
-          lbl.stmt.toString, "an expression", lbl.stmt.pos, lbl.stmt)
+          lbl.stmt.toString, "an expression", lbl.stmt.pos)
     }
     check(lbl.stmt)
   }

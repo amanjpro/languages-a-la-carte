@@ -28,9 +28,10 @@ trait SourceReader {
       val input = new ANTLRInputStream(is)
       val lexer = newLexer(input)
       val tokens = new CommonTokenStream(lexer)
+      val lines  = io.Source.fromFile(fname).getLines.toArray
       val parser = newParser(tokens)
       val tree = parserStart(parser)
-      SourceFile(fname, tree)
+      SourceFile(fname, lines, tree)
     } catch {
       case ioex: IOException =>
         // TODO: Fix this catch

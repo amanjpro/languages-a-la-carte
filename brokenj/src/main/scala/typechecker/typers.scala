@@ -56,12 +56,12 @@ trait SwitchTyperComponent extends TyperComponent {
             ()
           case (Some(etpe), Some(gtpe))                  =>
             error(TYPE_MISMATCH,
-              gtpe.toString, etpe.toString, guard.pos, guard)
+              gtpe.toString, etpe.toString, guard.pos)
           case (_, Some(gtpe))                           =>
             ()
           case (Some(etpe), _)                           =>
             error(TYPE_MISMATCH,
-              ErrorType.toString, etpe.toString, guard.pos, guard)
+              ErrorType.toString, etpe.toString, guard.pos)
         }
       }
     }
@@ -75,7 +75,7 @@ trait SwitchTyperComponent extends TyperComponent {
         error(TYPE_MISMATCH,
               expr.tpe.getOrElse(ErrorType).toString,
               "char, byte, short or int",
-              expr.pos, expr)
+              expr.pos)
     }
     TreeCopiers.copySwitch(switch)(expr = expr, cases = cases)
   }

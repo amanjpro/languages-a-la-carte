@@ -30,7 +30,7 @@ trait BlockShapeCheckerComponent extends ShapeCheckerComponent {
     block.stmts.foreach { tree =>
       if(!isValidStmt(tree)) {
         error(BAD_STATEMENT,
-          tree.toString, "a statement", tree.pos, tree)
+          tree.toString, "a statement", tree.pos)
       } else ()
       check(tree)
     }
@@ -50,18 +50,15 @@ trait IfShapeCheckerComponent extends ShapeCheckerComponent {
     check(ifelse.elsep)
     if(!isValidStmt(ifelse.thenp)) {
       error(BAD_STATEMENT,
-        ifelse.thenp.toString, "a statement", ifelse.thenp.pos,
-        ifelse.thenp)
+        ifelse.thenp.toString, "a statement", ifelse.thenp.pos)
     } else ()
     if(!isValidStmt(ifelse.elsep)) {
       error(BAD_STATEMENT,
-        ifelse.elsep.toString, "a statement", ifelse.elsep.pos,
-        ifelse.elsep)
+        ifelse.elsep.toString, "a statement", ifelse.elsep.pos)
     } else ()
     if(!isValidExpr(ifelse.cond)) {
       error(BAD_EXPRESSION,
-        ifelse.cond.toString, "an expression", ifelse.cond.pos,
-        ifelse.cond)
+        ifelse.cond.toString, "an expression", ifelse.cond.pos)
     } else ()
   }
 
@@ -82,13 +79,11 @@ trait WhileShapeCheckerComponent extends ShapeCheckerComponent {
 
     if(!isValidStmt(wile.body)) {
       error(BAD_STATEMENT,
-        wile.body.toString, "a statement", wile.body.pos,
-        wile.body)
+        wile.body.toString, "a statement", wile.body.pos)
     } else ()
     if(!isValidExpr(wile.cond)) {
       error(BAD_EXPRESSION,
-        wile.cond.toString, "a statement", wile.cond.pos,
-        wile.cond)
+        wile.cond.toString, "a statement", wile.cond.pos)
     } else ()
   }
 
@@ -113,20 +108,17 @@ trait ForShapeCheckerComponent extends ShapeCheckerComponent {
     forloop.steps.foreach { step =>
       if(!TreeUtils.isValidStatement(step))
         error(BAD_STATEMENT,
-          step.toString, "a statement", step.pos,
-          step)
+          step.toString, "a statement", step.pos)
       else ()
     }
 
     if(!isValidStmt(forloop.body)) {
       error(BAD_STATEMENT,
-        forloop.body.toString, "a statement", forloop.body.pos,
-        forloop.body)
+        forloop.body.toString, "a statement", forloop.body.pos)
     } else ()
     if(!isValidExpr(forloop.cond) || forloop.cond == NoTree) {
       error(BAD_EXPRESSION,
-        forloop.cond.toString, "a statement", forloop.cond.pos,
-        forloop.cond)
+        forloop.cond.toString, "a statement", forloop.cond.pos)
     } else ()
   }
 
@@ -138,12 +130,12 @@ trait ForShapeCheckerComponent extends ShapeCheckerComponent {
   protected def isValidInitStatements(forloop: ForApi): Unit = {
     if(!allValDefsOrNone(forloop.inits))
       error(UNEXPETED_TREE,
-        forloop.toString, "an expression", forloop.pos, forloop)
+        forloop.toString, "an expression", forloop.pos)
     else {
       forloop.inits.foreach { init =>
         if(!TreeUtils.isValDefOrStatementExpression(init)) {
           error(UNEXPETED_TREE, init.toString,
-                        "", init.pos, forloop)
+                        "", init.pos)
         }
       }
     }
@@ -165,7 +157,7 @@ trait CastShapeCheckerComponent extends ShapeCheckerComponent {
 
     if(!isTypeUse(cast.tpt)) {
       error(TYPE_NAME_EXPECTED,
-      cast.tpt.toString, "a type", cast.tpt.pos, cast.tpt)
+      cast.tpt.toString, "a type", cast.tpt.pos)
     } else ()
   }
 
@@ -187,7 +179,7 @@ trait MethodDefShapeCheckerComponent extends ShapeCheckerComponent {
   (meth: MethodDefApi)  => {
     if(!TreeUtils.isTypeUse(meth.ret)) {
       error(TYPE_NAME_EXPECTED,
-        meth.ret.toString, "a type", meth.ret.pos, meth.ret)
+        meth.ret.toString, "a type", meth.ret.pos)
     } else ()
     meth.params.foreach(check(_))
     check(meth.body)
@@ -201,7 +193,7 @@ trait UnaryShapeCheckerComponent extends ShapeCheckerComponent {
   (unary: UnaryApi) => {
     if(unary.isPostfix && (unary.op != Inc && unary.op != Dec))
       error(BAD_STATEMENT,
-        unary.toString, "a postfix operation", unary.pos, unary)
+        unary.toString, "a postfix operation", unary.pos)
     else ()
   }
 
@@ -214,14 +206,14 @@ trait ValDefShapeCheckerComponent extends ShapeCheckerComponent {
     if(!TreeUtils.isTypeUse(valdef.tpt)) {
       // TODO: Better error message
       error(TYPE_NAME_EXPECTED,
-        valdef.tpt.toString, "a type", valdef.tpt.pos, valdef.tpt)
+        valdef.tpt.toString, "a type", valdef.tpt.pos)
     } else ()
 
     valdef.owner match {
       case Some(_: MethodSymbol) if  !valdef.mods.isParam  =>
         // TODO: Better error message
         error(UNEXPETED_TREE,
-          valdef.toString, "an expression", valdef.pos, valdef)
+          valdef.toString, "an expression", valdef.pos)
       case _                                               =>
         ()
     }
@@ -231,13 +223,13 @@ trait ValDefShapeCheckerComponent extends ShapeCheckerComponent {
       && !(valdef.mods.isLocalVariable || valdef.mods.isParam)) {
       // TODO: Better error message
       error(UNEXPETED_TREE,
-        valdef.toString, "an expression", valdef.pos, valdef)
+        valdef.toString, "an expression", valdef.pos)
     } else ()
 
     if(enclMeth == None && !valdef.mods.isField) {
       // TODO: Better error message
       error(UNEXPETED_TREE,
-        valdef.toString, "an expression", valdef.pos, valdef)
+        valdef.toString, "an expression", valdef.pos)
     } else ()
 
     if(isSimpleExpression(valdef.rhs))
@@ -245,7 +237,7 @@ trait ValDefShapeCheckerComponent extends ShapeCheckerComponent {
     else
       // TODO: Better error message
       error(UNEXPETED_TREE,
-        valdef.toString, "an expression", valdef.pos, valdef)
+        valdef.toString, "an expression", valdef.pos)
 
     check(valdef.rhs)
   }
