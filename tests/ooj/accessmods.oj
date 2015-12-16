@@ -29,14 +29,14 @@ class B extends A {
 
   static void n () {
     B b = new B();
-    b.z;
-    b.y;
-    b.x;
-    b.u;
-    b.a; // should fail
-    b.b;
-    b.c;
-    b.d;
+    b.z = 1;
+    b.y = 1;
+    b.x = 1;
+    b.u = 1;
+    b.a = 1; // should fail
+    b.b = 1;
+    b.c = 1;
+    b.d = 1;
   }
 
   void m () {

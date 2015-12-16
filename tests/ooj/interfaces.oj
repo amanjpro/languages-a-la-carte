@@ -34,9 +34,9 @@ abstract class B {
 class Test implements A { // fails
   Test () {}
   void main() {
-    A.a;
-    A.b;
-    A.c;
+    int k = A.a;
+    k = A.b;
+    k = A.c;
     new B(); // fail
     new A(); // fail
     // new A(){}.k;

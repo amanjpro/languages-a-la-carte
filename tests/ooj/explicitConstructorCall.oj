@@ -13,7 +13,6 @@ class A {
 
 class B extends A {
   B(int k) {
-    super();
   } // fails, bad super.init() call
   B() {
     this(1);

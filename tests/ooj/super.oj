@@ -1,5 +1,6 @@
 // fails
 // NAME_NOT_FOUND
+// TYPE_MISMATCH
 
 package test;
 
@@ -15,7 +16,7 @@ class B extends A {
   }
 
   int n () {
-    1 + super.k();  // fails
+    int a = 1 + super.k();  // fails
     return 1 + super.m();
   }
 }

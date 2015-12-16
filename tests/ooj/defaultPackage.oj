@@ -18,10 +18,10 @@ class B {
   B () {}
   static void m () {
     A a = new A();
-    a.q;   // this fails
-    a.a;   // this fails
-    a.b;
-    a.c;
-    a.d;
+    a.q = 1;   // this fails
+    a.a = 1;   // this fails
+    a.b = 1;
+    a.c = 1;
+    a.d = 1;
   }
 }
