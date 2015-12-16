@@ -147,16 +147,52 @@ case class ClassSymbol(var mods: Flags, var name: Name,
 
   def directlyDefines(symbol: Symbol): Boolean = decls.contains(symbol)
 
-  def getDirectlyDefinedSymbol(name: Name, p: Symbol => Boolean): Option[Symbol] =
+  def getDirectlyDefinedSymbol(name: Name,
+      p: Symbol => Boolean): Option[Symbol] =
     decls.find { sym =>
       sym.name == name && p(sym)
     }
 
 
   def getAllSymbols(name: Name, p: Symbol => Boolean): List[Symbol] = {
-    val fromParents = parents.flatMap(_.getAllSymbols(name, p))
-    val fromThis    = decls.filter(sym => sym.name == name && p(sym))
-    fromThis ++ fromParents.filter(s => !fromThis.contains(s))
+    val newParents = {
+      val interfaces = parents.filter(_.mods.isInterface)
+      val classes    = parents.filter(!_.mods.isInterface)
+      classes match {
+        case List(x, y)                     =>
+          if(x == SymbolUtils.objectClassSymbol)
+            List(y) ++ interfaces
+          else if(y == SymbolUtils.objectClassSymbol)
+            List(x) ++ interfaces
+          else
+            classes ++ interfaces
+        case _                              =>
+            classes ++ interfaces
+      }
+    }
+    val fromParents   =
+      newParents.flatMap(_.getAllSymbols(name, p)).filter(!_.mods.isConstructor)
+    val fromThis      = decls.filter(sym => sym.name == name && p(sym))
+    val updatedParent = fromParents.filter(sp =>
+      !fromThis.exists(st => {
+        (st, sp) match {
+          case (st: MethodSymbol, sp: MethodSymbol)   =>
+            val thisTpe   = st.params.map(_.tpe)
+            val parentTpe = sp.params.map(_.tpe)
+            val r = thisTpe.zip(parentTpe).foldLeft(true)((z, y) => {
+              val r = for {
+                t1 <- y._1
+                t2 <- y._2
+              } yield t1 =:= t2
+              z && r.getOrElse(false)
+            })
+            r
+          case _                                      =>
+            false
+        }
+      }))
+
+    updatedParent ++ fromThis
   }
 
   // Override this method to look for definitions in the parents too.
