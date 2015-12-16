@@ -21,6 +21,7 @@ sealed class Flags(private val flags: Set[Flag]) {
   def hasFlag(flag: Flag): Boolean = flags.contains(flag)
 
   final def asString: String = flags.mkString(" | ")
+  override def toString: String = asString
 }
 object Flags {
   def apply(flag: Flag): Flags = new Flags(Set(flag))
