@@ -88,6 +88,7 @@ object TreeExtractors extends TreeExtractors {
   val Unary           = new UnaryExtractor {}
 
 
+  val Block           = new BlockExtractor {}
   val Assign          = new AssignExtractor {}
   val If              = new IfExtractor {}
   val While           = new WhileExtractor {}

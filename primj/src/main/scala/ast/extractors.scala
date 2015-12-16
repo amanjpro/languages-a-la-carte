@@ -72,6 +72,13 @@ trait TreeExtractors extends calcj.ast.TreeExtractors {
     }
   }
 
+  trait BlockExtractor {
+    def unapply(tree: BlockApi): Option[List[Tree]] = tree match {
+      case null          => None
+      case _             => Some((tree.stmts))
+    }
+  }
+
   trait MethodDefExtractor {
     def unapply(tree: MethodDefApi):
       Option[(UseTree, Name, List[ValDefApi], Expr)] = tree match {
@@ -107,6 +114,7 @@ object TreeExtractors extends TreeExtractors {
   val Ternary   = new TernaryExtractor {}
   val Apply     = new ApplyExtractor {}
   val Return    = new ReturnExtractor {}
+  val Block     = new BlockExtractor {}
   val MethodDef = new MethodDefExtractor {}
   val ValDef    = new ValDefExtractor {}
 }
