@@ -8,6 +8,7 @@ import tiny.settings.SanaConfig
 import tiny.ast.Tree
 import tiny.source.SourceReader
 import tiny.errors.ErrorReporting
+import tiny.symbols.Symbol
 import primj.phases._
 import primj.antlr._
 
@@ -41,10 +42,14 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
   object Language extends super.Language {
     def compile: Tree => Unit =
       (x: Tree) => {
-        val f = (PrimjSymbolAssignerFamily.assign join
-                  (PrimjNamerFamily.name join
-                    (PrimjTyperFamily.typed join
-                      PrimjShapeCheckerFamily.check)))
+        val typers =
+          (t: Tree) => PrimjTyperFamily.typed((t, Nil))
+
+        val f =
+          (PrimjSymbolAssignerFamily.assign join
+            (PrimjNamerFamily.name join
+              (typers join
+                (PrimjShapeCheckerFamily.check))))
         f((x, None))
       }
   }

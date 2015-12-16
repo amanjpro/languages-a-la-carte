@@ -33,22 +33,23 @@ Continue: DONE
 
 
 
-@component
+@component(tree, symbols)
 trait CaseTyperComponent extends TyperComponent {
   (cse: CaseApi) => {
-    val guards = cse.guards.map(typed(_).asInstanceOf[Expr])
-    val body   = typed(cse.body)
+    val guards = cse.guards.map(cs => typed((cs, symbols)).asInstanceOf[Expr])
+    val body   = typed((cse.body, symbols))
     TreeCopiers.copyCase(cse)(guards = guards, body = body)
   }
 }
 
 
 
-@component
+@component(tree, symbols)
 trait SwitchTyperComponent extends TyperComponent {
   (switch: SwitchApi) => {
-    val expr   = typed(switch.expr).asInstanceOf[Expr]
-    val cases  = switch.cases.map(cse => typed(cse).asInstanceOf[CaseApi])
+    val expr   = typed((switch.expr, symbols)).asInstanceOf[Expr]
+    val cases  = switch.cases
+      .map(cse => typed((cse, symbols)).asInstanceOf[CaseApi])
     cases.foreach { cse =>
       cse.guards.foreach { guard =>
         (expr.tpe, guard.tpe) match {
@@ -82,20 +83,20 @@ trait SwitchTyperComponent extends TyperComponent {
 }
 
 
-@component
+@component(tree, symbols)
 trait LabelTyperComponent extends TyperComponent {
   (label: LabelApi) => {
-    val stmt   = typed(label.stmt).asInstanceOf[Expr]
+    val stmt   = typed((label.stmt, symbols)).asInstanceOf[Expr]
     TreeCopiers.copyLabel(label)(stmt = stmt)
   }
 }
 
-@component
+@component(tree, symbols)
 trait ContinueTyperComponent extends TyperComponent {
   (continue: ContinueApi) => continue
 }
 
-@component
+@component(tree, symbols)
 trait BreakTyperComponent extends TyperComponent {
   (break: BreakApi) => break
 }

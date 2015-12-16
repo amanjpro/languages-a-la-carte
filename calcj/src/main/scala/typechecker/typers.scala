@@ -9,6 +9,7 @@ import sana.dsl._
 import tiny.ast.{TreeCopiers => _, _}
 import sana.tiny.ast.Implicits._
 import tiny.types._
+import tiny.symbols.Symbol
 import tiny.errors.ErrorCodes._
 import tiny.errors.ErrorReporting.{error,warning}
 import calcj.ast._
@@ -16,17 +17,18 @@ import calcj.ast.operators._
 import calcj.types._
 
 
-trait TyperComponent extends TransformationComponent[Tree, Tree] {
-  def typed: Tree => Tree
+trait TyperComponent extends
+  TransformationComponent[(Tree, List[Symbol]), Tree] {
+  def typed: ((Tree, List[Symbol])) => Tree
 }
 
 
-@component
+@component(tree, symbols)
 trait BinaryTyperComponent extends TyperComponent {
 
   (bin: BinaryApi)           => {
-    val e1 = typed(bin.lhs)
-    val e2 = typed(bin.rhs)
+    val e1 = typed((bin.lhs, symbols))
+    val e2 = typed((bin.rhs, symbols))
     (e1, e2) match {
       case (e1: Expr, e2: Expr)       if e1.tpe != None && e2.tpe != None =>
         val btpe = binaryTyper(e1.tpe.get, e2.tpe.get, bin)
@@ -150,7 +152,7 @@ trait BinaryTyperComponent extends TyperComponent {
 
 }
 
-@component
+@component(tree, symbols)
 trait UnaryTyperComponent extends TyperComponent {
 
   (unary: UnaryApi)          => {
@@ -164,7 +166,7 @@ trait UnaryTyperComponent extends TyperComponent {
     //   case Pos    => point(expr)
     //   case _      => point(Unary(unary.op, expr, point(utpe), unary.pos))
     // }
-    typed(unary.expr) match {
+    typed((unary.expr, symbols)) match {
       case expr: Expr       if expr.tpe != None =>
         val utpe = unaryTyper(expr.tpe.get, unary)
         utpe match {
@@ -219,12 +221,12 @@ trait UnaryTyperComponent extends TyperComponent {
 
 }
 
-@component
+@component(tree, symbols)
 trait CastTyperComponent extends TyperComponent {
 
   (cast: CastApi)           => {
-    val tpt  = typed(cast.tpt)
-    val expr = typed(cast.expr)
+    val tpt  = typed((cast.tpt, symbols))
+    val expr = typed((cast.expr, symbols))
     (tpt, expr) match {
       case (tpt: UseTree, expr: Expr)   =>
         TreeCopiers.copyCast(cast)(tpt = tpt, expr = expr)
@@ -236,7 +238,7 @@ trait CastTyperComponent extends TyperComponent {
 
 }
 
-@component
+@component(tree, symbols)
 trait LiteralTyperComponent extends TyperComponent {
   (lit: LiteralApi)     => {
     lit.tpe = lit.constant.tpe

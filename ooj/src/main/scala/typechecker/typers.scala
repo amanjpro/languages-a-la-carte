@@ -47,27 +47,28 @@ Apply: DONE
 // Set class type information in a separate phase, then
 // advance to typer
 
-@component
+@component(tree, symbols)
 trait CompilationUnitTyperComponent extends TyperComponent {
   (unit: CompilationUnitApi) => {
-    val pkg = typed(unit.module).asInstanceOf[PackageDefApi]
+    val pkg = typed((unit.module, symbols)).asInstanceOf[PackageDefApi]
     TreeCopiers.copyCompilationUnit(unit)(module = pkg)
   }
 }
 
-@component
+@component(tree, symbols)
 trait PackageDefTyperComponent extends TyperComponent {
   (pkg: PackageDefApi) => {
-    val members = pkg.members.map(member => typed(member).asInstanceOf[DefTree])
+    val members = pkg.members
+      .map(member => typed((member, symbols)).asInstanceOf[DefTree])
     TreeCopiers.copyPackageDef(pkg)(members = members)
   }
 }
 
-@component
+@component(tree, symbols)
 trait ValDefTyperComponent extends TyperComponent {
   (valdef: ValDefApi)          => {
-    val tpt    = typed(valdef.tpt).asInstanceOf[UseTree]
-    val rhs    = typed(valdef.rhs).asInstanceOf[Expr]
+    val tpt    = typed((valdef.tpt, symbols)).asInstanceOf[UseTree]
+    val rhs    = typed((valdef.rhs, symbols)).asInstanceOf[Expr]
     val rtpe   = rhs.tpe.getOrElse(ErrorType)
     val ttpe   = tpt.tpe.getOrElse(ErrorType)
     valdef.tpe = ttpe
@@ -130,12 +131,13 @@ trait ValDefTyperComponent extends TyperComponent {
   }
 }
 
-@component
+@component(tree, symbols)
 trait ClassDefTyperComponent extends TyperComponent {
   (clazz: ClassDefApi) => {
     val parents =
-      clazz.parents.map((parent) => typed(parent).asInstanceOf[UseTree])
-    val body    = typed(clazz.body).asInstanceOf[TemplateApi]
+      clazz.parents
+        .map((parent) => typed((parent, symbols)).asInstanceOf[UseTree])
+    val body    = typed((clazz.body, symbols)).asInstanceOf[TemplateApi]
     if(!(clazz.mods.isInterface || clazz.mods.isAbstract)) {
       SymbolUtils.allAbstractMembers(clazz.symbol) match {
         case Nil                           =>
@@ -251,21 +253,21 @@ trait ClassDefTyperComponent extends TyperComponent {
     TreeUtils.isInExtendsClause(tree)
 }
 
-@component
+@component(tree, symbols)
 trait TemplateTyperComponent extends TyperComponent {
   (tmpl: TemplateApi) => {
-    val members = tmpl.members.map(typed(_))
+    val members = tmpl.members.map(member => typed((member, symbols)))
     TreeCopiers.copyTemplate(tmpl)(members = members)
   }
 }
 
 
 // TODO: Do we need this?
-@component
+@component(tree, symbols)
 trait MethodDefTyperComponent
   extends primj.typechecker.MethodDefTyperComponent {
   (mthd: MethodDefApi)          => {
-    val body    = typed(mthd.body).asInstanceOf[Expr]
+    val body    = typed((mthd.body, symbols)).asInstanceOf[Expr]
     val rtpe    = mthd.ret.tpe.getOrElse(ErrorType)
     val btpe    = body.tpe.getOrElse(ErrorType)
     // if(!(btpe <:< rtpe) && rtpe =/= VoidType) {
@@ -347,7 +349,7 @@ trait MethodDefTyperComponent
 }
 
 
-@component
+@component(tree, symbols)
 trait ThisTyperComponent extends TyperComponent {
   (ths: ThisApi)                 => {
     val enclClass = ths.enclosingClassSymbol
@@ -375,7 +377,7 @@ trait ThisTyperComponent extends TyperComponent {
 }
 
 
-@component
+@component(tree, symbols)
 trait SuperTyperComponent extends TyperComponent {
   (spr: SuperApi)                 => {
     val enclClass = spr.enclosingClassSymbol
@@ -406,10 +408,10 @@ trait SuperTyperComponent extends TyperComponent {
 }
 
 
-@component
+@component(tree, symbols)
 trait NewTyperComponent extends TyperComponent {
   (nw: NewApi) => {
-    val app     = typed(nw.app).asInstanceOf[ApplyApi]
+    val app     = typed((nw.app, symbols)).asInstanceOf[ApplyApi]
     val tpe     = app match {
       case Apply(Select(qual, _), _) =>
         qual.symbol.foreach(nw.symbol = _)
@@ -423,20 +425,20 @@ trait NewTyperComponent extends TyperComponent {
 }
 
 
-@component
+@component(tree, symbols)
 trait ApplyTyperComponent extends TyperComponent {
   (apply: ApplyApi) => {
-    val args   = apply.args.map(typed(_).asInstanceOf[Expr])
+    val args   = apply.args.map(arg => typed((arg, symbols)).asInstanceOf[Expr])
     val fun    = {
       apply.fun match {
         case fun@Select(qual, f: IdentApi)   =>
           f.isMethodIdent = true
           f.argumentTypes = args.flatMap(_.tpe)
-          typed(fun).asInstanceOf[SelectApi]
+          typed((fun, symbols)).asInstanceOf[SelectApi]
         case f: IdentApi                     =>
           f.isMethodIdent = true
           f.argumentTypes = args.flatMap(_.tpe)
-          typed(f).asInstanceOf[IdentApi]
+          typed((f, symbols)).asInstanceOf[IdentApi]
       }
     }
     fun.tpe match {
@@ -456,7 +458,7 @@ trait ApplyTyperComponent extends TyperComponent {
 }
 
 
-@component
+@component(tree, symbols)
 trait TypeUseTyperComponent extends primj.typechecker.TypeUseTyperComponent {
   (tuse: TypeUseApi) => {
     tuse.owner.foreach(sym => {
@@ -465,11 +467,11 @@ trait TypeUseTyperComponent extends primj.typechecker.TypeUseTyperComponent {
         case _         => ()
       }
     })
-    super.apply(tuse)
+    super.apply((tuse, symbols))
   }
 }
 
-@component
+@component(tree, symbols)
 trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
   (id: IdentApi) => {
     val tptMods = if(id.isQualified) {
@@ -632,12 +634,12 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
 
 
 
-@component
+@component(tree, symbols)
 trait SelectTyperComponent extends TyperComponent {
   (select: SelectApi) => {
-    val qual = typed(select.qual)
+    val qual = typed((select.qual, symbols))
     qual.symbol.foreach(select.tree.owner = _)
-    val tree = typed(select.tree).asInstanceOf[SimpleUseTree]
+    val tree = typed((select.tree, symbols)).asInstanceOf[SimpleUseTree]
     tree.tpe.foreach(select.tpe = _)
     tree.symbol.foreach(select.symbol = _)
     if(isType(qual)) {
