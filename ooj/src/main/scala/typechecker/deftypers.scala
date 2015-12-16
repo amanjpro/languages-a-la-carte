@@ -214,3 +214,9 @@ trait IdentDefTyperComponent extends DefTyperComponent {
     id
   }
 }
+
+
+@component
+trait BlockDefTyperComponent extends DefTyperComponent {
+  (block: BlockApi) => block
+}

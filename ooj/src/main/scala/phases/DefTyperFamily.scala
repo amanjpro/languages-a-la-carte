@@ -17,7 +17,7 @@ trait DefTyperFamily extends TransformationFamily[Tree, Tree] {
 
   def components: List[PartialFunction[Tree, Tree]] =
     generateComponents[Tree, Tree](
-      "CompilationUnit,PackageDef,ClassDef,Template,MethodDef,ValDef,TypeUse,Select,Ident",
+      "CompilationUnit,PackageDef,ClassDef,Template,MethodDef,ValDef,TypeUse,Select,Ident,Block",
       "DefTyperComponent", "typed", "")
 
   def typed: Tree => Tree = family
