@@ -127,6 +127,18 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
     val message: String =
       "Local variable can only appear in local contexts"
   }
+
+  case object EXPLICIT_CONSTRUCTOR_INVOKATION_NOT_FIRST_STATEMENT extends
+      ErrorCode {
+    val message: String =
+      "Explicit constructor invokation needs to be the first statement"
+  }
+
+  case object EXPLICIT_CONSTRUCTOR_INVOKATION_IN_METHOD extends
+      ErrorCode {
+    val message: String =
+      "Explicit constructor invokation can only appear in constructors"
+  }
 }
 
 object ErrorCodes extends ErrorCodes
