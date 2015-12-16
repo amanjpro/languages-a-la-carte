@@ -569,7 +569,7 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
                 id.symbol = sym
                 id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
               }
-            } else if(owner.mods.isStatic && sym.mods.isField &&
+            } else if(isStaticContext(id.owner) && sym.mods.isField &&
                   !sym.mods.isStatic) {
               error(INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK,
                 id.toString, "a static name", id.pos, id)
@@ -599,6 +599,11 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
     }
   }
 
+
+  protected def isStaticContext(symbol: Option[Symbol]): Boolean = {
+    SymbolUtils.enclosingNonLocal(symbol)
+      .map(_.mods.isStatic).getOrElse(false)
+  }
 
   protected def enclosingNonLocal(sym: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingNonLocal(sym)
