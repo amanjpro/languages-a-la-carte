@@ -500,7 +500,7 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
               }
             }
           }
-        case _                         =>
+        case (_::_)                    =>
           error(AMBIGUOUS_METHOD_INVOCATION,
               id.toString, "a method name", id.pos, id)
         case Nil                       =>
