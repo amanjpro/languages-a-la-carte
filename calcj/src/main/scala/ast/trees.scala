@@ -18,22 +18,41 @@ import operators._
 trait CastApi extends Expr {
   def tpt: UseTree
   def expr: Expr
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = f(z, tpt)
+    val r2 = f(r1, expr)
+    f(r2, this)
+  }
 }
 
 trait LiteralApi extends Expr {
   def constant: Constant
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = f(z, this)
 }
 
 trait BinaryApi extends Expr {
   def lhs: Expr
   def op: BOp
   def rhs: Expr
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = f(z, lhs)
+    val r2 = f(r1, rhs)
+    f(r2, this)
+  }
 }
 
 trait UnaryApi extends Expr {
   def isPostfix: Boolean
   def op: UOp
   def expr: Expr
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = f(z, expr)
+    f(r1, this)
+  }
 }
 
 

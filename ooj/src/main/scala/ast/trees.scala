@@ -34,10 +34,20 @@ trait CompilationUnitApi extends Tree {
   def sourceName: String
   // the head of the list contains the inner most directory
   def sourcePath: List[String]
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = f(z, module)
+    f(r1, this)
+  }
 }
 
 trait PackageDefApi extends NamedTree {
   def members: List[Tree]
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = members.foldLeft(z)(f)
+    f(r1, this)
+  }
 }
 
 
@@ -47,6 +57,12 @@ trait ClassDefApi extends TypeTree {
   def parents: List[UseTree]
   def body: TemplateApi
 
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = parents.foldLeft(z)(f)
+    val r2 = f(r1, body)
+    f(r2, this)
+  }
   // {
   //   val ptpes = parents.flatMap(_.tpe).toSet
   //   // Is it Object? (No java.lang.Object is defined at this module level)
@@ -60,6 +76,11 @@ trait ClassDefApi extends TypeTree {
 
 trait TemplateApi extends Tree {
   def members: List[Tree]
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = members.foldLeft(z)(f)
+    f(r1, this)
+  }
 }
 
 trait MethodDefApi extends primj.ast.MethodDefApi {
@@ -68,6 +89,11 @@ trait MethodDefApi extends primj.ast.MethodDefApi {
 
 trait NewApi extends Expr {
   def app: ApplyApi
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = f(z, app)
+    f(r1, this)
+  }
 }
 
 trait SelectApi extends UseTree with Expr {
@@ -77,14 +103,23 @@ trait SelectApi extends UseTree with Expr {
   // override val name: ContextState[Name] = tree.name
   // def uses: Option[Symbol] = tree.symbol
   def name: Name           = tree.name
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = f(z, qual)
+    val r2 = f(r1, tree)
+    f(r2, this)
+  }
 }
 
 trait ThisApi extends Expr {
   // def enclosingClassSymbol: Option[Symbol]
-
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R =
+    f(z, this)
 }
 
 trait SuperApi extends Expr {
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R =
+    f(z, this)
   // def enclosingClassSymbol: Option[Symbol]
 
   // val tpe: TypeState[Type] = for {

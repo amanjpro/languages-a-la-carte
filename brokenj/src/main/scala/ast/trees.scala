@@ -20,19 +20,36 @@ import primj.types.VoidType
 trait LabelApi extends Expr with NamedTree {
   def name: Name
   def stmt: Expr
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = f(z, stmt)
+    f(r1, this)
+  }
 }
 
 trait BreakApi extends Expr {
   def label: Option[Name]
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R =
+    f(z, this)
 }
 
 trait ContinueApi extends Expr {
   def label: Option[Name]
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R =
+    f(z, this)
 }
 
 trait CaseApi extends Tree {
   def guards: List[Expr]
   def body: Tree
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = guards.foldLeft(z)(f)
+    val r2 = f(r1, body)
+    f(r2, this)
+  }
 }
 
 // trait DefaultCaseApi extends CaseApi {
@@ -42,6 +59,12 @@ trait CaseApi extends Tree {
 trait SwitchApi extends Expr {
   def expr: Expr
   def cases: List[CaseApi]
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = f(z, expr)
+    val r2 = cases.foldLeft(r1)(f)
+    f(r2, this)
+  }
 }
 
 

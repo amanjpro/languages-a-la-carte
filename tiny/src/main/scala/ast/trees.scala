@@ -12,6 +12,8 @@ import sana.tiny.names.Name
 
 trait Tree {
   var attributes: Attributes = noAttributes
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R
 }
 
 
@@ -35,8 +37,12 @@ trait UseTree extends Expr with NamedTree
 trait SimpleUseTree extends UseTree
 
 
-trait TypeUseApi extends SimpleUseTree
-trait IdentApi extends SimpleUseTree
+trait TypeUseApi extends SimpleUseTree {
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = f(z, this)
+}
+trait IdentApi extends SimpleUseTree {
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = f(z, this)
+}
 
 protected[ast] class TypeUse(val name: Name) extends TypeUseApi {
   override def toString: String = s"TypeUse($name)"
@@ -46,7 +52,11 @@ protected[ast] class Ident(val name: Name) extends IdentApi {
   override def toString: String = s"Ident($name)"
 }
 
-case object NoTree extends Expr
+case object NoTree extends Expr {
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = f(z, this)
+}
 
 
-case object ErrorTree extends Tree
+case object ErrorTree extends Tree {
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = f(z, this)
+}

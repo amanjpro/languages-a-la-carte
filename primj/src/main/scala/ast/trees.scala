@@ -18,6 +18,11 @@ trait ProgramApi extends Tree {
     */
   def members: List[DefTree]
   def sourceName: String
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = members.foldLeft(z)(f)
+    f(r1, this)
+  }
 }
 
 // Variable and Method definitions
@@ -25,6 +30,13 @@ trait MethodDefApi extends TermTree {
   def ret: UseTree
   def params: List[ValDefApi]
   def body: Expr
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = f(z, ret)
+    val r2 = params.foldLeft(r1)(f)
+    val r3 = f(r2, body)
+    f(r3, this)
+  }
 }
 
 // At this stage, methods don't have modifiers (no encapsulation,
@@ -34,6 +46,12 @@ trait ValDefApi extends TermTree {
   def mods: Flags
   def tpt: UseTree
   def rhs: Expr
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = f(z, tpt)
+    val r2 = f(r1, rhs)
+    f(r2, this)
+  }
 }
 
 
@@ -41,10 +59,21 @@ trait ValDefApi extends TermTree {
 trait ReturnApi extends Expr {
   val expr: Option[Expr]
   def isVoid: Boolean = expr == None
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = expr.map(f(z, _)).getOrElse(z)
+    f(z, this)
+  }
 }
 
 trait BlockApi extends Expr {
   def stmts: List[Tree]
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = stmts.foldLeft(z)(f)
+    f(r1, this)
+  }
+
 }
 
 
@@ -52,12 +81,26 @@ trait BlockApi extends Expr {
 trait AssignApi extends Expr {
   def lhs: Expr
   def rhs: Expr
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = f(z, lhs)
+    val r2 = f(r1, rhs)
+    f(r2, this)
+  }
 }
 
 trait IfApi extends Expr {
   def cond: Expr
   def thenp: Expr
   def elsep: Expr
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = f(z, cond)
+    val r2 = f(r1, thenp)
+    val r3 = f(r2, elsep)
+    f(r3, this)
+  }
+
 }
 
 
@@ -65,6 +108,12 @@ trait WhileApi extends Expr {
   def isDoWhile: Boolean
   def cond: Expr
   def body: Expr
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = f(z, cond)
+    val r2 = f(r1, body)
+    f(r2, this)
+  }
 }
 
 trait ForApi extends Expr {
@@ -72,6 +121,14 @@ trait ForApi extends Expr {
   def cond: Expr
   def steps: List[Expr]
   def body: Expr
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = inits.foldLeft(z)(f)
+    val r2 = f(r1, cond)
+    val r3 = steps.foldLeft(r2)(f)
+    val r4 = f(r3, body)
+    f(r4, this)
+  }
 }
 
 // Ternary operator
@@ -79,12 +136,25 @@ trait TernaryApi extends Expr {
   def cond: Expr
   def thenp: Expr
   def elsep: Expr
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = f(z, cond)
+    val r2 = f(r1, thenp)
+    val r3 = f(r2, elsep)
+    f(r3, this)
+  }
 }
 
 // Apply
 trait ApplyApi extends Expr {
   def fun: Expr
   def args: List[Expr]
+
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = f(z, fun)
+    val r2 = args.foldLeft(r1)(f)
+    f(r2, this)
+  }
 }
 
 protected[ast] class Program(val members: List[DefTree],
