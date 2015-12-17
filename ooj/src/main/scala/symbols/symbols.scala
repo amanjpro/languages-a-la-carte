@@ -43,27 +43,6 @@ object ProgramSymbol extends Symbol {
     val owner   = Some(langPackageSymbol)
     val tpe     = Some(TypeUtils.objectClassType)
     val res = ClassSymbol(mods, name, parents, owner, tpe)
-
-
-
-
-    // cnstr tpe:
-    val cnstrTpe = Some(MethodType(VoidType, Nil))
-    val cnstr = MethodSymbol(PUBLIC_ACC | CONSTRUCTOR,
-      CONSTRUCTOR_NAME, Nil, Some(res),
-      cnstrTpe, Some(res))
-
-    // eqls tpe:
-    val eqlsTpe = Some(MethodType(BooleanType, tpe.toList))
-    val eqls = MethodSymbol(PUBLIC_ACC | noflags,
-      Name("equals"), Nil, Some(BooleanSymbol), eqlsTpe, Some(res))
-    val psym    = VariableSymbol(PARAM | noflags,
-      Name("other"), Some(res), Some(eqls))
-
-    eqls.params = List(psym)
-
-    res.declare(cnstr)
-    res.declare(eqls)
     res
   }
 
