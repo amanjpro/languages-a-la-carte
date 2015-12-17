@@ -1,0 +1,19 @@
+// fails
+// OVERRIDING_FINAL_METHOD
+// OVERRIDING_FINAL_METHOD
+
+
+class A {
+  final void a() {}
+  private final void b() {}
+  final void c() {}
+  final static void d() {}
+}
+
+
+class B extends A {
+  void a() {} // fails
+  private final void b() {}
+  final void c() {} // fails
+  final static void d() {}
+}
