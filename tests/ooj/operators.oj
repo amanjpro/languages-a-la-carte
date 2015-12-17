@@ -1,0 +1,26 @@
+// fails
+// TYPE_MISMATCH
+// TYPE_MISMATCH
+
+
+package test;
+
+
+class A {
+  boolean m() {
+    return (null == null) && (1 > 2);
+  }
+
+  boolean n() {
+    return (new A() == 1); // fails
+  }
+
+
+  boolean a() {
+    return (null != new A());
+  }
+
+  boolean b() {
+    return (new A() != new java.lang.Object());
+  }
+}

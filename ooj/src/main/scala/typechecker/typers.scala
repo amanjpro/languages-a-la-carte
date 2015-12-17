@@ -17,6 +17,8 @@ import tiny.names.Name
 import tiny.errors.ErrorReporting.{error,warning}
 import calcj.typechecker.{TyperComponent, TypePromotions}
 import calcj.types._
+import calcj.ast.operators.{Eq, Neq}
+import calcj.ast.BinaryApi
 import primj.ast.{ApplyApi, ValDefApi}
 import primj.symbols.{MethodSymbol, VariableSymbol, ScopeSymbol}
 import primj.types._
@@ -794,4 +796,18 @@ trait SelectTyperComponent extends TyperComponent {
 
 
   def isType(tree: Tree): Boolean = TreeUtils.isType(tree)
+}
+
+
+
+@component(tree, symbols)
+trait BinaryTyperComponent extends calcj.typechecker.BinaryTyperComponent {
+  override def binaryTyper(ltpe: Type,
+    rtpe: Type, bin: BinaryApi): Option[(Type, Type, Type)] = bin.op match {
+      case Eq | Neq    if rtpe.isInstanceOf[RefType]   &&
+                          ltpe.isInstanceOf[RefType]             =>
+        Some((ltpe, rtpe, BooleanType))
+      case _                                                     =>
+        super.binaryTyper(ltpe, rtpe, bin)
+  }
 }
