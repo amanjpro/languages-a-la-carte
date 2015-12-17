@@ -140,8 +140,7 @@ trait ClassSymbol extends TypeSymbol {
   override def declarations: List[Symbol] = {
     val parentDecls =
       parents.flatMap(_.declarations).filter(sym =>
-          !(decls.contains(sym) || SymbolUtils.isConstructor(sym)
-                || sym.mods.isStatic))
+          !(decls.contains(sym) || !canBeInherited(sym)))
     decls ++ parentDecls
   }
 
@@ -172,8 +171,8 @@ trait ClassSymbol extends TypeSymbol {
     }
     val fromParents   =
       newParents.flatMap(_.getAllSymbols(name, p)).filter { sym =>
-        ! (sym.mods.isConstructor || sym.mods.isStatic)
-    }
+        canBeInherited(sym)
+      }
     val fromThis      = decls.filter(sym => sym.name == name && p(sym))
     val updatedParent = fromParents.filter(sp =>
       !fromThis.exists(st => {
@@ -203,7 +202,7 @@ trait ClassSymbol extends TypeSymbol {
               p: Symbol => Boolean): Boolean =
     decls.contains(symbol) ||
       parents.foldLeft(false)((z, y) => y.defines(symbol,
-        s => p(s) && !(s.mods.isConstructor && s.mods.isStatic)) || z) ||
+        s => p(s) && canBeInherited(s)) || z) ||
       owner.map { sym =>
         sym.defines(symbol, p)
       }.getOrElse(false)
@@ -221,8 +220,7 @@ trait ClassSymbol extends TypeSymbol {
         val sym = parents.foldLeft(None:Option[Symbol])((z, y) => {
           z match {
             case None        =>
-              y.getSymbol(name, s => (p(s) &&
-                !(s.mods.isConstructor || s.mods.isStatic)))
+              y.getSymbol(name, s => (p(s) && canBeInherited(s)))
             case _           =>
               z
           }
@@ -238,6 +236,9 @@ trait ClassSymbol extends TypeSymbol {
       case _    => thisSym
     }
   }
+
+  protected def canBeInherited(sym: Symbol): Boolean =
+    !(sym.mods.isConstructor || sym.mods.isStatic)
 
   override def toString(): String = s"Class symbol: $name"
   override def hashCode(): Int = name.hashCode * 43 + tpe.hashCode
