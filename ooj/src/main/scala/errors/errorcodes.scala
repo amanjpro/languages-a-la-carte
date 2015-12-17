@@ -163,6 +163,12 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
     val message: String =
       "Method already defined"
   }
+
+  case object FINAL_PARENT extends
+      ErrorCode {
+    val message: String =
+      "A parent class/interface must not be final"
+  }
 }
 
 object ErrorCodes extends ErrorCodes

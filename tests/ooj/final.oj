@@ -1,6 +1,7 @@
 // fails
 // OVERRIDING_FINAL_METHOD
 // OVERRIDING_FINAL_METHOD
+// FINAL_PARENT
 
 
 class A {
@@ -17,3 +18,9 @@ class B extends A {
   final void c() {} // fails
   final static void d() {}
 }
+
+
+final class D {
+}
+
+class C extends D {} // fails

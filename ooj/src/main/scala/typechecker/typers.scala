@@ -278,6 +278,13 @@ trait ClassDefTyperComponent extends TyperComponent {
           ()
       }
     }
+
+    parents.foreach { p =>
+      if(p.symbol.map(s => s.mods.isFinal &&
+          !s.mods.isAbstract && !s.mods.isInterface).getOrElse(false))
+        error(FINAL_PARENT,
+          "", "", p.pos)
+    }
   }
 
 
