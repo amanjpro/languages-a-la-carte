@@ -169,6 +169,12 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
     val message: String =
       "A parent class/interface must not be final"
   }
+
+
+  case object ABSTRACT_FINAL extends ErrorCode {
+    val message: String =
+      "Abstract classes, abstract methods and interfaces cannot be final"
+  }
 }
 
 object ErrorCodes extends ErrorCodes

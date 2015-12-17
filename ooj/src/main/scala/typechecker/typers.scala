@@ -197,6 +197,11 @@ trait ClassDefTyperComponent extends TyperComponent {
       }
     }
 
+
+    if(clazz.mods.isFinal && (clazz.mods.isInterface || clazz.mods.isAbstract))
+      error(ABSTRACT_FINAL,
+          "", "", clazz.pos)
+
     TreeCopiers.copyClassDef(clazz)(body = body, parents = parents)
   }
 
@@ -379,6 +384,10 @@ trait MethodDefTyperComponent
         }
       }
     }
+
+    if(mods.isFinal && mods.isAbstract)
+      error(ABSTRACT_FINAL,
+          "", "", mthd.pos)
 
     mthd.owner match {
       case Some(cs: ClassSymbol)    =>

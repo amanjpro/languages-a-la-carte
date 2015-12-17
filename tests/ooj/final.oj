@@ -2,6 +2,9 @@
 // OVERRIDING_FINAL_METHOD
 // OVERRIDING_FINAL_METHOD
 // FINAL_PARENT
+// ABSTRACT_FINAL
+// ABSTRACT_FINAL
+// ABSTRACT_FINAL
 
 
 class A {
@@ -24,3 +27,10 @@ final class D {
 }
 
 class C extends D {} // fails
+
+
+final interface X {}
+final abstract class Y {}
+abstract class Z {
+  final abstract void m();
+}
