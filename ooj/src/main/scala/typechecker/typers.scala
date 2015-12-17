@@ -553,7 +553,7 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
       id
     } else {
       val symbol = id.owner.flatMap(
-        _.getSymbol(id.name, _.isInstanceOf[TermSymbol]))
+        _.getSymbol(id.name, sym => alreadyDefined(sym, id.owner, symbols)))
 
       //       s => {
       //         enclosingClass(id.owner) match {
@@ -585,7 +585,7 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
                 id.symbol = sym
                 id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
               }
-            } else if(isStaticContext(id.owner) && sym.mods.isField &&
+            } else if(isInStaticContext(id.owner) && sym.mods.isField &&
                   !sym.mods.isStatic) {
               error(INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK,
                 id.toString, "a static name", id.pos)
@@ -616,7 +616,22 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
   }
 
 
-  protected def isStaticContext(symbol: Option[Symbol]): Boolean = {
+  protected def alreadyDefined(sym: Symbol,
+      encl: Option[Symbol], symbols: List[Symbol]): Boolean =
+      if(sym.isInstanceOf[TermSymbol])
+        if(sym.mods.isLocalVariable) {
+          symbols.contains(sym)
+        } else if(sym.mods.isField && isInStaticInit(encl)) {
+          symbols.contains(sym)
+        } else true
+      else false
+
+  protected def isInStaticInit(symbol: Option[Symbol]): Boolean = {
+    SymbolUtils.enclosingNonLocal(symbol)
+      .map(_.mods.isStaticInit).getOrElse(false)
+  }
+
+  protected def isInStaticContext(symbol: Option[Symbol]): Boolean = {
     SymbolUtils.enclosingNonLocal(symbol)
       .map(_.mods.isStatic).getOrElse(false)
   }
