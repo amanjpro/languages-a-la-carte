@@ -21,6 +21,7 @@ import primj.ast.{ApplyApi, ValDefApi}
 import primj.symbols.{MethodSymbol, VariableSymbol, ScopeSymbol}
 import primj.types._
 import ooj.modifiers.Ops._
+import ooj.modifiers._
 import ooj.ast._
 import ooj.names.StdNames
 import ooj.symbols._
@@ -89,6 +90,7 @@ trait ValDefTyperComponent extends TyperComponent {
         case _                             =>
           TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
       }
+
 
     res.symbol.foreach(sym => {
       sym match {
@@ -284,6 +286,15 @@ trait MethodDefTyperComponent
     val body    = typed((mthd.body, symbols)).asInstanceOf[Expr]
     val rtpe    = mthd.ret.tpe.getOrElse(ErrorType)
     val btpe    = body.tpe.getOrElse(ErrorType)
+    val mods   = {
+      (mthd.owner, mthd.symbol) match {
+        case (Some(cs: ClassSymbol), Some(s)) if cs.overrides(s)=>
+          s.mods = s.mods | OVERRIDE
+          mthd.mods | OVERRIDE
+        case _                                                     =>
+          mthd.mods
+      }
+    }
     // if(!(btpe <:< rtpe) && rtpe =/= VoidType) {
     //   error(TYPE_MISMATCH,
     //       rtpe.toString, btpe.toString, body.pos, mthd)
@@ -295,7 +306,30 @@ trait MethodDefTyperComponent
         body.toString, body.toString, body.pos)
       mthd
     } else {
-      TreeCopiers.copyMethodDef(mthd)(body = body)
+      TreeCopiers.copyMethodDef(mthd)(mods = mods, body = body)
+    }
+
+    mthd.owner match {
+      case Some(cs: ClassSymbol)    =>
+        val s = cs.getInheritedSymbol(mthd.name,
+          s => {
+            (s.tpe, mthd.tpe) match {
+              case ((Some(ms: MethodType), Some(mt: MethodType))) =>
+                ms.params == mt.params &&
+                  s.mods.isFinal &&
+                    mods.isOverride
+              case _                                              =>
+                false
+
+            }
+          })
+        s.foreach( s => {
+          if(mods.isOverride)
+            error(OVERRIDING_FINAL_METHOD,
+                "", "", mthd.pos)
+        })
+      case _                        =>
+        ()
     }
 
     if(mthd.mods.isAbstract && ! isConstructor(mthd.symbol) &&
@@ -592,7 +626,8 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
             } else {
               if(!id.isQualified) {
                 enclosingClass(id.owner) match {
-                  case Some(encl: ClassSymbol) if !encl.directlyDefines(sym) &&
+                  case Some(encl: ClassSymbol) if
+                                      !encl.directlyDefines(sym, _ => true) &&
                                              sym.mods.isPrivateAcc           =>
                       error(FIELD_NOT_ACCESSIBLE,
                         id.toString, "an accessible name", id.pos)
