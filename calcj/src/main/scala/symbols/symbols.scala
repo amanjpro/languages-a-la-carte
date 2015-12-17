@@ -23,7 +23,8 @@ case object IntSymbol extends TypeSymbol {
 
   override def declare(symbol: Symbol): Unit = ???
   override def delete(symbol: Symbol): Unit = ???
-  override def defines(symbol: Symbol): Boolean = false
+  override def defines(symbol: Symbol,
+    p: Symbol => Boolean): Boolean = false
   override def getSymbol(name: Name,
     p: Symbol => Boolean): Option[Symbol] = None
 }
@@ -41,7 +42,8 @@ case object CharSymbol extends TypeSymbol {
 
   override def declare(symbol: Symbol): Unit = ???
   override def delete(symbol: Symbol): Unit = ???
-  override def defines(symbol: Symbol): Boolean = false
+  override def defines(symbol: Symbol,
+    p: Symbol => Boolean): Boolean = false
   override def getSymbol(name: Name,
     p: Symbol => Boolean): Option[Symbol] = None
 }
@@ -59,7 +61,8 @@ case object ShortSymbol extends TypeSymbol {
 
   override def declare(symbol: Symbol): Unit = ???
   override def delete(symbol: Symbol): Unit = ???
-  override def defines(symbol: Symbol): Boolean = false
+  override def defines(symbol: Symbol,
+    p: Symbol => Boolean): Boolean = false
   override def getSymbol(name: Name,
     p: Symbol => Boolean): Option[Symbol] = None
 }
@@ -77,7 +80,8 @@ case object ByteSymbol extends TypeSymbol {
 
   override def declare(symbol: Symbol): Unit = ???
   override def delete(symbol: Symbol): Unit = ???
-  override def defines(symbol: Symbol): Boolean = false
+  override def defines(symbol: Symbol,
+    p: Symbol => Boolean): Boolean = false
   override def getSymbol(name: Name,
     p: Symbol => Boolean): Option[Symbol] = None
 }
@@ -95,7 +99,8 @@ case object LongSymbol extends TypeSymbol {
 
   override def declare(symbol: Symbol): Unit = ???
   override def delete(symbol: Symbol): Unit = ???
-  override def defines(symbol: Symbol): Boolean = false
+  override def defines(symbol: Symbol,
+    p: Symbol => Boolean): Boolean = false
   override def getSymbol(name: Name,
     p: Symbol => Boolean): Option[Symbol] = None
 }
@@ -113,7 +118,8 @@ case object FloatSymbol extends TypeSymbol {
 
   override def declare(symbol: Symbol): Unit = ???
   override def delete(symbol: Symbol): Unit = ???
-  override def defines(symbol: Symbol): Boolean = false
+  override def defines(symbol: Symbol,
+    p: Symbol => Boolean): Boolean = false
   override def getSymbol(name: Name,
     p: Symbol => Boolean): Option[Symbol] = None
 }
@@ -131,7 +137,8 @@ case object DoubleSymbol extends TypeSymbol {
 
   override def declare(symbol: Symbol): Unit = ???
   override def delete(symbol: Symbol): Unit = ???
-  override def defines(symbol: Symbol): Boolean = false
+  override def defines(symbol: Symbol,
+    p: Symbol => Boolean): Boolean = false
   override def getSymbol(name: Name,
     p: Symbol => Boolean): Option[Symbol] = None
 }
@@ -150,7 +157,8 @@ case object BooleanSymbol extends TypeSymbol {
 
   override def declare(symbol: Symbol): Unit = ???
   override def delete(symbol: Symbol): Unit = ???
-  override def defines(symbol: Symbol): Boolean = false
+  override def defines(symbol: Symbol,
+    p: Symbol => Boolean): Boolean = false
   override def getSymbol(name: Name,
     p: Symbol => Boolean): Option[Symbol] = None
 }

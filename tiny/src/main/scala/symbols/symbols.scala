@@ -25,8 +25,10 @@ trait Symbol {
   // Handling scoping, does this defines a symbol? If not see if
   // the owner defines it
   def defines(symbol: Symbol): Boolean =
-    decls.contains(symbol) || owner.map { sym =>
-      sym.defines(symbol)
+    defines(symbol, _ => true)
+  def defines(symbol: Symbol, p: Symbol => Boolean): Boolean =
+    decls.exists(s => s == symbol && p(s)) || owner.map { sym =>
+      sym.defines(symbol, p)
     }.getOrElse(false)
 
 

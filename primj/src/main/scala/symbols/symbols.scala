@@ -36,8 +36,9 @@ case class VariableSymbol(var mods: Flags, var name: Name,
 
   override def declare(symbol: Symbol): Unit = ???
   override def delete(symbol: Symbol): Unit = ???
-  override def defines(symbol: Symbol): Boolean =
-    typeSymbol.map(_.defines(symbol)).getOrElse(false)
+  override def defines(symbol: Symbol,
+    p: Symbol => Boolean): Boolean =
+    typeSymbol.map(_.defines(symbol, p)).getOrElse(false)
   override def getSymbol(name: Name,
     p: Symbol => Boolean): Option[Symbol] = {
     typeSymbol.flatMap(_.getSymbol(name, p))
@@ -111,7 +112,8 @@ object VoidSymbol extends TypeSymbol {
 
   override def declare(symbol: Symbol): Unit = ???
   override def delete(symbol: Symbol): Unit = ???
-  override def defines(symbol: Symbol): Boolean = false
+  override def defines(symbol: Symbol,
+    p: Symbol => Boolean): Boolean = false
   override def getSymbol(name: Name,
     p: Symbol => Boolean): Option[Symbol] = None
 

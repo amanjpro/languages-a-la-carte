@@ -140,7 +140,8 @@ trait ClassSymbol extends TypeSymbol {
   override def declarations: List[Symbol] = {
     val parentDecls =
       parents.flatMap(_.declarations).filter(sym =>
-          !(decls.contains(sym) || SymbolUtils.isConstructor(sym)))
+          !(decls.contains(sym) || SymbolUtils.isConstructor(sym)
+                || sym.mods.isStatic))
     decls ++ parentDecls
   }
 
@@ -170,7 +171,9 @@ trait ClassSymbol extends TypeSymbol {
       }
     }
     val fromParents   =
-      newParents.flatMap(_.getAllSymbols(name, p)).filter(!_.mods.isConstructor)
+      newParents.flatMap(_.getAllSymbols(name, p)).filter { sym =>
+        ! (sym.mods.isConstructor || sym.mods.isStatic)
+    }
     val fromThis      = decls.filter(sym => sym.name == name && p(sym))
     val updatedParent = fromParents.filter(sp =>
       !fromThis.exists(st => {
@@ -196,11 +199,13 @@ trait ClassSymbol extends TypeSymbol {
 
   // Override this method to look for definitions in the parents too.
   // First local defs, then parent defs then defs in enclosing symbol
-  override def defines(symbol: Symbol): Boolean =
+  override def defines(symbol: Symbol,
+              p: Symbol => Boolean): Boolean =
     decls.contains(symbol) ||
-      parents.foldLeft(false)((z, y) => y.defines(symbol) || z) ||
+      parents.foldLeft(false)((z, y) => y.defines(symbol,
+        s => p(s) && !(s.mods.isConstructor && s.mods.isStatic)) || z) ||
       owner.map { sym =>
-        sym.defines(symbol)
+        sym.defines(symbol, p)
       }.getOrElse(false)
 
 
@@ -216,7 +221,8 @@ trait ClassSymbol extends TypeSymbol {
         val sym = parents.foldLeft(None:Option[Symbol])((z, y) => {
           z match {
             case None        =>
-              y.getSymbol(name, s => (p(s) && !s.mods.isConstructor))
+              y.getSymbol(name, s => (p(s) &&
+                !(s.mods.isConstructor || s.mods.isStatic)))
             case _           =>
               z
           }
