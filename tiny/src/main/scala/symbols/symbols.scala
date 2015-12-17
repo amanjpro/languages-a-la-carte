@@ -21,6 +21,17 @@ trait Symbol {
 
   def delete(symbol: Symbol): Unit = decls = decls.filter(_ != symbol)
 
+  def directlyDefines(symbol: Symbol,
+    p: Symbol => Boolean): Boolean = decls.exists { s =>
+      s == symbol && p(s)
+    }
+
+  def getDirectlyDefinedSymbols(name: Name,
+      p: Symbol => Boolean): List[Symbol] =
+    decls.filter { sym =>
+      sym.name == name && p(sym)
+    }
+
 
   // Handling scoping, does this defines a symbol? If not see if
   // the owner defines it

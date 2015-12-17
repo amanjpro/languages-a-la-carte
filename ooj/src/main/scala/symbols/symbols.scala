@@ -140,18 +140,9 @@ trait ClassSymbol extends TypeSymbol {
   override def declarations: List[Symbol] = {
     val parentDecls =
       parents.flatMap(_.declarations).filter(sym =>
-          !(decls.contains(sym) || !canBeInherited(sym)))
+          !(decls.contains(sym) || !canBeInheritedStrict(sym)))
     decls ++ parentDecls
   }
-
-  def directlyDefines(symbol: Symbol): Boolean = decls.contains(symbol)
-
-  def getDirectlyDefinedSymbol(name: Name,
-      p: Symbol => Boolean): Option[Symbol] =
-    decls.find { sym =>
-      sym.name == name && p(sym)
-    }
-
 
   def getAllSymbols(name: Name, p: Symbol => Boolean): List[Symbol] = {
     val newParents = {
@@ -199,13 +190,15 @@ trait ClassSymbol extends TypeSymbol {
   // Override this method to look for definitions in the parents too.
   // First local defs, then parent defs then defs in enclosing symbol
   override def defines(symbol: Symbol,
-              p: Symbol => Boolean): Boolean =
-    decls.contains(symbol) ||
-      parents.foldLeft(false)((z, y) => y.defines(symbol,
-        s => p(s) && canBeInherited(s)) || z) ||
-      owner.map { sym =>
+              p: Symbol => Boolean): Boolean = {
+      val inThis          = decls.exists(s => s == symbol && p(s))
+      lazy val inParents  = parents.foldLeft(false)((z, y) => y.defines(symbol,
+                    s => p(s) && canBeInheritedStrict(s)) || z)
+      lazy val inOwner    = owner.map { sym =>
         sym.defines(symbol, p)
       }.getOrElse(false)
+      inThis || inParents || inOwner
+  }
 
 
   // Handling scoping, does this defines a name with a predicate? If
@@ -239,6 +232,39 @@ trait ClassSymbol extends TypeSymbol {
 
   protected def canBeInherited(sym: Symbol): Boolean =
     !(sym.mods.isConstructor || sym.mods.isStatic)
+
+  protected def canBeInheritedStrict(sym: Symbol): Boolean =
+    !(sym.mods.isConstructor || sym.mods.isStatic || sym.mods.isPrivateAcc)
+
+  def getInheritedSymbol(name: Name,
+          p: Symbol => Boolean): Option[Symbol] = {
+    parents.flatMap(_.declarations).filter(s => s.name == name && p(s)) match {
+      case Nil                 => None
+      case (x::xs)             => Some(x)
+    }
+  }
+
+  def overrides(sym: Symbol): Boolean = {
+    parents.exists { p =>
+      (sym, p) match {
+        case (sym: MethodSymbol, p: ClassSymbol)      =>
+          p.defines(sym, s => {
+            s match {
+              case s: MethodSymbol                    =>
+                (p.canBeInheritedStrict(s) &&
+                  s.name == sym.name &&
+                    s.params.map(_.tpe) == sym.params.map(_.tpe) &&
+                      !s.mods.isAbstract)
+              case _                                  =>
+                false
+            }
+          })
+        case _                                        =>
+          false
+      }
+    }
+  }
+
 
   override def toString(): String = s"Class symbol: $name"
   override def hashCode(): Int = name.hashCode * 43 + tpe.hashCode
