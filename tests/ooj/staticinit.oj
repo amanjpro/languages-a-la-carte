@@ -1,11 +1,13 @@
 // fails
 // INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK
 // ACCESSING_THIS_IN_STATIC
+// NAME_NOT_FOUND
+// TYPE_MISMATCH
 // ACCESSING_SUPER_IN_STATIC
 // INSTANCE_METHOD_IN_STATIC_CONTEXT_INVOK
 // TYPE_MISMATCH
 // NAME_NOT_FOUND
-// ASSIGNING_NOT_TO_VARIABLE
+// TYPE_MISMATCH
 
 
 
@@ -19,10 +21,12 @@ class A {
   static {
     a = 2; // fails
     c = this.a; // fails
+    c = k; // fails
     c = 2;
-    c = 2;
+    int k = 2;
     d = super.equals(null); // fails
     d = equals(null); // fails
     b = 2; // fails
   }
+  static int b;
 }
