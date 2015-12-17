@@ -17,6 +17,7 @@ object Ops {
     val isConstructor:   Boolean       = mask.hasFlag(CONSTRUCTOR)
     val isInterface: Boolean           = mask.hasFlag(INTERFACE)
     val isStatic: Boolean              = mask.hasFlag(STATIC)
+    val isStaticInit: Boolean          = mask.hasFlag(STATIC_INIT)
     val isAbstract: Boolean            = mask.hasFlag(ABSTRACT)
     val isClass: Boolean               = mask.hasFlag(CLASS)
 
@@ -25,6 +26,6 @@ object Ops {
     val isPublicAcc: Boolean           = mask.hasFlag(PUBLIC_ACC)
     val isProtectedAcc: Boolean        = mask.hasFlag(PROTECTED_ACC)
 
-    val isStaticInit: Boolean          = mask.hasFlag(STATIC_INIT)
+    val isOverride: Boolean            = mask.hasFlag(OVERRIDE)
   }
 }
