@@ -121,10 +121,9 @@ case class PackageSymbol(var name: Name,
   override def hashCode(): Int = qualifiedName.hashCode * 43
 }
 
-case class ClassSymbol(var mods: Flags, var name: Name,
-        var parents: List[ClassSymbol],
-        var owner: Option[Symbol],
-        var tpe: Option[Type]) extends TypeSymbol {
+trait ClassSymbol extends TypeSymbol {
+
+  var parents: List[ClassSymbol]
 
   override def equals(other: Any): Boolean = other match {
     case null                 => false
@@ -236,6 +235,27 @@ case class ClassSymbol(var mods: Flags, var name: Name,
 
   override def toString(): String = s"Class symbol: $name"
   override def hashCode(): Int = name.hashCode * 43 + tpe.hashCode
+}
+
+object ClassSymbol {
+  private class ClassSymbolImpl(var mods: Flags, var name: Name,
+        var parents: List[ClassSymbol],
+        var owner: Option[Symbol],
+        var tpe: Option[Type]) extends ClassSymbol
+
+  def apply(mods: Flags, name: Name,
+        parents: List[ClassSymbol],
+        owner: Option[Symbol],
+        tpe: Option[Type]): ClassSymbol =
+    new ClassSymbolImpl(mods, name, parents, owner, tpe)
+
+
+  def unapply(csym: ClassSymbol): Option[(Flags, Name, List[ClassSymbol],
+          Option[Symbol], Option[Type])] = csym match {
+    case null                       => None
+    case _                          =>
+      Some((csym.mods, csym.name, csym.parents, csym.owner, csym.tpe))
+  }
 }
 
 case class CompilationUnitSymbol(var module: Option[Symbol],
