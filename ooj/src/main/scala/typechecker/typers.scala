@@ -256,7 +256,21 @@ trait ClassDefTyperComponent extends TyperComponent {
 @component(tree, symbols)
 trait TemplateTyperComponent extends TyperComponent {
   (tmpl: TemplateApi) => {
-    val members = tmpl.members.map(member => typed((member, symbols)))
+    val (members, _) = {
+      tmpl.members.foldLeft((Nil: List[Tree], symbols))((z, member) => {
+        val members  = z._1
+        val symbols  = z._2
+
+        val newSymbols: List[Symbol] = member match {
+          case v: ValDefApi =>
+            (v.symbol).map(_::symbols).getOrElse(symbols)
+          case _            =>
+            symbols
+        }
+        val r = typed((member, newSymbols))
+        (members ++ List(r), newSymbols)
+      })
+    }
     TreeCopiers.copyTemplate(tmpl)(members = members)
   }
 }

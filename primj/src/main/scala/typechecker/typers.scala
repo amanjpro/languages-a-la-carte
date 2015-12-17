@@ -11,7 +11,7 @@ import tiny.ast.{TreeCopiers => _, _}
 import tiny.ast.Implicits._
 import tiny.types._
 import tiny.types.TypeUtils._
-import tiny.symbols.{TypeSymbol, TermSymbol}
+import tiny.symbols.{Symbol, TypeSymbol, TermSymbol}
 import tiny.source.Position
 import tiny.errors.ErrorReporting.{error,warning}
 import calcj.typechecker.{TyperComponent, TypePromotions}
@@ -128,7 +128,21 @@ trait WhileTyperComponent extends TyperComponent {
 @component(tree, symbols)
 trait BlockTyperComponent extends TyperComponent {
   (block: BlockApi)           => {
-    val stmts  = block.stmts.map(stmt => typed((stmt, symbols)))
+    val (stmts, _)  = {
+      block.stmts.foldLeft((Nil: List[Tree], symbols))((z, stmt) => {
+        val stmts    = z._1
+        val symbols  = z._2
+
+        val newSymbols: List[Symbol] = stmt match {
+          case v: ValDefApi =>
+            (v.symbol).map(_::symbols).getOrElse(symbols)
+          case _            =>
+            symbols
+        }
+        val r = typed((stmt, newSymbols))
+        (stmts ++ List(r), newSymbols)
+      })
+    }
     stmts match {
       case Nil    =>
         block.tpe = VoidType
@@ -144,11 +158,24 @@ trait BlockTyperComponent extends TyperComponent {
 @component(tree, symbols)
 trait ForTyperComponent extends TyperComponent {
   (forloop: ForApi)           => {
-    val inits = forloop.inits.map(init => typed((init, symbols)))
-    val cond  = typed((forloop.cond, symbols))
+    val (inits, newSymbols) =
+      forloop.inits.foldLeft((Nil: List[Tree], symbols))((z, init) => {
+        val inits    = z._1
+        val symbols  = z._2
+
+        val newSymbols: List[Symbol] = init match {
+          case v: ValDefApi =>
+            (v.symbol).map(_::symbols).getOrElse(symbols)
+          case _            =>
+            symbols
+        }
+        val r = typed((init, newSymbols))
+        (inits ++ List(r), newSymbols)
+      })
+    val cond  = typed((forloop.cond, newSymbols))
     val steps = forloop.steps
-      .map(step => typed((step, symbols)).asInstanceOf[Expr])
-    val body  = typed((forloop.body, symbols))
+      .map(step => typed((step, newSymbols)).asInstanceOf[Expr])
+    val body  = typed((forloop.body, newSymbols))
     (cond, body) match {
       case (cond: Expr, body: Expr)  =>
         cond.tpe match {
