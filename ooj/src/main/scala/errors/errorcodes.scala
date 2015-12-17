@@ -139,6 +139,13 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
     val message: String =
       "Explicit constructor invokation can only appear in constructors"
   }
+
+  case object OVERRIDING_FINAL_METHOD extends
+      ErrorCode {
+    val message: String =
+      "Final methods may not be overridden"
+  }
+
 }
 
 object ErrorCodes extends ErrorCodes
