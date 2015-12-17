@@ -146,6 +146,23 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
       "Final methods may not be overridden"
   }
 
+  case object VARIABLE_ALREADY_DEFINED extends
+      ErrorCode {
+    val message: String =
+      "Variable already defined"
+  }
+
+  case object CLASS_ALREADY_DEFINED extends
+      ErrorCode {
+    val message: String =
+      "Class already defined"
+  }
+
+  case object METHOD_ALREADY_DEFINED extends
+      ErrorCode {
+    val message: String =
+      "Method already defined"
+  }
 }
 
 object ErrorCodes extends ErrorCodes

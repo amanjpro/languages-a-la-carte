@@ -114,6 +114,36 @@ trait ValDefTyperComponent extends TyperComponent {
     }
 
 
+
+    res.owner.foreach { s =>
+      val vs = s match {
+        case c: ScopeSymbol             =>
+          c.owner match {
+            case Some(ms: MethodSymbol) =>
+              val cvs = s.getDirectlyDefinedSymbols(valdef.name,
+                _.isInstanceOf[VariableSymbol])
+              val mvs     = ms.getDirectlyDefinedSymbols(valdef.name,
+                _.isInstanceOf[VariableSymbol])
+              cvs ++ mvs
+            case _                      =>
+              s.getDirectlyDefinedSymbols(valdef.name,
+                _.isInstanceOf[VariableSymbol])
+          }
+        case _                          =>
+          s.getDirectlyDefinedSymbols(valdef.name,
+          _.isInstanceOf[VariableSymbol])
+      }
+      vs match {
+        case Nil                                =>
+          ()
+        case (x::Nil)                           =>
+          ()
+        case _                                  =>
+          error(VARIABLE_ALREADY_DEFINED,
+              "", "", valdef.pos)
+      }
+    }
+
     if(res.mods.isField &&
       res.owner.map(! _.isInstanceOf[TypeSymbol]).getOrElse(false)) {
       error(FIELD_OWNED_BY_NON_CLASS,
@@ -153,6 +183,19 @@ trait ClassDefTyperComponent extends TyperComponent {
 
 
     checkParents(parents, clazz)
+
+    clazz.owner.foreach { s =>
+      s.getDirectlyDefinedSymbols(clazz.name,
+          _.isInstanceOf[ClassSymbol]) match {
+        case Nil                                =>
+          ()
+        case (x::Nil)                           =>
+          ()
+        case _                                  =>
+          error(CLASS_ALREADY_DEFINED,
+              "", "", clazz.pos)
+      }
+    }
 
     TreeCopiers.copyClassDef(clazz)(body = body, parents = parents)
   }
@@ -307,6 +350,27 @@ trait MethodDefTyperComponent
       mthd
     } else {
       TreeCopiers.copyMethodDef(mthd)(mods = mods, body = body)
+    }
+
+    res.owner.foreach {
+      s => {
+        val r = s.getDirectlyDefinedSymbols(mthd.name,
+          o => (o.tpe, mthd.tpe) match {
+            case (Some(to: MethodType), Some(ts: MethodType)) =>
+              to.params == ts.params
+            case l                                            =>
+              false
+          })
+        r match {
+          case Nil                                =>
+            ()
+          case (x::Nil)                           =>
+            ()
+          case _                                  =>
+            error(METHOD_ALREADY_DEFINED,
+                "", "", mthd.pos)
+        }
+      }
     }
 
     mthd.owner match {
