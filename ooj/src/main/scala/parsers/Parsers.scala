@@ -267,9 +267,7 @@ class Parser extends parsers.Parser {
 
 
     override def visitStringLit(ctx: Java1Parser.StringLitContext): Tree = {
-      // TODO: Uncomment this when you introduce string literals
-      // TreeFactories.mkLiteral(StringConstant(ctx.getText), pos(ctx))
-      NoTree
+      TreeFactories.mkLiteral(StringConstant(ctx.getText), pos(ctx))
     }
 
     override def visitNullLit(ctx: Java1Parser.NullLitContext): Tree = {
