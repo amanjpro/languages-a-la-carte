@@ -8,7 +8,7 @@ import sana.calcj
 
 
 import tiny.types.Type
-import ooj.types.NullType
+import ooj.types.{NullType, TypeUtils}
 import calcj.ast.Constant
 
 
@@ -18,6 +18,15 @@ case object NullConstant extends Constant {
   def value: Null = ???
 
   val tpe: Type = NullType
+}
+
+
+
+
+case class StringConstant(value: String) extends Constant {
+  type Value = String
+
+  val tpe: Type = TypeUtils.stringClassType
 }
 
 
