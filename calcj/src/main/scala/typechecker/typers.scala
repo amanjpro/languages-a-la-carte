@@ -34,10 +34,12 @@ trait BinaryTyperComponent extends TyperComponent {
         val btpe = binaryTyper(e1.tpe.get, e2.tpe.get, bin)
         btpe match {
           case Some((e1tpe, e2tpe, rtpe))           =>
-            val expr1 = TypePromotions.castIfNeeded(e1,
-              e1tpe, e1.tpe.get)
-            val expr2 = TypePromotions.castIfNeeded(e2,
-              e2tpe, e2.tpe.get)
+            val expr1 =
+              typed((castIfNeeded(e1, e1tpe, e1.tpe.get),
+                      symbols)).asInstanceOf[Expr]
+            val expr2 =
+              typed((castIfNeeded(e2, e2tpe, e2.tpe.get),
+                    symbols)).asInstanceOf[Expr]
             val res = TreeCopiers.copyBinary(bin)(lhs = expr1, rhs = expr2)
             res.tpe = rtpe
             res
@@ -51,8 +53,12 @@ trait BinaryTyperComponent extends TyperComponent {
     }
   }
 
+  protected def castIfNeeded(e: Expr, t1: Type, t2: Type): Expr = {
+    TypePromotions.castIfNeeded(e, t1, t2)
+  }
 
-  def binaryTyper(ltpe: Type,
+
+  protected def binaryTyper(ltpe: Type,
     rtpe: Type, bin: BinaryApi): Option[(Type, Type, Type)] = bin.op match {
       case Gt | Lt | Le | Ge                      =>
         (ltpe, rtpe) match {
@@ -93,21 +99,21 @@ trait BinaryTyperComponent extends TyperComponent {
               ltpe.toString, "bolean", bin.lhs.pos)
             None
         }
-      case Add                                    =>
-        (ltpe, rtpe) match {
-          case (x: NumericType, y: NumericType)   =>
-            val t = TypePromotions.binaryNumericPromotion(x, y)
-            Some((t, t, t))
-          case (_: NumericType, _)                =>
-            error(TYPE_MISMATCH,
-              rtpe.toString, "a numerical type", bin.rhs.pos)
-            None
-          case _                                  =>
-            error(TYPE_MISMATCH,
-              ltpe.toString, "a numerical type", bin.lhs.pos)
-            None
-        }
-      case Sub | Mul | Div | Mod                  =>
+      // case Add                                    =>
+      //   (ltpe, rtpe) match {
+      //     case (x: NumericType, y: NumericType)   =>
+      //       val t = TypePromotions.binaryNumericPromotion(x, y)
+      //       Some((t, t, t))
+      //     case (_: NumericType, _)                =>
+      //       error(TYPE_MISMATCH,
+      //         rtpe.toString, "a numerical type", bin.rhs.pos)
+      //       None
+      //     case _                                  =>
+      //       error(TYPE_MISMATCH,
+      //         ltpe.toString, "a numerical type", bin.lhs.pos)
+      //       None
+      //   }
+      case Sub | Mul | Div | Mod | Add            =>
         (ltpe, rtpe) match {
           case (x: NumericType, y: NumericType)   =>
             val t = TypePromotions.binaryNumericPromotion(x, y)
