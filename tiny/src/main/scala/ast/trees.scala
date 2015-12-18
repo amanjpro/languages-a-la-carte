@@ -14,6 +14,9 @@ trait Tree {
   var attributes: Attributes = noAttributes
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R
+  def foreach(f: Tree => Unit): Unit = {
+    bottomUp(())((z, y) => f(y))
+  }
 }
 
 
