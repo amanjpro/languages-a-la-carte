@@ -7,6 +7,7 @@
 // METHOD_ALREADY_DEFINED
 // METHOD_ALREADY_DEFINED
 // CLASS_ALREADY_DEFINED
+// NAME_NOT_FOUND
 // CLASS_ALREADY_DEFINED
 
 
@@ -54,7 +55,9 @@ class A {
 
 class B extends A {
   int k =1;
+  B () {}
   void m() {
+    init(); // fails
   }
 }
 
