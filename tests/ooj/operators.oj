@@ -1,12 +1,22 @@
 // fails
 // TYPE_MISMATCH
 // TYPE_MISMATCH
+// TYPE_MISMATCH
 
 
 package test;
 
 
 class A {
+  boolean l() {
+    return ("" + new A()) + 1; // fails
+  }
+
+
+  boolean l(boolean k) {
+    return ("" + "string" + 1 + null + new A() == null) && k;
+  }
+
   boolean m() {
     return (null == null) && (1 > 2);
   }
