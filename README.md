@@ -35,6 +35,12 @@ You can generate a fat jar by running assembly for your target, for example for
 sbt tiny/assembly
 ```
 
+To generate an ANTLR grammar:
+```
+sbt primj/antlr4:antlr4Generate
+```
+
+
 
 ## Usage
 
