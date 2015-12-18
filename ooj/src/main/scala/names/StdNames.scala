@@ -11,6 +11,7 @@ trait StdNames extends primj.names.StdNames {
   val JAVA_PACKAGE_NAME      = Name("java")
   val LANG_PACKAGE_NAME      = Name("lang")
   val OBJECT_TYPE_NAME       = Name("Object")
+  val STRING_TYPE_NAME       = Name("String")
   val NULL_NAME              = Name("null")
 }
 

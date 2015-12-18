@@ -55,22 +55,22 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
   }
 
   def javaPackageSymbol: PackageSymbol =  {
-    val name  = Name("java")
+    val name    = StdNames.JAVA_PACKAGE_NAME
     ProgramSymbol.getSymbol(name, _ => true).get.asInstanceOf[PackageSymbol]
   }
 
   def langPackageSymbol: PackageSymbol = {
-    val name  = Name("lang")
+    val name    = StdNames.LANG_PACKAGE_NAME
     javaPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[PackageSymbol]
   }
 
   def objectClassSymbol: ClassSymbol = {
-    val name    = Name("Object")
+    val name    = StdNames.OBJECT_TYPE_NAME
     langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
   }
 
   def stringClassSymbol: ClassSymbol = {
-    val name    = Name("String")
+    val name    = StdNames.STRING_TYPE_NAME
     langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
   }
 

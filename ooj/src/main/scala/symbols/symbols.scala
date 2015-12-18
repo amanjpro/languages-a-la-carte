@@ -14,7 +14,7 @@ import sana.tiny.modifiers.Flags
 import sana.primj.modifiers.PARAM
 import sana.tiny.names.Name
 import sana.tiny.names.StdNames.noname
-import sana.ooj.names.StdNames.CONSTRUCTOR_NAME
+import sana.ooj.names.StdNames
 import sana.ooj.modifiers._
 import sana.ooj.modifiers.Ops._
 import sana.ooj.types.TypeUtils
@@ -25,20 +25,20 @@ import sana.ooj.types.TypeUtils
 object ProgramSymbol extends Symbol {
 
   private val javaPackageSymbol: PackageSymbol = {
-    val name  = Name("java")
+    val name    = StdNames.JAVA_PACKAGE_NAME
     val owner = Some(ProgramSymbol)
     PackageSymbol(name, owner)
   }
 
   private val langPackageSymbol: PackageSymbol = {
-    val name  = Name("lang")
+    val name    = StdNames.LANG_PACKAGE_NAME
     val owner = Some(javaPackageSymbol)
     PackageSymbol(name, owner)
   }
 
   private val objectClassSymbol: ClassSymbol = {
     val mods    = Flags(PUBLIC_ACC)
-    val name    = Name("Object")
+    val name    = StdNames.OBJECT_TYPE_NAME
     val parents = Nil
     val owner   = Some(langPackageSymbol)
     val tpe     = Some(TypeUtils.objectClassType)

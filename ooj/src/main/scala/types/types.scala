@@ -98,7 +98,7 @@ case class ClassType(qual: String, name: Name, parents: Set[Symbol])
 //   def name: Name = OBJECT_TYPE_NAME
 // }
 
-object NullType extends RefType {
+case object NullType extends RefType {
   def =:=(t: Type): Boolean = this == t
   def <:<(t: Type): Boolean = t match {
     case _: PrimitiveType   => false
