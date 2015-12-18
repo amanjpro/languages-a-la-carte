@@ -9,7 +9,7 @@ import sana.tiny
 import sana.calcj
 
 import sana.dsl._
-import tiny.ast.{TreeCopiers => _, _}
+import tiny.ast.{TreeCopiers => _, TreeFactories => _, _}
 import tiny.types.{TypeUtils => _, _}
 import tiny.symbols.{TypeSymbol, TermSymbol, Symbol}
 import tiny.source.Position
@@ -17,7 +17,7 @@ import tiny.names.Name
 import tiny.errors.ErrorReporting.{error,warning}
 import calcj.typechecker.{TyperComponent, TypePromotions}
 import calcj.types._
-import calcj.ast.operators.{Eq, Neq}
+import calcj.ast.operators.{Add, Eq, Neq, BOp}
 import calcj.ast.BinaryApi
 import primj.ast.{ApplyApi, ValDefApi}
 import primj.symbols.{MethodSymbol, VariableSymbol, ScopeSymbol}
@@ -803,12 +803,43 @@ trait SelectTyperComponent extends TyperComponent {
 
 @component(tree, symbols)
 trait BinaryTyperComponent extends calcj.typechecker.BinaryTyperComponent {
-  override def binaryTyper(ltpe: Type,
+
+  override protected def binaryTyper(ltpe: Type,
     rtpe: Type, bin: BinaryApi): Option[(Type, Type, Type)] = bin.op match {
       case Eq | Neq    if rtpe.isInstanceOf[RefType]   &&
                           ltpe.isInstanceOf[RefType]             =>
         Some((ltpe, rtpe, BooleanType))
+      case Add         if ltpe =:= TypeUtils.stringClassType     =>
+        Some((ltpe, rtpe, ltpe))
       case _                                                     =>
         super.binaryTyper(ltpe, rtpe, bin)
+    }
+
+
+
+  // toString should be called when needed, also all primitives can be
+  // easily promoted to String
+  // TODO: How primitive and null promotions to String is done in Java?
+  override def castIfNeeded(e: Expr, t1: Type, t2: Type): Expr = {
+    val strTpe = TypeUtils.stringClassType
+    val strSym = SymbolUtils.stringClassSymbol
+    (t1, t2) match {
+      case (`strTpe`, `strTpe`)                      =>
+        e
+      case (`strTpe`, _: PrimitiveType)              =>
+        val tuse = TreeFactories.mkTypeUse(strSym.name,
+                            e.pos, Some(strSym),
+                            strSym.owner)
+        strSym.tpe.foreach(tuse.tpe = _)
+        TreeFactories.mkCast(tuse, e)
+      case (`strTpe`, NullType)                      =>
+        TreeFactories.mkLiteral(StringConstant("null"), e.pos)
+      case (`strTpe`, r       )                      =>
+        val slct = TreeFactories.mkSelect(e,
+          TreeFactories.mkIdent(Name("toString"), e.pos), e.pos)
+        TreeFactories.mkApply(slct, Nil, e.pos)
+      case _                                         =>
+        super.castIfNeeded(e, t1, t2)
+    }
   }
 }
