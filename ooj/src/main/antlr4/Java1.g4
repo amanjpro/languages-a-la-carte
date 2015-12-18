@@ -560,28 +560,34 @@ leftHandSide
 
 
 expression
-  : primary                                            # PrimaryExpression
-  | name                                               # NameExpression
-	| '(' type ')' expression                            # CastExpression
-  | expression op=('++' | '--')                        # PostfixExpression
-  | op=('++' | '--' | '-' | '+') expression            # UnaryExpression
-  | op=('~' | '!') expression                          # BitwiseUnaryExpression
-  | expression op=('*' | '/' | '%') expression         # MulBinaryExpression
-	| expression op=('+' | '-') expression               # AddBinaryExpression
-	| expression op=('>>' | '<<' | '>>>') expression     # ShiftBinaryExpression
-	| expression op=('<' | '>' | '<=' | '>=') expression # RelBinaryExpression
-	| expression 'instanceof' type                       # InstanceOfExpression
-	| expression op=('==' | '!=') expression             # EquBinaryExpression
-	| expression '&' expression                          # BitAndBinaryExpression
-	| expression '|' expression                          # BitOrBinaryExpression
-	| expression '^' expression                          # BitXOrBinaryExpression
-	| expression '&&' expression                         # AndBinaryExpression
-	| expression '||' expression                         # OrBinaryExpression
-	| expression '?' expression ':' expression           # TernaryExpression
-  | leftHandSide
+  : primary                                           # PrimaryExpression
+  | name                                              # NameExpression
+	| '(' type ')' expression                           # CastExpression
+  | <assoc=left> expression op=('++' | '--')          # PostfixExpression
+  | <assoc=right> op=('++' | '--' | '-' | '+')
+      expression                                      # UnaryExpression
+  | <assoc=right> op=('~' | '!') expression           # BitwiseUnaryExpression
+  | <assoc=left> expression op=('*' | '/' | '%')
+      expression                                      # MulBinaryExpression
+	| <assoc=left> expression op=('+' | '-') expression # AddBinaryExpression
+	| <assoc=left> expression op=('>>' | '<<' | '>>>')
+      expression                                      # ShiftBinaryExpression
+	| <assoc=left> expression op=('<' | '>' | '<=' | '>=')
+      expression                                      # RelBinaryExpression
+	| <assoc=left> expression 'instanceof' type         # InstanceOfExpression
+	| <assoc=left> expression op=('==' | '!=')
+      expression                                      # EquBinaryExpression
+	| <assoc=left> expression '&' expression            # BitAndBinaryExpression
+	| <assoc=left> expression '|' expression            # BitOrBinaryExpression
+	| <assoc=left> expression '^' expression            # BitXOrBinaryExpression
+	| <assoc=left> expression '&&' expression           # AndBinaryExpression
+	| <assoc=left> expression '||' expression           # OrBinaryExpression
+	| <assoc=right> expression '?' expression ':'
+      expression                                      # TernaryExpression
+  | <assoc=right> leftHandSide
     op=('='  | '*='  | '/='  | '%='   | '+=' |
      '-=' | '<<=' | '>>=' | '>>>=' |
-     '&=' | '^='  | '|=') expression                   # AssignExpression
+     '&=' | '^='  | '|=') expression                  # AssignExpression
   ;
 
 constantExpression
