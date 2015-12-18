@@ -39,7 +39,7 @@ object TypePromotions {
           val tuse = mkTypeUse(sym.name,
                             pos, Some(sym),
                             sym.owner)
-
+          sym.tpe.foreach(tuse.tpe = _)
           mkCast(tuse, e)
         case _         =>
           e
