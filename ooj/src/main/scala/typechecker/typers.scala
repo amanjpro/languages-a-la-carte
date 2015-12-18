@@ -637,7 +637,8 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
       candidateMethods match {
         case List(mthd)                =>
           if(id.isQualified) {
-            if(!mthd.mods.isStatic && id.shouldBeStatic) {
+            if(!mthd.mods.isStatic && id.shouldBeStatic &&
+                !mthd.mods.isConstructor) {
               error(INSTANCE_METHOD_IN_STATIC_CONTEXT_INVOK,
                 id.toString, "a method name", id.pos)
             } else {
