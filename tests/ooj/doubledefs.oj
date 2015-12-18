@@ -19,7 +19,17 @@ class A {
     int b = 1;
   }
 
+  A () {
+  }
+
+  /* A () { */
+  /* } */
+  /*  */
+  void init() {
+  }
+
   void m() {
+    init();
   }
 
   int k() { // fails
