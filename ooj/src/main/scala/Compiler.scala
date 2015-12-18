@@ -8,6 +8,7 @@ import sana.ooj
 import sana.primj
 import tiny.settings.SanaConfig
 import tiny.ast.Tree
+import tiny.modifiers.Flags
 import tiny.source.SourceReader
 import tiny.errors.ErrorReporting
 import tiny.names.Name
@@ -15,12 +16,13 @@ import calcj.types._
 import calcj.symbols.BooleanSymbol
 import primj.symbols.{MethodSymbol, VariableSymbol}
 import primj.types._
-import primj.modifiers.PARAM
+import primj.modifiers.{PARAM, FINAL}
 import ooj.phases._
-import ooj.symbols.{ProgramSymbol, SymbolUtils}
+import ooj.symbols.{ProgramSymbol, SymbolUtils, ClassSymbol}
 import ooj.modifiers._
 import ooj.modifiers.Ops.noflags
-import ooj.names.StdNames.CONSTRUCTOR_NAME
+import ooj.names.StdNames
+import ooj.types.TypeUtils
 import ooj.antlr._
 
 import org.antlr.v4.runtime._
@@ -53,25 +55,44 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
 
   object Language extends super.Language {
     def init(): Unit = {
-      val res = SymbolUtils.objectClassSymbol
-      val tpe     = res.tpe
+      val obj = SymbolUtils.objectClassSymbol
+      val tpe     = obj.tpe
       // cnstr tpe:
       val cnstrTpe = Some(MethodType(VoidType, Nil))
       val cnstr = MethodSymbol(PUBLIC_ACC | CONSTRUCTOR,
-      CONSTRUCTOR_NAME, Nil, Some(res),
-      cnstrTpe, Some(res))
+        StdNames.CONSTRUCTOR_NAME, Nil, Some(obj),
+        cnstrTpe, Some(obj))
 
       // eqls tpe:
       val eqlsTpe = Some(MethodType(BooleanType, tpe.toList))
       val eqls = MethodSymbol(PUBLIC_ACC | noflags,
-      Name("equals"), Nil, Some(BooleanSymbol), eqlsTpe, Some(res))
+        Name("equals"), Nil, Some(BooleanSymbol), eqlsTpe, Some(obj))
       val psym    = VariableSymbol(PARAM | noflags,
-      Name("other"), Some(res), Some(eqls))
+            Name("other"), Some(obj), Some(eqls))
 
       eqls.params = List(psym)
 
-      res.declare(cnstr)
-      res.declare(eqls)
+
+
+      val str = {
+        val mods    = PUBLIC_ACC | FINAL
+        val name    = StdNames.STRING_TYPE_NAME
+        val parents = List(obj)
+        val owner   = Some(SymbolUtils.langPackageSymbol)
+        val tpe     = Some(TypeUtils.stringClassType)
+        ClassSymbol(mods, name, parents, owner, tpe)
+      }
+
+      val toStrTpe = Some(MethodType(TypeUtils.stringClassType, Nil))
+      val toStr = MethodSymbol(Flags(PUBLIC_ACC),
+        Name("toString"), Nil, Some(str),
+        toStrTpe, Some(obj))
+
+
+      obj.declare(cnstr)
+      obj.declare(eqls)
+      obj.declare(toStr)
+      SymbolUtils.langPackageSymbol.declare(str)
     }
 
     def compile: Tree => Unit = {
