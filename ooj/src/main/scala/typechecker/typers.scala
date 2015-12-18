@@ -547,8 +547,15 @@ trait NewTyperComponent extends TyperComponent {
       case Apply(Select(qual, id), _) =>
         qual.symbol.foreach(nw.symbol = _)
         qual.tpe
-      case _                                 =>
+      case _                          =>
         Some(ErrorType)
+    }
+    app match {
+      case Apply(Select(qual, id), _) if id.name != StdNames.CONSTRUCTOR_NAME =>
+        error(NAME_NOT_FOUND,
+          id.name.asString, StdNames.CONSTRUCTOR_NAME.asString, id.pos)
+      case _                                                                  =>
+        ()
     }
     tpe.foreach(nw.tpe = _)
     TreeCopiers.copyNew(nw)(app = app)
@@ -824,19 +831,57 @@ trait BinaryTyperComponent extends calcj.typechecker.BinaryTyperComponent {
 
   // toString should be called when needed, also all primitives can be
   // easily promoted to String
-  // TODO: How primitive and null promotions to String is done in Java?
-  override def castIfNeeded(e: Expr, t1: Type, t2: Type): Expr = {
+  // in Java spec:
+  // e is boolean               ==> new Boolean(e).toString();
+  // e is char                  ==> new Character(e).toString();
+  // e is byte, short or int    ==> new Integer(e).toString();
+  // e is long                  ==> new Long(e).toString();
+  // e is float                 ==> new Float(e).toString();
+  // e is double                ==> new Double(e).toString();
+  override protected def castIfNeeded(e: Expr, t1: Type, t2: Type): Expr = {
     val strTpe = TypeUtils.stringClassType
     val strSym = SymbolUtils.stringClassSymbol
     (t1, t2) match {
       case (`strTpe`, `strTpe`)                      =>
         e
-      case (`strTpe`, _: PrimitiveType)              =>
-        val tuse = TreeFactories.mkTypeUse(strSym.name,
-                            e.pos, Some(strSym),
-                            strSym.owner)
-        strSym.tpe.foreach(tuse.tpe = _)
-        TreeFactories.mkCast(tuse, e)
+      case (`strTpe`, t: PrimitiveType)              =>
+        TypeUtils.toBoxedType(t) match {
+          case Some(clazz: RefType)           =>
+            // FIXME: This is all too ugly
+            // We need to find a way to trigger the compiler from
+            // the very first phase up to this phase, which helps
+            // us avoid all these wirings
+            val java  =
+              TreeFactories.mkIdent(StdNames.JAVA_PACKAGE_NAME, e.pos)
+            val lang  =
+              TreeFactories.mkIdent(StdNames.LANG_PACKAGE_NAME, e.pos)
+            val jl    = TreeFactories.mkSelect(java, lang, e.pos)
+            val tuse  = TreeFactories.mkTypeUse(clazz.name, e.pos)
+            val jlp   = TreeFactories.mkSelect(jl, tuse, e.pos)
+            val cnstr = TreeFactories.mkIdent(StdNames.CONSTRUCTOR_NAME, e.pos)
+            cnstr.isConstructorIdent = true
+            val slct  = TreeFactories.mkSelect(jlp, cnstr, e.pos)
+            val app   = TreeFactories.mkApply(slct, List(e), e.pos)
+            val nw    = TreeFactories.mkNew(app)
+            java.symbol = SymbolUtils.javaPackageSymbol
+            lang.symbol = SymbolUtils.langPackageSymbol
+            SymbolUtils.getSymbol(t).foreach { s =>
+              SymbolUtils.toBoxedSymbol(s).foreach { s =>
+                tuse.symbol = s
+              }
+            }
+            nw.foreach(t => e.owner.foreach(t.owner = _))
+            e.owner.foreach(s => {
+              lang.enclosing = s
+              tuse.enclosing = s
+            })
+            lang.isQualified = true
+            tuse.isQualified = true
+            java.owner = ProgramSymbol
+            nw
+          case _                              =>
+            super.castIfNeeded(e, t1, t2)
+        }
       case (`strTpe`, NullType)                      =>
         TreeFactories.mkLiteral(StringConstant("null"), e.pos)
       case (`strTpe`, r       )                      =>
