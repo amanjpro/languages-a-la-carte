@@ -13,6 +13,13 @@ trait StdNames extends primj.names.StdNames {
   val OBJECT_TYPE_NAME       = Name("Object")
   val STRING_TYPE_NAME       = Name("String")
   val NULL_NAME              = Name("null")
+
+  val BOOLEAN_CLASS_NAME     = Name("Boolean")
+  val CHARACTER_CLASS_NAME   = Name("Character")
+  val INTEGER_CLASS_NAME     = Name("Integer")
+  val LONG_CLASS_NAME        = Name("Long")
+  val FLOAT_CLASS_NAME       = Name("Float")
+  val DOUBLE_CLASS_NAME      = Name("Double")
 }
 
 object StdNames extends StdNames

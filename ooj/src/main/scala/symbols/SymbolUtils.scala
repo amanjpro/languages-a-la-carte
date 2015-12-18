@@ -5,6 +5,7 @@ import sana.tiny.symbols.Symbol
 import sana.tiny.modifiers.Ops.noflags
 import sana.tiny.types.Type
 import sana.tiny.names.Name
+import sana.calcj.symbols._
 import sana.ooj.names.StdNames
 import sana.ooj.modifiers.Ops._
 import sana.ooj.types.TypeUtils
@@ -72,6 +73,53 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
   def stringClassSymbol: ClassSymbol = {
     val name    = StdNames.STRING_TYPE_NAME
     langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
+  }
+
+  def booleanClassSymbol: ClassSymbol = {
+    val name    = StdNames.BOOLEAN_CLASS_NAME
+    langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
+  }
+
+  def characterClassSymbol: ClassSymbol = {
+    val name    = StdNames.CHARACTER_CLASS_NAME
+    langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
+  }
+
+  def integerClassSymbol: ClassSymbol = {
+    val name    = StdNames.INTEGER_CLASS_NAME
+    langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
+  }
+
+  def longClassSymbol: ClassSymbol = {
+    val name    = StdNames.LONG_CLASS_NAME
+    langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
+  }
+
+  def floatClassSymbol: ClassSymbol = {
+    val name    = StdNames.FLOAT_CLASS_NAME
+    langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
+  }
+
+  def doubleClassSymbol: ClassSymbol = {
+    val name    = StdNames.DOUBLE_CLASS_NAME
+    langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
+  }
+
+  def toBoxedSymbol(tpe: Symbol): Option[Symbol] = tpe match {
+    case BooleanSymbol            =>
+      Some(booleanClassSymbol)
+    case CharSymbol               =>
+      Some(characterClassSymbol)
+    case IntSymbol                =>
+      Some(integerClassSymbol)
+    case LongSymbol               =>
+      Some(longClassSymbol)
+    case FloatSymbol              =>
+      Some(floatClassSymbol)
+    case DoubleSymbol             =>
+      Some(doubleClassSymbol)
+    case _                        =>
+      None
   }
 
   def allAbstractMembers(symbol: Option[Symbol]): List[Symbol] = symbol match {
