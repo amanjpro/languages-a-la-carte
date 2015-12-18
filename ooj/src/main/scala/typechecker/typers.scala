@@ -809,8 +809,10 @@ trait BinaryTyperComponent extends calcj.typechecker.BinaryTyperComponent {
       case Eq | Neq    if rtpe.isInstanceOf[RefType]   &&
                           ltpe.isInstanceOf[RefType]             =>
         Some((ltpe, rtpe, BooleanType))
-      case Add         if ltpe =:= TypeUtils.stringClassType     =>
-        Some((ltpe, rtpe, ltpe))
+      case Add         if ltpe =:= TypeUtils.stringClassType ||
+                          rtpe =:= TypeUtils.stringClassType     =>
+        Some((TypeUtils.stringClassType, TypeUtils.stringClassType,
+          TypeUtils.stringClassType))
       case _                                                     =>
         super.binaryTyper(ltpe, rtpe, bin)
     }

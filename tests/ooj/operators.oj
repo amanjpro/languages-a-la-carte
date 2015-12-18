@@ -9,6 +9,8 @@ package test;
 
 class A {
   boolean l() {
+    java.lang.Object obj = 1 + "";
+    java.lang.String str = 1 + "";
     return ("" + new A()) + 1; // fails
   }
 
