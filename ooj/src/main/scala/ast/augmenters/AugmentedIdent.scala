@@ -23,5 +23,12 @@ trait AugmentedIdent {
 
   def argumentTypes_=(argTypes: List[Type]): Unit =
     tree.attributes = tree.attributes + ('argumentTypes -> argTypes)
+
+  def isConstructorIdent: Boolean =
+    tree.attributes.get('isConstructorIdent)
+      .map(_.asInstanceOf[Boolean]).getOrElse(false)
+
+  def isConstructorIdent_=(flag: Boolean): Unit =
+    tree.attributes = tree.attributes + ('isConstructorIdent -> flag)
 }
 

@@ -98,6 +98,7 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
           }
           val spr           = TreeFactories.mkSuper(clazz.pos)
           val id            = TreeFactories.mkIdent(constructorName, clazz.pos)
+          id.isConstructorIdent = true
           val slct          = TreeFactories.mkSelect(spr, id, clazz.pos)
           val app           = TreeFactories.mkApply(slct, Nil, clazz.pos)
           val body          = TreeFactories.mkBlock(List(app), clazz.pos)
@@ -208,7 +209,7 @@ trait MethodDefSymbolAssignerComponent
       Nil, None, None, owner)
     owner.foreach(sym => sym.declare(symbol))
     val opsym   = Some(symbol)
-    val tpt     = if(mthd.name == constructorName) {
+    val tpt     = if(mthd.mods.isConstructor) {
       mthd.declaredClassNameForConstructor = useName(mthd.ret)
       assign((TreeFactories.mkTypeUse(voidName, mthd.pos), owner)).asInstanceOf[UseTree]
     } else {
@@ -216,7 +217,7 @@ trait MethodDefSymbolAssignerComponent
     }
     val params  = mthd.params.map((x) =>
         assign((x, opsym)).asInstanceOf[ValDefApi])
-    val body    = if(mthd.name == constructorName) {
+    val body    = if(mthd.mods.isConstructor) {
       mthd.body match {
         case Block(List(Apply(Select(_: ThisApi,
                     Ident(`constructorName`)), _), _*)) |
@@ -245,11 +246,14 @@ trait MethodDefSymbolAssignerComponent
       params = params, body = body)
   }
 
-  protected def constructorCall(pos: Option[Position]): Expr =
+  protected def constructorCall(pos: Option[Position]): Expr = {
+    val id = TreeFactories.mkIdent(constructorName, pos)
+    id.isConstructorIdent = true
     TreeFactories.mkApply(
       TreeFactories.mkSelect(
         TreeFactories.mkSuper(pos),
-        TreeFactories.mkIdent(constructorName, pos), pos), Nil, pos)
+          id, pos), Nil, pos)
+  }
 
   protected def useName(use: UseTree): Name = use match {
     case id: IdentApi   => id.name

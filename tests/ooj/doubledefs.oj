@@ -27,6 +27,7 @@ class A {
   /* } */
   /*  */
   void init() {
+    this.m(1);
   }
 
   void m() {

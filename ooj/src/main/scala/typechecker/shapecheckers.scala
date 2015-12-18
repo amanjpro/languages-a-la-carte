@@ -12,6 +12,7 @@ import sana.dsl._
 import tiny.ast._
 import tiny.symbols._
 import tiny.ast.Implicits._
+import tiny.source.Position
 import calcj.ast._
 import calcj.ast.operators.{Inc, Dec}
 import tiny.errors.ErrorReporting.{error,warning}
@@ -36,13 +37,11 @@ trait MethodDefShapeCheckerComponent extends
         case Block(stmts)                  =>
           stmts.tail.foreach {
             case stmt@Apply(Select(_: ThisApi,
-              Ident(`CONSTRUCTOR_NAME`)), _)         =>
-              error(EXPLICIT_CONSTRUCTOR_INVOKATION_NOT_FIRST_STATEMENT,
-                "", "", stmt.pos)
+              id@Ident(`CONSTRUCTOR_NAME`)), _)         =>
+              checkExplicitConstructor(id, stmt.pos)
             case stmt@Apply(Select(_: SuperApi,
-              Ident(`CONSTRUCTOR_NAME`)), _)         =>
-              error(EXPLICIT_CONSTRUCTOR_INVOKATION_NOT_FIRST_STATEMENT,
-                "", "", stmt.pos)
+              id@Ident(`CONSTRUCTOR_NAME`)), _)         =>
+              checkExplicitConstructor(id, stmt.pos)
             case _                                  =>
               () // pass
           }
@@ -51,28 +50,24 @@ trait MethodDefShapeCheckerComponent extends
       }
     } else {
       mthd.body match {
-        case Block(stmts)                  =>
+        case Block(stmts)                   =>
           stmts.foreach {
             case stmt@Apply(Select(_: ThisApi,
-              Ident(`CONSTRUCTOR_NAME`)), _)         =>
-              error(EXPLICIT_CONSTRUCTOR_INVOKATION_IN_METHOD,
-                "", "", stmt.pos)
+              id@Ident(`CONSTRUCTOR_NAME`)), _)      =>
+              checkExplicitConstructor(id, stmt.pos)
             case stmt@Apply(Select(_: SuperApi,
-              Ident(`CONSTRUCTOR_NAME`)), _)         =>
-              error(EXPLICIT_CONSTRUCTOR_INVOKATION_IN_METHOD,
-                "", "", stmt.pos)
+              id@Ident(`CONSTRUCTOR_NAME`)), _)      =>
+              checkExplicitConstructor(id, stmt.pos)
             case _                                  =>
               () // pass
           }
         case stmt@Apply(Select(_: ThisApi,
-          Ident(`CONSTRUCTOR_NAME`)), _)     =>
-          error(EXPLICIT_CONSTRUCTOR_INVOKATION_IN_METHOD,
-            "", "", stmt.pos)
+          id@Ident(`CONSTRUCTOR_NAME`)), _)  =>
+          checkExplicitConstructor(id, stmt.pos)
         case stmt@Apply(Select(_: ThisApi,
-          Ident(`CONSTRUCTOR_NAME`)), _)     =>
-          error(EXPLICIT_CONSTRUCTOR_INVOKATION_IN_METHOD,
-            "", "", stmt.pos)
-        case _                              =>
+          id@Ident(`CONSTRUCTOR_NAME`)), _)  =>
+          checkExplicitConstructor(id, stmt.pos)
+        case _                               =>
           () // pass
       }
     }
@@ -80,6 +75,22 @@ trait MethodDefShapeCheckerComponent extends
     super.apply(mthd)
   }
 
+  protected def checkFirstStmtExplicitConstructor(id: IdentApi,
+    pos: Option[Position]): Unit = {
+    id.symbol.foreach { s =>
+      if(s.mods.isConstructor)
+        error(EXPLICIT_CONSTRUCTOR_INVOKATION_NOT_FIRST_STATEMENT,
+          "", "", pos)
+    }
+  }
+  protected def checkExplicitConstructor(id: IdentApi,
+    pos: Option[Position]): Unit = {
+    id.symbol.foreach { s =>
+      if(s.mods.isConstructor)
+        error(EXPLICIT_CONSTRUCTOR_INVOKATION_IN_METHOD,
+          "", "", pos)
+    }
+  }
   protected def isConstructor(sym: Option[Symbol]): Boolean =
     sym.map(s => SymbolUtils.isConstructor(s)).getOrElse(false)
 

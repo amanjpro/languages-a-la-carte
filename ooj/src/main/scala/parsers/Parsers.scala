@@ -630,6 +630,7 @@ class Parser extends parsers.Parser {
       val ps   = pos(ctx)
       val init = TreeFactories.mkIdent(CONSTRUCTOR_NAME,
         ps)
+      init.isConstructorIdent = true
       val qual = ctx.qual.getText match {
         case "super"             =>
           TreeFactories.mkSuper(ps)
@@ -1232,6 +1233,7 @@ class Parser extends parsers.Parser {
       val qual    = visit(ctx.classOrInterfaceType)
       val ps      = pos(ctx)
       val init    = TreeFactories.mkIdent(CONSTRUCTOR_NAME, ps)
+      init.isConstructorIdent = true
       val fun     = TreeFactories.mkSelect(qual, init, ps)
       val args = ctx.argumentList match {
         case null                       => Nil

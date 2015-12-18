@@ -371,7 +371,8 @@ trait MethodDefTyperComponent
         val r = s.getDirectlyDefinedSymbols(mthd.name,
           o => (o.tpe, mthd.tpe) match {
             case (Some(to: MethodType), Some(ts: MethodType)) =>
-              to.params == ts.params
+              to.params == ts.params &&
+              mods.isConstructor == o.mods.isConstructor
             case l                                            =>
               false
           })
@@ -543,10 +544,10 @@ trait NewTyperComponent extends TyperComponent {
   (nw: NewApi) => {
     val app     = typed((nw.app, symbols)).asInstanceOf[ApplyApi]
     val tpe     = app match {
-      case Apply(Select(qual, _), _) =>
+      case Apply(Select(qual, id), _) =>
         qual.symbol.foreach(nw.symbol = _)
         qual.tpe
-      case _                      =>
+      case _                                 =>
         Some(ErrorType)
     }
     tpe.foreach(nw.tpe = _)
@@ -617,12 +618,14 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
             (sym) => {
               id.enclosing match {
                 case Some(from)     =>
-                  applicableMethod(sym, tpes) && isAccessible(sym, from)
+                  applicableMethod(sym, tpes) && isAccessible(sym, from) &&
+                      (sym.mods.isConstructor == id.isConstructorIdent)
                 case _              =>
                   id.owner match {
                     case Some(from)     =>
                       applicableMethod(sym, tpes) &&
-                          isAccessible(sym, from)
+                          isAccessible(sym, from) &&
+                            (sym.mods.isConstructor == id.isConstructorIdent)
                     case _              =>
                       false
                   }
