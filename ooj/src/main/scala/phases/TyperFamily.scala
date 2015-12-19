@@ -11,6 +11,7 @@ import sana.primj.typechecker.{MethodDefTyperComponent => _,
                                ApplyTyperComponent => _,
                                TypeUseTyperComponent => _,
                                ValDefTyperComponent => _,
+                               AssignTyperComponent => _,
                                IdentTyperComponent => _, _}
 import sana.calcj.typechecker.{UnaryTyperComponent => _,
                                BinaryTyperComponent => _,

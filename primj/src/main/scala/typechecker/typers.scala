@@ -40,34 +40,40 @@ trait ProgramTyperComponent extends TyperComponent {
 trait AssignTyperComponent extends TyperComponent {
 
   (assign: AssignApi)          => {
-    val lhs = typed((assign.lhs, symbols))
-    val rhs = typed((assign.rhs, symbols))
-    (lhs, rhs) match {
-      case (lhs: Tree, _) if ! TreeUtils.isVariable(lhs)     =>
-        error(ASSIGNING_NOT_TO_VARIABLE,
-          lhs.toString, lhs.toString, lhs.pos)
+    val lhs = typed((assign.lhs, symbols)).asInstanceOf[Expr]
+    val rhs = typed((assign.rhs, symbols)).asInstanceOf[Expr]
+    checkVariableLHS(lhs)
+    checkFinalReassigning(lhs)
+    checkAssignmentTypeCorrectness(lhs, rhs, assign)
+  }
+
+
+  protected def checkVariableLHS(lhs: Tree): Unit = {
+    if(!TreeUtils.isVariable(lhs))
+      error(ASSIGNING_NOT_TO_VARIABLE,
+        lhs.toString, lhs.toString, lhs.pos)
+  }
+
+  protected def checkFinalReassigning(lhs: Tree): Unit = {
+    if(TreeUtils.isFinal(lhs))
+      error(REASSIGNING_FINAL_VARIABLE,
+        lhs.toString, lhs.toString, lhs.pos)
+  }
+
+  protected def checkAssignmentTypeCorrectness(lhs: Expr, rhs: Expr,
+    assign: AssignApi): AssignApi = {
+    (lhs.tpe, rhs.tpe) match {
+      case (Some(ltpe), Some(rtpe))
+          if TypeUtils.isProbablyAssignable(ltpe, rtpe)  =>
+        lhs.tpe.foreach(assign.tpe = _)
+        TreeCopiers.copyAssign(assign)(lhs = lhs, rhs = rhs)
+      case (Some(ltpe), Some(rtpe))                      =>
+        error(TYPE_MISMATCH,
+          ltpe.toString, rtpe.toString, rhs.pos)
         assign
-      case (lhs: Tree, _)  if TreeUtils.isFinal(lhs)         =>
-        error(REASSIGNING_FINAL_VARIABLE,
-          lhs.toString, lhs.toString, lhs.pos)
-        assign
-      case (lhs: Expr, rhs: Expr)                            =>
-        (lhs.tpe, rhs.tpe) match {
-          case (Some(ltpe), Some(rtpe))
-              if TypeUtils.isProbablyAssignable(ltpe, rtpe)  =>
-            lhs.tpe.foreach(assign.tpe = _)
-            TreeCopiers.copyAssign(assign)(lhs = lhs, rhs = rhs)
-          case (Some(ltpe), Some(rtpe))                      =>
-            error(TYPE_MISMATCH,
-              ltpe.toString, rtpe.toString, rhs.pos)
-            assign
-          case _                                             =>
-            error(TYPE_MISMATCH,
-              lhs.toString, rhs.toString, rhs.pos)
-            assign
-        }
-      case _                                                 =>
-        // errors are already reported
+      case _                                             =>
+        error(TYPE_MISMATCH,
+          lhs.toString, rhs.toString, rhs.pos)
         assign
     }
   }
