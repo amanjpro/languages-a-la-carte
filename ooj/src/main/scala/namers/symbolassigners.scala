@@ -15,7 +15,7 @@ import tiny.symbols._
 import tiny.source.Position
 import tiny.names.Name
 import calcj.ast.{TreeCopiers => _, TreeFactories => _, _}
-import primj.ast.{TreeCopiers => _, MethodDefApi => _,
+import primj.ast.{TreeCopiers => _, MethodDefApi => _, ProgramApi => _,
                   TreeFactories => _, TreeUtils => _, _}
 import primj.errors.ErrorCodes._
 import primj.symbols.{ProgramSymbol, MethodSymbol, VoidSymbol}
@@ -42,6 +42,16 @@ This: DONE
 Super: DONE
 MethodDef: DONE
 */
+
+@component(tree, owner)
+trait ProgramSymbolAssignerComponent extends SymbolAssignerComponent {
+  (prg: ProgramApi) => {
+    val members =
+      prg.members.map(x => assign((x,
+        Some(ProgramSymbol))))
+    TreeCopiers.copyProgram(prg)(members = members)
+  }
+}
 
 @component(tree, owner)
 trait CompilationUnitSymbolAssignerComponent extends SymbolAssignerComponent {

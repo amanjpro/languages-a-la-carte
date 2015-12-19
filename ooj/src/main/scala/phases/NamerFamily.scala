@@ -7,7 +7,8 @@ import sana.core.Implicits._
 import sana.tiny.ast.{Tree, NoTree}
 import sana.ooj.OojNodes
 import sana.primj.namers.{MethodDefNamerComponent => _,
-                          IdentNamerComponent => _, _}
+                          IdentNamerComponent => _,
+                          ProgramNamerComponent => _, _}
 import sana.brokenj.namers._
 import sana.ooj.namers._
 

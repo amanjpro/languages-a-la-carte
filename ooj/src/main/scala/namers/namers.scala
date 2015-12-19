@@ -39,6 +39,15 @@ Super: DONE -- I think
 MethodDef: DONE
 Apply:
 */
+@component
+trait ProgramNamerComponent extends NamerComponent {
+  (prg: ProgramApi) => {
+    val members =
+      prg.members.map(x => name(x))
+    TreeCopiers.copyProgram(prg)(members = members)
+  }
+}
+
 
 
 @component

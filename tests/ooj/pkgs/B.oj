@@ -1,0 +1,12 @@
+package p1.p3.p3;
+
+public class B {
+}
+
+
+private class A extends B {
+  void m() {
+    new p1.p2.p3.A();
+    new p1.p2.p3.B();
+  }
+}

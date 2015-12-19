@@ -10,7 +10,7 @@ import sana.tiny.modifiers.Flags
 import sana.tiny.ast._
 import sana.calcj.ast._
 import sana.calcj.ast.operators.{BOp, UOp}
-import sana.primj.ast._
+import sana.primj.ast.{ProgramApi => _, _}
 import sana.brokenj.ast.{TreeCopiers => TC, _}
 
 
@@ -19,6 +19,14 @@ trait TreeCopiers extends {
 
   protected def copyProperties(template: Tree,
       newTree: Tree): Unit = newTree.attributes = template.attributes
+
+  def copyProgram(template: ProgramApi)(members: List[Tree] =
+    template.members): ProgramApi = {
+    val res = TreeFactories.mkProgram(members)
+    copyProperties(template, res)
+    res
+  }
+
 
   def copyCompilationUnit(template: CompilationUnitApi)(
     module: PackageDefApi = template.module,

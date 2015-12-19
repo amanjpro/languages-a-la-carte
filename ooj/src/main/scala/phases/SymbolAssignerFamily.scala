@@ -9,6 +9,7 @@ import sana.tiny.ast.{Tree, NoTree}
 import sana.ooj.OojNodes
 import sana.primj.namers.{MethodDefSymbolAssignerComponent => _,
                           BlockSymbolAssignerComponent => _,
+                          ProgramSymbolAssignerComponent => _,
                           ValDefSymbolAssignerComponent => _, _}
 import sana.brokenj.namers._
 import sana.ooj.namers._

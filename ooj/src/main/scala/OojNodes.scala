@@ -3,7 +3,8 @@ package ch.usi.inf.l3.sana.ooj
 
 object OojNodes {
   final val nodes =
-    """CompilationUnit,
+    """Program,
+       CompilationUnit,
        PackageDef,
        ClassDef,
        Template,

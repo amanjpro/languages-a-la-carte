@@ -23,7 +23,8 @@ import calcj.types._
 import primj.errors.ErrorCodes._
 import primj.types._
 import primj.symbols.{MethodSymbol, VariableSymbol}
-import primj.ast.{TreeCopiers => _, MethodDefApi => _, TreeUtils => _, _}
+import primj.ast.{TreeCopiers => _, MethodDefApi => _,
+                  ProgramApi => _, TreeUtils => _, _}
 import primj.modifiers.Ops._
 import ooj.ast.Implicits._
 import brokenj.ast.{TreeCopiers => _, TreeUtils => _, _}
@@ -79,6 +80,15 @@ Super:
 
 trait DefTyperComponent extends TransformationComponent[Tree, Tree] {
   def typed: Tree => Tree
+}
+
+@component
+trait ProgramDefTyperComponent extends DefTyperComponent {
+  (prg: ProgramApi) => {
+    val members =
+      prg.members.map(x => typed(x))
+    TreeCopiers.copyProgram(prg)(members = members)
+  }
 }
 
 @component

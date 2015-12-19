@@ -51,6 +51,16 @@ Apply: DONE
 // advance to typer
 
 @component(tree, symbols)
+trait ProgramTyperComponent extends TyperComponent {
+  (prg: ProgramApi) => {
+    val members =
+      prg.members.map(x => typed((x,
+        symbols)))
+    TreeCopiers.copyProgram(prg)(members = members)
+  }
+}
+
+@component(tree, symbols)
 trait CompilationUnitTyperComponent extends TyperComponent {
   (unit: CompilationUnitApi) => {
     val pkg = typed((unit.module, symbols)).asInstanceOf[PackageDefApi]
@@ -626,8 +636,19 @@ trait TypeUseTyperComponent extends primj.typechecker.TypeUseTyperComponent {
         case _         => ()
       }
     })
+    if(tuse.isQualified) {
+      (tuse.symbol, tuse.enclosing) match {
+        case (Some(s), Some(f)) if !isAccessible(s, f) =>
+          error(TYPE_NOT_FOUND, "", "", tuse.pos)
+        case _                                         =>
+      }
+    }
     super.apply((tuse, symbols))
   }
+
+
+  protected def isAccessible(symbol: Symbol, from: Symbol): Boolean =
+    SymbolUtils.isAccessible(symbol, from)
 }
 
 @component(tree, symbols)

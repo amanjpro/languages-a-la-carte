@@ -9,7 +9,7 @@ import sana.tiny.modifiers.Flags
 import sana.tiny.ast._
 import sana.calcj.ast._
 import sana.calcj.ast.operators.{UOp, BOp}
-import sana.primj.ast.{MethodDefApi => _, _}
+import sana.primj.ast.{MethodDefApi => _, ProgramApi => _, _}
 import sana.brokenj.ast.{TreeFactories => TF, _}
 import sana.primj.types._
 import sana.ooj.ast.Implicits._
@@ -17,6 +17,9 @@ import sana.ooj.ast.TreeExtractors._
 
 trait TreeFactories {
 
+  def mkProgram(members: List[Tree]): ProgramApi = {
+    new Program(members)
+  }
   def mkCompilationUnit(module: PackageDefApi, sourceName: String,
     sourcePath: List[String],
     symbol: Option[Symbol] = None): CompilationUnitApi = {
@@ -207,6 +210,8 @@ trait TreeFactories {
   }
 
   // From primj
+
+
   def mkAssign(lhs: Expr, rhs: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): AssignApi = {

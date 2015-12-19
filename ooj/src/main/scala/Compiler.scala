@@ -19,6 +19,7 @@ import calcj.symbols._
 import primj.symbols.{ProgramSymbol, MethodSymbol, VariableSymbol, VoidSymbol}
 import primj.types._
 import primj.modifiers.{PARAM, FINAL}
+import ooj.ast.TreeFactories
 import ooj.phases._
 import ooj.symbols.{PackageSymbol, SymbolUtils, ClassSymbol}
 import ooj.modifiers._
@@ -176,7 +177,6 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
     }
 
     def compile: Tree => Unit = {
-      init()
       (x: Tree) => {
         val typers = (t: Tree) => TyperFamily.typed((t, Nil))
         val f = (SymbolAssignerFamily.assign join
@@ -191,7 +191,10 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
   }
 
   def start: Unit = {
-    compile(parse(config.files.toList.head))
+    Language.init()
+    val cunits  = config.files.map(f => parse(f)).toList
+    val program = TreeFactories.mkProgram(cunits)
+    compile(program)
   }
 
 }

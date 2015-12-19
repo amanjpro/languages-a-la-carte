@@ -16,7 +16,7 @@ import tiny.source.Position
 import calcj.ast._
 import calcj.ast.operators.{Inc, Dec}
 import tiny.errors.ErrorReporting.{error,warning}
-import primj.ast.{MethodDefApi => _, TreeUtils => _, _}
+import primj.ast.{MethodDefApi => _, TreeUtils => _, ProgramApi => _, _}
 import primj.typechecker.ShapeCheckerComponent
 import ooj.symbols._
 import ooj.modifiers.Ops._
@@ -25,6 +25,12 @@ import ooj.ast._
 import ooj.names.StdNames._
 import ooj.ast.TreeExtractors._
 
+@component
+trait ProgramShapeCheckerComponent extends ShapeCheckerComponent {
+  (prg: ProgramApi) => {
+    prg.members.foreach(x => check(x))
+  }
+}
 
 @component
 trait MethodDefShapeCheckerComponent extends

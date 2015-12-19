@@ -13,6 +13,7 @@ import sana.primj.typechecker.{MethodDefShapeCheckerComponent => _,
                                ForShapeCheckerComponent => _,
                                WhileShapeCheckerComponent => _,
                                CastShapeCheckerComponent => _,
+                               ProgramShapeCheckerComponent => _,
                                _}
 import sana.calcj.typechecker._
 import sana.ooj.typechecker._

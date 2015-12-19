@@ -16,7 +16,7 @@ trait TypeTyperFamily extends TransformationFamily[Tree, Tree] {
   override def default: Tree = NoTree
 
   def components: List[PartialFunction[Tree, Tree]] =
-    generateComponents[Tree, Tree]("ClassDef,PackageDef,CompilationUnit",
+    generateComponents[Tree, Tree]("Program,ClassDef,PackageDef,CompilationUnit",
       "TypeTyperComponent", "typed", "")
 
   def typed: Tree => Tree = family

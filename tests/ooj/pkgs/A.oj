@@ -1,0 +1,14 @@
+
+
+package p1.p2.p3;
+
+public class A {
+}
+
+
+private class B extends A {
+}
+
+class B extends A {
+}
+

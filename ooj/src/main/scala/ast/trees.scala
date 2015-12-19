@@ -29,6 +29,14 @@ import ooj.names.StdNames._
 
 /********************* AST Nodes *********************************/
 
+trait ProgramApi extends Tree {
+  def members: List[Tree]
+  def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = members.foldLeft(z)(f)
+    f(r1, this)
+  }
+}
+
 trait CompilationUnitApi extends Tree {
   def module: PackageDefApi
   def sourceName: String
@@ -158,7 +166,10 @@ protected[ast] class CompilationUnit(val module: PackageDefApi,
   override def toString: String =
     s"CompilationUnit($module, $sourceName, $sourcePath)"
 }
-
+protected[ast] class Program(val members: List[Tree])
+            extends ProgramApi {
+  override def toString: String = s"Program"
+}
 protected[ast] class PackageDef(val containingPackages: List[Name],
   val name: Name, val members: List[Tree]) extends PackageDefApi {
   override def toString: String =
