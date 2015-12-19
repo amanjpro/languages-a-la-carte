@@ -28,6 +28,7 @@ trait CompilerApi[Input, Output] {
 
 
   trait Language extends LanguageModule[Input, Output] {
+    def init(): Unit
     def compile: Input => Output
   }
 

@@ -25,6 +25,9 @@ object ProgramSymbol extends Symbol {
   def mods_=(mods: Flags): Unit = ???
   def tpe_=(tpe: Option[Type]): Unit = ???
   def owner_=(owner: Option[Symbol]): Unit = ???
+
+  override def toString(): String = s"Program symbol"
+  override def hashCode(): Int = name.hashCode * 43
 }
 
 case class VariableSymbol(var mods: Flags, var name: Name,

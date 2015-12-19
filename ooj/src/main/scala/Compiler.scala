@@ -16,11 +16,11 @@ import tiny.errors.ErrorReporting
 import tiny.names.Name
 import calcj.types._
 import calcj.symbols._
-import primj.symbols.{MethodSymbol, VariableSymbol, VoidSymbol}
+import primj.symbols.{ProgramSymbol, MethodSymbol, VariableSymbol, VoidSymbol}
 import primj.types._
 import primj.modifiers.{PARAM, FINAL}
 import ooj.phases._
-import ooj.symbols.{ProgramSymbol, SymbolUtils, ClassSymbol}
+import ooj.symbols.{PackageSymbol, SymbolUtils, ClassSymbol}
 import ooj.modifiers._
 import ooj.modifiers.Ops.noflags
 import ooj.names.StdNames
@@ -88,7 +88,31 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
         res
       }
 
-      val obj = SymbolUtils.objectClassSymbol
+      val javaPackageSymbol: PackageSymbol = {
+        val name    = StdNames.JAVA_PACKAGE_NAME
+        val owner = Some(ProgramSymbol)
+        PackageSymbol(name, owner)
+      }
+
+      val langPackageSymbol: PackageSymbol = {
+        val name    = StdNames.LANG_PACKAGE_NAME
+        val owner = Some(javaPackageSymbol)
+        PackageSymbol(name, owner)
+      }
+
+      val obj: ClassSymbol = {
+        val mods    = Flags(PUBLIC_ACC)
+        val name    = StdNames.OBJECT_TYPE_NAME
+        val parents = Nil
+        val owner   = Some(langPackageSymbol)
+        val tpe     = Some(TypeUtils.objectClassType)
+        val res = ClassSymbol(mods, name, parents, owner, tpe)
+        res
+      }
+      langPackageSymbol.declare(obj)
+      javaPackageSymbol.declare(langPackageSymbol)
+      ProgramSymbol.declare(javaPackageSymbol)
+
       val tpe     = obj.tpe
       // cnstr tpe:
       val cnstrTpe = Some(MethodType(VoidType, Nil))
@@ -144,6 +168,11 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
       SymbolUtils.langPackageSymbol.declare(long)
       SymbolUtils.langPackageSymbol.declare(float)
       SymbolUtils.langPackageSymbol.declare(double)
+
+
+      SymbolUtils.standardDefinitions.foreach { s =>
+        ProgramSymbol.declare(s)
+      }
     }
 
     def compile: Tree => Unit = {

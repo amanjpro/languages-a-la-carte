@@ -22,54 +22,30 @@ import sana.ooj.types.TypeUtils
 
 
 
-object ProgramSymbol extends Symbol {
-
-  private val javaPackageSymbol: PackageSymbol = {
-    val name    = StdNames.JAVA_PACKAGE_NAME
-    val owner = Some(ProgramSymbol)
-    PackageSymbol(name, owner)
-  }
-
-  private val langPackageSymbol: PackageSymbol = {
-    val name    = StdNames.LANG_PACKAGE_NAME
-    val owner = Some(javaPackageSymbol)
-    PackageSymbol(name, owner)
-  }
-
-  private val objectClassSymbol: ClassSymbol = {
-    val mods    = Flags(PUBLIC_ACC)
-    val name    = StdNames.OBJECT_TYPE_NAME
-    val parents = Nil
-    val owner   = Some(langPackageSymbol)
-    val tpe     = Some(TypeUtils.objectClassType)
-    val res = ClassSymbol(mods, name, parents, owner, tpe)
-    res
-  }
-
-
-  langPackageSymbol.declare(objectClassSymbol)
-  javaPackageSymbol.declare(langPackageSymbol)
-
-  decls = (decls ++ List(javaPackageSymbol) ++
-      primj.symbols.SymbolUtils.standardDefinitions)
-
-  def name: Name = noname
-  def name_=(sym: Name): Unit = ???
-
-  def owner: Option[Symbol] = None
-  def owner_=(sym: Option[Symbol]): Unit = ???
-
-  def mods: Flags = noflags
-  def mods_=(mods: Flags): Unit = ???
-
-  def tpe: Option[Type] = None
-  def tpe_=(tpe: Option[Type]): Unit = ???
-
-  override def toString(): String = s"Package symbol: $name"
-  override def hashCode(): Int = name.hashCode * 43
-
-}
-
+// object ProgramSymbol extends Symbol {
+//
+//   
+//
+//
+//
+//   decls = (decls ++ List(javaPackageSymbol) ++
+//       primj.symbols.SymbolUtils.standardDefinitions)
+//
+//   def name: Name = noname
+//   def name_=(sym: Name): Unit = ???
+//
+//   def owner: Option[Symbol] = None
+//   def owner_=(sym: Option[Symbol]): Unit = ???
+//
+//   def mods: Flags = noflags
+//   def mods_=(mods: Flags): Unit = ???
+//
+//   def tpe: Option[Type] = None
+//   def tpe_=(tpe: Option[Type]): Unit = ???
+//
+//
+// }
+//
 case class PackageSymbol(var name: Name,
         var owner: Option[Symbol]) extends TermSymbol {
 

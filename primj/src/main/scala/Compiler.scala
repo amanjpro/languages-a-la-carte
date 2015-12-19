@@ -9,6 +9,7 @@ import tiny.ast.Tree
 import tiny.source.SourceReader
 import tiny.errors.ErrorReporting
 import tiny.symbols.Symbol
+import primj.symbols.{ProgramSymbol, SymbolUtils}
 import primj.phases._
 import primj.antlr._
 
@@ -40,7 +41,13 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
   }
 
   object Language extends super.Language {
-    def compile: Tree => Unit =
+    def init(): Unit = {
+      SymbolUtils.standardDefinitions.foreach { s =>
+        ProgramSymbol.declare(s)
+      }
+    }
+    def compile: Tree => Unit = {
+      init()
       (x: Tree) => {
         val typers =
           (t: Tree) => PrimjTyperFamily.typed((t, Nil))
@@ -52,6 +59,7 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
                 (PrimjShapeCheckerFamily.check))))
         f((x, None))
       }
+    }
   }
   def start: Unit = {
     compile(parse(config.files.toList.head))

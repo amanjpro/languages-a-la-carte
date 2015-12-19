@@ -9,7 +9,8 @@ import sana.calcj.symbols._
 import sana.ooj.names.StdNames
 import sana.ooj.modifiers.Ops._
 import sana.ooj.types.TypeUtils
-import sana.primj.symbols.{MethodSymbol, VariableSymbol, ScopeSymbol}
+import sana.primj.symbols.{ProgramSymbol, MethodSymbol,
+                           VariableSymbol, ScopeSymbol}
 
 trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
 
@@ -55,52 +56,52 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
       false
   }
 
-  def javaPackageSymbol: PackageSymbol =  {
+  lazy val javaPackageSymbol: PackageSymbol =  {
     val name    = StdNames.JAVA_PACKAGE_NAME
     ProgramSymbol.getSymbol(name, _ => true).get.asInstanceOf[PackageSymbol]
   }
 
-  def langPackageSymbol: PackageSymbol = {
+  lazy val langPackageSymbol: PackageSymbol = {
     val name    = StdNames.LANG_PACKAGE_NAME
     javaPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[PackageSymbol]
   }
 
-  def objectClassSymbol: ClassSymbol = {
+  lazy val objectClassSymbol: ClassSymbol = {
     val name    = StdNames.OBJECT_TYPE_NAME
     langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
   }
 
-  def stringClassSymbol: ClassSymbol = {
+  lazy val stringClassSymbol: ClassSymbol = {
     val name    = StdNames.STRING_TYPE_NAME
     langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
   }
 
-  def booleanClassSymbol: ClassSymbol = {
+  lazy val booleanClassSymbol: ClassSymbol = {
     val name    = StdNames.BOOLEAN_CLASS_NAME
     langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
   }
 
-  def characterClassSymbol: ClassSymbol = {
+  lazy val characterClassSymbol: ClassSymbol = {
     val name    = StdNames.CHARACTER_CLASS_NAME
     langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
   }
 
-  def integerClassSymbol: ClassSymbol = {
+  lazy val integerClassSymbol: ClassSymbol = {
     val name    = StdNames.INTEGER_CLASS_NAME
     langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
   }
 
-  def longClassSymbol: ClassSymbol = {
+  lazy val longClassSymbol: ClassSymbol = {
     val name    = StdNames.LONG_CLASS_NAME
     langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
   }
 
-  def floatClassSymbol: ClassSymbol = {
+  lazy val floatClassSymbol: ClassSymbol = {
     val name    = StdNames.FLOAT_CLASS_NAME
     langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
   }
 
-  def doubleClassSymbol: ClassSymbol = {
+  lazy val doubleClassSymbol: ClassSymbol = {
     val name    = StdNames.DOUBLE_CLASS_NAME
     langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
   }
