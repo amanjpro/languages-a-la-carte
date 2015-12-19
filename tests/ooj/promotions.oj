@@ -5,7 +5,7 @@
 
 
 
-class A {
+public class promotions {
   short m() {
     int k      = 10;
     byte b     = k;

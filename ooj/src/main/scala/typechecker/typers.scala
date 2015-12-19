@@ -186,6 +186,12 @@ trait ClassDefTyperComponent extends TyperComponent {
 
     checkParents(parents, clazz)
 
+    clazz.sourceName.foreach(sn => {
+      if(clazz.mods.isPublicAcc && clazz.name.asString != sn)
+        error(PUBLIC_CLASS_FILE_NAME_MATCH_ERROR,
+          "", "", clazz.pos)
+    })
+
     clazz.owner.foreach { s =>
       s.getDirectlyDefinedSymbols(clazz.name,
           _.isInstanceOf[ClassSymbol]) match {

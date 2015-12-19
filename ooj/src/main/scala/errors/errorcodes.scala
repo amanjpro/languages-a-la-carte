@@ -175,6 +175,11 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
     val message: String =
       "Abstract classes, abstract methods and interfaces cannot be final"
   }
+
+  case object PUBLIC_CLASS_FILE_NAME_MATCH_ERROR extends ErrorCode {
+    val message: String =
+      "Public classes/interfaces should have the same name as the containing file"
+  }
 }
 
 object ErrorCodes extends ErrorCodes

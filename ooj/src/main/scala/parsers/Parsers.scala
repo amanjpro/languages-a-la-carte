@@ -45,23 +45,23 @@ class Parser extends parsers.Parser {
 
 
   def parse(source: SourceFile): Tree = {
-    val tree = new OOJVisitor(source.name,
+    val tree = new OOJVisitor(source.fileName, source.name,
       source.lines).visit(source.content)
     TreeFactories.mkCompilationUnit(tree.asInstanceOf[PackageDefApi],
       source.fileName, source.filePath)
   }
 
-  class OOJVisitor(val source: String,
+  class OOJVisitor(val fileName: String, val fullName: String,
         lines: Array[String]) extends Java1BaseVisitor[Tree] {
 
     def pos(token: Token): Option[Position] = {
-      Some(Position(source,
+      Some(Position(fullName,
         lines, token.getLine, token.getCharPositionInLine + 1))
     }
 
     def pos(ctx: ParserRuleContext): Option[Position] = {
       val token = ctx.getStart
-      Some(Position(source, lines,
+      Some(Position(fullName, lines,
         token.getLine, token.getCharPositionInLine + 1))
     }
 
@@ -413,7 +413,11 @@ class Parser extends parsers.Parser {
             ()
         }
       }
-      TreeFactories.mkClassDef(mods, name, parent::interfaces, body, pos(ctx))
+      val res = TreeFactories.mkClassDef(mods, name,
+        parent::interfaces, body, pos(ctx))
+      if(mods.isPublicAcc)
+        res.sourceName = fileName
+      res
     }
 
 
@@ -659,7 +663,12 @@ class Parser extends parsers.Parser {
       }
       val body       =
         visit(ctx.interfaceBody()).asInstanceOf[TemplateApi]
-      TreeFactories.mkClassDef(mods, name, interfaces, body, pos(ctx))
+      val res = TreeFactories.mkClassDef(mods,
+        name, interfaces, body, pos(ctx))
+      if(mods.isPublicAcc)
+        res.sourceName = fileName
+      res
+
     }
 
     override def visitExtendsInterfaces(ctx:

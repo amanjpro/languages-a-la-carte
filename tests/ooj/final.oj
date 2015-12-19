@@ -1,4 +1,5 @@
 // fails
+// PUBLIC_CLASS_FILE_NAME_MATCH_ERROR
 // OVERRIDING_FINAL_METHOD
 // OVERRIDING_FINAL_METHOD
 // FINAL_PARENT
@@ -7,7 +8,7 @@
 // ABSTRACT_FINAL
 
 
-class A {
+public class A { // fails
   final void a() {}
   private final void b() {}
   final void c() {}

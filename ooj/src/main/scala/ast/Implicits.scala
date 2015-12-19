@@ -21,5 +21,10 @@ object Implicits {
       extends AugmentedIdent
   implicit class AugmentedTypeUseImpl(val tree: TypeUseApi)
     extends AugmentedTypeUse
+
+
+
+  implicit class AugmentedClassDefImpl(val tree: ClassDefApi)
+      extends AugmentedClassDef
 }
 
