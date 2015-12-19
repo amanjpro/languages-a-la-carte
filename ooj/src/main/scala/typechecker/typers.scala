@@ -193,8 +193,23 @@ trait ClassDefTyperComponent extends TyperComponent {
     })
 
     clazz.owner.foreach { s =>
-      s.getDirectlyDefinedSymbols(clazz.name,
-          _.isInstanceOf[ClassSymbol]) match {
+      val allClasses = {
+        val cs1 = s.getDirectlyDefinedSymbols(clazz.name,
+            _.isInstanceOf[ClassSymbol])
+        s match {
+          case cunit: CompilationUnitSymbol   =>
+            val cs2 = cunit.owner.map(o =>
+              o.getDirectlyDefinedSymbols(clazz.name,
+                _.isInstanceOf[ClassSymbol])) match {
+                  case None    => Nil
+                  case Some(l) => l
+                }
+              cs1 ++ cs2
+          case _                              =>
+            cs1
+        }
+      }
+      allClasses match {
         case Nil                                =>
           ()
         case (x::Nil)                           =>
