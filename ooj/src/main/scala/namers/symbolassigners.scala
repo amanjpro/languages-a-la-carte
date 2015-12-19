@@ -62,14 +62,24 @@ trait CompilationUnitSymbolAssignerComponent extends SymbolAssignerComponent {
 trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
   (pkg: PackageDefApi) => {
     val sym     = PackageSymbol(pkg.name, owner)
-    val members = pkg.members.map { member =>
-      assign((member, Some(sym)))
+    val newOwner = owner match {
+      case Some(cunit: CompilationUnitSymbol) =>
+        sym.owner   = cunit.owner
+        cunit.owner = Some(sym)
+        cunit
+      case _                              =>
+        sym.owner = owner
+        owner.foreach(_.declare(sym))
+        sym
     }
     pkg.symbol = sym
-    owner.foreach(owner => {
-      pkg.owner = owner
-      owner.declare(sym)
-    })
+    // owner.foreach(owner => {
+    //   pkg.owner = newOwner
+    //   owner.declare(sym)
+    // })
+    val members = pkg.members.map { member =>
+      assign((member, Some(newOwner)))
+    }
     TreeCopiers.copyPackageDef(pkg)(members = members)
   }
 }
@@ -79,8 +89,14 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
   (clazz: ClassDefApi) => {
     val parents  = clazz.parents.map(parent =>
         assign((parent, owner)).asInstanceOf[UseTree])
-    val sym      = ClassSymbol(clazz.mods, clazz.name,
-      Nil, owner, None)
+    val sym = owner match {
+      case Some(cunit: CompilationUnitSymbol) if clazz.mods.isPrivateAcc  =>
+        ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
+      case Some(cunit: CompilationUnitSymbol)                             =>
+        ClassSymbol(clazz.mods, clazz.name, Nil, cunit.owner, None)
+      case _                                                              =>
+        ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
+    }
     val template = {
       val shouldCreateConstructor =
         !(clazz.body.members.exists(isConstructor(_))) &&
@@ -111,7 +127,7 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
       }
     }
     clazz.symbol = sym
-    owner.foreach(owner => {
+    sym.owner.foreach(owner => {
       clazz.owner = owner
       owner.declare(sym)
     })
