@@ -7,7 +7,7 @@ project, Sana aims to be both fully modular in a sense that removing a new
 language component should be as easy as adding a new one. Sana also tries to be
 safe and immutable in most of the cases, but not when it adds a considerable
 amount of overhead. Sana implements ``languages à la carte'' which is proposed
-by Amanj Sherwany.
+by Amanj Sherwany and Nate Nystrom.
 
 
 
@@ -35,7 +35,7 @@ You can generate a fat jar by running assembly for your target, for example for
 sbt tiny/assembly
 ```
 
-To generate an ANTLR grammar:
+To generate ANTLR grammar:
 ```
 sbt primj/antlr4:antlr4Generate
 ```
