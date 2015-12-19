@@ -44,6 +44,10 @@ trait CompilationUnitApi extends Tree {
 trait PackageDefApi extends NamedTree {
   def members: List[Tree]
 
+  def name: Name
+  // the head of the list contains the outer most package
+  def containingPackages: List[Name]
+
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
     val r1 = members.foldLeft(z)(f)
     f(r1, this)
@@ -155,8 +159,8 @@ protected[ast] class CompilationUnit(val module: PackageDefApi,
     s"CompilationUnit($module, $sourceName, $sourcePath)"
 }
 
-protected[ast] class PackageDef(val name: Name,
-  val members: List[Tree]) extends PackageDefApi {
+protected[ast] class PackageDef(val containingPackages: List[Name],
+  val name: Name, val members: List[Tree]) extends PackageDefApi {
   override def toString: String =
     s"PackageDef($name, $members)"
 }

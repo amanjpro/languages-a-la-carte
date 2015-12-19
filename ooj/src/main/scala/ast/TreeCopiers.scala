@@ -30,9 +30,11 @@ trait TreeCopiers extends {
     res
   }
 
-  def copyPackageDef(template: PackageDefApi)(name: Name = template.name,
+  def copyPackageDef(template: PackageDefApi)(
+    containingPackages: List[Name] = template.containingPackages,
+    name: Name = template.name,
       members: List[Tree] = template.members): PackageDefApi = {
-    val res = TreeFactories.mkPackageDef(name, members)
+    val res = TreeFactories.mkPackageDef(containingPackages, name, members)
     copyProperties(template, res)
     res
   }

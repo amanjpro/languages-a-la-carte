@@ -228,8 +228,21 @@ class Parser extends parsers.Parser {
 
     override def visitCompilationUnit(ctx:
         Java1Parser.CompilationUnitContext): Tree = {
-      val pkgName = if(ctx.packageDeclaration == null) DEFAULT_PACKAGE_NAME
-        else Name(ctx.packageDeclaration.Identifier.asScala.mkString("."))
+      val (containingPackages, pkgName) = {
+        if(ctx.packageDeclaration == null) (Nil, DEFAULT_PACKAGE_NAME)
+        else {
+          val raw = ctx.packageDeclaration.Identifier
+          raw.asScala.toList.reverse match {
+            case x::Nil          =>
+              (Nil, Name(x.getText))
+            case (x::xs)         =>
+              (xs.map(x => Name(x.getText)).reverse, Name(x.getText))
+            case _               =>
+              // should never happen
+              (Nil, DEFAULT_PACKAGE_NAME)
+          }
+        }
+      }
       val imports = ctx.importDeclaration match {
         case null                           => Nil
         case imports                        =>
@@ -241,7 +254,8 @@ class Parser extends parsers.Parser {
         case types                          =>
           types.asScala.toList.map((x) => visit(x))
       }
-      TreeFactories.mkPackageDef(pkgName, members, pos(ctx))
+      TreeFactories.mkPackageDef(containingPackages,
+        pkgName, members, pos(ctx))
     }
 
     override def visitIntLit(ctx: Java1Parser.IntLitContext): Tree = {

@@ -18,7 +18,7 @@ import calcj.ast.{TreeCopiers => _, TreeFactories => _, _}
 import primj.ast.{TreeCopiers => _, MethodDefApi => _,
                   TreeFactories => _, TreeUtils => _, _}
 import primj.errors.ErrorCodes._
-import primj.symbols.{MethodSymbol, VoidSymbol}
+import primj.symbols.{ProgramSymbol, MethodSymbol, VoidSymbol}
 import primj.modifiers._
 import ooj.names.StdNames
 import ooj.modifiers._
@@ -61,16 +61,17 @@ trait CompilationUnitSymbolAssignerComponent extends SymbolAssignerComponent {
 @component(tree, owner)
 trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
   (pkg: PackageDefApi) => {
-    val sym     = PackageSymbol(pkg.name, owner)
-    val newOwner = owner match {
+    val (newOwner, sym) = owner match {
       case Some(cunit: CompilationUnitSymbol) =>
-        sym.owner   = cunit.owner
+        val sym     = createSymbol(pkg.containingPackages,
+          pkg.name, Some(ProgramSymbol))
         cunit.owner = Some(sym)
-        cunit
-      case _                              =>
+        (cunit, sym)
+      case _                                  =>
+        val sym     = createSymbol(pkg.containingPackages,
+          pkg.name, owner)
         sym.owner = owner
-        owner.foreach(_.declare(sym))
-        sym
+        (sym, sym)
     }
     pkg.symbol = sym
     // owner.foreach(owner => {
@@ -81,6 +82,25 @@ trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
       assign((member, Some(newOwner)))
     }
     TreeCopiers.copyPackageDef(pkg)(members = members)
+  }
+
+
+  protected def createSymbol(names: List[Name], name: Name,
+    owner: Option[Symbol]): Symbol = {
+    names match {
+      case Nil                    =>
+        owner.flatMap(_.getSymbol(name, _.isInstanceOf[PackageSymbol])) match {
+          case None               =>
+            val sym = PackageSymbol(name, owner)
+            owner.foreach(_.declare(sym))
+            sym
+          case Some(sym)          =>
+            sym
+        }
+      case (n::ns)                =>
+        val s = createSymbol(Nil, n, owner)
+        createSymbol(ns, name, Some(s))
+    }
   }
 }
 

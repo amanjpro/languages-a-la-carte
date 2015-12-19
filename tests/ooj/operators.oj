@@ -4,7 +4,7 @@
 // TYPE_MISMATCH
 
 
-package test;
+package pkg.test.here;
 
 
 class A {

@@ -20,7 +20,7 @@ import calcj.types._
 import calcj.ast.operators.{Add, Eq, Neq, BOp}
 import calcj.ast.BinaryApi
 import primj.ast.{ApplyApi, ValDefApi}
-import primj.symbols.{MethodSymbol, VariableSymbol, ScopeSymbol}
+import primj.symbols.{ProgramSymbol, MethodSymbol, VariableSymbol, ScopeSymbol}
 import primj.types.{TypeUtils => _, _}
 import ooj.modifiers.Ops._
 import ooj.modifiers._

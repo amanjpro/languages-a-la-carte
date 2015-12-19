@@ -1,11 +1,9 @@
 package ch.usi.inf.l3.sana.tiny.source
 
 import org.antlr.v4.runtime.tree.ParseTree
-import java.nio.file.{Paths, Path}
 
 case class SourceFile(name: String,
-      lines: Array[String], content: ParseTree,
-      rootDir: Path = Paths.get("").toAbsolutePath) {
+      lines: Array[String], content: ParseTree) {
   private[this] lazy val files: List[String] = {
     name.split("[/|\\\\]").reverse.toList match {
       case x::xs              =>

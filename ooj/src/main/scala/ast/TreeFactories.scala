@@ -25,10 +25,11 @@ trait TreeFactories {
     res
   }
 
-  def mkPackageDef(name: Name, members: List[Tree],
+  def mkPackageDef(containingPackages: List[Name],
+    name: Name, members: List[Tree],
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None): PackageDefApi = {
-    val res = new PackageDef(name, members)
+    val res = new PackageDef(containingPackages, name, members)
     pos.foreach(res.pos = _)
     symbol.foreach(sym => {
       res.symbol = sym
