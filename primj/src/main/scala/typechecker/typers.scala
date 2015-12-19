@@ -9,8 +9,7 @@ import sana.calcj
 import sana.dsl._
 import tiny.ast.{TreeCopiers => _, _}
 import tiny.ast.Implicits._
-import tiny.types._
-import tiny.types.TypeUtils._
+import tiny.types.{TypeUtils => _, _}
 import tiny.symbols.{Symbol, TypeSymbol, TermSymbol}
 import tiny.source.Position
 import tiny.errors.ErrorReporting.{error,warning}
@@ -44,29 +43,30 @@ trait AssignTyperComponent extends TyperComponent {
     val lhs = typed((assign.lhs, symbols))
     val rhs = typed((assign.rhs, symbols))
     (lhs, rhs) match {
-      case (lhs: Tree, _) if ! TreeUtils.isVariable(lhs) =>
+      case (lhs: Tree, _) if ! TreeUtils.isVariable(lhs)     =>
         error(ASSIGNING_NOT_TO_VARIABLE,
           lhs.toString, lhs.toString, lhs.pos)
         assign
-      case (lhs: Tree, _)  if TreeUtils.isFinal(lhs)     =>
+      case (lhs: Tree, _)  if TreeUtils.isFinal(lhs)         =>
         error(REASSIGNING_FINAL_VARIABLE,
           lhs.toString, lhs.toString, lhs.pos)
         assign
-      case (lhs: Expr, rhs: Expr)                        =>
+      case (lhs: Expr, rhs: Expr)                            =>
         (lhs.tpe, rhs.tpe) match {
-          case (Some(ltpe), Some(rtpe)) if ltpe >:> rtpe =>
+          case (Some(ltpe), Some(rtpe))
+              if TypeUtils.isProbablyAssignable(ltpe, rtpe)  =>
             lhs.tpe.foreach(assign.tpe = _)
             TreeCopiers.copyAssign(assign)(lhs = lhs, rhs = rhs)
-          case (Some(ltpe), Some(rtpe))                  =>
+          case (Some(ltpe), Some(rtpe))                      =>
             error(TYPE_MISMATCH,
               ltpe.toString, rtpe.toString, rhs.pos)
             assign
-          case _                                         =>
+          case _                                             =>
             error(TYPE_MISMATCH,
               lhs.toString, rhs.toString, rhs.pos)
             assign
         }
-      case _                                             =>
+      case _                                                 =>
         // errors are already reported
         assign
     }
@@ -279,7 +279,7 @@ trait ApplyTyperComponent extends TyperComponent {
     val argtys = args.map(_.tpe).flatten
     (funty, argtys) match {
       case (Some(mt: MethodType), argtys) =>
-        if(checkList(argtys, mt.params, _ <:< _)) {
+        if(TypeUtils.checkList(argtys, mt.params, _ <:< _)) {
           funty match {
             case Some(MethodType(r, _)) =>
               apply.tpe = r
@@ -324,7 +324,9 @@ trait ReturnTyperComponent extends TyperComponent {
               t.toString, ret.pos)
             ret
           case Some(MethodType(rtpe, _))                                =>
-            expr.tpe.map(_ <:< rtpe) match {
+            val ok = expr.tpe.map(etpe =>
+                TypeUtils.isProbablyAssignable(rtpe, etpe))
+            ok match {
               case Some(true)          =>
                 ret
               case l                   =>
@@ -386,7 +388,7 @@ trait ValDefTyperComponent extends TyperComponent {
       error(UNINITIALIZED_FINAL_VARIABLE,
           valdef.toString, "", valdef.pos)
       valdef
-    } else (rtpe <:< ttpe) match {
+    } else (TypeUtils.isProbablyAssignable(ttpe, rtpe)) match {
         case false if rhs != NoTree        =>
           error(TYPE_MISMATCH,
             rtpe.toString, ttpe.toString, rhs.pos)

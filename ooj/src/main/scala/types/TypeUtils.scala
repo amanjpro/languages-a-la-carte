@@ -6,7 +6,7 @@ import sana.calcj.types._
 import sana.tiny.types.Type
 import sana.ooj.symbols.SymbolUtils
 
-trait TypeUtils {
+trait TypeUtils extends sana.primj.types.TypeUtils {
   lazy val objectClassType: ClassTypeApi = {
     val qual            = {
       val java = StdNames.JAVA_PACKAGE_NAME.asString

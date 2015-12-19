@@ -21,7 +21,7 @@ import calcj.ast.operators.{Add, Eq, Neq, BOp}
 import calcj.ast.BinaryApi
 import primj.ast.{ApplyApi, ValDefApi}
 import primj.symbols.{MethodSymbol, VariableSymbol, ScopeSymbol}
-import primj.types._
+import primj.types.{TypeUtils => _, _}
 import ooj.modifiers.Ops._
 import ooj.modifiers._
 import ooj.ast._
@@ -84,7 +84,7 @@ trait ValDefTyperComponent extends TyperComponent {
     //   error(UNINITIALIZED_FINAL_VARIABLE,
     //       valdef.toString, "", valdef.pos, valdef)
     //   valdef
-    } else (rtpe <:< ttpe) match {
+    } else (TypeUtils.isProbablyAssignable(ttpe, rtpe)) match {
         case false if rhs != NoTree        =>
           error(TYPE_MISMATCH,
             rtpe.toString, ttpe.toString, rhs.pos)
