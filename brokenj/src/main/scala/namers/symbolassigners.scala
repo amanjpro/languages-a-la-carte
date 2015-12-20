@@ -51,53 +51,56 @@ Continue: DONE
 */
 
 
-@component(tree, owner)
+@component
 trait CaseSymbolAssignerComponent extends SymbolAssignerComponent {
   (cse: CaseApi)     => {
+    val owner = cse.owner
     val guards = cse.guards.map { guard =>
-      assign((guard, owner)).asInstanceOf[Expr]
+      owner.foreach(guard.owner = _)
+      assign(guard).asInstanceOf[Expr]
     }
-    val body   = assign((cse.body, owner))
-    owner.foreach(cse.owner = _)
+    owner.foreach(cse.body.owner = _)
+    val body   = assign(cse.body)
     TreeCopiers.copyCase(cse)(guards = guards, body= body)
   }
 }
 
 
-@component(tree, owner)
+@component
 trait SwitchSymbolAssignerComponent extends SymbolAssignerComponent {
   (switch: SwitchApi)     => {
-    val expr  = assign((switch.expr, owner)).asInstanceOf[Expr]
+    val owner = switch.owner
+    owner.foreach(switch.expr.owner = _)
+    val expr  = assign(switch.expr).asInstanceOf[Expr]
     val cases = switch.cases.map { guard =>
-      assign((guard, owner)).asInstanceOf[CaseApi]
+      owner.foreach(guard.owner = _)
+      assign(guard).asInstanceOf[CaseApi]
     }
-    owner.foreach(switch.owner = _)
     TreeCopiers.copySwitch(switch)(cases = cases, expr = expr)
   }
 }
 
 
-@component(tree, owner)
+@component
 trait LabelSymbolAssignerComponent extends SymbolAssignerComponent {
   (label: LabelApi)     => {
-    val stmt  = assign((label.stmt, owner)).asInstanceOf[Expr]
-    owner.foreach(label.owner = _)
+    val owner = label.owner
+    owner.foreach(label.stmt.owner = _)
+    val stmt  = assign(label.stmt).asInstanceOf[Expr]
     TreeCopiers.copyLabel(label)(stmt = stmt)
   }
 }
 
-@component(tree, owner)
+@component
 trait BreakSymbolAssignerComponent extends SymbolAssignerComponent {
   (break: BreakApi)     => {
-    owner.foreach(break.owner = _)
     break
   }
 }
 
-@component(tree, owner)
+@component
 trait ContinueSymbolAssignerComponent extends SymbolAssignerComponent {
   (continue: ContinueApi)     => {
-    owner.foreach(continue.owner = _)
     continue
   }
 }

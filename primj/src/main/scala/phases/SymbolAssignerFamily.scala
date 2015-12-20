@@ -13,17 +13,17 @@ import sana.primj.namers._
 
 
 trait PrimjSymbolAssignerFamily
-  extends TransformationFamily[AssignerInput, Tree] {
+  extends TransformationFamily[Tree, Tree] {
   self =>
 
   override def default: Tree = NoTree
 
-  def components: List[PartialFunction[AssignerInput, Tree]] =
-    generateComponents[AssignerInput, Tree](PrimjNodes.nodes,
+  def components: List[PartialFunction[Tree, Tree]] =
+    generateComponents[Tree, Tree](PrimjNodes.nodes,
       "SymbolAssignerComponent", "assign", "")
       // "Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal")
 
-  def assign: AssignerInput => Tree = family
+  def assign: Tree => Tree = family
 }
 
 object PrimjSymbolAssignerFamily extends PrimjSymbolAssignerFamily

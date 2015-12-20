@@ -57,7 +57,7 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
             (PrimjNamerFamily.name join
               (typers join
                 (PrimjShapeCheckerFamily.check))))
-        f((x, None))
+        f(x)
       }
     }
   }

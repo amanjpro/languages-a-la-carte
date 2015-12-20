@@ -18,17 +18,17 @@ import sana.ooj.namers._
 
 
 trait SymbolAssignerFamily
-  extends TransformationFamily[AssignerInput, Tree] {
+  extends TransformationFamily[Tree, Tree] {
   self =>
 
   override def default: Tree = NoTree
 
-  def components: List[PartialFunction[AssignerInput, Tree]] =
-    generateComponents[AssignerInput, Tree](OojNodes.nodes,
+  def components: List[PartialFunction[Tree, Tree]] =
+    generateComponents[Tree, Tree](OojNodes.nodes,
       "SymbolAssignerComponent", "assign", "")
       // "Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal")
 
-  def assign: AssignerInput => Tree = family
+  def assign: Tree => Tree = family
 }
 
 object SymbolAssignerFamily extends SymbolAssignerFamily

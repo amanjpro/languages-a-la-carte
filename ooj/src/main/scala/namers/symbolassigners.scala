@@ -43,34 +43,38 @@ Super: DONE
 MethodDef: DONE
 */
 
-@component(tree, owner)
+@component
 trait ProgramSymbolAssignerComponent extends SymbolAssignerComponent {
   (prg: ProgramApi) => {
-    val members =
-      prg.members.map(x => assign((x,
-        Some(ProgramSymbol))))
+    val sym     = ProgramSymbol
+    val members = prg.members.map { x =>
+        x.owner = sym
+        assign(x)
+      }
     TreeCopiers.copyProgram(prg)(members = members)
   }
 }
 
-@component(tree, owner)
+@component
 trait CompilationUnitSymbolAssignerComponent extends SymbolAssignerComponent {
   (cunit: CompilationUnitApi) => {
+    val owner   = cunit.owner
     val sym     = CompilationUnitSymbol(None, cunit.sourceName,
                                   cunit.sourcePath, owner)
-    val pkg     = assign((cunit.module, Some(sym))).asInstanceOf[PackageDefApi]
-    sym.module  = pkg.symbol
     owner.foreach(owner => {
-      cunit.owner = owner
       owner.declare(sym)
     })
+    cunit.module.owner = sym
+    val pkg            = assign(cunit.module).asInstanceOf[PackageDefApi]
+    sym.module         = pkg.symbol
     TreeCopiers.copyCompilationUnit(cunit)(module = pkg)
   }
 }
 
-@component(tree, owner)
+@component
 trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
   (pkg: PackageDefApi) => {
+    val owner = pkg.owner
     val (newOwner, sym) = owner match {
       case Some(cunit: CompilationUnitSymbol) =>
         val sym     = createSymbol(pkg.containingPackages,
@@ -85,7 +89,8 @@ trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
     }
     pkg.symbol = sym
     val members = pkg.members.map { member =>
-      assign((member, Some(newOwner)))
+      member.owner = newOwner
+      assign(member)
     }
     TreeCopiers.copyPackageDef(pkg)(members = members)
   }
@@ -112,11 +117,14 @@ trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
   }
 }
 
-@component(tree, owner)
+@component
 trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
   (clazz: ClassDefApi) => {
-    val parents  = clazz.parents.map(parent =>
-        assign((parent, owner)).asInstanceOf[UseTree])
+    val owner = clazz.owner
+    val parents  = clazz.parents.map { parent =>
+      owner.foreach(parent.owner = _)
+      assign(parent).asInstanceOf[UseTree]
+    }
     val sym = owner match {
       case Some(cunit: CompilationUnitSymbol)
             if Some(clazz.name.asString) != clazz.sourceName              =>
@@ -128,13 +136,15 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
       case _                                                              =>
         ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
     }
+    clazz.symbol = sym
     val template = {
       val shouldCreateConstructor =
         !(clazz.body.members.exists(isConstructor(_))) &&
           ! clazz.mods.isInterface
       shouldCreateConstructor match {
         case false               =>
-          assign((clazz.body, Some(sym))).asInstanceOf[TemplateApi]
+          clazz.body.owner = sym
+          assign(clazz.body).asInstanceOf[TemplateApi]
         case true                =>
           // TODO: Do we need to have a refactoring for creating constructors?
           // I would say yes!!!
@@ -154,12 +164,11 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
             constructorName, Nil, body, clazz.pos)
           val temp          = TreeCopiers.copyTemplate(clazz.body)(members =
             const::clazz.body.members)
-          assign((temp, Some(sym))).asInstanceOf[TemplateApi]
+          temp.owner        = sym
+          assign(temp).asInstanceOf[TemplateApi]
       }
     }
-    clazz.symbol = sym
     sym.owner.foreach(owner => {
-      clazz.owner = owner
       owner.declare(sym)
     })
     TreeCopiers.copyClassDef(clazz)(parents = parents, body = template)
@@ -174,12 +183,12 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
 }
 
 
-@component(tree, owner)
+@component
 trait BlockSymbolAssignerComponent extends
   primj.namers.BlockSymbolAssignerComponent {
   (block: BlockApi)          => {
-    val res = super.apply((block, owner)).asInstanceOf[BlockApi]
-    owner match {
+    val res = super.apply(block).asInstanceOf[BlockApi]
+    block.owner match {
       case Some(_: ClassSymbol)   =>
         res.isStaticInit = true
         res.symbol.foreach(s => s.mods = s.mods | STATIC_INIT | STATIC)
@@ -190,44 +199,48 @@ trait BlockSymbolAssignerComponent extends
   }
 }
 
-@component(tree, owner)
+@component
 trait TemplateSymbolAssignerComponent extends SymbolAssignerComponent {
   (tmpl: TemplateApi) => {
-    val members  = tmpl.members.map(member =>
-        assign((member, owner)))
-    owner.foreach(tmpl.owner = _)
+    val owner    = tmpl.owner
+    val members  = tmpl.members.map { member =>
+      owner.foreach(member.owner = _)
+      assign(member)
+    }
     TreeCopiers.copyTemplate(tmpl)(members = members)
   }
 }
 
-@component(tree, owner)
+@component
 trait NewSymbolAssignerComponent extends SymbolAssignerComponent {
   (nu: NewApi) => {
-    val app      = assign((nu.app, owner)).asInstanceOf[ApplyApi]
-    owner.foreach(nu.owner = _)
+    nu.owner.foreach(nu.app.owner = _)
+    val app      = assign(nu.app).asInstanceOf[ApplyApi]
     TreeCopiers.copyNew(nu)(app = app)
   }
 }
 
-@component(tree, owner)
+@component
 trait SelectSymbolAssignerComponent extends SymbolAssignerComponent {
   (select: SelectApi) => {
-    owner.foreach(select.owner = _)
-    val qual           = assign((select.qual, owner))
+    val owner = select.owner
+    owner.foreach(select.qual.owner = _)
+    val qual           = assign(select.qual)
     val slctdOwner     = qual.symbol
     val slctdEnclosing = owner
     slctdEnclosing.foreach(select.tree.enclosing = _)
     select.tree.isQualified = true
+    slctdOwner.foreach(select.tree.owner = _)
     val tree           =
-      assign((select.tree, slctdOwner)).asInstanceOf[SimpleUseTree]
+      assign(select.tree).asInstanceOf[SimpleUseTree]
     TreeCopiers.copySelect(select)(tree = tree, qual = qual)
   }
 }
 
-@component(tree, owner)
+@component
 trait ThisSymbolAssignerComponent extends SymbolAssignerComponent {
   (ths: ThisApi) => {
-    owner.foreach(ths.owner = _)
+    val owner = ths.owner
     val encl = enclosingClass(owner)
     encl.foreach(ths.enclosingClassSymbol = _)
     ths
@@ -237,58 +250,63 @@ trait ThisSymbolAssignerComponent extends SymbolAssignerComponent {
     SymbolUtils.enclosingClass(owner)
 }
 
-@component(tree, owner)
+@component
 trait SuperSymbolAssignerComponent extends SymbolAssignerComponent {
-  (ths: SuperApi) => {
-    owner.foreach(ths.owner = _)
+  (spr: SuperApi) => {
+    val owner = spr.owner
     val enclosingClass = SymbolUtils.enclosingClass(owner)
-    enclosingClass.foreach(ths.enclosingClassSymbol = _)
-    ths
+    enclosingClass.foreach(spr.enclosingClassSymbol = _)
+    spr
   }
 }
 
-@component(tree, owner)
+@component
 trait MethodDefSymbolAssignerComponent
     extends primj.namers.MethodDefSymbolAssignerComponent {
-
   (mthd: MethodDefApi)          => {
+    val owner   = mthd.owner
     val symbol  = MethodSymbol(mthd.mods, mthd.name,
       Nil, None, None, owner)
     owner.foreach(sym => sym.declare(symbol))
-    val opsym   = Some(symbol)
     val tpt     = if(mthd.mods.isConstructor) {
       mthd.declaredClassNameForConstructor = useName(mthd.ret)
-      assign((TreeFactories.mkTypeUse(voidName, mthd.pos), owner)).asInstanceOf[UseTree]
+      val tuse = TreeFactories.mkTypeUse(voidName, mthd.pos)
+      owner.foreach(tuse.owner = _)
+      assign(tuse).asInstanceOf[UseTree]
     } else {
-      assign((mthd.ret, owner)).asInstanceOf[UseTree]
+      owner.foreach(mthd.ret.owner = _)
+      assign(mthd.ret).asInstanceOf[UseTree]
     }
-    val params  = mthd.params.map((x) =>
-        assign((x, opsym)).asInstanceOf[ValDefApi])
+    val params  = mthd.params.map { x =>
+      x.owner = symbol
+      assign(x).asInstanceOf[ValDefApi]
+    }
     val body    = if(mthd.mods.isConstructor) {
       mthd.body match {
         case Block(List(Apply(Select(_: ThisApi,
                     Ident(`constructorName`)), _), _*)) |
              Block(List(Apply(Select(_: SuperApi,
                     Ident(`constructorName`)), _), _*))                     =>
-          assign((mthd.body, opsym)).asInstanceOf[Expr]
+          mthd.body.owner = symbol
+          assign(mthd.body).asInstanceOf[Expr]
         case body: BlockApi                                                 =>
           val newBody = TreeCopiers.copyBlock(body)(
             stmts = constructorCall(body.pos)::body.stmts)
-          assign((newBody, opsym)).asInstanceOf[Expr]
+          newBody.owner = symbol
+          assign(newBody).asInstanceOf[Expr]
         case expr                                                           =>
           val newBody = TreeFactories.mkBlock(
             List(constructorCall(expr.pos), expr), expr.pos)
-          assign((newBody, opsym)).asInstanceOf[Expr]
-
+          newBody.owner = symbol
+          assign(newBody).asInstanceOf[Expr]
       }
     } else {
-      assign((mthd.body, opsym)).asInstanceOf[Expr]
+      mthd.body.owner = symbol
+      assign(mthd.body).asInstanceOf[Expr]
     }
     symbol.params = params.flatMap(_.symbol)
     symbol.ret    = tpt.symbol
     mthd.symbol = symbol
-    symbol.owner.foreach(mthd.owner = _)
-
     TreeCopiers.copyMethodDef(mthd)(ret = tpt,
       params = params, body = body)
   }
@@ -313,21 +331,24 @@ trait MethodDefSymbolAssignerComponent
 }
 
 
-@component(tree, owner)
+@component
 trait ValDefSymbolAssignerComponent
   extends primj.namers.ValDefSymbolAssignerComponent {
   (valdef: ValDefApi) => {
+    val owner = valdef.owner
     owner match {
       case Some(sym) if sym.mods.isInterface =>
         val mods = STATIC | FINAL | FIELD | valdef.mods
         val nv   = TreeCopiers.copyValDef(valdef)(mods = mods)
-        super.apply((nv, owner))
+        owner.foreach(nv.owner = _)
+        super.apply(nv)
       case Some(sym) if sym.mods.isClass     =>
         val mods = FIELD | valdef.mods
         val nv   = TreeCopiers.copyValDef(valdef)(mods = mods)
-        super.apply((nv, owner))
+        owner.foreach(nv.owner = _)
+        super.apply(nv)
       case _                                 =>
-        super.apply((valdef, owner))
+        super.apply(valdef)
     }
   }
 
@@ -336,7 +357,7 @@ trait ValDefSymbolAssignerComponent
 }
 
 
-// @component(tree, owner)
+// @component
 // trait IdentSymbolAssignerComponent extends SymbolAssignerComponent {
 //   (id: Ident)          => {
 //     owner.foreach(id.owner = _)
@@ -344,7 +365,7 @@ trait ValDefSymbolAssignerComponent
 //   }
 // }
 //
-// @component(tree, owner)
+// @component
 // trait TypeUseSymbolAssignerComponent extends SymbolAssignerComponent {
 //   (tuse: TypeUse)          => {
 //     val symbol = owner.flatMap(_.getSymbol(tuse.name,

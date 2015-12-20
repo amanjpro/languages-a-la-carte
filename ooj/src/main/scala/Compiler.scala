@@ -185,7 +185,7 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
                       (DefTyperFamily.typed join
                         (typers join
                           ShapeCheckerFamily.check))))//)
-        f((x, Some(ProgramSymbol)))
+        f(x)
       }
     }
   }
