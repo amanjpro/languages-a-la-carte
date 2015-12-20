@@ -57,20 +57,11 @@ def pass(f: String): Unit = {
   println(s"$green $f passed $endcolor")
 }
 
-def test(file: String, prg: String): Unit = {
-  val source = Source.fromFile(file)
-  val lines = source.getLines.toList
-  lines.indexWhere((x) => ! x.startsWith("//")) match {
-    case -1 | 0                    =>
+def test(file: String, prg: String, oracle: List[String]): Unit = {
+  oracle match {
+    case Nil                            =>
       skip(file)
-    case n                         =>
-      // Only take the first error codes
-      val refErrorCodes = lines.take(n).tail.flatMap((code) => {
-        val trimmed = code.trim
-        if(trimmed == "//") Nil
-        else List(trimmed)
-      })
-
+    case oracle                         =>
       var rr: List[String] = Nil
       val countLogger = ProcessLogger(line => (),
                                       line => rr = rr ++ List(line))
@@ -80,29 +71,55 @@ def test(file: String, prg: String): Unit = {
         val trimmed = err.trim
         if(trimmed != "") List(s"// $trimmed")
         else Nil
-      })
+      }).toList
 
-      if(refErrorCodes.length == programErrors.length &&
-        refErrorCodes == programErrors)
+      if(oracle.length == programErrors.length &&
+        oracle == programErrors)
         pass(file)
-      else fail(file, programErrors, refErrorCodes)
+      else {
+        fail(file, programErrors, oracle)
+      }
   }
 }
 
-def testDir(dir: String, prg: String): Unit = {
+def readOracle(file: String): List[String] = {
+  val source = Source.fromFile(file)
+  val lines = source.getLines.toList
+  lines.indexWhere((x) => ! x.startsWith("//")) match {
+    case -1 | 0                    =>
+      Nil
+    case n                         =>
+      // Only take the first error codes
+      val refErrorCodes = lines.take(n).tail.flatMap((code) => {
+        val trimmed = code.trim
+        if(trimmed == "//") Nil
+        else List(trimmed)
+      })
+      refErrorCodes
+  }
+}
+def nestedFilesInDir(dir: String): List[(String, String)] = {
   val files = new File(dir).listFiles
   val testFiles = files.filter((x) => {
     !(x.getName.startsWith(".") ||
     x.getName.endsWith("~") ||
     x.getName.endsWith(".swp"))
   })
-  testFiles.foreach((x) => {
-    if(x.isDirectory) {
-      testDir(x.getAbsolutePath, prg)
+  testFiles.toList.flatMap((x) => {
+    if(x.isDirectory && x.list.contains("oracle")) {
+      val r = nestedFilesInDir(x.getAbsolutePath)
+          .map(_._1).filter(!_.endsWith("oracle"))
+      List((r.mkString(" "), x.getAbsolutePath + "/oracle"))
+    } else if(x.isDirectory) {
+      nestedFilesInDir(x.getAbsolutePath)
     } else {
-      test(x.getAbsolutePath, prg)
+      List((x.getAbsolutePath, x.getAbsolutePath))
     }
   })
+}
+def testDir(dir: String, prg: String): Unit = {
+  val files = nestedFilesInDir(dir)
+  files.foreach(p => test(p._1, prg, readOracle(p._2)))
 }
 
 def start(opts: List[String]): Unit = {
