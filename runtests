@@ -109,7 +109,8 @@ def nestedFilesInDir(dir: String): List[(String, String)] = {
   testFiles.toList.flatMap((x) => {
     if(x.isDirectory && x.list.contains("oracle")) {
       val r = nestedFilesInDir(x.getAbsolutePath)
-          .map(_._1).filter(!_.endsWith("oracle"))
+        .map(_._1).filter(!_.endsWith("oracle"))
+        .map(_.split(" ").sorted.mkString(" "))
       List((r.mkString(" "), x.getAbsolutePath + "/oracle"))
     } else if(x.isDirectory) {
       nestedFilesInDir(x.getAbsolutePath)
