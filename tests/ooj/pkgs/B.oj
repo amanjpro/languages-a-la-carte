@@ -7,6 +7,11 @@ public class B {
 private class A extends B {
   void m() {
     new p1.p2.p3.A();
-    new p1.p2.p3.B();
+    new p1.p2.p3.B(); // fails
+    new p1.p2.p3.D(); // fails
+    new p1.p2.p3.C(); // fails
+    new p1.p2.p3.E(); // fails
+    new B();
+    new p1.p3.p3.B();
   }
 }

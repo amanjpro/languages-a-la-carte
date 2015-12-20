@@ -203,23 +203,8 @@ trait ClassDefTyperComponent extends TyperComponent {
     })
 
     clazz.owner.foreach { s =>
-      val allClasses = {
-        val cs1 = s.getDirectlyDefinedSymbols(clazz.name,
-            _.isInstanceOf[ClassSymbol])
-        s match {
-          case cunit: CompilationUnitSymbol   =>
-            val cs2 = cunit.owner.map(o =>
-              o.getDirectlyDefinedSymbols(clazz.name,
-                _.isInstanceOf[ClassSymbol])) match {
-                  case None    => Nil
-                  case Some(l) => l
-                }
-              cs1 ++ cs2
-          case _                              =>
-            cs1
-        }
-      }
-      allClasses match {
+      s.getDirectlyDefinedSymbols(clazz.name,
+            _.isInstanceOf[ClassSymbol]) match {
         case Nil                                =>
           ()
         case (x::Nil)                           =>
@@ -636,19 +621,29 @@ trait TypeUseTyperComponent extends primj.typechecker.TypeUseTyperComponent {
         case _         => ()
       }
     })
-    if(tuse.isQualified) {
-      (tuse.symbol, tuse.enclosing) match {
-        case (Some(s), Some(f)) if !isAccessible(s, f) =>
-          error(TYPE_NOT_FOUND, "", "", tuse.pos)
-        case _                                         =>
-      }
+    tuse.symbol match {
+      case None          if tuse.isQualified         =>
+        // INFO:
+        // In the class is private to the compilation unit, and
+        // we are in the compilation unit then ignore the qualified
+        // owner and search in the current compilation unit.
+        for {
+          opkg   <- SymbolUtils.enclosingPackage(tuse.owner)
+          epkg   <- SymbolUtils.enclosingPackage(tuse.enclosing)
+          encl   <-
+            SymbolUtils.enclosingCompilationUnit(tuse.enclosing)
+              if opkg.defines(encl) &&  opkg == epkg
+          sym    <- encl.getSymbol(tuse.name, _.isInstanceOf[TypeSymbol])
+          owner  <- sym.owner
+        } {
+          tuse.symbol = sym
+          tuse.owner  = owner
+        }
+      case s                                         =>
+        ()
     }
     super.apply((tuse, symbols))
   }
-
-
-  protected def isAccessible(symbol: Symbol, from: Symbol): Boolean =
-    SymbolUtils.isAccessible(symbol, from)
 }
 
 @component(tree, symbols)

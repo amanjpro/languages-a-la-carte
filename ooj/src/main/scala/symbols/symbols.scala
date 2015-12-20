@@ -24,7 +24,7 @@ import sana.ooj.types.TypeUtils
 
 // object ProgramSymbol extends Symbol {
 //
-//   
+//
 //
 //
 //
@@ -72,7 +72,7 @@ case class PackageSymbol(var name: Name,
       false
   }
 
-  override def toString(): String = s"Package symbol: $name"
+  override def toString(): String = s"Package symbol: $qualifiedName"
   override def hashCode(): Int = qualifiedName.hashCode * 43
 }
 
@@ -262,4 +262,11 @@ case class CompilationUnitSymbol(var module: Option[Symbol],
 
   override def toString(): String = s"CompilationUnit symbol: $sourceName"
   override def hashCode(): Int = sourceName.hashCode * 43 + sourcePath.hashCode
+  override def equals(other: Any): Boolean = other match {
+    case null                            => false
+    case other: CompilationUnitSymbol    =>
+        other.sourceName == sourceName &&
+        other.sourcePath == sourcePath
+    case _                               => false
+  }
 }

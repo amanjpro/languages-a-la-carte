@@ -3,12 +3,23 @@
 package p1.p2.p3;
 
 public class A {
+  void m() {
+    new D();
+    new C();
+    new E();
+    new p1.p2.p3.D();
+    new p1.p2.p3.C();
+    new p1.p2.p3.E();
+  }
 }
 
 
-private class B extends A {
+private class B extends A { // fails
 }
 
-class B extends A {
+class B extends A { // fails
 }
 
+private class D extends A {}
+class C extends A {}
+protected class E extends A {}

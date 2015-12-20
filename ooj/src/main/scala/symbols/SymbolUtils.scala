@@ -22,6 +22,12 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
     case _                        => "" // TODO: Update this when needed
   }
 
+  def enclosingCompilationUnit(symbol: Option[Symbol]): Option[Symbol] =
+    symbol.flatMap {
+      case sym: CompilationUnitSymbol  => Some(sym)
+      case sym                         => enclosingCompilationUnit(sym.owner)
+    }
+
   def enclosingPackage(symbol: Option[Symbol]): Option[Symbol] =
     symbol.flatMap {
       case sym: PackageSymbol  => Some(sym)

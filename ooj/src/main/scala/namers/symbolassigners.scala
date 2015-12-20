@@ -98,7 +98,10 @@ trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
   protected def createSymbol(names: List[Name], name: Name,
     owner: Option[Symbol]): Symbol = {
     names match {
-      case Nil                    =>
+      case (n::ns) if name != StdNames.DEFAULT_PACKAGE_NAME      =>
+        val s = createSymbol(Nil, n, owner)
+        createSymbol(ns, name, Some(s))
+      case _                                                     =>
         owner.flatMap(_.getSymbol(name, _.isInstanceOf[PackageSymbol])) match {
           case None               =>
             val sym = PackageSymbol(name, owner)
@@ -107,9 +110,7 @@ trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
           case Some(sym)          =>
             sym
         }
-      case (n::ns)                =>
-        val s = createSymbol(Nil, n, owner)
-        createSymbol(ns, name, Some(s))
+
     }
   }
 }
@@ -120,10 +121,13 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
     val parents  = clazz.parents.map(parent =>
         assign((parent, owner)).asInstanceOf[UseTree])
     val sym = owner match {
-      case Some(cunit: CompilationUnitSymbol) if clazz.mods.isPrivateAcc  =>
+      case Some(cunit: CompilationUnitSymbol)
+            if Some(clazz.name.asString) != clazz.sourceName              =>
         ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
       case Some(cunit: CompilationUnitSymbol)                             =>
-        ClassSymbol(clazz.mods, clazz.name, Nil, cunit.owner, None)
+        val s = ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
+        cunit.owner.foreach(_.declare(s))
+        s
       case _                                                              =>
         ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
     }
