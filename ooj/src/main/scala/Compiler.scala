@@ -181,10 +181,10 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
         val typers = (t: Tree) => TyperFamily.typed((t, Nil))
         val f = (SymbolAssignerFamily.assign join
                   (NamerFamily.name join
-                    (TypeTyperFamily.typed join
+                    // (TypeTyperFamily.typed join
                       (DefTyperFamily.typed join
                         (typers join
-                          ShapeCheckerFamily.check)))))
+                          ShapeCheckerFamily.check))))//)
         f((x, Some(ProgramSymbol)))
       }
     }

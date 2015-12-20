@@ -20,6 +20,7 @@ import primj.symbols.{SymbolUtils => _, _}
 import primj.errors.ErrorCodes._
 import primj.ast.ApplyApi
 import ooj.ast._
+import ooj.types.ClassType
 import ooj.names.StdNames
 import ooj.modifiers._
 import ooj.modifiers.Ops._
@@ -98,6 +99,17 @@ trait ClassDefNamerComponent extends NamerComponent {
         cs.parents = parentSymbols
       case _               => ()
     })
+    clazz.symbol match {
+      case Some(csym: ClassSymbol) =>
+        val qname   = packageName(csym)
+        val name    = csym.name
+        val psyms   = clazz.parents.flatMap(_.symbol).toSet
+        val tpe     = ClassType(qname, name, psyms)
+        clazz.symbol.foreach(_.tpe = Some(tpe))
+        clazz.tpe = tpe
+      case _                       =>
+        ()
+    }
     val body    = name(clazz.body).asInstanceOf[TemplateApi]
     TreeCopiers.copyClassDef(clazz)(body = body, parents = parents)
   }
@@ -105,6 +117,8 @@ trait ClassDefNamerComponent extends NamerComponent {
   protected def objectClassSymbol: ClassSymbol =
     SymbolUtils.objectClassSymbol
 
+  protected def packageName(symbol: ClassSymbol): String =
+    SymbolUtils.packageName(symbol)
 }
 
 @component
