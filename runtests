@@ -57,9 +57,10 @@ def pass(f: String): Unit = {
   println(s"$green $f passed $endcolor")
 }
 
-def test(file: String, prg: String, oracle: List[String]): Unit = {
+def test(file: String, prg: String, oracle: List[String],
+          skipIt: Boolean): Unit = {
   oracle match {
-    case Nil                            =>
+    case Nil       if skipIt            =>
       skip(file)
     case oracle                         =>
       var rr: List[String] = Nil
@@ -82,12 +83,12 @@ def test(file: String, prg: String, oracle: List[String]): Unit = {
   }
 }
 
-def readOracle(file: String): List[String] = {
+def readOracle(file: String): (List[String], Boolean) = {
   val source = Source.fromFile(file)
   val lines = source.getLines.toList
   lines.indexWhere((x) => ! x.startsWith("//")) match {
     case -1 | 0                    =>
-      Nil
+      (Nil, true)
     case n                         =>
       // Only take the first error codes
       val refErrorCodes = lines.take(n).tail.flatMap((code) => {
@@ -95,7 +96,7 @@ def readOracle(file: String): List[String] = {
         if(trimmed == "//") Nil
         else List(trimmed)
       })
-      refErrorCodes
+      (refErrorCodes, false)
   }
 }
 def nestedFilesInDir(dir: String): List[(String, String)] = {
@@ -119,7 +120,10 @@ def nestedFilesInDir(dir: String): List[(String, String)] = {
 }
 def testDir(dir: String, prg: String): Unit = {
   val files = nestedFilesInDir(dir)
-  files.foreach(p => test(p._1, prg, readOracle(p._2)))
+  files.foreach(p => {
+    val (o, f)   = readOracle(p._2)
+    test(p._1, prg, o, f)
+  })
 }
 
 def start(opts: List[String]): Unit = {
