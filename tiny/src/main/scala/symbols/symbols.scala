@@ -43,6 +43,12 @@ trait Symbol {
     }.getOrElse(false)
 
 
+  def getDirectlyDefinedSymbol(name: Name,
+          p: Symbol => Boolean): Option[Symbol] = {
+    decls.find { sym =>
+      sym.name == name && p(sym)
+    }
+  }
   // Handling scoping, does this defines a name with a predicate? If
   // not see if the owner defines it
   def getSymbol(name: Name, p: Symbol => Boolean): Option[Symbol] = {

@@ -84,10 +84,6 @@ trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
         (sym, sym)
     }
     pkg.symbol = sym
-    // owner.foreach(owner => {
-    //   pkg.owner = newOwner
-    //   owner.declare(sym)
-    // })
     val members = pkg.members.map { member =>
       assign((member, Some(newOwner)))
     }
@@ -102,7 +98,8 @@ trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
         val s = createSymbol(Nil, n, owner)
         createSymbol(ns, name, Some(s))
       case _                                                     =>
-        owner.flatMap(_.getSymbol(name, _.isInstanceOf[PackageSymbol])) match {
+        owner.flatMap(_.getDirectlyDefinedSymbol(name,
+            _.isInstanceOf[PackageSymbol])) match {
           case None               =>
             val sym = PackageSymbol(name, owner)
             owner.foreach(_.declare(sym))
