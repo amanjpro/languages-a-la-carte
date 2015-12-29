@@ -676,8 +676,9 @@ trait TypeUseTyperComponent extends primj.typechecker.TypeUseTyperComponent {
 @component(tree, symbols)
 trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent
       with ooj.namers.IdentNamer {
-  (id: IdentApi) => {
-    nameIdent(id) match {
+  (ident: IdentApi) => {
+    val id = if(ident.symbol != None) ident else nameIdent(id)
+    id match {
       case id: IdentApi                          =>
         val tptMods = if(id.isQualified) {
           id.owner.map(_.mods).getOrElse(noflags)
