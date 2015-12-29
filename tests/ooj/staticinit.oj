@@ -7,10 +7,10 @@
 // INSTANCE_METHOD_IN_STATIC_CONTEXT_INVOK
 // TYPE_MISMATCH
 // NAME_NOT_FOUND
-// TYPE_MISMATCH
 
 
 
+// TYPE_MISMATCH -- this won't be reported anymore (I think correctly)
 package test;
 
 

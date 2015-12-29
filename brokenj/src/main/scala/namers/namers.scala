@@ -51,41 +51,41 @@ Break: DONE
 Continue: DONE
 */
 
-@component
-trait CaseNamerComponent extends NamerComponent {
-  (cse: CaseApi)            => {
-    val guards =
-      cse.guards.map(x => name(x).asInstanceOf[Expr])
-    val body   = name(cse.body)
-    TreeCopiers.copyCase(cse)(guards = guards, body = body)
-  }
-}
-
-@component
-trait SwitchNamerComponent extends NamerComponent {
-  (switch: SwitchApi)            => {
-    val cases =
-      switch.cases.map(x => name(x).asInstanceOf[CaseApi])
-    val expr   = name(switch.expr).asInstanceOf[Expr]
-    TreeCopiers.copySwitch(switch)(cases = cases, expr = expr)
-  }
-}
-
-@component
-trait LabelNamerComponent extends NamerComponent {
-  (label: LabelApi)            => {
-    val stmt   = name(label.stmt).asInstanceOf[Expr]
-    TreeCopiers.copyLabel(label)(stmt = stmt)
-  }
-}
-
-@component
-trait BreakNamerComponent extends NamerComponent {
-  (break: BreakApi)            => break
-}
-
-@component
-trait ContinueNamerComponent extends NamerComponent {
-  (continue: ContinueApi) => continue
-}
-
+// @component
+// trait CaseNamerComponent extends NamerComponent {
+//   (cse: CaseApi)            => {
+//     val guards =
+//       cse.guards.map(x => name(x).asInstanceOf[Expr])
+//     val body   = name(cse.body)
+//     TreeCopiers.copyCase(cse)(guards = guards, body = body)
+//   }
+// }
+//
+// @component
+// trait SwitchNamerComponent extends NamerComponent {
+//   (switch: SwitchApi)            => {
+//     val cases =
+//       switch.cases.map(x => name(x).asInstanceOf[CaseApi])
+//     val expr   = name(switch.expr).asInstanceOf[Expr]
+//     TreeCopiers.copySwitch(switch)(cases = cases, expr = expr)
+//   }
+// }
+//
+// @component
+// trait LabelNamerComponent extends NamerComponent {
+//   (label: LabelApi)            => {
+//     val stmt   = name(label.stmt).asInstanceOf[Expr]
+//     TreeCopiers.copyLabel(label)(stmt = stmt)
+//   }
+// }
+//
+// @component
+// trait BreakNamerComponent extends NamerComponent {
+//   (break: BreakApi)            => break
+// }
+//
+// @component
+// trait ContinueNamerComponent extends NamerComponent {
+//   (continue: ContinueApi) => continue
+// }
+//

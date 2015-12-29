@@ -381,6 +381,15 @@ trait UnaryTyperComponent extends calcj.typechecker.UnaryTyperComponent {
 trait ValDefTyperComponent extends TyperComponent {
   (valdef: ValDefApi)          => {
     val tpt    = typed((valdef.tpt, symbols)).asInstanceOf[UseTree]
+    valdef.symbol.foreach(sym => {
+      sym.tpe.foreach(valdef.tpe = _)
+      sym match {
+        case vs: VariableSymbol =>
+          vs.typeSymbol = tpt.symbol
+        case _                  =>
+          ()
+      }
+    })
     val rhs    = typed((valdef.rhs, symbols)).asInstanceOf[Expr]
     val rtpe   = rhs.tpe.getOrElse(ErrorType)
     val ttpe   = tpt.tpe.getOrElse(ErrorType)
@@ -454,7 +463,15 @@ trait MethodDefTyperComponent extends TyperComponent {
 @component(tree, symbols)
 trait IdentTyperComponent extends TyperComponent {
   (id: IdentApi)     => {
-    val symbol = id.symbol
+    val symbol = id.symbol match {
+      case None           =>
+        val sym = id.owner.flatMap(_.getSymbol(id.name,
+            _.isInstanceOf[TermSymbol]))
+        sym.foreach(id.symbol = _)
+        sym
+      case Some(sym)      =>
+        Some(sym)
+    }
     symbol match {
       case Some(sym: TermSymbol)  =>
         sym.tpe.foreach(id.tpe = _)
@@ -472,7 +489,15 @@ trait IdentTyperComponent extends TyperComponent {
 @component(tree, symbols)
 trait TypeUseTyperComponent extends TyperComponent {
   (tuse: TypeUseApi)     => {
-    val symbol = tuse.symbol
+    val symbol = tuse.symbol match {
+      case None           =>
+        val sym = tuse.owner.flatMap(_.getSymbol(tuse.name,
+        _.isInstanceOf[TypeSymbol]))
+        sym.foreach(tuse.symbol = _)
+        sym
+      case Some(sym)      =>
+        Some(sym)
+    }
     symbol match {
       case Some(sym: TypeSymbol)  =>
         sym.tpe.foreach(tuse.tpe = _)

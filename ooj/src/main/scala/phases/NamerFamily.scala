@@ -20,7 +20,9 @@ trait NamerFamily extends TransformationFamily[Tree, Tree] {
   override def default: Tree = NoTree
 
   def components: List[PartialFunction[Tree, Tree]] =
-    generateComponents[Tree, Tree](OojNodes.nodes,
+    generateComponents[Tree, Tree](
+      """Program,ClassDef,PackageDef,CompilationUnit,MethodDef,
+          ValDef,TypeUse,Ident,Template,Select,Block""",
       "NamerComponent", "name", "")
       // "Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal")
 

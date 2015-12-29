@@ -16,7 +16,8 @@ trait PrimjNamerFamily extends TransformationFamily[Tree, Tree] {
   override def default: Tree = NoTree
 
   def components: List[PartialFunction[Tree, Tree]] =
-    generateComponents[Tree, Tree](PrimjNodes.nodes,
+    generateComponents[Tree, Tree](
+      "Program,MethodDef,ValDef,TypeUse,Ident",
       "NamerComponent", "name", "")
       // "Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal")
 

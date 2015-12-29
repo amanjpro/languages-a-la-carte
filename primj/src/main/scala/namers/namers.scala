@@ -45,7 +45,6 @@ Unary: DONE
 
 trait NamerComponent extends TransformationComponent[Tree, Tree] {
   def name: Tree => Tree
-  //def name[A <: Tree]: A => A = (a: A) => a
 }
 
 @component
@@ -61,7 +60,7 @@ trait ProgramNamerComponent extends NamerComponent {
 @component
 trait MethodDefNamerComponent extends NamerComponent {
   (mthd: MethodDefApi)          => {
-    val rhs    = name(mthd.body).asInstanceOf[Expr]
+    // val rhs    = name(mthd.body).asInstanceOf[Expr]
     val tpt    = name(mthd.ret).asInstanceOf[UseTree]
     val params = mthd.params.map(name(_).asInstanceOf[ValDefApi])
     val mtpe    = {
@@ -76,7 +75,7 @@ trait MethodDefNamerComponent extends NamerComponent {
     mtpe.foreach(mthd.tpe = _)
 
 
-    TreeCopiers.copyMethodDef(mthd)(body = rhs,
+    TreeCopiers.copyMethodDef(mthd)(//body = rhs,
       ret = tpt, params = params)
   }
 
@@ -87,7 +86,7 @@ trait ValDefNamerComponent extends NamerComponent {
   (valdef: ValDefApi)          => {
     // Only local variables need to be named
     val tpt     = name(valdef.tpt).asInstanceOf[UseTree]
-    val rhs     = name(valdef.rhs).asInstanceOf[Expr]
+    // val rhs     = name(valdef.rhs).asInstanceOf[Expr]
     valdef.symbol.foreach(sym => {
       sym.tpe.foreach(valdef.tpe = _)
       sym match {
@@ -97,7 +96,7 @@ trait ValDefNamerComponent extends NamerComponent {
           ()
       }
     })
-    TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
+    TreeCopiers.copyValDef(valdef)(tpt = tpt)//, rhs = rhs)
   }
 
 }
@@ -135,133 +134,133 @@ trait IdentNamerComponent extends NamerComponent {
   }
 
 }
-
-@component
-trait ForNamerComponent extends NamerComponent {
-  (forloop: ForApi)          => {
-    val inits = forloop.inits.map { init =>
-      name(init)
-    }
-    val cond = name(forloop.cond).asInstanceOf[Expr]
-    val steps = forloop.steps.map { step =>
-      name(step).asInstanceOf[Expr]
-    }
-    val body = name(forloop.body).asInstanceOf[Expr]
-    TreeCopiers.copyFor(forloop)(inits = inits, cond = cond,
-      steps = steps, body = body)
-  }
-
-}
-
-@component
-trait BlockNamerComponent extends NamerComponent {
-  (block: BlockApi)          => {
-    val stmts = block.stmts.map { stmt => name(stmt) }
-    TreeCopiers.copyBlock(block)(stmts = stmts)
-  }
-
-}
-// Boring cases, just pass the owner around and name it to
-// all the trees that can have an owner
-
-
-@component
-trait BinaryNamerComponent extends NamerComponent {
-  (bin: BinaryApi)          => {
-    val lhs = name(bin.lhs).asInstanceOf[Expr]
-    val rhs = name(bin.rhs).asInstanceOf[Expr]
-    TreeCopiers.copyBinary(bin)(lhs = lhs, rhs = rhs)
-  }
-
-}
-
-@component
-trait UnaryNamerComponent extends NamerComponent {
-  (unary: UnaryApi)          => {
-    val expr = name(unary.expr).asInstanceOf[Expr]
-    TreeCopiers.copyUnary(unary)(expr = expr)
-  }
-
-}
-
-@component
-trait CastNamerComponent extends NamerComponent {
-  (cast: CastApi)          => {
-    val expr = name(cast.expr).asInstanceOf[Expr]
-    TreeCopiers.copyCast(cast)(expr = expr)
-  }
-
-}
-
-@component
-trait ReturnNamerComponent extends NamerComponent {
-  (ret: ReturnApi)          => {
-    val expr = ret.expr.map(name(_).asInstanceOf[Expr])
-    TreeCopiers.copyReturn(ret)(expr = expr)
-  }
-
-}
-
-@component
-trait AssignNamerComponent extends NamerComponent {
-  (assgn: AssignApi)          => {
-    val lhs = name(assgn.lhs).asInstanceOf[Expr]
-    val rhs = name(assgn.rhs).asInstanceOf[Expr]
-    TreeCopiers.copyAssign(assgn)(lhs = lhs, rhs = rhs)
-  }
-
-}
-
-
-@component
-trait TernaryNamerComponent extends NamerComponent {
-  (tern: TernaryApi)          => {
-    val cond = name(tern.cond).asInstanceOf[Expr]
-    val thenp = name(tern.thenp).asInstanceOf[Expr]
-    val elsep = name(tern.elsep).asInstanceOf[Expr]
-    TreeCopiers.copyTernary(tern)(cond = cond,
-      thenp = thenp, elsep = elsep)
-  }
-
-}
-
-@component
-trait IfNamerComponent extends NamerComponent {
-  (ifelse: IfApi)          => {
-    val cond = name(ifelse.cond).asInstanceOf[Expr]
-    val thenp = name(ifelse.thenp).asInstanceOf[Expr]
-    val elsep = name(ifelse.elsep).asInstanceOf[Expr]
-    TreeCopiers.copyIf(ifelse)(cond = cond, thenp = thenp,
-      elsep = elsep)
-  }
-
-}
-
-@component
-trait WhileNamerComponent extends NamerComponent {
-  (wile: WhileApi)          => {
-    val cond = name(wile.cond).asInstanceOf[Expr]
-    val body = name(wile.body).asInstanceOf[Expr]
-    TreeCopiers.copyWhile(wile)(cond = cond, body = body)
-  }
-
-}
-
-@component
-trait ApplyNamerComponent extends NamerComponent {
-  (apply: ApplyApi)          => {
-    val fun = name(apply.fun).asInstanceOf[Expr]
-    val args = apply.args.map { arg =>
-      name(arg).asInstanceOf[Expr]
-    }
-    TreeCopiers.copyApply(apply)(fun = fun, args = args)
-  }
-
-}
-
-@component
-trait LiteralNamerComponent extends NamerComponent {
-  (lit: LiteralApi)          => lit
-}
-
-
+//
+// @component
+// trait ForNamerComponent extends NamerComponent {
+//   (forloop: ForApi)          => {
+//     val inits = forloop.inits.map { init =>
+//       name(init)
+//     }
+//     val cond = name(forloop.cond).asInstanceOf[Expr]
+//     val steps = forloop.steps.map { step =>
+//       name(step).asInstanceOf[Expr]
+//     }
+//     val body = name(forloop.body).asInstanceOf[Expr]
+//     TreeCopiers.copyFor(forloop)(inits = inits, cond = cond,
+//       steps = steps, body = body)
+//   }
+//
+// }
+//
+// @component
+// trait BlockNamerComponent extends NamerComponent {
+//   (block: BlockApi)          => {
+//     val stmts = block.stmts.map { stmt => name(stmt) }
+//     TreeCopiers.copyBlock(block)(stmts = stmts)
+//   }
+//
+// }
+// // Boring cases, just pass the owner around and name it to
+// // all the trees that can have an owner
+//
+//
+// @component
+// trait BinaryNamerComponent extends NamerComponent {
+//   (bin: BinaryApi)          => {
+//     val lhs = name(bin.lhs).asInstanceOf[Expr]
+//     val rhs = name(bin.rhs).asInstanceOf[Expr]
+//     TreeCopiers.copyBinary(bin)(lhs = lhs, rhs = rhs)
+//   }
+//
+// }
+//
+// @component
+// trait UnaryNamerComponent extends NamerComponent {
+//   (unary: UnaryApi)          => {
+//     val expr = name(unary.expr).asInstanceOf[Expr]
+//     TreeCopiers.copyUnary(unary)(expr = expr)
+//   }
+//
+// }
+//
+// @component
+// trait CastNamerComponent extends NamerComponent {
+//   (cast: CastApi)          => {
+//     val expr = name(cast.expr).asInstanceOf[Expr]
+//     TreeCopiers.copyCast(cast)(expr = expr)
+//   }
+//
+// }
+//
+// @component
+// trait ReturnNamerComponent extends NamerComponent {
+//   (ret: ReturnApi)          => {
+//     val expr = ret.expr.map(name(_).asInstanceOf[Expr])
+//     TreeCopiers.copyReturn(ret)(expr = expr)
+//   }
+//
+// }
+//
+// @component
+// trait AssignNamerComponent extends NamerComponent {
+//   (assgn: AssignApi)          => {
+//     val lhs = name(assgn.lhs).asInstanceOf[Expr]
+//     val rhs = name(assgn.rhs).asInstanceOf[Expr]
+//     TreeCopiers.copyAssign(assgn)(lhs = lhs, rhs = rhs)
+//   }
+//
+// }
+//
+//
+// @component
+// trait TernaryNamerComponent extends NamerComponent {
+//   (tern: TernaryApi)          => {
+//     val cond = name(tern.cond).asInstanceOf[Expr]
+//     val thenp = name(tern.thenp).asInstanceOf[Expr]
+//     val elsep = name(tern.elsep).asInstanceOf[Expr]
+//     TreeCopiers.copyTernary(tern)(cond = cond,
+//       thenp = thenp, elsep = elsep)
+//   }
+//
+// }
+//
+// @component
+// trait IfNamerComponent extends NamerComponent {
+//   (ifelse: IfApi)          => {
+//     val cond = name(ifelse.cond).asInstanceOf[Expr]
+//     val thenp = name(ifelse.thenp).asInstanceOf[Expr]
+//     val elsep = name(ifelse.elsep).asInstanceOf[Expr]
+//     TreeCopiers.copyIf(ifelse)(cond = cond, thenp = thenp,
+//       elsep = elsep)
+//   }
+//
+// }
+//
+// @component
+// trait WhileNamerComponent extends NamerComponent {
+//   (wile: WhileApi)          => {
+//     val cond = name(wile.cond).asInstanceOf[Expr]
+//     val body = name(wile.body).asInstanceOf[Expr]
+//     TreeCopiers.copyWhile(wile)(cond = cond, body = body)
+//   }
+//
+// }
+//
+// @component
+// trait ApplyNamerComponent extends NamerComponent {
+//   (apply: ApplyApi)          => {
+//     val fun = name(apply.fun).asInstanceOf[Expr]
+//     val args = apply.args.map { arg =>
+//       name(arg).asInstanceOf[Expr]
+//     }
+//     TreeCopiers.copyApply(apply)(fun = fun, args = args)
+//   }
+//
+// }
+//
+// @component
+// trait LiteralNamerComponent extends NamerComponent {
+//   (lit: LiteralApi)          => lit
+// }
+//
+//

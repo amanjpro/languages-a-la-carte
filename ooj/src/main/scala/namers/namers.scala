@@ -18,7 +18,7 @@ import calcj.ast.operators.{Inc, Dec}
 import primj.namers.NamerComponent
 import primj.symbols.{SymbolUtils => _, _}
 import primj.errors.ErrorCodes._
-import primj.ast.ApplyApi
+import primj.ast.{ApplyApi, BlockApi}
 import ooj.ast._
 import ooj.types.ClassType
 import ooj.names.StdNames
@@ -144,37 +144,37 @@ trait MethodDefNamerComponent extends
 }
 
 
-@component
-trait ThisNamerComponent extends NamerComponent {
-  (ths: ThisApi) => {
-    ths.enclosingClassSymbol.foreach(ths.symbol = _)
-    ths
-  }
-}
+// @component
+// trait ThisNamerComponent extends NamerComponent {
+//   (ths: ThisApi) => {
+//     ths.enclosingClassSymbol.foreach(ths.symbol = _)
+//     ths
+//   }
+// }
 
-@component
-trait SuperNamerComponent extends NamerComponent {
-  (spr: SuperApi) => {
-    spr.enclosingClassSymbol match {
-      case Some(csym: ClassSymbol)    =>
-        csym.parents.filter(! _.mods.isInterface) match {
-          case List(s)        =>
-            spr.symbol = s
-          case List(x, y)     =>
-            if(x == SymbolUtils.objectClassSymbol) {
-              spr.symbol = y
-            } else if (y == SymbolUtils.objectClassSymbol) {
-              spr.symbol = x
-            }
-          case _              =>
-            ()
-        }
-      case _                          =>
-        ()
-    }
-    spr
-  }
-}
+// @component
+// trait SuperNamerComponent extends NamerComponent {
+//   (spr: SuperApi) => {
+//     spr.enclosingClassSymbol match {
+//       case Some(csym: ClassSymbol)    =>
+//         csym.parents.filter(! _.mods.isInterface) match {
+//           case List(s)        =>
+//             spr.symbol = s
+//           case List(x, y)     =>
+//             if(x == SymbolUtils.objectClassSymbol) {
+//               spr.symbol = y
+//             } else if (y == SymbolUtils.objectClassSymbol) {
+//               spr.symbol = x
+//             }
+//           case _              =>
+//             ()
+//         }
+//       case _                          =>
+//         ()
+//     }
+//     spr
+//   }
+// }
 
 @component
 trait SelectNamerComponent extends NamerComponent {
@@ -189,17 +189,32 @@ trait SelectNamerComponent extends NamerComponent {
 }
 
 @component
-trait NewNamerComponent extends NamerComponent {
-  (nw: NewApi) => {
-    val app     = name(nw.app).asInstanceOf[ApplyApi]
-    nw.app.symbol.foreach(nw.symbol = _)
-    TreeCopiers.copyNew(nw)(app = app)
-  }
+trait BlockNamerComponent extends NamerComponent {
+  (block: BlockApi)          => block
 }
 
+// @component
+// trait NewNamerComponent extends NamerComponent {
+//   (nw: NewApi) => {
+//     val app     = name(nw.app).asInstanceOf[ApplyApi]
+//     nw.app.symbol.foreach(nw.symbol = _)
+//     TreeCopiers.copyNew(nw)(app = app)
+//   }
+// }
+
 @component
-trait IdentNamerComponent extends primj.namers.IdentNamerComponent {
-  (id: IdentApi)       => {
+trait IdentNamerComponent
+  extends primj.namers.IdentNamerComponent
+  with IdentNamer {
+
+  (id: IdentApi)       => nameIdent(id)
+}
+
+
+
+
+trait IdentNamer {
+  protected def nameIdent(id: IdentApi): SimpleUseTree = {
     // At the beginning: we treat all (Ident)s as ambiguous names.
     // Can we see any (VariableSymbol)s with this name from the current scope?
     val temp = id.owner.flatMap(_.getSymbol(id.name,
@@ -238,6 +253,3 @@ trait IdentNamerComponent extends primj.namers.IdentNamerComponent {
     }
   }
 }
-
-
-
