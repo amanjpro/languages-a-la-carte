@@ -80,6 +80,11 @@ trait PackageDefTyperComponent extends TyperComponent {
 @component(tree, symbols)
 trait ValDefTyperComponent extends TyperComponent {
   (valdef: ValDefApi)          => {
+    if(!valdef.mods.isField) {
+      valdef.owner.foreach(sym => {
+        valdef.symbol.foreach(sym.declare(_))
+      })
+    }
     val tpt    = typed((valdef.tpt, symbols)).asInstanceOf[UseTree]
     valdef.symbol.foreach(sym => {
       sym.tpe.foreach(valdef.tpe = _)
@@ -365,6 +370,8 @@ trait TemplateTyperComponent extends TyperComponent {
 trait MethodDefTyperComponent
   extends primj.typechecker.MethodDefTyperComponent {
   (mthd: MethodDefApi)          => {
+    val params  = mthd.params.map(param =>
+        typed((param, symbols)).asInstanceOf[ValDefApi])
     val body    = typed((mthd.body, symbols)).asInstanceOf[Expr]
     val rtpe    = mthd.ret.tpe.getOrElse(ErrorType)
     val btpe    = body.tpe.getOrElse(ErrorType)
@@ -388,7 +395,8 @@ trait MethodDefTyperComponent
         body.toString, body.toString, body.pos)
       mthd
     } else {
-      TreeCopiers.copyMethodDef(mthd)(mods = mods, body = body)
+      TreeCopiers.copyMethodDef(mthd)(mods = mods, body = body,
+        params = params)
     }
 
     res.owner.foreach {

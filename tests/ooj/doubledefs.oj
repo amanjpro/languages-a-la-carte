@@ -6,6 +6,7 @@
 // METHOD_ALREADY_DEFINED
 // METHOD_ALREADY_DEFINED
 // METHOD_ALREADY_DEFINED
+// VARIABLE_ALREADY_DEFINED
 // CLASS_ALREADY_DEFINED
 // NAME_NOT_FOUND
 // CLASS_ALREADY_DEFINED
@@ -48,7 +49,11 @@ class A {
   void k(java.lang.Object a) { // fails
   }
 
-  int k(java.lang.Object a, int a) {
+  int k(java.lang.Object a, int a) { // fails
+    return 2;
+  }
+
+  int k(java.lang.Object a, boolean b) {
     return 2;
   }
 }

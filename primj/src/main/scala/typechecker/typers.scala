@@ -380,6 +380,11 @@ trait UnaryTyperComponent extends calcj.typechecker.UnaryTyperComponent {
 @component(tree, symbols)
 trait ValDefTyperComponent extends TyperComponent {
   (valdef: ValDefApi)          => {
+    if(!valdef.mods.isField) {
+      valdef.owner.foreach(sym => {
+        valdef.symbol.foreach(sym.declare(_))
+      })
+    }
     val tpt    = typed((valdef.tpt, symbols)).asInstanceOf[UseTree]
     valdef.symbol.foreach(sym => {
       sym.tpe.foreach(valdef.tpe = _)
