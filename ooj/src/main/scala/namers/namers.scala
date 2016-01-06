@@ -207,7 +207,18 @@ trait IdentNamerComponent
   extends primj.namers.IdentNamerComponent
   with IdentNamer {
 
-  (id: IdentApi)       => nameIdent(id)
+  (id: IdentApi)       => {
+    id.hasBeenNamed = true
+    val res = nameIdent(id)
+    res.symbol match {
+      case Some(s)       =>
+        res
+      case _             =>
+        error(NAME_NOT_FOUND,
+          id.toString, "a term name", id.pos)
+        res
+    }
+  }
 }
 
 

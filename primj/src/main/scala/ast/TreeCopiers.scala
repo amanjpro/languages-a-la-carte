@@ -5,7 +5,7 @@ import sana.tiny.types.Type
 import sana.tiny.source.Position
 import sana.tiny.symbols.Symbol
 import sana.tiny.names.Name
-import sana.tiny.ast.Implicits._
+import sana.primj.ast.Implicits._
 import sana.tiny.modifiers.Flags
 import sana.tiny.ast._
 import sana.calcj.ast._

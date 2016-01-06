@@ -10,7 +10,7 @@ import sana.calcj
 import sana.dsl._
 import tiny.ast.{TreeCopiers => _, _}
 import tiny.types._
-import tiny.ast.Implicits._
+import primj.ast.Implicits._
 import tiny.types.TypeUtils._
 import tiny.symbols.{TypeSymbol, TermSymbol}
 import tiny.source.Position

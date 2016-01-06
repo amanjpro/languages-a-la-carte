@@ -9,7 +9,7 @@ import sana.brokenj
 import sana.core.TransformationComponent
 import sana.dsl._
 import tiny.ast.{TreeCopiers => _, _}
-import tiny.ast.Implicits._
+import primj.ast.Implicits._
 import tiny.errors.ErrorReporting.{error,warning}
 import tiny.symbols._
 import calcj.ast.{TreeCopiers => _, _}

@@ -6,7 +6,7 @@ import sana.calcj
 import sana.primj
 
 import tiny.ast._
-import tiny.ast.Implicits._
+import primj.ast.Implicits._
 import calcj.ast._
 import primj.ast._
 

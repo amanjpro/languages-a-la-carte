@@ -6,9 +6,8 @@ import sana.tiny.symbols.Symbol
 
 
 
-trait AugmentedSimpleUseTree {
-
-  def tree: SimpleUseTree
+trait AugmentedSimpleUseTree
+  extends sana.primj.ast.augmenters.AugmentedSimpleUseTree {
 
   def enclosing: Option[Symbol] =
     tree.attributes.get('enclosing).map(_.asInstanceOf[Symbol])

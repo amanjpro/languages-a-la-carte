@@ -8,7 +8,7 @@ import sana.calcj
 import sana.core.TransformationComponent
 import sana.dsl._
 import tiny.ast.{TreeCopiers => _, _}
-import tiny.ast.Implicits._
+import primj.ast.Implicits._
 import tiny.symbols._
 import calcj.ast.{TreeCopiers => _, _}
 import calcj.ast.operators.{Inc, Dec}
@@ -105,14 +105,21 @@ trait ValDefNamerComponent extends NamerComponent {
 @component
 trait TypeUseNamerComponent extends NamerComponent {
   (tuse: TypeUseApi)          => {
+    tuse.hasBeenNamed = true
     val symbol = tuse.owner.flatMap(_.getSymbol(tuse.name,
       _.isInstanceOf[TypeSymbol]))
     symbol match {
-      case Some(sym)      =>
+      case Some(sym: TypeSymbol)      =>
         tuse.symbol = sym
         sym.tpe.foreach(tuse.tpe = _)
         tuse
-      case _              =>
+      case Some(_)                    =>
+        error(TYPE_NAME_EXPECTED,
+          tuse.toString, "a type", tuse.pos)
+        tuse
+      case _                          =>
+        error(TYPE_NOT_FOUND,
+          tuse.toString, "a type", tuse.pos)
         tuse
     }
   }
@@ -122,6 +129,7 @@ trait TypeUseNamerComponent extends NamerComponent {
 @component
 trait IdentNamerComponent extends NamerComponent {
   (id: IdentApi)          => {
+    id.hasBeenNamed = true
     val symbol = id.owner.flatMap(_.getSymbol(id.name,
       _.isInstanceOf[TermSymbol]))
     symbol match {
@@ -129,7 +137,10 @@ trait IdentNamerComponent extends NamerComponent {
         id.symbol = sym
         sym.tpe.foreach(id.tpe = _)
         id
-      case _              => id
+      case _              =>
+        error(NAME_NOT_FOUND,
+          id.toString, "a term", id.pos)
+        id
     }
   }
 

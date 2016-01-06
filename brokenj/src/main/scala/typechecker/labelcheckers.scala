@@ -10,7 +10,7 @@ import sana.calcj
 import sana.core.CheckerComponent
 import sana.dsl._
 import tiny.ast._
-import tiny.ast.Implicits._
+import primj.ast.Implicits._
 import tiny.names.Name
 import calcj.ast._
 import calcj.ast.operators.{Inc, Dec}

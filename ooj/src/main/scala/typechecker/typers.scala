@@ -650,32 +650,34 @@ trait ApplyTyperComponent extends TyperComponent {
 @component(tree, symbols)
 trait TypeUseTyperComponent extends primj.typechecker.TypeUseTyperComponent {
   (tuse: TypeUseApi) => {
-    tuse.owner.foreach(sym => {
-      sym.getSymbol(tuse.name, _.isInstanceOf[TypeSymbol]) match {
-        case Some(sym) => tuse.symbol = sym
-        case _         => ()
-      }
-    })
-    tuse.symbol match {
-      case None          if tuse.isQualified         =>
-        // INFO:
-        // In the class is private to the compilation unit, and
-        // we are in the compilation unit then ignore the qualified
-        // owner and search in the current compilation unit.
-        for {
-          opkg   <- SymbolUtils.enclosingPackage(tuse.owner)
-          epkg   <- SymbolUtils.enclosingPackage(tuse.enclosing)
-          encl   <-
-            SymbolUtils.enclosingCompilationUnit(tuse.enclosing)
-              if opkg.defines(encl) &&  opkg == epkg
-          sym    <- encl.getSymbol(tuse.name, _.isInstanceOf[TypeSymbol])
-          owner  <- sym.owner
-        } {
-          tuse.symbol = sym
-          tuse.owner  = owner
+    if(!tuse.hasBeenNamed) {
+      tuse.owner.foreach(sym => {
+        sym.getSymbol(tuse.name, _.isInstanceOf[TypeSymbol]) match {
+          case Some(sym) => tuse.symbol = sym
+          case _         => ()
         }
-      case s                                         =>
-        ()
+      })
+      tuse.symbol match {
+        case None          if tuse.isQualified         =>
+          // INFO:
+          // In the class is private to the compilation unit, and
+          // we are in the compilation unit then ignore the qualified
+          // owner and search in the current compilation unit.
+          for {
+            opkg   <- SymbolUtils.enclosingPackage(tuse.owner)
+            epkg   <- SymbolUtils.enclosingPackage(tuse.enclosing)
+            encl   <-
+              SymbolUtils.enclosingCompilationUnit(tuse.enclosing)
+                if opkg.defines(encl) &&  opkg == epkg
+            sym    <- encl.getSymbol(tuse.name, _.isInstanceOf[TypeSymbol])
+            owner  <- sym.owner
+          } {
+            tuse.symbol = sym
+            tuse.owner  = owner
+          }
+        case s                                         =>
+          ()
+      }
     }
     super.apply((tuse, symbols))
   }

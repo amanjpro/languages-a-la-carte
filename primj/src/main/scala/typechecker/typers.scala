@@ -8,7 +8,7 @@ import sana.calcj
 
 import sana.dsl._
 import tiny.ast.{TreeCopiers => _, _}
-import tiny.ast.Implicits._
+import primj.ast.Implicits._
 import tiny.types.{TypeUtils => _, _}
 import tiny.symbols.{Symbol, TypeSymbol, TermSymbol}
 import tiny.source.Position
@@ -468,24 +468,26 @@ trait MethodDefTyperComponent extends TyperComponent {
 @component(tree, symbols)
 trait IdentTyperComponent extends TyperComponent {
   (id: IdentApi)     => {
-    val symbol = id.symbol match {
-      case None           =>
-        val sym = id.owner.flatMap(_.getSymbol(id.name,
-            _.isInstanceOf[TermSymbol]))
-        sym.foreach(id.symbol = _)
-        sym
-      case Some(sym)      =>
-        Some(sym)
-    }
-    symbol match {
-      case Some(sym: TermSymbol)  =>
-        sym.tpe.foreach(id.tpe = _)
-        id
-      case _                      =>
-        error(NAME_NOT_FOUND,
-          id.toString, "a term", id.pos)
-        id
-    }
+    if(!id.hasBeenNamed) {
+      val symbol = id.symbol match {
+        case None           =>
+          val sym = id.owner.flatMap(_.getSymbol(id.name,
+              _.isInstanceOf[TermSymbol]))
+          sym.foreach(id.symbol = _)
+          sym
+        case Some(sym)      =>
+          Some(sym)
+      }
+      symbol match {
+        case Some(sym: TermSymbol)  =>
+          sym.tpe.foreach(id.tpe = _)
+          id
+        case _                      =>
+          error(NAME_NOT_FOUND,
+            id.toString, "a term", id.pos)
+          id
+      }
+    } else id
   }
 
 }
@@ -494,28 +496,30 @@ trait IdentTyperComponent extends TyperComponent {
 @component(tree, symbols)
 trait TypeUseTyperComponent extends TyperComponent {
   (tuse: TypeUseApi)     => {
-    val symbol = tuse.symbol match {
-      case None           =>
-        val sym = tuse.owner.flatMap(_.getSymbol(tuse.name,
-        _.isInstanceOf[TypeSymbol]))
-        sym.foreach(tuse.symbol = _)
-        sym
-      case Some(sym)      =>
-        Some(sym)
-    }
-    symbol match {
-      case Some(sym: TypeSymbol)  =>
-        sym.tpe.foreach(tuse.tpe = _)
-        tuse
-      case Some(_)                =>
-        error(TYPE_NAME_EXPECTED,
-          tuse.toString, "a type", tuse.pos)
-        tuse
-      case _                      =>
-        error(TYPE_NOT_FOUND,
-          tuse.toString, "a type", tuse.pos)
-        tuse
-    }
+    if(!tuse.hasBeenNamed) {
+      val symbol = tuse.symbol match {
+        case None           =>
+          val sym = tuse.owner.flatMap(_.getSymbol(tuse.name,
+          _.isInstanceOf[TypeSymbol]))
+          sym.foreach(tuse.symbol = _)
+          sym
+        case Some(sym)      =>
+          Some(sym)
+      }
+      symbol match {
+        case Some(sym: TypeSymbol)                =>
+          sym.tpe.foreach(tuse.tpe = _)
+          tuse
+        case Some(_)                              =>
+          error(TYPE_NAME_EXPECTED,
+            tuse.toString, "a type", tuse.pos)
+          tuse
+        case _                                    =>
+          error(TYPE_NOT_FOUND,
+            tuse.toString, "a type", tuse.pos)
+          tuse
+      }
+    } else tuse
   }
 
 }
