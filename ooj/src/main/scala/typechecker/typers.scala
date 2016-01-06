@@ -50,34 +50,32 @@ Apply: DONE
 // Set class type information in a separate phase, then
 // advance to typer
 
-@component(tree, symbols)
+@component
 trait ProgramTyperComponent extends TyperComponent {
   (prg: ProgramApi) => {
-    val members =
-      prg.members.map(x => typed((x,
-        symbols)))
+    val members = prg.members.map(x => typed(x))
     TreeCopiers.copyProgram(prg)(members = members)
   }
 }
 
-@component(tree, symbols)
+@component
 trait CompilationUnitTyperComponent extends TyperComponent {
   (unit: CompilationUnitApi) => {
-    val pkg = typed((unit.module, symbols)).asInstanceOf[PackageDefApi]
+    val pkg = typed(unit.module).asInstanceOf[PackageDefApi]
     TreeCopiers.copyCompilationUnit(unit)(module = pkg)
   }
 }
 
-@component(tree, symbols)
+@component
 trait PackageDefTyperComponent extends TyperComponent {
   (pkg: PackageDefApi) => {
     val members = pkg.members
-      .map(member => typed((member, symbols)).asInstanceOf[DefTree])
+      .map(member => typed(member).asInstanceOf[DefTree])
     TreeCopiers.copyPackageDef(pkg)(members = members)
   }
 }
 
-@component(tree, symbols)
+@component
 trait ValDefTyperComponent extends TyperComponent {
   (valdef: ValDefApi)          => {
     if(!valdef.mods.isField) {
@@ -85,7 +83,7 @@ trait ValDefTyperComponent extends TyperComponent {
         valdef.symbol.foreach(sym.declare(_))
       })
     }
-    val tpt    = typed((valdef.tpt, symbols)).asInstanceOf[UseTree]
+    val tpt    = typed(valdef.tpt).asInstanceOf[UseTree]
     valdef.symbol.foreach(sym => {
       sym.tpe.foreach(valdef.tpe = _)
       sym match {
@@ -95,7 +93,7 @@ trait ValDefTyperComponent extends TyperComponent {
           ()
       }
     })
-    val rhs    = typed((valdef.rhs, symbols)).asInstanceOf[Expr]
+    val rhs    = typed(valdef.rhs).asInstanceOf[Expr]
     val rtpe   = rhs.tpe.getOrElse(ErrorType)
     val ttpe   = tpt.tpe.getOrElse(ErrorType)
     valdef.tpe = ttpe
@@ -189,13 +187,13 @@ trait ValDefTyperComponent extends TyperComponent {
   }
 }
 
-@component(tree, symbols)
+@component
 trait ClassDefTyperComponent extends TyperComponent {
   (clazz: ClassDefApi) => {
     val parents =
       clazz.parents
-        .map((parent) => typed((parent, symbols)).asInstanceOf[UseTree])
-    val body    = typed((clazz.body, symbols)).asInstanceOf[TemplateApi]
+        .map((parent) => typed(parent).asInstanceOf[UseTree])
+    val body    = typed(clazz.body).asInstanceOf[TemplateApi]
     if(!(clazz.mods.isInterface || clazz.mods.isAbstract)) {
       SymbolUtils.allAbstractMembers(clazz.symbol) match {
         case Nil                           =>
@@ -342,23 +340,11 @@ trait ClassDefTyperComponent extends TyperComponent {
     TreeUtils.isInExtendsClause(tree)
 }
 
-@component(tree, symbols)
+@component
 trait TemplateTyperComponent extends TyperComponent {
   (tmpl: TemplateApi) => {
-    val (members, _) = {
-      tmpl.members.foldLeft((Nil: List[Tree], symbols))((z, member) => {
-        val members  = z._1
-        val symbols  = z._2
-
-        val newSymbols: List[Symbol] = member match {
-          case v: ValDefApi =>
-            (v.symbol).map(_::symbols).getOrElse(symbols)
-          case _            =>
-            symbols
-        }
-        val r = typed((member, newSymbols))
-        (members ++ List(r), newSymbols)
-      })
+    val members = tmpl.members.map { member =>
+      typed(member)
     }
     TreeCopiers.copyTemplate(tmpl)(members = members)
   }
@@ -366,13 +352,13 @@ trait TemplateTyperComponent extends TyperComponent {
 
 
 // TODO: Do we need this?
-@component(tree, symbols)
+@component
 trait MethodDefTyperComponent
   extends primj.typechecker.MethodDefTyperComponent {
   (mthd: MethodDefApi)          => {
     val params  = mthd.params.map(param =>
-        typed((param, symbols)).asInstanceOf[ValDefApi])
-    val body    = typed((mthd.body, symbols)).asInstanceOf[Expr]
+        typed(param).asInstanceOf[ValDefApi])
+    val body    = typed(mthd.body).asInstanceOf[Expr]
     val rtpe    = mthd.ret.tpe.getOrElse(ErrorType)
     val btpe    = body.tpe.getOrElse(ErrorType)
     val mods   = {
@@ -513,7 +499,7 @@ trait MethodDefTyperComponent
 }
 
 
-@component(tree, symbols)
+@component
 trait ThisTyperComponent extends TyperComponent {
   (ths: ThisApi)                 => {
     val enclClass = ths.enclosingClassSymbol
@@ -542,7 +528,7 @@ trait ThisTyperComponent extends TyperComponent {
 }
 
 
-@component(tree, symbols)
+@component
 trait SuperTyperComponent extends TyperComponent {
   (spr: SuperApi)                 => {
     spr.enclosingClassSymbol match {
@@ -590,10 +576,10 @@ trait SuperTyperComponent extends TyperComponent {
 }
 
 
-@component(tree, symbols)
+@component
 trait NewTyperComponent extends TyperComponent {
   (nw: NewApi) => {
-    val app     = typed((nw.app, symbols)).asInstanceOf[ApplyApi]
+    val app     = typed(nw.app).asInstanceOf[ApplyApi]
     val tpe     = app match {
       case Apply(Select(qual, id), _) =>
         qual.symbol.foreach(nw.symbol = _)
@@ -614,20 +600,20 @@ trait NewTyperComponent extends TyperComponent {
 }
 
 
-@component(tree, symbols)
+@component
 trait ApplyTyperComponent extends TyperComponent {
   (apply: ApplyApi) => {
-    val args   = apply.args.map(arg => typed((arg, symbols)).asInstanceOf[Expr])
+    val args   = apply.args.map(arg => typed(arg).asInstanceOf[Expr])
     val fun    = {
       apply.fun match {
         case fun@Select(qual, f: IdentApi)   =>
           f.isMethodIdent = true
           f.argumentTypes = args.flatMap(_.tpe)
-          typed((fun, symbols)).asInstanceOf[SelectApi]
+          typed(fun).asInstanceOf[SelectApi]
         case f: IdentApi                     =>
           f.isMethodIdent = true
           f.argumentTypes = args.flatMap(_.tpe)
-          typed((f, symbols)).asInstanceOf[IdentApi]
+          typed(f).asInstanceOf[IdentApi]
       }
     }
     fun.tpe match {
@@ -647,7 +633,7 @@ trait ApplyTyperComponent extends TyperComponent {
 }
 
 
-@component(tree, symbols)
+@component
 trait TypeUseTyperComponent extends primj.typechecker.TypeUseTyperComponent {
   (tuse: TypeUseApi) => {
     if(!tuse.hasBeenNamed) {
@@ -679,165 +665,166 @@ trait TypeUseTyperComponent extends primj.typechecker.TypeUseTyperComponent {
           ()
       }
     }
-    super.apply((tuse, symbols))
+    super.apply(tuse)
   }
 }
 
-@component(tree, symbols)
+@component
 trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent
       with ooj.namers.IdentNamer {
   (ident: IdentApi) => {
-    val id = if(ident.symbol != None) ident else nameIdent(ident)
-    id match {
-      case id: IdentApi                          =>
-        val tptMods = if(id.isQualified) {
-          id.owner.map(_.mods).getOrElse(noflags)
-        } else enclosingClass(id.owner).map(_.mods).getOrElse(noflags)
+    if(!ident.hasBeenNamed) {
+      val id = nameIdent(ident)
+      id match {
+        case id: IdentApi                          =>
+          val tptMods = if(id.isQualified) {
+            id.owner.map(_.mods).getOrElse(noflags)
+          } else enclosingClass(id.owner).map(_.mods).getOrElse(noflags)
 
-        if(id.isMethodIdent && !(id.name == StdNames.CONSTRUCTOR_NAME &&
-                  (tptMods.isAbstract || tptMods.isInterface))) {
-          val allCandidateMethods = (enclosingClass(id.owner),
-                id.argumentTypes) match {
-            case (Some(cs: ClassSymbol), Some(tpes)) =>
-              cs.getAllSymbols(id.name,
-                (sym) => {
-                  id.enclosing match {
-                    case Some(from)     =>
-                      applicableMethod(sym, tpes) && isAccessible(sym, from) &&
-                          (sym.mods.isConstructor == id.isConstructorIdent)
-                    case _              =>
-                      id.owner match {
-                        case Some(from)     =>
-                          applicableMethod(sym, tpes) &&
-                              isAccessible(sym, from) &&
-                                (sym.mods.isConstructor == id.isConstructorIdent)
-                        case _              =>
-                          false
-                      }
-                  }
-                }).toList
-            case _                     =>
-              Nil
-          }
-          val candidateMethods = mostSpecificMethods(allCandidateMethods)
+          if(id.isMethodIdent && !(id.name == StdNames.CONSTRUCTOR_NAME &&
+                    (tptMods.isAbstract || tptMods.isInterface))) {
+            val allCandidateMethods = (enclosingClass(id.owner),
+                  id.argumentTypes) match {
+              case (Some(cs: ClassSymbol), Some(tpes)) =>
+                cs.getAllSymbols(id.name,
+                  (sym) => {
+                    id.enclosing match {
+                      case Some(from)     =>
+                        applicableMethod(sym, tpes) && isAccessible(sym, from) &&
+                            (sym.mods.isConstructor == id.isConstructorIdent)
+                      case _              =>
+                        id.owner match {
+                          case Some(from)     =>
+                            applicableMethod(sym, tpes) &&
+                                isAccessible(sym, from) &&
+                                  (sym.mods.isConstructor == id.isConstructorIdent)
+                          case _              =>
+                            false
+                        }
+                    }
+                  }).toList
+              case _                     =>
+                Nil
+            }
+            val candidateMethods = mostSpecificMethods(allCandidateMethods)
 
 
-          candidateMethods match {
-            case List(mthd)                =>
-              if(id.isQualified) {
-                if(!mthd.mods.isStatic && id.shouldBeStatic &&
-                    !mthd.mods.isConstructor) {
-                  error(INSTANCE_METHOD_IN_STATIC_CONTEXT_INVOK,
-                    id.toString, "a method name", id.pos)
-                } else {
-                  id.symbol = mthd
-                  id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
-                }
-              } else {
-                enclosingNonLocal(id.owner).foreach { owner =>
-                  if(owner.mods.isStatic && !mthd.mods.isStatic) {
+            candidateMethods match {
+              case List(mthd)                =>
+                if(id.isQualified) {
+                  if(!mthd.mods.isStatic && id.shouldBeStatic &&
+                      !mthd.mods.isConstructor) {
                     error(INSTANCE_METHOD_IN_STATIC_CONTEXT_INVOK,
-                      id.toString, "a static method name", id.pos)
+                      id.toString, "a method name", id.pos)
                   } else {
                     id.symbol = mthd
                     id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
                   }
-                }
-              }
-            case (_::_)                    =>
-              error(AMBIGUOUS_METHOD_INVOCATION,
-                  id.toString, "a method name", id.pos)
-            case Nil                       =>
-              error(NAME_NOT_FOUND,
-                  id.toString, "a method name", id.pos)
-          }
-          id
-        } else if(id.isMethodIdent) {
-          error(INSTANTIATING_NON_CONCRETE_CLASS,
-            id.toString, "a concrete class", id.pos)
-          id
-        } else {
-          val symbol = id.owner.flatMap(
-            _.getSymbol(id.name, sym => alreadyDefined(sym, id.owner, symbols)))
-
-          //       s => {
-          //         enclosingClass(id.owner) match {
-          //           case Some(enc: ClassSymbol) =>
-          //             s.isInstanceOf[TermSymbol] &&
-          //             ((s.mods.isPrivateAcc && enc.directlyDefines(s)) ||
-          //               !s.mods.isPrivateAcc)
-          //           case _                      =>
-          //             s.isInstanceOf[TermSymbol]
-          //         }
-          //       })
-
-          symbol match {
-            case Some(sym)                        =>
-              enclosingNonLocal(id.owner).foreach { owner =>
-                if(id.isQualified) {
-                  id.enclosing match {
-                    case Some(from) if !isAccessible(sym, from)   =>
-                      error(FIELD_NOT_ACCESSIBLE,
-                        id.toString, "an accessible name", id.pos)
-                    case _                                        =>
-                      ()
-                  }
-                  if(sym.mods.isField && !sym.mods.isStatic && id.shouldBeStatic) {
-                    error(INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK,
-                      id.toString, "a variable name", id.pos)
-                  } else {
-                    id.symbol = sym
-                    id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
-                  }
-                } else if(isInStaticContext(id.owner) && sym.mods.isField &&
-                      !sym.mods.isStatic) {
-                  error(INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK,
-                    id.toString, "a static name", id.pos)
                 } else {
-                  if(!id.isQualified) {
-                    enclosingClass(id.owner) match {
-                      case Some(encl: ClassSymbol) if
-                                          !encl.directlyDefines(sym, _ => true) &&
-                                                 sym.mods.isPrivateAcc           =>
-                          error(FIELD_NOT_ACCESSIBLE,
-                            id.toString, "an accessible name", id.pos)
-                      case _                                                     =>
-                        id.symbol = sym
-                        id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
+                  enclosingNonLocal(id.owner).foreach { owner =>
+                    if(owner.mods.isStatic && !mthd.mods.isStatic) {
+                      error(INSTANCE_METHOD_IN_STATIC_CONTEXT_INVOK,
+                        id.toString, "a static method name", id.pos)
+                    } else {
+                      id.symbol = mthd
+                      id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
                     }
-                  } else {
-                    id.symbol = sym
-                    id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
                   }
                 }
-              }
-            case _                                =>
-              println(id.tpe)
-              error(NAME_NOT_FOUND,
-                  id.toString, "a variable name", id.pos)
+              case (_::_)                    =>
+                error(AMBIGUOUS_METHOD_INVOCATION,
+                    id.toString, "a method name", id.pos)
+              case Nil                       =>
+                error(NAME_NOT_FOUND,
+                    id.toString, "a method name", id.pos)
+            }
+            id
+          } else if(id.isMethodIdent) {
+            error(INSTANTIATING_NON_CONCRETE_CLASS,
+              id.toString, "a concrete class", id.pos)
+            id
+          } else {
+            val symbol = id.owner.flatMap(
+              _.getSymbol(id.name, _.isInstanceOf[TermSymbol]))
+
+            //       s => {
+            //         enclosingClass(id.owner) match {
+            //           case Some(enc: ClassSymbol) =>
+            //             s.isInstanceOf[TermSymbol] &&
+            //             ((s.mods.isPrivateAcc && enc.directlyDefines(s)) ||
+            //               !s.mods.isPrivateAcc)
+            //           case _                      =>
+            //             s.isInstanceOf[TermSymbol]
+            //         }
+            //       })
+
+            symbol match {
+              case Some(sym)                        =>
+                enclosingNonLocal(id.owner).foreach { owner =>
+                  if(id.isQualified) {
+                    id.enclosing match {
+                      case Some(from) if !isAccessible(sym, from)   =>
+                        error(FIELD_NOT_ACCESSIBLE,
+                          id.toString, "an accessible name", id.pos)
+                      case _                                        =>
+                        ()
+                    }
+                    if(sym.mods.isField && !sym.mods.isStatic && id.shouldBeStatic) {
+                      error(INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK,
+                        id.toString, "a variable name", id.pos)
+                    } else {
+                      id.symbol = sym
+                      id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
+                    }
+                  } else if(isInStaticContext(id.owner) && sym.mods.isField &&
+                        !sym.mods.isStatic) {
+                    error(INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK,
+                      id.toString, "a static name", id.pos)
+                  } else {
+                    if(!id.isQualified) {
+                      enclosingClass(id.owner) match {
+                        case Some(encl: ClassSymbol) if
+                                            !encl.directlyDefines(sym, _ => true) &&
+                                                   sym.mods.isPrivateAcc           =>
+                            error(FIELD_NOT_ACCESSIBLE,
+                              id.toString, "an accessible name", id.pos)
+                        case _                                                     =>
+                          id.symbol = sym
+                          id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
+                      }
+                    } else {
+                      id.symbol = sym
+                      id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
+                    }
+                  }
+                }
+              case _                                =>
+                error(NAME_NOT_FOUND,
+                    id.toString, "a variable name", id.pos)
+            }
+            id
           }
-          id
-        }
-      case tuse                                =>
-        typed((tuse, symbols))
-    }
+        case tuse                                =>
+          typed(tuse)
+      }
+    } else ident
   }
 
 
-  protected def alreadyDefined(sym: Symbol,
-      encl: Option[Symbol], symbols: List[Symbol]): Boolean =
-      if(sym.isInstanceOf[TermSymbol])
-        if(sym.mods.isLocalVariable) {
-          symbols.contains(sym)
-        } else if(sym.mods.isField && isInStaticInit(encl)) {
-          symbols.contains(sym)
-        } else true
-      else false
+  // protected def alreadyDefined(sym: Symbol,
+  //     encl: Option[Symbol], symbols: List[Symbol]): Boolean =
+  //     if(sym.isInstanceOf[TermSymbol])
+  //       if(sym.mods.isLocalVariable) {
+  //         symbols.contains(sym)
+  //       } else if(sym.mods.isField && isInStaticInit(encl)) {
+  //         symbols.contains(sym)
+  //       } else true
+  //     else false
 
-  protected def isInStaticInit(symbol: Option[Symbol]): Boolean = {
-    SymbolUtils.enclosingNonLocal(symbol)
-      .map(_.mods.isStaticInit).getOrElse(false)
-  }
+  // protected def isInStaticInit(symbol: Option[Symbol]): Boolean = {
+  //   SymbolUtils.enclosingNonLocal(symbol)
+  //     .map(_.mods.isStaticInit).getOrElse(false)
+  // }
 
   protected def isInStaticContext(symbol: Option[Symbol]): Boolean = {
     SymbolUtils.enclosingNonLocal(symbol)
@@ -871,15 +858,15 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent
 
 
 
-@component(tree, symbols)
+@component
 trait SelectTyperComponent extends TyperComponent {
   (select: SelectApi) => {
-    val qual = typed((select.qual, symbols))
+    val qual = typed(select.qual)
     qual.symbol.foreach(select.tree.owner = _)
     if(isType(qual)) {
       select.tree.shouldBeStatic = true
     }
-    val tree = typed((select.tree, symbols)).asInstanceOf[SimpleUseTree]
+    val tree = typed(select.tree).asInstanceOf[SimpleUseTree]
     tree.tpe.foreach(select.tpe = _)
     tree.symbol.foreach(select.symbol = _)
     TreeCopiers.copySelect(select)(qual, tree)
@@ -891,7 +878,7 @@ trait SelectTyperComponent extends TyperComponent {
 
 
 
-@component(tree, symbols)
+@component
 trait BinaryTyperComponent extends calcj.typechecker.BinaryTyperComponent {
 
   override protected def binaryTyper(ltpe: Type,
@@ -974,7 +961,7 @@ trait BinaryTyperComponent extends calcj.typechecker.BinaryTyperComponent {
   }
 }
 
-@component(tree, symbols)
+@component
 trait AssignTyperComponent extends primj.typechecker.AssignTyperComponent {
   override protected def checkFinalReassigning(lhs: Tree): Unit = {
     val isInStaticInit =

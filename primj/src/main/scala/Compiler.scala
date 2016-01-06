@@ -49,13 +49,10 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
     def compile: Tree => Unit = {
       init()
       (x: Tree) => {
-        val typers =
-          (t: Tree) => PrimjTyperFamily.typed((t, Nil))
-
         val f =
           (PrimjSymbolAssignerFamily.assign join
             (PrimjNamerFamily.name join
-              (typers join
+              (PrimjTyperFamily.typed join
                 (PrimjShapeCheckerFamily.check))))
         f(x)
       }

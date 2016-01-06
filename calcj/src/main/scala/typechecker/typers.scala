@@ -18,28 +18,26 @@ import calcj.types._
 
 
 trait TyperComponent extends
-  TransformationComponent[(Tree, List[Symbol]), Tree] {
-  def typed: ((Tree, List[Symbol])) => Tree
+  TransformationComponent[Tree, Tree] {
+  def typed: Tree => Tree
 }
 
 
-@component(tree, symbols)
+@component
 trait BinaryTyperComponent extends TyperComponent {
 
   (bin: BinaryApi)           => {
-    val e1 = typed((bin.lhs, symbols))
-    val e2 = typed((bin.rhs, symbols))
+    val e1 = typed(bin.lhs)
+    val e2 = typed(bin.rhs)
     (e1, e2) match {
       case (e1: Expr, e2: Expr)       if e1.tpe != None && e2.tpe != None =>
         val btpe = binaryTyper(e1.tpe.get, e2.tpe.get, bin)
         btpe match {
           case Some((e1tpe, e2tpe, rtpe))           =>
             val expr1 =
-              typed((castIfNeeded(e1, e1tpe, e1.tpe.get),
-                      symbols)).asInstanceOf[Expr]
+              typed(castIfNeeded(e1, e1tpe, e1.tpe.get)).asInstanceOf[Expr]
             val expr2 =
-              typed((castIfNeeded(e2, e2tpe, e2.tpe.get),
-                    symbols)).asInstanceOf[Expr]
+              typed(castIfNeeded(e2, e2tpe, e2.tpe.get)).asInstanceOf[Expr]
             val res = TreeCopiers.copyBinary(bin)(lhs = expr1, rhs = expr2)
             res.tpe = rtpe
             res
@@ -158,7 +156,7 @@ trait BinaryTyperComponent extends TyperComponent {
 
 }
 
-@component(tree, symbols)
+@component
 trait UnaryTyperComponent extends TyperComponent {
 
   (unary: UnaryApi)          => {
@@ -172,7 +170,7 @@ trait UnaryTyperComponent extends TyperComponent {
     //   case Pos    => point(expr)
     //   case _      => point(Unary(unary.op, expr, point(utpe), unary.pos))
     // }
-    typed((unary.expr, symbols)) match {
+    typed(unary.expr) match {
       case expr: Expr       if expr.tpe != None =>
         val utpe = unaryTyper(expr.tpe.get, unary)
         utpe match {
@@ -227,12 +225,12 @@ trait UnaryTyperComponent extends TyperComponent {
 
 }
 
-@component(tree, symbols)
+@component
 trait CastTyperComponent extends TyperComponent {
 
   (cast: CastApi)           => {
-    val tpt  = typed((cast.tpt, symbols))
-    val expr = typed((cast.expr, symbols))
+    val tpt  = typed(cast.tpt)
+    val expr = typed(cast.expr)
     (tpt, expr) match {
       case (tpt: UseTree, expr: Expr)   =>
         TreeCopiers.copyCast(cast)(tpt = tpt, expr = expr)
@@ -244,7 +242,7 @@ trait CastTyperComponent extends TyperComponent {
 
 }
 
-@component(tree, symbols)
+@component
 trait LiteralTyperComponent extends TyperComponent {
   (lit: LiteralApi)     => {
     lit.tpe = lit.constant.tpe

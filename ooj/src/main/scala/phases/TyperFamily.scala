@@ -22,16 +22,16 @@ import sana.ooj.typechecker._
 
 
 
-trait TyperFamily extends TransformationFamily[(Tree, List[Symbol]), Tree] {
+trait TyperFamily extends TransformationFamily[Tree, Tree] {
   self =>
 
   override def default: Tree = NoTree
 
-  def components: List[PartialFunction[(Tree, List[Symbol]), Tree]] =
-    generateComponents[(Tree, List[Symbol]), Tree](OojNodes.nodes,
+  def components: List[PartialFunction[Tree, Tree]] =
+    generateComponents[Tree, Tree](OojNodes.nodes,
       "TyperComponent", "typed", "")
 
-  def typed: ((Tree, List[Symbol])) => Tree = family
+  def typed: Tree => Tree = family
 }
 
 object TyperFamily extends TyperFamily
