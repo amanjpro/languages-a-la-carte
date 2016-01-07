@@ -17,7 +17,7 @@ import tiny.names.Name
 import calcj.ast.{TreeCopiers => _, TreeFactories => _, _}
 import primj.ast.{TreeCopiers => _, MethodDefApi => _, ProgramApi => _,
                   TreeFactories => _, TreeUtils => _, _}
-import primj.errors.ErrorCodes._
+import ooj.errors.ErrorCodes._
 import primj.symbols.{ProgramSymbol, MethodSymbol, VoidSymbol}
 import primj.modifiers._
 import ooj.names.StdNames
@@ -168,12 +168,21 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
           assign(temp).asInstanceOf[TemplateApi]
       }
     }
-    sym.owner.foreach(owner => {
-      owner.declare(sym)
-    })
+    classDoubleDefCheck(owner, clazz.name, clazz.pos)
+    owner.foreach(_.declare(sym))
     TreeCopiers.copyClassDef(clazz)(parents = parents, body = template)
   }
 
+
+  protected def classDoubleDefCheck(owner: Option[Symbol],
+    name: Name, pos: Option[Position]): Unit = owner match {
+    case Some(owner) if owner.directlyDefinesName(name,
+                               _.isInstanceOf[ClassSymbol])     =>
+      error(CLASS_ALREADY_DEFINED,
+          "", "", pos)
+    case _                                                      =>
+      ()
+  }
 
   protected def constructorName: Name       = StdNames.CONSTRUCTOR_NAME
   protected def voidSymbol: Option[Symbol]  = Some(VoidSymbol)
@@ -262,7 +271,7 @@ trait SuperSymbolAssignerComponent extends SymbolAssignerComponent {
 
 @component
 trait MethodDefSymbolAssignerComponent
-    extends primj.namers.MethodDefSymbolAssignerComponent {
+    extends SymbolAssignerComponent {
   (mthd: MethodDefApi)          => {
     val owner   = mthd.owner
     val symbol  = MethodSymbol(mthd.mods, mthd.name,

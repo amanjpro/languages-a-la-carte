@@ -8,6 +8,8 @@ import sana.calcj
 import sana.core.TransformationComponent
 import sana.dsl._
 import tiny.ast.{TreeCopiers => _, _}
+import tiny.names.Name
+import tiny.source.Position
 import primj.ast.Implicits._
 import tiny.errors.ErrorReporting.{error,warning}
 import tiny.symbols._
@@ -18,6 +20,7 @@ import primj.ast.TreeUtils
 import primj.ast.TreeFactories._
 import primj.symbols._
 import primj.modifiers.Ops._
+import primj.modifiers._
 import primj.errors.ErrorCodes._
 
 
@@ -78,6 +81,7 @@ trait MethodDefSymbolAssignerComponent extends SymbolAssignerComponent {
     val owner   = mthd.owner
     val symbol  = MethodSymbol(noflags, mthd.name,
       Nil, None, None, owner)
+    checkDoubleDef(owner, mthd.name, mthd.pos)
     owner.foreach(sym => sym.declare(symbol))
     owner.foreach(mthd.ret.owner  = _)
     mthd.body.owner = symbol
@@ -95,9 +99,16 @@ trait MethodDefSymbolAssignerComponent extends SymbolAssignerComponent {
     symbol.ret    = tpt.symbol
     mthd.symbol   = symbol
     symbol.owner.foreach(mthd.owner = _)
-
     TreeCopiers.copyMethodDef(mthd)(ret = tpt,
       params = params, body = body)
+  }
+
+  protected def checkDoubleDef(owner: Option[Symbol],
+      name: Name, pos: Option[Position]): Unit = owner.foreach { owner =>
+    if(owner.directlyDefinesName(name,
+            _.isInstanceOf[MethodSymbol]))
+        error(METHOD_ALREADY_DEFINED,
+            "", "", pos)
   }
 }
 
@@ -113,6 +124,7 @@ trait ValDefSymbolAssignerComponent extends SymbolAssignerComponent {
     val symbol  = VariableSymbol(valdef.mods, valdef.name,
       tpt.symbol, owner)
     val rhs     = assign(valdef.rhs).asInstanceOf[Expr]
+    checkDoubleDef(owner, valdef.name, valdef.pos)
     if(valdef.mods.isField) {
       owner.foreach(sym => {
         sym.declare(symbol)
@@ -121,6 +133,13 @@ trait ValDefSymbolAssignerComponent extends SymbolAssignerComponent {
     valdef.symbol = symbol
     TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
   }
+
+  protected def checkDoubleDef(owner: Option[Symbol],
+      name: Name, pos: Option[Position]): Unit =
+    if(owner.map(_.directlyDefinesName(name,
+        _.isInstanceOf[VariableSymbol])).getOrElse(false))
+      error(VARIABLE_ALREADY_DEFINED,
+          "", "", pos)
 }
 
 
