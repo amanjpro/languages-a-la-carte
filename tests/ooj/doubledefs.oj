@@ -1,19 +1,15 @@
 // fails
 // VARIABLE_ALREADY_DEFINED
-// VARIABLE_ALREADY_DEFINED
-// VARIABLE_ALREADY_DEFINED
-// METHOD_ALREADY_DEFINED
-// METHOD_ALREADY_DEFINED
-// METHOD_ALREADY_DEFINED
-// METHOD_ALREADY_DEFINED
-// VARIABLE_ALREADY_DEFINED
 // CLASS_ALREADY_DEFINED
+// VARIABLE_ALREADY_DEFINED
+// VARIABLE_ALREADY_DEFINED
+// METHOD_ALREADY_DEFINED
+// METHOD_ALREADY_DEFINED
 // NAME_NOT_FOUND
-// CLASS_ALREADY_DEFINED
 
 
 class A {
-  int k = 1; // fails
+  int k = 1;
   static int k = 2; // fails
   int b = 1;
   void m(int a) {
@@ -35,7 +31,7 @@ class A {
     init();
   }
 
-  int k() { // fails
+  int k() {
     return 1;
   }
 
@@ -43,7 +39,7 @@ class A {
     return 1;
   }
 
-  int k(java.lang.Object a) { // fails
+  int k(java.lang.Object a) {
     return 1;
   }
   void k(java.lang.Object a) { // fails
