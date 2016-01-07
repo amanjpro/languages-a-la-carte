@@ -17,7 +17,7 @@ trait AugmentedBlock {
       .map(_.asInstanceOf[Boolean])
       .getOrElse(false)
 
-  def isStaticInit_=(enclosing: Boolean): Unit =
-    tree.attributes = tree.attributes + ('isStaticInit -> enclosing)
+  def isStaticInit_=(flag: Boolean): Unit =
+    tree.attributes = tree.attributes + ('isStaticInit -> flag)
 }
 
