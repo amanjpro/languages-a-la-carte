@@ -25,15 +25,15 @@ class TyperTest extends FlatSpec with Matchers {
 
 
   // Transformation Family #1
-  trait TyperFamily extends TransformationFamily[(Tree, List[Symbol]), Tree] {
+  trait TyperFamily extends TransformationFamily[Tree, Tree] {
     self =>
 
     override def default: Tree = NoTree
 
-    def components: List[PartialFunction[(Tree, List[Symbol]), Tree]] =
-      generateComponents[(Tree, List[Symbol]), Tree](langs,
+    def components: List[PartialFunction[Tree, Tree]] =
+      generateComponents[Tree, Tree](langs,
         "TyperComponent", "typed", "")
-    def typed: ((Tree, List[Symbol])) => Tree = family
+    def typed: Tree => Tree = family
   }
 
 
@@ -52,7 +52,7 @@ class TyperTest extends FlatSpec with Matchers {
               mkLiteral(LongConstant(1)),
               SHR,
               mkLiteral(IntConstant(2)))
-    val tpe = getTpe(typer.typed((b, Nil)))
+    val tpe = getTpe(typer.typed(b))
     (tpe =:= LongType) should be (true)
   }
 
@@ -61,7 +61,7 @@ class TyperTest extends FlatSpec with Matchers {
               mkLiteral(ShortConstant(1)),
               USHR,
               mkLiteral(LongConstant(1)))
-    val tpe = getTpe(typer.typed((b, Nil)))
+    val tpe = getTpe(typer.typed(b))
     (tpe =:= IntType) should be (true)
   }
 
@@ -70,7 +70,7 @@ class TyperTest extends FlatSpec with Matchers {
               mkLiteral(IntConstant(1)),
               SHL,
               mkLiteral(FloatConstant(1.0f)))
-    val tpe = getTpe(typer.typed((b, Nil)))
+    val tpe = getTpe(typer.typed(b))
     (tpe == NoType) should be (true)
   }
 
@@ -79,7 +79,7 @@ class TyperTest extends FlatSpec with Matchers {
               mkLiteral(ShortConstant(1)),
               USHR,
               mkLiteral(BooleanConstant(true)))
-    val tpe = getTpe(typer.typed((b, Nil)))
+    val tpe = getTpe(typer.typed(b))
     (tpe == NoType) should be (true)
   }
 
@@ -92,7 +92,7 @@ class TyperTest extends FlatSpec with Matchers {
                   mkLiteral(ByteConstant(2))),
                 Mul,
                 mkLiteral(IntConstant(4))))
-    val tpe = getTpe(typer.typed((b, Nil)))
+    val tpe = getTpe(typer.typed(b))
     (tpe =:= IntType) should be (true)
   }
 
@@ -104,7 +104,7 @@ class TyperTest extends FlatSpec with Matchers {
                 mkLiteral(CharConstant('a'))),
               Mul,
               mkLiteral(DoubleConstant(2.2D)))
-    val tpe = getTpe(typer.typed((b, Nil)))
+    val tpe = getTpe(typer.typed(b))
     (tpe =:= DoubleType) should be (true)
   }
 
@@ -116,7 +116,7 @@ class TyperTest extends FlatSpec with Matchers {
                 mkLiteral(ByteConstant(2)),
                 Add,
                 mkLiteral(DoubleConstant(2.5))))
-    val tpe = getTpe(typer.typed((b, Nil)))
+    val tpe = getTpe(typer.typed(b))
     (tpe =:= DoubleType) should be (true)
   }
 
@@ -124,7 +124,7 @@ class TyperTest extends FlatSpec with Matchers {
     val b = mkUnary(false,
               Pos,
               mkLiteral(ByteConstant(1)))
-    val tpe = getTpe(typer.typed((b, Nil)))
+    val tpe = getTpe(typer.typed(b))
     (tpe =:= IntType) should be (true)
   }
 
