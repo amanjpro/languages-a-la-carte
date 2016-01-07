@@ -23,6 +23,7 @@ import primj.ast.{ApplyApi, ValDefApi}
 import primj.symbols.{ProgramSymbol, MethodSymbol, VariableSymbol, ScopeSymbol}
 import primj.types.{TypeUtils => _, _}
 import ooj.modifiers.Ops._
+import primj.modifiers.PARAM
 import ooj.modifiers._
 import ooj.ast._
 import ooj.names.StdNames
@@ -79,6 +80,7 @@ trait PackageDefTyperComponent extends TyperComponent {
 trait ValDefTyperComponent extends TyperComponent {
   (valdef: ValDefApi)          => {
     if(!valdef.mods.isField) {
+      checkDoubleDef(valdef.owner, valdef.name, valdef.pos)
       valdef.owner.foreach(sym => {
         valdef.symbol.foreach(sym.declare(_))
       })
@@ -139,34 +141,6 @@ trait ValDefTyperComponent extends TyperComponent {
 
 
 
-    res.owner.foreach { s =>
-      val vs = s match {
-        case c: ScopeSymbol             =>
-          c.owner match {
-            case Some(ms: MethodSymbol) =>
-              val cvs = s.getDirectlyDefinedSymbols(valdef.name,
-                _.isInstanceOf[VariableSymbol])
-              val mvs     = ms.getDirectlyDefinedSymbols(valdef.name,
-                _.isInstanceOf[VariableSymbol])
-              cvs ++ mvs
-            case _                      =>
-              s.getDirectlyDefinedSymbols(valdef.name,
-                _.isInstanceOf[VariableSymbol])
-          }
-        case _                          =>
-          s.getDirectlyDefinedSymbols(valdef.name,
-          _.isInstanceOf[VariableSymbol])
-      }
-      vs match {
-        case Nil                                =>
-          ()
-        case (x::Nil)                           =>
-          ()
-        case _                                  =>
-          error(VARIABLE_ALREADY_DEFINED,
-              "", "", valdef.pos)
-      }
-    }
 
     if(res.mods.isField &&
       res.owner.map(! _.isInstanceOf[TypeSymbol]).getOrElse(false)) {
@@ -177,7 +151,8 @@ trait ValDefTyperComponent extends TyperComponent {
       error(PARAM_OWNED_BY_NON_METHOD,
         valdef.toString, "A parameter", valdef.pos)
     } else if(res.mods.isLocalVariable &&
-      res.owner.map(! _.isInstanceOf[ScopeSymbol]).getOrElse(false)) {
+      res.owner.map(sym => !(sym.isInstanceOf[ScopeSymbol] ||
+            sym.isInstanceOf[MethodSymbol])).getOrElse(false)) {
       error(LOCAL_VARIABLE_OWNED_BY_NON_LOCAL,
         valdef.toString, "A local variable", valdef.pos)
     }
@@ -185,6 +160,12 @@ trait ValDefTyperComponent extends TyperComponent {
 
     res
   }
+
+  protected def checkDoubleDef(owner: Option[Symbol],
+      name: Name, pos: Option[Position]): Unit =
+    if(SymbolUtils.alreadyDefinedLocalVarable(owner, name))
+      error(VARIABLE_ALREADY_DEFINED,
+          "", "", pos)
 }
 
 @component
@@ -214,18 +195,14 @@ trait ClassDefTyperComponent extends TyperComponent {
           "", "", clazz.pos)
     })
 
-    clazz.owner.foreach { s =>
-      s.getDirectlyDefinedSymbols(clazz.name,
-            _.isInstanceOf[ClassSymbol]) match {
-        case Nil                                =>
-          ()
-        case (x::Nil)                           =>
-          ()
-        case _                                  =>
-          error(CLASS_ALREADY_DEFINED,
-              "", "", clazz.pos)
-      }
-    }
+    val methods       =
+      body
+        .members
+        .filter(_.isInstanceOf[MethodDefApi])
+        .map(_.asInstanceOf[MethodDefApi])
+
+
+    reportDuplicateMethods(methods)
 
 
     if(clazz.mods.isFinal && (clazz.mods.isInterface || clazz.mods.isAbstract))
@@ -233,6 +210,33 @@ trait ClassDefTyperComponent extends TyperComponent {
           "", "", clazz.pos)
 
     TreeCopiers.copyClassDef(clazz)(body = body, parents = parents)
+  }
+
+  def reportDuplicateMethods(methodsToSee: List[MethodDefApi]): Unit = {
+    methodsToSee match {
+      case Nil                                 =>
+        ()
+      case (m::ms)                             =>
+        val (matches, nonMatches) = ms.partition { mthd =>
+          val mthdSym = mthd.symbol
+          val msym    = m.symbol
+          val mthdTpe = msym.flatMap(_.tpe)
+          val mTpe    = mthdSym.flatMap(_.tpe)
+          (mthdTpe, mTpe) match {
+            case (Some(to: MethodType), Some(ts: MethodType)) =>
+              msym.map(_.name) == mthdSym.map(_.name) &&
+                to.params == ts.params &&
+                mthdSym.map(_.mods.isConstructor) ==
+                    msym.map(_.mods.isConstructor)
+            case _                                            =>
+              false
+          }
+        }
+        matches foreach { x =>
+          error(METHOD_ALREADY_DEFINED, "", "", x.pos)
+        }
+        reportDuplicateMethods(nonMatches)
+    }
   }
 
 
@@ -356,8 +360,9 @@ trait TemplateTyperComponent extends TyperComponent {
 trait MethodDefTyperComponent
   extends primj.typechecker.MethodDefTyperComponent {
   (mthd: MethodDefApi)          => {
-    val params  = mthd.params.map(param =>
-        typed(param).asInstanceOf[ValDefApi])
+    val params  = mthd.params.map { param =>
+      typed(param).asInstanceOf[ValDefApi]
+    }
     val body    = typed(mthd.body).asInstanceOf[Expr]
     val rtpe    = mthd.ret.tpe.getOrElse(ErrorType)
     val btpe    = body.tpe.getOrElse(ErrorType)
@@ -385,27 +390,7 @@ trait MethodDefTyperComponent
         params = params)
     }
 
-    res.owner.foreach {
-      s => {
-        val r = s.getDirectlyDefinedSymbols(mthd.name,
-          o => (o.tpe, mthd.tpe) match {
-            case (Some(to: MethodType), Some(ts: MethodType)) =>
-              to.params == ts.params &&
-              mods.isConstructor == o.mods.isConstructor
-            case l                                            =>
-              false
-          })
-        r match {
-          case Nil                                =>
-            ()
-          case (x::Nil)                           =>
-            ()
-          case _                                  =>
-            error(METHOD_ALREADY_DEFINED,
-                "", "", mthd.pos)
-        }
-      }
-    }
+
 
     if(mods.isFinal && mods.isAbstract)
       error(ABSTRACT_FINAL,

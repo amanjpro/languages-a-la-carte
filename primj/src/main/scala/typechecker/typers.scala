@@ -8,6 +8,7 @@ import sana.calcj
 
 import sana.dsl._
 import tiny.ast.{TreeCopiers => _, _}
+import tiny.names.Name
 import primj.ast.Implicits._
 import tiny.types.{TypeUtils => _, _}
 import tiny.symbols.{Symbol, TypeSymbol, TermSymbol}
@@ -358,6 +359,7 @@ trait UnaryTyperComponent extends calcj.typechecker.UnaryTyperComponent {
 trait ValDefTyperComponent extends TyperComponent {
   (valdef: ValDefApi)          => {
     if(!valdef.mods.isField) {
+      checkDoubleDef(valdef.owner, valdef.name, valdef.pos)
       valdef.owner.foreach(sym => {
         valdef.symbol.foreach(sym.declare(_))
       })
@@ -394,6 +396,14 @@ trait ValDefTyperComponent extends TyperComponent {
           TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
       }
   }
+
+
+  protected def checkDoubleDef(owner: Option[Symbol],
+      name: Name, pos: Option[Position]): Unit =
+    if(SymbolUtils.alreadyDefinedLocalVarable(owner, name))
+      error(VARIABLE_ALREADY_DEFINED,
+          "", "", pos)
+
 }
 
 
