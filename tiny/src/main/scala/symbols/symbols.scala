@@ -26,6 +26,11 @@ trait Symbol {
       s == symbol && p(s)
     }
 
+  def directlyDefinesName(name: Name,
+    p: Symbol => Boolean): Boolean = decls.exists { sym =>
+    sym.name == name && p(sym)
+  }
+
   def getDirectlyDefinedSymbols(name: Name,
       p: Symbol => Boolean): List[Symbol] =
     decls.filter { sym =>
