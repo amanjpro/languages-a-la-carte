@@ -82,9 +82,13 @@ trait MethodDefSymbolAssignerComponent extends SymbolAssignerComponent {
     owner.foreach(mthd.ret.owner  = _)
     mthd.body.owner = symbol
     val tpt     = assign(mthd.ret).asInstanceOf[UseTree]
-    val params  = mthd.params.map { x =>
-        x.owner = symbol
-        assign(x).asInstanceOf[ValDefApi]
+    val params  = mthd.params.map { param =>
+      val p = if(!param.mods.isParam) {
+        val mods = param.mods | PARAM
+        TreeCopiers.copyValDef(param)(mods = mods)
+      } else param
+      p.owner = symbol
+      assign(p).asInstanceOf[ValDefApi]
     }
     val body    = assign(mthd.body).asInstanceOf[Expr]
     symbol.params = params.map(_.symbol).flatten
@@ -157,11 +161,11 @@ trait BlockSymbolAssignerComponent extends SymbolAssignerComponent {
   (block: BlockApi)          => {
     val owner   = block.owner
     val symbol  = ScopeSymbol(owner)
+    block.symbol = symbol
     val stmts = block.stmts.map { stmt =>
       stmt.owner = symbol
       assign(stmt)
     }
-    block.symbol = symbol
     TreeCopiers.copyBlock(block)(stmts = stmts)
   }
 }

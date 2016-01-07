@@ -277,9 +277,13 @@ trait MethodDefSymbolAssignerComponent
       owner.foreach(mthd.ret.owner = _)
       assign(mthd.ret).asInstanceOf[UseTree]
     }
-    val params  = mthd.params.map { x =>
-      x.owner = symbol
-      assign(x).asInstanceOf[ValDefApi]
+    val params  = mthd.params.map { param =>
+      val p = if(!param.mods.isParam) {
+        val mods = param.mods | PARAM
+        TreeCopiers.copyValDef(param)(mods = mods)
+      } else param
+      p.owner = symbol
+      assign(p).asInstanceOf[ValDefApi]
     }
     val body    = if(mthd.mods.isConstructor) {
       mthd.body match {
