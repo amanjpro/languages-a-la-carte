@@ -48,6 +48,20 @@ trait ErrorCodes extends tiny.errors.ErrorCodes {
   case object TYPE_NAME_EXPECTED extends ErrorCode {
     val message: String = "A type name is expected"
   }
+
+  case object VARIABLE_ALREADY_DEFINED extends
+      ErrorCode {
+    val message: String =
+      "Variable already defined"
+  }
+
+  case object METHOD_ALREADY_DEFINED extends
+      ErrorCode {
+    val message: String =
+      "Method already defined"
+  }
+
+
 }
 
 object ErrorCodes extends ErrorCodes
