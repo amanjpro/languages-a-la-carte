@@ -613,8 +613,22 @@ trait ApplyTyperComponent extends TyperComponent {
       case _                       =>
         ()
     }
-    TreeCopiers.copyApply(apply)(fun = fun, args = args)
+    val res = TreeCopiers.copyApply(apply)(fun = fun, args = args)
+    if(isExplicitConstructorInvocation(res)) {
+      args.foreach { arg =>
+        if(isThisFieldAccess(arg)) {
+          error(REFERENCE_FIELD_BEFORE_SUPERTYPE,
+            "", "", arg.pos)
+        }
+      }
+    }
+    res
   }
+  protected def isExplicitConstructorInvocation(tree: Tree): Boolean =
+    TreeUtils.isExplicitConstructorInvocation(tree)
+
+  protected def isThisFieldAccess(tree: Tree): Boolean =
+    TreeUtils.isThisFieldAccess(tree)
 }
 
 

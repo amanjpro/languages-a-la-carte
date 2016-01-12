@@ -168,6 +168,11 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
     val message: String =
       "Public classes/interfaces should have the same name as the containing file"
   }
+
+  case object REFERENCE_FIELD_BEFORE_SUPERTYPE extends ErrorCode {
+    val message: String =
+      "Cannot reference a field before supertype constructor has been called"
+  }
 }
 
 object ErrorCodes extends ErrorCodes

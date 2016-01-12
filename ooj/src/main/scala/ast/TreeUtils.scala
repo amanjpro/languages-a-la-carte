@@ -8,7 +8,7 @@ import sana.brokenj
 import sana.ooj
 import brokenj.ast
 import primj.ast.{ValDefApi, BlockApi}
-import tiny.ast.{Tree, NoTree, TypeUseApi, UseTree}
+import tiny.ast.{Tree, NoTree, TypeUseApi, UseTree, IdentApi}
 import Implicits._
 import ooj.symbols.SymbolUtils
 import ooj.modifiers.Ops._
@@ -91,6 +91,29 @@ trait TreeUtils extends ast.TreeUtils {
   }
 
 
+  def isExplicitConstructorInvocation(tree: Tree): Boolean = tree match {
+    case Apply(Select(_: ThisApi, id: IdentApi), _)  if isConstructor(id)   =>
+      true
+    case Apply(Select(_: SuperApi, id: IdentApi), _) if isConstructor(id)   =>
+      true
+    case _                                                                  =>
+      false
+  }
+
+
+  /** Checks if this is an access to a field of the current
+   *  instance
+   */
+  def isThisFieldAccess(tree: Tree): Boolean = tree match {
+    case id: IdentApi             =>
+      id.symbol.map(_.mods.isField).getOrElse(false)
+    case Select(_: ThisApi, id)   =>
+      isThisFieldAccess(id)
+    case Select(_: SuperApi, id)  =>
+      isThisFieldAccess(id)
+    case _                        =>
+      false
+  }
 }
 
 object TreeUtils extends TreeUtils

@@ -3,6 +3,10 @@
 // NAME_NOT_FOUND
 // NAME_NOT_FOUND
 // CONSTRUCTOR_SHOULD_HAVE_THE_SAME_TYPE_AS_CONTAINING_CLASS
+// REFERENCE_FIELD_BEFORE_SUPERTYPE
+// REFERENCE_FIELD_BEFORE_SUPERTYPE
+// REFERENCE_FIELD_BEFORE_SUPERTYPE
+// REFERENCE_FIELD_BEFORE_SUPERTYPE
 
 package test;
 
@@ -36,4 +40,36 @@ class B extends A {
 
 class D extends A {
   A () {} // fails
+}
+
+
+class AB {
+  int k;
+}
+
+class AB2 extends AB {
+  int l;
+  AB2() {
+    this(super.k); // fails
+  }
+
+  AB2(char a) {
+    this(this.l); // fails
+  }
+
+  AB2(byte a) {
+    this(k); // fails
+  }
+
+  AB2(long a) {
+    this(l); // fails
+  }
+
+  AB2(double a) {
+    this(20);
+  }
+
+  AB2(int l) {
+    this.l = l;
+  }
 }
