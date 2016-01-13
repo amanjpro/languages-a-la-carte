@@ -178,11 +178,14 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
 
     def compile: Tree => Unit = {
       (x: Tree) => {
-        val f = (SymbolAssignerFamily.assign join
-                  (NamerFamily.name join
-                      (DefTyperFamily.typed join
-                        (TyperFamily.typed join
-                          ShapeCheckerFamily.check))))//)
+        val labelChecker = (t: Tree) =>
+          LabelNameCheckerFamily.check((t, Nil))
+        val f = SymbolAssignerFamily.assign join
+                  NamerFamily.name join
+                    DefTyperFamily.typed join
+                      TyperFamily.typed join
+                        ShapeCheckerFamily.check join
+                            labelChecker
         f(x)
       }
     }
