@@ -334,9 +334,9 @@ trait MethodDefSymbolAssignerComponent
   }
 
   protected def useName(use: UseTree): Name = use match {
-    case id: IdentApi   => id.name
-    case tuse: TypeUse  => tuse.name
-    case Select(_, i)   => i.name
+    case id: IdentApi      => id.name
+    case tuse: TypeUseApi  => tuse.name
+    case Select(_, i)      => i.name
   }
 
   protected def voidName: Name              = StdNames.VOID_TYPE_NAME
