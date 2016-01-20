@@ -26,6 +26,7 @@ import ooj.modifiers._
 import ooj.modifiers.Ops.noflags
 import ooj.names.StdNames
 import ooj.types.TypeUtils
+import ooj.eval.Env
 import ooj.antlr._
 
 import org.antlr.v4.runtime._
@@ -178,6 +179,11 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
 
     def compile: Tree => Unit = {
       (x: Tree) => {
+        val constantFolder = (t: Tree) => {
+          val (tc, env) = ConstantCollectingFamily.collect((t, Env.emptyEnv))
+          val (tf, _)   = ConstantFoldingFamily.constantFold((tc, env))
+          tf
+        }
         val labelChecker = (t: Tree) =>
           LabelNameCheckerFamily.check((t, Nil))
         val jumpChecker = (t: Tree) =>
@@ -186,8 +192,9 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
         val f = SymbolAssignerFamily.assign join
                   NamerFamily.name join
                     DefTyperFamily.typed join
-                      TyperFamily.typed join
-                        ShapeCheckerFamily.check join
+                      constantFolder join
+                        TyperFamily.typed join
+                          ShapeCheckerFamily.check join
                             labelChecker join
                               jumpChecker
         f(x)
