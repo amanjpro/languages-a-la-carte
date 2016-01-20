@@ -259,17 +259,29 @@ class Parser extends parsers.Parser {
     }
 
     override def visitIntLit(ctx: Java1Parser.IntLitContext): Tree = {
-      TreeFactories.mkLiteral(IntConstant(ctx.getText.toInt), pos(ctx))
+      val txt = ctx.getText
+      (txt.endsWith("l") || txt.endsWith("L")) match {
+        case true  =>
+          TreeFactories.mkLiteral(LongConstant(ctx.getText.toInt), pos(ctx))
+        case false =>
+          TreeFactories.mkLiteral(IntConstant(ctx.getText.toInt), pos(ctx))
+      }
     }
+
 
     override def visitCharLit(ctx: Java1Parser.CharLitContext): Tree = {
       TreeFactories.mkLiteral(CharConstant(ctx.getText.head), pos(ctx))
     }
 
     override def visitDoubleLit(ctx: Java1Parser.DoubleLitContext): Tree = {
-      TreeFactories.mkLiteral(DoubleConstant(ctx.getText.toDouble), pos(ctx))
+      val txt = ctx.getText
+      (txt.endsWith("f") || txt.endsWith("F")) match {
+        case true  =>
+          TreeFactories.mkLiteral(FloatConstant(ctx.getText.toFloat), pos(ctx))
+        case false =>
+          TreeFactories.mkLiteral(DoubleConstant(ctx.getText.toDouble), pos(ctx))
+      }
     }
-
 
     override def visitBoolLit(ctx: Java1Parser.BoolLitContext): Tree = {
       val b = ctx.getText match {

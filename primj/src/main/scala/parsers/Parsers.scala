@@ -482,8 +482,8 @@ class Parser extends parsers.Parser {
     override def visitFloatLit(@NotNull ctx: PrimjParser.FloatLitContext): Tree = {
       val txt = ctx.getText
       (txt.endsWith("f") || txt.endsWith("F")) match {
-        case true  => mkLiteral(FloatConstant(ctx.getText.toInt), pos(ctx))
-        case false => mkLiteral(DoubleConstant(ctx.getText.toInt), pos(ctx))
+        case true  => mkLiteral(FloatConstant(ctx.getText.toFloat), pos(ctx))
+        case false => mkLiteral(DoubleConstant(ctx.getText.toDouble), pos(ctx))
       }
     }
 
