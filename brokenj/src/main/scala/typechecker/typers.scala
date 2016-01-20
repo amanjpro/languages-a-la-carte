@@ -11,6 +11,7 @@ import sana.dsl._
 import tiny.ast.{TreeCopiers => _, _}
 import tiny.types._
 import primj.ast.Implicits._
+import primj.ast.TreeExtractors._
 import tiny.types.TypeUtils._
 import tiny.symbols.{TypeSymbol, TermSymbol}
 import tiny.source.Position
@@ -18,7 +19,7 @@ import tiny.errors.ErrorReporting.{error,warning}
 import calcj.typechecker.{TyperComponent, TypePromotions}
 import calcj.types._
 import primj.symbols._
-import primj.errors.ErrorCodes._
+import brokenj.errors.ErrorCodes._
 import primj.types._
 import primj.modifiers.Ops._
 import brokenj.ast._
@@ -36,7 +37,17 @@ Continue: DONE
 @component
 trait CaseTyperComponent extends TyperComponent {
   (cse: CaseApi) => {
-    val guards = cse.guards.map(cs => typed(cs).asInstanceOf[Expr])
+    val guards = cse.guards.map { cs =>
+      val res = typed(cs).asInstanceOf[Expr]
+      res match {
+        case Literal(c)                                         =>
+          res
+        case guard                                              =>
+          error(CASE_GUARD_NOT_CONSTANT_EXPRESSION,
+              "", "", guard.pos)
+          cs
+      }
+    }
     val body   = typed(cse.body)
     TreeCopiers.copyCase(cse)(guards = guards, body = body)
   }
@@ -78,7 +89,28 @@ trait SwitchTyperComponent extends TyperComponent {
               "char, byte, short or int",
               expr.pos)
     }
+    checkDistinctness(cases.flatMap(_.guards))
     TreeCopiers.copySwitch(switch)(expr = expr, cases = cases)
+  }
+
+  def checkDistinctness(l: List[Expr]): Unit = l match {
+    case Nil                                =>
+      ()
+    case (Literal(c1)::tl)                  =>
+      val notDistinct = tl.find { t => t match {
+          case Literal(c2) =>
+            c1 == c2
+          case _           =>
+            false
+        }
+      }
+      notDistinct.foreach { guard =>
+        error(NOT_DISTINCT_GUARD,
+            "", "", guard.pos)
+      }
+      checkDistinctness(tl)
+    case (_::tl)                            =>
+      checkDistinctness(tl)
   }
 }
 

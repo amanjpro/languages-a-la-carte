@@ -21,6 +21,14 @@ trait ErrorCodes extends primj.errors.ErrorCodes {
   case object BAD_BREAK_STMT extends ErrorCode {
     val message: String = "Break can only appear in breakable statements"
   }
+
+  case object NOT_DISTINCT_GUARD extends ErrorCode {
+    val message: String = "Case guard is not distinct"
+  }
+
+  case object CASE_GUARD_NOT_CONSTANT_EXPRESSION extends ErrorCode {
+    val message: String = "Case guard is not constant expression"
+  }
 }
 
 object ErrorCodes extends ErrorCodes
