@@ -9,6 +9,7 @@ import sana.calcj.symbols._
 import sana.ooj.names.StdNames
 import sana.ooj.modifiers.Ops._
 import sana.ooj.types.TypeUtils
+import sana.tiny.symbols.{TypeSymbol, TermSymbol}
 import sana.primj.symbols.{ProgramSymbol, MethodSymbol,
                            VariableSymbol, ScopeSymbol}
 
@@ -217,6 +218,13 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
       areInTheSamePackages(symbol, from) || r.getOrElse(false)
     } else areInTheSamePackages(symbol, from)
   }
+
+
+  def isTypeSymbol(symbol: Option[Symbol]): Boolean =
+    symbol.map(_.isInstanceOf[TypeSymbol]).getOrElse(false)
+
+  def isTermSymbol(symbol: Option[Symbol]): Boolean =
+    symbol.map(_.isInstanceOf[TermSymbol]).getOrElse(false)
 }
 
 object SymbolUtils extends SymbolUtils
