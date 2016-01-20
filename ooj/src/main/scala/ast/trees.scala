@@ -32,7 +32,9 @@ import ooj.names.StdNames._
 trait ProgramApi extends Tree {
   def members: List[Tree]
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
-    val r1 = members.foldLeft(z)(f)
+    val r1 = members.foldLeft(z)((z, y) => {
+      y.bottomUp(z)(f)
+    })
     f(r1, this)
   }
 }
@@ -44,7 +46,7 @@ trait CompilationUnitApi extends Tree {
   def sourcePath: List[String]
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
-    val r1 = f(z, module)
+    val r1 = module.bottomUp(z)(f)
     f(r1, this)
   }
 }
@@ -57,7 +59,9 @@ trait PackageDefApi extends NamedTree {
   def containingPackages: List[Name]
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
-    val r1 = members.foldLeft(z)(f)
+    val r1 = members.foldLeft(z)((z, y) => {
+      y.bottomUp(z)(f)
+    })
     f(r1, this)
   }
 }
@@ -71,8 +75,10 @@ trait ClassDefApi extends TypeTree {
 
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
-    val r1 = parents.foldLeft(z)(f)
-    val r2 = f(r1, body)
+    val r1 = parents.foldLeft(z)((z, y) => {
+      y.bottomUp(z)(f)
+    })
+    val r2 = body.bottomUp(r1)(f)
     f(r2, this)
   }
   // {
@@ -90,7 +96,9 @@ trait TemplateApi extends Tree {
   def members: List[Tree]
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
-    val r1 = members.foldLeft(z)(f)
+    val r1 = members.foldLeft(z)((z, y) => {
+      y.bottomUp(z)(f)
+    })
     f(r1, this)
   }
 }
@@ -103,7 +111,7 @@ trait NewApi extends Expr {
   def app: ApplyApi
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
-    val r1 = f(z, app)
+    val r1 = app.bottomUp(z)(f)
     f(r1, this)
   }
 }
@@ -117,8 +125,8 @@ trait SelectApi extends UseTree with Expr {
   def name: Name           = tree.name
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
-    val r1 = f(z, qual)
-    val r2 = f(r1, tree)
+    val r1 = qual.bottomUp(z)(f)
+    val r2 = tree.bottomUp(r1)(f)
     f(r2, this)
   }
 }

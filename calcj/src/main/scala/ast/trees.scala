@@ -20,8 +20,8 @@ trait CastApi extends Expr {
   def expr: Expr
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
-    val r1 = f(z, tpt)
-    val r2 = f(r1, expr)
+    val r1 = tpt.bottomUp(z)(f)
+    val r2 = expr.bottomUp(r1)(f)
     f(r2, this)
   }
 }
@@ -38,8 +38,8 @@ trait BinaryApi extends Expr {
   def rhs: Expr
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
-    val r1 = f(z, lhs)
-    val r2 = f(r1, rhs)
+    val r1 = lhs.bottomUp(z)(f)
+    val r2 = rhs.bottomUp(r1)(f)
     f(r2, this)
   }
 }
@@ -50,7 +50,7 @@ trait UnaryApi extends Expr {
   def expr: Expr
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
-    val r1 = f(z, expr)
+    val r1 = expr.bottomUp(z)(f)
     f(r1, this)
   }
 }

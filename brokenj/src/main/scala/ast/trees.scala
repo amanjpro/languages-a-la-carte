@@ -22,7 +22,7 @@ trait LabelApi extends Expr with NamedTree {
   def stmt: Expr
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
-    val r1 = f(z, stmt)
+    val r1 = stmt.bottomUp(z)(f)
     f(r1, this)
   }
 }
@@ -46,8 +46,10 @@ trait CaseApi extends Tree {
   def body: Tree
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
-    val r1 = guards.foldLeft(z)(f)
-    val r2 = f(r1, body)
+    val r1 = guards.foldLeft(z)((z, y) => {
+      y.bottomUp(z)(f)
+    })
+    val r2 = body.bottomUp(r1)(f)
     f(r2, this)
   }
 }
@@ -61,8 +63,10 @@ trait SwitchApi extends Expr {
   def cases: List[CaseApi]
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
-    val r1 = f(z, expr)
-    val r2 = cases.foldLeft(r1)(f)
+    val r1 = expr.bottomUp(z)(f)
+    val r2 = cases.foldLeft(r1)((z, y) => {
+      y.bottomUp(z)(f)
+    })
     f(r2, this)
   }
 }
