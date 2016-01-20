@@ -8,12 +8,12 @@
 
 short m() {
   int k      = 10;
-  byte b     = k;
-  boolean bo = k; // fails
-  double d   = k;
-  char c1    = d;    // fails
-  char z2    = k;
-  z2         = k;
-  z2         = b;  // fails
-  return k;
+  byte b     = 10;
+  boolean bo = 10; // fails
+  double d   = 10;
+  char c1    = 10.2;    // fails
+  char z2    = 10;
+  z2         = 10;
+  z2         = (byte) 10;  // fails
+  return 10;
 }

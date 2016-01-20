@@ -2,15 +2,18 @@
 // TYPE_MISMATCH
 // TYPE_MISMATCH
 // TYPE_MISMATCH
+// TYPE_MISMATCH
 
 
 
 public class promotions {
+  final int k      = 10;
+  final double dd  = k;
   short m() {
-    int k      = 10;
     byte b     = k;
     boolean bo = k; // fails
     double d   = k;
+    char c0    = dd;    // fails
     char c1    = d;    // fails
     char z2    = k;
     z2         = k;
