@@ -480,7 +480,7 @@ trait TypeUseTyperComponent extends TyperComponent {
       val symbol = tuse.symbol match {
         case None           =>
           val sym = tuse.owner.flatMap(_.getSymbol(tuse.name,
-          _.isInstanceOf[TypeSymbol]))
+              _.isInstanceOf[TypeSymbol]))
           sym.foreach(tuse.symbol = _)
           sym
         case Some(sym)      =>
