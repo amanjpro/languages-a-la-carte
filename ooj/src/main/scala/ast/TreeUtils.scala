@@ -9,6 +9,9 @@ import sana.ooj
 import brokenj.ast
 import primj.ast.{ValDefApi, BlockApi}
 import tiny.ast.{Tree, NoTree, TypeUseApi, UseTree, IdentApi}
+import calcj.ast._
+import calcj.types.PrimitiveType
+import ooj.types.TypeUtils
 import Implicits._
 import ooj.symbols.SymbolUtils
 import ooj.modifiers.Ops._
@@ -113,6 +116,16 @@ trait TreeUtils extends ast.TreeUtils {
       isThisFieldAccess(id)
     case _                        =>
       false
+  }
+
+
+  override def isConstantLiteral(tree: Tree): Boolean = tree match {
+    case Literal(constant)  =>
+      constant.tpe.isInstanceOf[PrimitiveType] ||
+        constant.tpe =:= TypeUtils.stringClassType
+    case _                  =>
+      false
+
   }
 }
 
