@@ -108,7 +108,7 @@ trait ValDefTyperComponent extends TyperComponent {
     //   error(UNINITIALIZED_FINAL_VARIABLE,
     //       valdef.toString, "", valdef.pos, valdef)
     //   valdef
-    } else (TypeUtils.isProbablyAssignable(ttpe, rtpe)) match {
+    } else (TypeUtils.isAssignable(rhs, rtpe, ttpe)) match {
         case false if rhs != NoTree        =>
           error(TYPE_MISMATCH,
             rtpe.toString, ttpe.toString, rhs.pos)

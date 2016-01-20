@@ -65,7 +65,7 @@ trait AssignTyperComponent extends TyperComponent {
     assign: AssignApi): AssignApi = {
     (lhs.tpe, rhs.tpe) match {
       case (Some(ltpe), Some(rtpe))
-          if TypeUtils.isProbablyAssignable(ltpe, rtpe)  =>
+          if TypeUtils.isAssignable(rhs, rtpe, ltpe)  =>
         lhs.tpe.foreach(assign.tpe = _)
         TreeCopiers.copyAssign(assign)(lhs = lhs, rhs = rhs)
       case (Some(ltpe), Some(rtpe))                      =>
@@ -228,30 +228,23 @@ trait TernaryTyperComponent extends TyperComponent {
         Some(ShortType)
       case (Some(tpe1: NumericType),
             Some(tpe2: NumericType))                      =>
-        if((tpe1 =:= ShortType ||
-            tpe1 =:= CharType  ||
-            tpe1 =:= ByteType) &&
-            tpe2 =:= IntType &&
-            isConstantLiteral(rhs) &&
-            TypePromotions.isNarrawableTo(rhs, tpe1))
+        if(isNarrawableTo(rhs, tpe1))
           Some(tpe1)
-        else if((tpe2 =:= ShortType ||
-                 tpe2 =:= CharType  ||
-                 tpe2 =:= ByteType) &&
-                 tpe1 =:= IntType &&
-                 isConstantLiteral(lhs) &&
-                 TypePromotions.isNarrawableTo(lhs, tpe2))
+        else if(isNarrawableTo(lhs, tpe2))
           Some(tpe2)
         else
           // INFO: This will be extended once we have OOJ
-          Some(TypePromotions.binaryNumericPromotion(tpe1, tpe2))
+          Some(binaryNumericPromotion(tpe1, tpe2))
       case _                                              => None
     }
   }
 
-  protected def isConstantLiteral(tree: Tree): Boolean =
-    TreeUtils.isConstantLiteral(tree)
+  protected def isNarrawableTo(e: Tree, t: Type): Boolean =
+    TypePromotions.isNarrawableTo(e, t)
 
+  protected def binaryNumericPromotion(t1: NumericType,
+    t2: NumericType): PrimitiveType =
+    TypePromotions.binaryNumericPromotion(t1, t2)
 }
 
 @component
@@ -309,7 +302,7 @@ trait ReturnTyperComponent extends TyperComponent {
             ret
           case Some(MethodType(rtpe, _))                                =>
             val ok = expr.tpe.map(etpe =>
-                TypeUtils.isProbablyAssignable(rtpe, etpe))
+                TypeUtils.isAssignable(expr, etpe, rtpe))
             ok match {
               case Some(true)          =>
                 ret
@@ -387,7 +380,7 @@ trait ValDefTyperComponent extends TyperComponent {
       error(UNINITIALIZED_FINAL_VARIABLE,
           valdef.toString, "", valdef.pos)
       valdef
-    } else (TypeUtils.isProbablyAssignable(ttpe, rtpe)) match {
+    } else (TypeUtils.isAssignable(rhs, rtpe, ttpe)) match {
         case false if rhs != NoTree        =>
           error(TYPE_MISMATCH,
             rtpe.toString, ttpe.toString, rhs.pos)
