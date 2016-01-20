@@ -235,6 +235,7 @@ trait CastTyperComponent extends TyperComponent {
     val expr = typed(cast.expr)
     (tpt, expr) match {
       case (tpt: UseTree, expr: Expr)   =>
+        tpt.tpe.foreach(cast.tpe = _)
         TreeCopiers.copyCast(cast)(tpt = tpt, expr = expr)
       case _                            =>
         // errors are already reported
