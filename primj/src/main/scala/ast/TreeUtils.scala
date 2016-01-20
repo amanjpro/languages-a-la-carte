@@ -32,28 +32,28 @@ trait TreeUtils {
 
 
   // make sure that the guards are constant expressions Section 15.27
-  def isConstantExpression(e: Tree): Boolean = e match {
-    case lit: LiteralApi                              => true
-    case cst: CastApi                                 =>
-      // permit casts to primitive and string
-      // TODO: Change this in OOJ, to handle String too
-      cst.tpt.tpe match {
-        case Some(_: PrimitiveType) => isConstantExpression(cst.expr)
-        case _                      => false
-      }
-    case u: UnaryApi    if u.op != Inc && u.op != Dec    =>
-      isConstantExpression(u.expr)
-    case b: BinaryApi                                    =>
-      isConstantExpression(b.lhs) &&
-        isConstantExpression(b.rhs)
-    case id: IdentApi                                    =>
-      isFinal(id) && isVariable(id)
-    case _                                            => false
-    // TODO: Add qualified Select later in ooj
-    // TypeName.Identifier only, and only when Identifier is already
-    // a final variable
-  }
-
+  // def isConstantExpression(e: Tree): Boolean = e match {
+  //   case lit: LiteralApi                              => true
+  //   case cst: CastApi                                 =>
+  //     // permit casts to primitive and string
+  //     // TODO: Change this in OOJ, to handle String too
+  //     cst.tpt.tpe match {
+  //       case Some(_: PrimitiveType) => isConstantExpression(cst.expr)
+  //       case _                      => false
+  //     }
+  //   case u: UnaryApi    if u.op != Inc && u.op != Dec    =>
+  //     isConstantExpression(u.expr)
+  //   case b: BinaryApi                                    =>
+  //     isConstantExpression(b.lhs) &&
+  //       isConstantExpression(b.rhs)
+  //   case id: IdentApi                                    =>
+  //     isFinal(id) && isVariable(id)
+  //   case _                                            => false
+  //   // TODO: Add qualified Select later in ooj
+  //   // TypeName.Identifier only, and only when Identifier is already
+  //   // a final variable
+  // }
+  //
 
   def isFinal(tree: Tree): Boolean =
     tree.symbol.map(_.mods.isFinal).getOrElse(false)
@@ -124,6 +124,14 @@ trait TreeUtils {
     case _: BlockApi                 => false
     case _: TypeUseApi               => false
     case _                        => true
+  }
+
+
+  def isConstantLiteral(tree: Tree): Boolean = tree match {
+    case lit: Literal              =>
+      true
+    case _                         =>
+      false
   }
 }
 

@@ -232,14 +232,14 @@ trait TernaryTyperComponent extends TyperComponent {
             tpe1 =:= CharType  ||
             tpe1 =:= ByteType) &&
             tpe2 =:= IntType &&
-            isConstantExpr(rhs) &&
+            isConstantLiteral(rhs) &&
             TypePromotions.isNarrawableTo(rhs, tpe1))
           Some(tpe1)
         else if((tpe2 =:= ShortType ||
                  tpe2 =:= CharType  ||
                  tpe2 =:= ByteType) &&
                  tpe1 =:= IntType &&
-                 isConstantExpr(lhs) &&
+                 isConstantLiteral(lhs) &&
                  TypePromotions.isNarrawableTo(lhs, tpe2))
           Some(tpe2)
         else
@@ -249,8 +249,8 @@ trait TernaryTyperComponent extends TyperComponent {
     }
   }
 
-  protected def isConstantExpr(tree: Tree): Boolean =
-    TreeUtils.isConstantExpression(tree)
+  protected def isConstantLiteral(tree: Tree): Boolean =
+    TreeUtils.isConstantLiteral(tree)
 
 }
 
