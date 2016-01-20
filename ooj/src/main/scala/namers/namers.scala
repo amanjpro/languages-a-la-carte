@@ -225,7 +225,8 @@ trait IdentNamerComponent
 
 
 trait IdentNamer {
-  protected def nameIdent(id: IdentApi): SimpleUseTree = {
+  protected def nameIdent(original: IdentApi): SimpleUseTree = {
+    val id = TreeCopiers.copyIdent(original)(name = original.name)
     // At the beginning: we treat all (Ident)s as ambiguous names.
     // Can we see any (VariableSymbol)s with this name from the current scope?
     val temp = id.owner.flatMap(_.getSymbol(id.name,
