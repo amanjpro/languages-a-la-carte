@@ -15,7 +15,7 @@ import calcj.types._
 import primj.symbols.VariableSymbol
 import primj.modifiers.Ops._
 
-trait TreeUtils {
+trait TreeUtils extends calcj.ast.TreeUtils {
   def isTypeUse(tree: UseTree): Boolean = tree match {
     case _: IdentApi                    => false
     case _: TypeUseApi                  => true
