@@ -228,6 +228,7 @@ trait CastSymbolAssignerComponent extends SymbolAssignerComponent {
     val owner = cast.owner
     owner.foreach { o =>
       cast.expr.owner = o
+      cast.tpt.owner  = o
     }
     val expr = assign(cast.expr).asInstanceOf[Expr]
     TreeCopiers.copyCast(cast)(expr = expr)
