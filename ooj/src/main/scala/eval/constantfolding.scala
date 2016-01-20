@@ -49,8 +49,7 @@ trait ProgramConstantFoldingComponent extends ConstantFoldingComponent {
     }
     val res = TreeCopiers.copyProgram(prg)(members = members)
     res.bottomUp(())((_, y) => y match {
-      case v: ValDef    if (!v.mods.isField) &&
-                             v.mods.isFinal  &&
+      case v: ValDefApi    if v.mods.isFinal && !v.mods.isField &&
                              v.rhs != NoTree    =>
         for {
           s <- v.symbol
@@ -121,20 +120,23 @@ trait TemplateConstantFoldingComponent
 trait ValDefConstantFoldingComponent
   extends ConstantFoldingComponent {
   (valdef: ValDefApi) => {
-    if(valdef.mods.isFinal && valdef.rhs != NoTree) {
-      if(!valdef.mods.isField) {
+    if(valdef.rhs != NoTree) {
+      if(valdef.mods.isFinal && !valdef.mods.isField) {
         valdef.owner.foreach(sym => {
           valdef.symbol.foreach(sym.declare(_))
         })
       }
+      val (tpt, _) = constantFold((valdef.tpt, env))
+      val vtpe     = tpt.symbol.flatMap(_.tpe)
       valdef.symbol.map { sym =>
         env.getValue(sym) match {
           case Some(LiteralValue(lit))       =>
-            (updateRhs(valdef, lit), env)
+            val rhs = vtpe.map(updateLiteral(lit, _)).getOrElse(lit)
+            (updateRhs(valdef, rhs), env)
           case Some(ExprValue(expr))         =>
-            foldRhs(valdef, expr, env, sym)
+            foldRhs(valdef, expr, env, sym, vtpe)
           case None if !valdef.mods.isField  =>
-            foldRhs(valdef, valdef.rhs, env, sym)
+            foldRhs(valdef, valdef.rhs, env, sym, vtpe)
           case _                             =>
             (valdef, env)
         }
@@ -145,21 +147,44 @@ trait ValDefConstantFoldingComponent
   }
 
   protected def foldRhs(valdef: ValDefApi,
-            expr: Expr, env: Env, sym: Symbol): (ValDefApi, Env) = {
+        expr: Expr, env: Env, sym: Symbol,
+        tpe: Option[Type]): (ValDefApi, Env) = {
     val (rhs, env2) = constantFold((expr, env))
     rhs match {
       case lit: LiteralApi       =>
-        val e = env2.bind(sym, LiteralValue(lit))
-        (updateRhs(valdef, lit), e)
+        val rhs = tpe.map(updateLiteral(lit, _)).getOrElse(lit)
+        val e = valdef.mods.isFinal match {
+          case true => env2.bind(sym, LiteralValue(rhs))
+          case false => env2
+        }
+        (updateRhs(valdef, rhs), e)
       case _                     =>
         val e = env2.unbind(sym)
         (valdef, e)
     }
   }
 
+  protected def updateLiteral(lit: LiteralApi, tpe: Type): LiteralApi = {
+    if(isNarrawableTo(lit, tpe)) {
+      narrowDown(lit, tpe)
+    } else if(lit.constant.tpe <:< tpe) {
+      widen(lit, tpe)
+    } else {
+      lit
+    }
+  }
+
   protected def updateRhs(valdef: ValDefApi, rhs: Expr): ValDefApi = {
     TreeCopiers.copyValDef(valdef)(rhs = rhs)
   }
+
+  protected def narrowDown(lit: LiteralApi, tpe: Type): LiteralApi =
+    TreeUtils.narrowDown(lit, tpe)
+  protected def widen(lit: LiteralApi, tpe: Type): LiteralApi =
+    TreeUtils.widen(lit, tpe)
+  protected def isNarrawableTo(e: Tree, t: Type): Boolean =
+    TypePromotions.isNarrawableTo(e, t)
+
 }
 
 
@@ -677,15 +702,19 @@ trait CastConstantFoldingComponent
     val (newExpr, newEnv) = constantFold((cst.expr, env))
     val newTree = newExpr match {
       case lit@Literal(c)          =>
+        println(newTpt.symbol)
+        println(newTpt.symbol.map(_.tpe))
         val res = for {
           sym  <- newTpt.symbol
           stpe <- sym.tpe
         } yield {
           if(stpe.isInstanceOf[PrimitiveType] &&
              c.tpe.isInstanceOf[PrimitiveType]) {
-            if(c.tpe <:< stpe || isNarrawableTo(lit, stpe))
-              lit
-            else
+            if(isNarrawableTo(lit, stpe)) {
+              narrowDown(lit, stpe)
+            } else if(c.tpe <:< stpe) {
+              widen(lit, stpe)
+            } else
               cst
           } else if(stpe =:= stringClassType &&
                     c.tpe =:= stringClassType) {
@@ -701,6 +730,10 @@ trait CastConstantFoldingComponent
     (newTree, newEnv)
   }
 
+  protected def narrowDown(lit: LiteralApi, tpe: Type): LiteralApi =
+    TreeUtils.narrowDown(lit, tpe)
+  protected def widen(lit: LiteralApi, tpe: Type): LiteralApi =
+    TreeUtils.widen(lit, tpe)
   protected val stringClassType: Type = TypeUtils.stringClassType
   protected def isNarrawableTo(e: Tree, t: Type): Boolean =
     TypePromotions.isNarrawableTo(e, t)
