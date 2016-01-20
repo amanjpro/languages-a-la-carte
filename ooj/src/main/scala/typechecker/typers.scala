@@ -633,176 +633,62 @@ trait ApplyTyperComponent extends TyperComponent {
 
 
 @component
-trait TypeUseTyperComponent extends primj.typechecker.TypeUseTyperComponent {
+trait TypeUseTyperComponent
+  extends primj.typechecker.TypeUseTyperComponent
+  with TypeUseNamer {
   (tuse: TypeUseApi) => {
-    if(!tuse.hasBeenNamed) {
-      tuse.owner.foreach(sym => {
-        sym.getSymbol(tuse.name, _.isInstanceOf[TypeSymbol]) match {
-          case Some(sym) => tuse.symbol = sym
-          case _         => ()
-        }
-      })
-      tuse.symbol match {
-        case None          if tuse.isQualified         =>
-          // INFO:
-          // In the class is private to the compilation unit, and
-          // we are in the compilation unit then ignore the qualified
-          // owner and search in the current compilation unit.
-          for {
-            opkg   <- SymbolUtils.enclosingPackage(tuse.owner)
-            epkg   <- SymbolUtils.enclosingPackage(tuse.enclosing)
-            encl   <-
-              SymbolUtils.enclosingCompilationUnit(tuse.enclosing)
-                if opkg.defines(encl) &&  opkg == epkg
-            sym    <- encl.getSymbol(tuse.name, _.isInstanceOf[TypeSymbol])
-            owner  <- sym.owner
-          } {
-            tuse.symbol = sym
-            tuse.owner  = owner
-          }
-        case s                                         =>
-          ()
+    val tuseCopy = if(!tuse.hasBeenNamed) {
+      nameTypeUse(tuse)
+    } else tuse
+    super.apply(tuseCopy)
+  }
+}
+
+
+trait TypeUseNamer {
+  def nameTypeUse(tuse: TypeUseApi): TypeUseApi = {
+    val tuseCopy = TreeCopiers.copyTypeUse(tuse)(name = tuse.name)
+    tuseCopy.owner.foreach(sym => {
+      sym.getSymbol(tuseCopy.name, _.isInstanceOf[TypeSymbol]) match {
+        case Some(sym) => tuseCopy.symbol = sym
+        case _         => ()
       }
+    })
+    tuseCopy.symbol match {
+      case None          if tuseCopy.isQualified         =>
+        // INFO:
+        // In the class is private to the compilation unit, and
+        // we are in the compilation unit then ignore the qualified
+        // owner and search in the current compilation unit.
+        for {
+          opkg   <- SymbolUtils.enclosingPackage(tuseCopy.owner)
+          epkg   <- SymbolUtils.enclosingPackage(tuseCopy.enclosing)
+          encl   <-
+            SymbolUtils.enclosingCompilationUnit(tuseCopy.enclosing)
+              if opkg.defines(encl) &&  opkg == epkg
+          sym    <- encl.getSymbol(tuseCopy.name, _.isInstanceOf[TypeSymbol])
+          owner  <- sym.owner
+        } {
+          tuseCopy.symbol = sym
+          tuseCopy.owner  = owner
+        }
+      case s                                             =>
+        ()
     }
-    super.apply(tuse)
+    tuseCopy
   }
 }
 
 @component
 trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent
-      with ooj.namers.IdentNamer {
+      with ooj.namers.IdentNamer
+      with ooj.typechecker.IdentNamer {
   (ident: IdentApi) => {
     if(!ident.hasBeenNamed) {
       val id = nameIdent(ident)
       id match {
         case id: IdentApi                          =>
-          val tptMods = if(id.isQualified) {
-            id.owner.map(_.mods).getOrElse(noflags)
-          } else enclosingClass(id.owner).map(_.mods).getOrElse(noflags)
-
-          if(id.isMethodIdent && !(id.name == StdNames.CONSTRUCTOR_NAME &&
-                    (tptMods.isAbstract || tptMods.isInterface))) {
-            val allCandidateMethods = (enclosingClass(id.owner),
-                  id.argumentTypes) match {
-              case (Some(cs: ClassSymbol), Some(tpes)) =>
-                cs.getAllSymbols(id.name,
-                  (sym) => {
-                    id.enclosing match {
-                      case Some(from)     =>
-                        applicableMethod(sym, tpes) && isAccessible(sym, from) &&
-                            (sym.mods.isConstructor == id.isConstructorIdent)
-                      case _              =>
-                        id.owner match {
-                          case Some(from)     =>
-                            applicableMethod(sym, tpes) &&
-                                isAccessible(sym, from) &&
-                                  (sym.mods.isConstructor == id.isConstructorIdent)
-                          case _              =>
-                            false
-                        }
-                    }
-                  }).toList
-              case _                     =>
-                Nil
-            }
-            val candidateMethods = mostSpecificMethods(allCandidateMethods)
-
-
-            candidateMethods match {
-              case List(mthd)                =>
-                if(id.isQualified) {
-                  if(!mthd.mods.isStatic && id.shouldBeStatic &&
-                      !mthd.mods.isConstructor) {
-                    error(INSTANCE_METHOD_IN_STATIC_CONTEXT_INVOK,
-                      id.toString, "a method name", id.pos)
-                  } else {
-                    id.symbol = mthd
-                    id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
-                  }
-                } else {
-                  enclosingNonLocal(id.owner).foreach { owner =>
-                    if(owner.mods.isStatic && !mthd.mods.isStatic) {
-                      error(INSTANCE_METHOD_IN_STATIC_CONTEXT_INVOK,
-                        id.toString, "a static method name", id.pos)
-                    } else {
-                      id.symbol = mthd
-                      id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
-                    }
-                  }
-                }
-              case (_::_)                    =>
-                error(AMBIGUOUS_METHOD_INVOCATION,
-                    id.toString, "a method name", id.pos)
-              case Nil                       =>
-                error(NAME_NOT_FOUND,
-                    id.toString, "a method name", id.pos)
-            }
-            id
-          } else if(id.isMethodIdent) {
-            error(INSTANTIATING_NON_CONCRETE_CLASS,
-              id.toString, "a concrete class", id.pos)
-            id
-          } else {
-            val symbol = id.owner.flatMap(
-              _.getSymbol(id.name, _.isInstanceOf[TermSymbol]))
-
-            //       s => {
-            //         enclosingClass(id.owner) match {
-            //           case Some(enc: ClassSymbol) =>
-            //             s.isInstanceOf[TermSymbol] &&
-            //             ((s.mods.isPrivateAcc && enc.directlyDefines(s)) ||
-            //               !s.mods.isPrivateAcc)
-            //           case _                      =>
-            //             s.isInstanceOf[TermSymbol]
-            //         }
-            //       })
-
-            symbol match {
-              case Some(sym)                        =>
-                enclosingNonLocal(id.owner).foreach { owner =>
-                  if(id.isQualified) {
-                    id.enclosing match {
-                      case Some(from) if !isAccessible(sym, from)   =>
-                        error(FIELD_NOT_ACCESSIBLE,
-                          id.toString, "an accessible name", id.pos)
-                      case _                                        =>
-                        ()
-                    }
-                    if(sym.mods.isField && !sym.mods.isStatic && id.shouldBeStatic) {
-                      error(INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK,
-                        id.toString, "a variable name", id.pos)
-                    } else {
-                      id.symbol = sym
-                      id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
-                    }
-                  } else if(isInStaticContext(id.owner) && sym.mods.isField &&
-                        !sym.mods.isStatic) {
-                    error(INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK,
-                      id.toString, "a static name", id.pos)
-                  } else {
-                    if(!id.isQualified) {
-                      enclosingClass(id.owner) match {
-                        case Some(encl: ClassSymbol) if
-                                            !encl.directlyDefines(sym, _ => true) &&
-                                                   sym.mods.isPrivateAcc           =>
-                            error(FIELD_NOT_ACCESSIBLE,
-                              id.toString, "an accessible name", id.pos)
-                        case _                                                     =>
-                          id.symbol = sym
-                          id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
-                      }
-                    } else {
-                      id.symbol = sym
-                      id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
-                    }
-                  }
-                }
-              case _                                =>
-                error(NAME_NOT_FOUND,
-                    id.toString, "a variable name", id.pos)
-            }
-            id
-          }
+          nameIdent(id, true)
         case tuse                                =>
           typed(tuse)
       }
@@ -824,6 +710,151 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent
   //   SymbolUtils.enclosingNonLocal(symbol)
   //     .map(_.mods.isStaticInit).getOrElse(false)
   // }
+}
+
+
+trait IdentNamer {
+  def nameIdent(ident: IdentApi, isInTypeChecker: Boolean): IdentApi = {
+    val id = TreeCopiers.copyIdent(ident)(name = ident.name)
+    val tptMods = if(id.isQualified) {
+      id.owner.map(_.mods).getOrElse(noflags)
+    } else enclosingClass(id.owner).map(_.mods).getOrElse(noflags)
+
+    if(id.isMethodIdent && !(id.name == StdNames.CONSTRUCTOR_NAME &&
+              (tptMods.isAbstract || tptMods.isInterface))) {
+      val allCandidateMethods = (enclosingClass(id.owner),
+            id.argumentTypes) match {
+        case (Some(cs: ClassSymbol), Some(tpes)) =>
+          cs.getAllSymbols(id.name,
+            (sym) => {
+              id.enclosing match {
+                case Some(from)     =>
+                  applicableMethod(sym, tpes) && isAccessible(sym, from) &&
+                      (sym.mods.isConstructor == id.isConstructorIdent)
+                case _              =>
+                  id.owner match {
+                    case Some(from)     =>
+                      applicableMethod(sym, tpes) &&
+                          isAccessible(sym, from) &&
+                            (sym.mods.isConstructor == id.isConstructorIdent)
+                    case _              =>
+                      false
+                  }
+              }
+            }).toList
+        case _                     =>
+          Nil
+      }
+      val candidateMethods = mostSpecificMethods(allCandidateMethods)
+
+
+      candidateMethods match {
+        case List(mthd)                =>
+          if(id.isQualified) {
+            if(!mthd.mods.isStatic && id.shouldBeStatic &&
+                !mthd.mods.isConstructor &&
+                isInTypeChecker) {
+              error(INSTANCE_METHOD_IN_STATIC_CONTEXT_INVOK,
+                id.toString, "a method name", id.pos)
+            } else {
+              id.symbol = mthd
+              id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
+            }
+          } else {
+            enclosingNonLocal(id.owner).foreach { owner =>
+              if(owner.mods.isStatic && !mthd.mods.isStatic &&
+                  isInTypeChecker) {
+                error(INSTANCE_METHOD_IN_STATIC_CONTEXT_INVOK,
+                  id.toString, "a static method name", id.pos)
+              } else {
+                id.symbol = mthd
+                id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
+              }
+            }
+          }
+        case (_::_)  if isInTypeChecker    =>
+          error(AMBIGUOUS_METHOD_INVOCATION,
+              id.toString, "a method name", id.pos)
+        case Nil     if isInTypeChecker    =>
+          error(NAME_NOT_FOUND,
+              id.toString, "a method name", id.pos)
+        case _                             =>
+          ()
+      }
+      id
+    } else if(id.isMethodIdent) {
+      if(isInTypeChecker)
+        error(INSTANTIATING_NON_CONCRETE_CLASS,
+          id.toString, "a concrete class", id.pos)
+      id
+    } else {
+      val symbol = id.owner.flatMap(
+        _.getSymbol(id.name, _.isInstanceOf[TermSymbol]))
+
+      //       s => {
+      //         enclosingClass(id.owner) match {
+      //           case Some(enc: ClassSymbol) =>
+      //             s.isInstanceOf[TermSymbol] &&
+      //             ((s.mods.isPrivateAcc && enc.directlyDefines(s)) ||
+      //               !s.mods.isPrivateAcc)
+      //           case _                      =>
+      //             s.isInstanceOf[TermSymbol]
+      //         }
+      //       })
+
+      symbol match {
+        case Some(sym)                        =>
+          enclosingNonLocal(id.owner).foreach { owner =>
+            if(id.isQualified) {
+              id.enclosing match {
+                case Some(from) if !isAccessible(sym, from) &&
+                                    isInTypeChecker           =>
+                  error(FIELD_NOT_ACCESSIBLE,
+                    id.toString, "an accessible name", id.pos)
+                case _                                        =>
+                  ()
+              }
+              if(sym.mods.isField && !sym.mods.isStatic &&
+                  id.shouldBeStatic) {
+                if(isInTypeChecker)
+                  error(INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK,
+                    id.toString, "a variable name", id.pos)
+              } else {
+                id.symbol = sym
+                id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
+              }
+            } else if(isInStaticContext(id.owner) && sym.mods.isField &&
+                  !sym.mods.isStatic) {
+              if(isInTypeChecker)
+                error(INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK,
+                  id.toString, "a static name", id.pos)
+            } else {
+              if(!id.isQualified) {
+                enclosingClass(id.owner) match {
+                  case Some(encl: ClassSymbol) if
+                                      !encl.directlyDefines(sym, _ => true) &&
+                                             sym.mods.isPrivateAcc           =>
+                    if(isInTypeChecker)
+                      error(FIELD_NOT_ACCESSIBLE,
+                        id.toString, "an accessible name", id.pos)
+                  case _                                                     =>
+                    id.symbol = sym
+                    id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
+                }
+              } else {
+                id.symbol = sym
+                id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
+              }
+            }
+          }
+        case _                                =>
+          if(isInTypeChecker)
+            error(NAME_NOT_FOUND,
+                id.toString, "a variable name", id.pos)
+      }
+      id
+    }
+  }
 
   protected def isInStaticContext(symbol: Option[Symbol]): Boolean = {
     SymbolUtils.enclosingNonLocal(symbol)
@@ -854,8 +885,6 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent
       false
   }
 }
-
-
 
 @component
 trait SelectTyperComponent extends TyperComponent {
