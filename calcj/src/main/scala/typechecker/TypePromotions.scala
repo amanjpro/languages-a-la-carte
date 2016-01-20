@@ -7,6 +7,7 @@ import sana.calcj.ast.TreeFactories._
 import sana.tiny.types._
 import sana.calcj.types._
 import sana.calcj.ast._
+import sana.calcj.ast.TreeExtractors._
 import sana.calcj.symbols.SymbolUtils._
 
 
@@ -48,6 +49,18 @@ object TypePromotions {
   }
 
 
-  def isNarrawableTo(expr: Expr, tpe: Type): Boolean = ???
+  def isNarrawableTo(expr: Tree, tpe: Type): Boolean = expr match {
+    case Literal(c) if c.tpe =:= IntType =>
+      val value = c.value.asInstanceOf[Int]
+      if(tpe =:= ShortType) {
+        value.isValidShort
+      } else if(tpe =:= ByteType) {
+        value.isValidByte
+      } else if(tpe =:= CharType) {
+        value.isValidChar
+      } else false
+    case _                               =>
+      false
+  }
 }
 
