@@ -84,7 +84,7 @@ trait BinaryTyperComponent extends TyperComponent {
                 ltpe.toString, "a primitive type", bin.pos)
             None
         }
-      case And | Or | Amp | Pipe | Xor            =>
+      case And | Or                               =>
         (ltpe, rtpe) match {
           case (BooleanType, BooleanType)         =>
             Some((BooleanType, BooleanType, BooleanType))
@@ -113,6 +113,8 @@ trait BinaryTyperComponent extends TyperComponent {
       //   }
       case Sub | Mul | Div | Mod | Add            =>
         (ltpe, rtpe) match {
+          case (BooleanType, BooleanType)         =>
+            Some((BooleanType, BooleanType, BooleanType))
           case (x: NumericType, y: NumericType)   =>
             val t = TypePromotions.binaryNumericPromotion(x, y)
             Some((t, t, t))

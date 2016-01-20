@@ -121,7 +121,7 @@ class Parser extends parsers.Parser {
         case "%="   => Some(Mod)
         case "&="   => Some(BAnd)
         case "|="   => Some(BOr)
-        case "^="   => Some(Xor)
+        case "^="   => Some(BXor)
         case "<<="  => Some(SHL)
         case ">>="  => Some(SHR)
         case ">>>=" => Some(USHR)

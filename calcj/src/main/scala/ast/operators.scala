@@ -52,17 +52,8 @@ object operators {
   object Neq extends BOp {
     override def toString: String = "!="
   }
-  object Amp extends BOp {
-    override def toString: String = "&"
-  }
-  object Pipe extends BOp {
-    override def toString: String = "|"
-  }
   object And extends BOp {
     override def toString: String = "&&"
-  }
-  object Xor extends BOp {
-    override def toString: String = "^"
   }
   object Or extends BOp {
     override def toString: String = "||"
