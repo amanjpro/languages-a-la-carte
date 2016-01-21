@@ -1,0 +1,24 @@
+// fails
+// CASE_GUARD_NOT_CONSTANT_EXPRESSION
+
+abstract class RR {
+
+  final static byte c = (int) 2;
+  final int dddd = 22;
+  final static int r;
+
+  boolean rr() {
+    switch (2) {
+      case RR.c:
+        rr();
+        return true;
+      case dddd:
+      case 4:
+        rr();
+        return true;
+      case r: // fails
+        rr();
+        return true;
+    }
+  }
+}
