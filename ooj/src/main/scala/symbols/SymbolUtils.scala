@@ -147,19 +147,37 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
    * other, if all its parameters can be passed to the latter.
    */
   def mostSpecificMethods(symbols: List[Symbol]): List[Symbol] = {
-    symbols.filter{ sym =>
-      symbols.foldLeft(true)((z, y) => {
-        if(sym == y) z
-        else {
-          (sym, y) match {
-            case (m1: MethodSymbol, m2: MethodSymbol) =>
-              methodCanBeApplied(m1.params.flatMap(_.tpe), m2.params.flatMap(_.tpe))
-            case _                                    =>
-              false
+    def loop(mthds: List[Symbol], acc: List[Symbol]): List[Symbol] = {
+      mthds match {
+        case Nil                                 =>
+          acc
+        case (m::ms)                             =>
+          val acc2 = acc.filter { sym =>
+            (sym, m) match {
+              case (m1: MethodSymbol, m2: MethodSymbol) =>
+                !(methodCanBeApplied(m1.params.flatMap(_.tpe),
+                      m2.params.flatMap(_.tpe)))
+              case _                                    =>
+                false
+            }
           }
-        }
-      })
+          val shouldNotAdd = acc.exists { sym =>
+            (m, sym) match {
+              case (m1: MethodSymbol, m2: MethodSymbol) =>
+                methodCanBeApplied(m1.params.flatMap(_.tpe),
+                        m2.params.flatMap(_.tpe))
+              case _                                    =>
+                false
+            }
+          }
+
+          if(!shouldNotAdd)
+            loop(ms, m::acc2)
+          else
+            loop(ms, acc2)
+      }
     }
+    loop(symbols, Nil)
   }
 
 
