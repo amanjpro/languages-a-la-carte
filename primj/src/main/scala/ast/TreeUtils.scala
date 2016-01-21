@@ -62,7 +62,7 @@ trait TreeUtils extends calcj.ast.TreeUtils {
   def isValidStatement(e: Tree): Boolean = {
     lazy val isStmt = e match {
       // Statements in primj: if, while, for, block, return, valdef
-      // brokenj adds: Switch, continue, break
+      // brokenj adds: Switch, continue, break, label
       case _: IfApi | _: WhileApi | _: ForApi | _: BlockApi |
          _: ReturnApi | _: ValDefApi | NoTree     => true
       case _                                => false

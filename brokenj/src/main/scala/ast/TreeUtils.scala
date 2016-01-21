@@ -54,6 +54,13 @@ trait TreeUtils extends ast.TreeUtils {
     case _                                         => false
   }
 
+  override def isValidStatement(e: Tree): Boolean = e match {
+    case _: SwitchApi | _: LabelApi | _: ContinueApi | _: BreakApi =>
+      true
+    case _                                                         =>
+      super.isValidStatement(e)
+  }
+
   def isLoopTree(tree: Tree): Boolean = tree match {
     case _: WhileApi | _: ForApi            => true
     case _                                  => false
