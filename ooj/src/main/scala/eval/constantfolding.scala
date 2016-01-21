@@ -304,12 +304,17 @@ trait IdentConstantFoldingComponent
               val (v, env2) = constantFold((expr, env))
               v match {
                 case lit: LiteralApi          =>
-                  (lit, env2.bind(sym, LiteralValue(lit)))
+                  val clit =
+                    TreeCopiers.copyLiteral(lit)(constant = lit.constant)
+                  ident.pos.foreach(clit.pos = _)
+                  (clit, env2.bind(sym, LiteralValue(lit)))
                 case _                        =>
                   (ident, env)
               }
             case Some(LiteralValue(lit))                  =>
-              (lit, env)
+              val clit = TreeCopiers.copyLiteral(lit)(constant = lit.constant)
+              ident.pos.foreach(clit.pos = _)
+              (clit, env)
             case None if sym.isInstanceOf[PackageSymbol]  =>
               (id, env)
             case _                     =>
