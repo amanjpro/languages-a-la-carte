@@ -77,8 +77,9 @@ class Test2 extends Test {
   final int w = 20;
   private void d() {
     byte x = 2;
-    boolean y = r(true?x:w);
-    boolean z = r(true?w:x);
+    boolean flag = true;
+    boolean y = r(flag?x:w);
+    boolean z = r(flag?w:x);
     boolean a = r(x);
     super.test();
   }

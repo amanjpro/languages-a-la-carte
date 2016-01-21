@@ -699,9 +699,16 @@ trait TernaryConstantFoldingComponent
     val (cond,  env1) = constantFold((tern.cond,  env))
     val (thenp, env2) = constantFold((tern.thenp, env1))
     val (elsep, env3) = constantFold((tern.elsep, env2))
-    val res = TreeCopiers.copyTernary(tern)(cond = cond.asInstanceOf[Expr],
-      thenp = thenp.asInstanceOf[Expr],
-      elsep = elsep.asInstanceOf[Expr])
+    val res = cond match {
+      case Literal(BooleanConstant(true))  =>
+        thenp
+      case Literal(BooleanConstant(false)) =>
+        elsep
+      case _                               =>
+        TreeCopiers.copyTernary(tern)(cond = cond.asInstanceOf[Expr],
+        thenp = thenp.asInstanceOf[Expr],
+        elsep = elsep.asInstanceOf[Expr])
+    }
     (res, env3)
   }
 }
