@@ -60,7 +60,7 @@ trait JumpCheckerComponent extends
 @component(tree, encls)
 trait ContinueJumpCheckerComponent extends JumpCheckerComponent {
   (cont: ContinueApi) =>
-    if(encls.filter(isContinuable(_)) != Nil)
+    if(encls.filter(isContinuable(_)) == Nil)
       error(BAD_CONTINUE_STMT,
         cont.toString, cont.toString, cont.pos)
     else
@@ -73,7 +73,7 @@ trait ContinueJumpCheckerComponent extends JumpCheckerComponent {
 @component(tree, encls)
 trait BreakJumpCheckerComponent extends JumpCheckerComponent {
   (break: BreakApi) =>
-    if(encls.filter(isBreakable(_)) != Nil)
+    if(encls.filter(isBreakable(_)) == Nil)
       error(BAD_BREAK_STMT,
         break.toString, break.toString, break.pos)
     else
@@ -201,7 +201,7 @@ trait BinaryJumpCheckerComponent extends JumpCheckerComponent {
 trait SwitchJumpCheckerComponent extends JumpCheckerComponent {
   (switch: SwitchApi) => {
     check((switch.expr, encls))
-    switch.cases.foreach(cse => check((cse, switch::encls)))
+    switch.cases.foreach(cse => check((cse, encls)))
   }
 }
 
@@ -210,7 +210,7 @@ trait SwitchJumpCheckerComponent extends JumpCheckerComponent {
 trait CaseJumpCheckerComponent extends JumpCheckerComponent {
   (cse: CaseApi) => {
     cse.guards.foreach(guard => check((guard, encls)))
-    check((cse.body, encls))
+    check((cse.body, cse::encls))
   }
 }
 
