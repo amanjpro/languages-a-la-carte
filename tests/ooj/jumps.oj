@@ -1,0 +1,32 @@
+// fails
+// BAD_CONTINUE_STMT
+// BAD_CONTINUE_STMT
+// BAD_BREAK_STMT
+
+
+
+
+class A {
+  void m () {
+    int k = 0;
+    c: while(true) {
+      break c;
+    }
+    c: while(true) {
+      continue c;
+    }
+    c: while(true) {
+      continue;
+    }
+
+    l: {
+      break l;
+    }
+    l: {
+      continue l; // fails
+    }
+    l: {
+      break; // fails
+    }
+  }
+}

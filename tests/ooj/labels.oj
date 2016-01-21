@@ -1,0 +1,24 @@
+// fails
+// NO_LABEL_DEF
+// NO_LABEL_DEF
+// DOUBLE_LABEL_DEF
+
+
+
+
+class A {
+  void m () {
+    while(true) {
+      continue l; // fails
+    }
+    while(true) {
+      break l; // fails
+    }
+    l: {
+      l: { // fails
+      }
+    }
+    l: {
+    }
+  }
+}
