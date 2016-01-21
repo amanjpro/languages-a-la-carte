@@ -74,8 +74,22 @@ class Test extends Test1 {
 class Test2 extends Test {
   // this should work, but it doesn't
   public Test2() {}
+  final int w = 20;
   private void d() {
+    byte x = 2;
+    boolean y = r(true?x:w);
+    boolean z = r(true?w:x);
+    boolean a = r(x);
     super.test();
+  }
+
+
+  boolean r(byte k) {
+    return true;
+  }
+
+  short r(int k) {
+    return 2;
   }
 }
 
