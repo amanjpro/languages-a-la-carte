@@ -223,12 +223,20 @@ trait SelectConstantFoldingComponent
     val tree = if(isTypeSymbol(qual.symbol) ||
                        isPackageSymbol(qual.symbol)) {
                       val (t, _) = constantFold((select.tree, env))
-                      t.asInstanceOf[SimpleUseTree]
+                      t
                     } else select.tree
 
-    if(isTypeSymbol(qual.symbol))
-      tree.shouldBeStatic = true
+    if(isTypeSymbol(qual.symbol)) {
+      tree match {
+        case tree: SimpleUseTree =>
+          tree.shouldBeStatic = true
+        case _                   =>
+      }
+    }
     if(isTypeSymbol(qual.symbol) &&
+        isConstantLiteral(tree)) {
+      (tree, env)
+    } else if(isTypeSymbol(qual.symbol) &&
         isStaticFinal(tree.symbol)) {
       tree.symbol.map { sym =>
         env.getValue(sym) match {
@@ -252,9 +260,12 @@ trait SelectConstantFoldingComponent
     } else if(isPackageSymbol(qual.symbol) &&
              (isTypeSymbol(tree.symbol))) {
       (TreeCopiers.copySelect(slct)(qual = qual,
-                                    tree = tree), env)
+                      tree = tree.asInstanceOf[SimpleUseTree]), env)
     } else (slct, env)
   }
+
+  protected def isConstantLiteral(tree: Tree): Boolean =
+    TreeUtils.isConstantLiteral(tree)
 
   protected def isPackageSymbol(sym: Option[Symbol]): Boolean =
     sym.map(_.isInstanceOf[PackageSymbol]).getOrElse(false)
@@ -702,8 +713,6 @@ trait CastConstantFoldingComponent
     val (newExpr, newEnv) = constantFold((cst.expr, env))
     val newTree = newExpr match {
       case lit@Literal(c)          =>
-        println(newTpt.symbol)
-        println(newTpt.symbol.map(_.tpe))
         val res = for {
           sym  <- newTpt.symbol
           stpe <- sym.tpe
