@@ -50,7 +50,7 @@ trait TreeUtils extends ast.TreeUtils {
   def isContinuable(tree: Tree): Boolean = isLoopTree(tree)
 
   def isBreakable(tree: Tree): Boolean = tree match {
-    case _: SwitchApi | _: WhileApi | _: ForApi    => true
+    case _: CaseApi | _: WhileApi | _: ForApi      => true
     case _                                         => false
   }
 
