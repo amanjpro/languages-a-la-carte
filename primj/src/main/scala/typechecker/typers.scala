@@ -197,8 +197,8 @@ trait TernaryTyperComponent extends TyperComponent {
             rtpe match {
               case None                     =>
                 error(TYPE_MISMATCH,
-                  tpeToString(elsep.tpe),
-                  tpeToString(thenp.tpe),
+                  "",
+                  "",
                   ternary.cond.pos)
                 ternary
               case _                        =>
@@ -228,13 +228,15 @@ trait TernaryTyperComponent extends TyperComponent {
         Some(ShortType)
       case (Some(tpe1: NumericType),
             Some(tpe2: NumericType))                      =>
-        if(isNarrawableTo(rhs, tpe1))
+        if(isNarrawableTo(rhs, tpe1)) {
           Some(tpe1)
-        else if(isNarrawableTo(lhs, tpe2))
+        }
+        else if(isNarrawableTo(lhs, tpe2)) {
           Some(tpe2)
-        else
+        } else {
           // INFO: This will be extended once we have OOJ
           Some(binaryNumericPromotion(tpe1, tpe2))
+        }
       case _                                              => None
     }
   }
