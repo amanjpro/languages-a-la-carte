@@ -173,6 +173,11 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
     val message: String =
       "Cannot reference a field before supertype constructor has been called"
   }
+
+  case object FIELD_FORWARD_REFERENCE_IN_STATIC_INIT extends ErrorCode {
+    val message: String =
+      "Accessing fields (before declaration) in static initializer"
+  }
 }
 
 object ErrorCodes extends ErrorCodes

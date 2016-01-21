@@ -6,11 +6,10 @@
 // ACCESSING_SUPER_IN_STATIC
 // INSTANCE_METHOD_IN_STATIC_CONTEXT_INVOK
 // TYPE_MISMATCH
+// FIELD_FORWARD_REFERENCE_IN_STATIC_INIT
 
 
 
-// NAME_NOT_FOUND  -- this won't be reported anymore (not in typer anyways)
-// TYPE_MISMATCH -- this won't be reported anymore (I think correctly)
 package test;
 
 
