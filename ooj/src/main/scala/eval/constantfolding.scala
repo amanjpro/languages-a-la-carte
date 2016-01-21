@@ -206,8 +206,8 @@ trait BlockConstantFoldingComponent
     (z, stmt) =>
       val e       = z._2
       val stmts = z._1
-      val (res, env) = constantFold((stmt, e))
-      (stmts++List(res), env)
+      val (res, e2) = constantFold((stmt, e))
+      (stmts++List(res), e2)
     }
     (TreeCopiers.copyBlock(block)(stmts = stmts), newEnv)
   }
@@ -839,8 +839,8 @@ trait SwitchConstantFoldingComponent
       (z, cse) =>
         val cases   = z._1
         val e       = z._2
-        val (res, env) = constantFold((cse, e))
-        (cases++List(res.asInstanceOf[CaseApi]), env)
+        val (res, e1) = constantFold((cse, e))
+        (cases++List(res.asInstanceOf[CaseApi]), e1)
     }
     val newSwitch = TreeCopiers.copySwitch(switch)(cases = cases,
       expr = expr.asInstanceOf[Expr])
@@ -856,8 +856,8 @@ trait CaseConstantFoldingComponent
       (z, guard) =>
         val guards   = z._1
         val e       = z._2
-        val (res, env) = constantFold((guard, e))
-        (guards++List(res.asInstanceOf[Expr]), env)
+        val (res, e2) = constantFold((guard, e))
+        (guards++List(res.asInstanceOf[Expr]), e2)
     }
     val (body, env3)  = constantFold((cse.body, env2))
     val newCse = TreeCopiers.copyCase(cse)(guards = guards,
