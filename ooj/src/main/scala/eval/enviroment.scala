@@ -31,6 +31,17 @@ trait Env {
   }
 
   protected def create(bindings: Map[Symbol, Value]): Env
+
+
+  override def hashCode: Int = bindings.hashCode
+  override def equals(other: Any): Boolean = other match {
+    case null      =>
+      false
+    case that: Env =>
+      bindings == that.bindings
+    case _         =>
+      false
+  }
 }
 
 
