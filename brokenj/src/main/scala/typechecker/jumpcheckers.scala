@@ -73,7 +73,8 @@ trait ContinueJumpCheckerComponent extends JumpCheckerComponent {
 @component(tree, encls)
 trait BreakJumpCheckerComponent extends JumpCheckerComponent {
   (break: BreakApi) =>
-    if(encls.filter(isBreakable(_)) == Nil)
+    if(encls.filter(isBreakable(_)) == Nil &&
+        break.label == None)
       error(BAD_BREAK_STMT,
         "", "", break.pos)
     else
