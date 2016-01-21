@@ -910,7 +910,13 @@ class Parser extends parsers.Parser {
                 List(visit(ctx.caseLabel.constantExpression).asInstanceOf[Expr])
               } else Nil
             }
-            List(TreeFactories.mkCase(lbls, NoTree, pos(bodyCtx)))
+            lbls match {
+              case Nil =>
+                Nil
+              case _   =>
+                val block = TreeFactories.mkBlock(Nil, pos(bodyCtx))
+                List(TreeFactories.mkCase(lbls, block, pos(bodyCtx)))
+            }
         }
         cases1 ++ cases2
       }
