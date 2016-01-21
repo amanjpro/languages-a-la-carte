@@ -158,6 +158,9 @@ trait ValDefConstantFoldingComponent
           case false => env2
         }
         (updateRhs(valdef, rhs), e)
+      case rhs: Expr             =>
+        val e = env2.unbind(sym)
+        (updateRhs(valdef, rhs), e)
       case _                     =>
         val e = env2.unbind(sym)
         (valdef, e)
@@ -203,11 +206,11 @@ trait BlockConstantFoldingComponent
   extends ConstantFoldingComponent {
   (block: BlockApi) => {
     val (stmts, newEnv) = block.stmts.foldLeft((Nil: List[Tree], env)){
-    (z, stmt) =>
-      val e       = z._2
-      val stmts = z._1
-      val (res, e2) = constantFold((stmt, e))
-      (stmts++List(res), e2)
+      (z, stmt) =>
+        val e       = z._2
+        val stmts   = z._1
+        val (res, e2) = constantFold((stmt, e))
+        (stmts++List(res), e2)
     }
     (TreeCopiers.copyBlock(block)(stmts = stmts), newEnv)
   }
@@ -696,17 +699,10 @@ trait TernaryConstantFoldingComponent
     val (cond,  env1) = constantFold((tern.cond,  env))
     val (thenp, env2) = constantFold((tern.thenp, env1))
     val (elsep, env3) = constantFold((tern.elsep, env2))
-    cond match {
-      case Literal(BooleanConstant(true))    =>
-        (thenp, env3)
-      case Literal(BooleanConstant(false))   =>
-        (elsep, env3)
-      case _                                 =>
-      (TreeCopiers.copyTernary(tern)(cond = cond.asInstanceOf[Expr],
-        thenp = thenp.asInstanceOf[Expr],
-        elsep = elsep.asInstanceOf[Expr]),
-        env3)
-    }
+    val res = TreeCopiers.copyTernary(tern)(cond = cond.asInstanceOf[Expr],
+      thenp = thenp.asInstanceOf[Expr],
+      elsep = elsep.asInstanceOf[Expr])
+    (res, env3)
   }
 }
 
