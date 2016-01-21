@@ -1,5 +1,7 @@
 // fails
 // CASE_GUARD_NOT_CONSTANT_EXPRESSION
+// NOT_DISTINCT_GUARD
+// BAD_CONTINUE_STMT
 
 abstract class RR {
 
@@ -10,15 +12,29 @@ abstract class RR {
   boolean rr() {
     switch (2) {
       case RR.c:
+      case dddd:
         rr();
         return true;
-      case dddd:
+      case dddd: // fails
       case 4:
         rr();
         return true;
       case r: // fails
         rr();
         return true;
+      case 100:
+      case 200:
     }
+
+    switch (3) {
+      default:
+        break;
+      case dddd:
+        break;
+      case c:
+        continue; // fails
+    }
+
+    return true;
   }
 }
