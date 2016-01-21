@@ -62,7 +62,7 @@ trait ContinueJumpCheckerComponent extends JumpCheckerComponent {
   (cont: ContinueApi) =>
     if(encls.filter(isContinuable(_)) == Nil)
       error(BAD_CONTINUE_STMT,
-        cont.toString, cont.toString, cont.pos)
+        "", "", cont.pos)
     else
       ()
 
@@ -75,7 +75,7 @@ trait BreakJumpCheckerComponent extends JumpCheckerComponent {
   (break: BreakApi) =>
     if(encls.filter(isBreakable(_)) == Nil)
       error(BAD_BREAK_STMT,
-        break.toString, break.toString, break.pos)
+        "", "", break.pos)
     else
       ()
 
