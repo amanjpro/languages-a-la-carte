@@ -10,7 +10,8 @@ import brokenj.ast
 import primj.ast.{ValDefApi, BlockApi}
 import tiny.ast.{Tree, NoTree, TypeUseApi, UseTree, IdentApi}
 import calcj.ast._
-import calcj.types.PrimitiveType
+import calcj.types._
+import tiny.types.Type
 import ooj.types.TypeUtils
 import Implicits._
 import ooj.symbols.SymbolUtils
@@ -80,7 +81,7 @@ trait TreeUtils extends ast.TreeUtils {
     case _: ThisApi                  => true
     case _: SuperApi                 => true
     case _: SelectApi                => true
-    case _                               =>
+    case _                           =>
       super.isValidExpression(e)
   }
 
@@ -126,6 +127,28 @@ trait TreeUtils extends ast.TreeUtils {
     case _                  =>
       false
 
+  }
+
+
+  def getDefaultFieldValue(tpe: Option[Type]): Tree = tpe match {
+    case Some(ByteType)    =>
+      TreeFactories.mkLiteral(ByteConstant(0))
+    case Some(ShortType)   =>
+      TreeFactories.mkLiteral(ShortConstant(0))
+    case Some(CharType)    =>
+      TreeFactories.mkLiteral(CharConstant('\u0000'))
+    case Some(IntType)     =>
+      TreeFactories.mkLiteral(IntConstant(0))
+    case Some(LongType)    =>
+      TreeFactories.mkLiteral(LongConstant(0L))
+    case Some(FloatType)   =>
+      TreeFactories.mkLiteral(FloatConstant(0.0F))
+    case Some(DoubleType)  =>
+      TreeFactories.mkLiteral(DoubleConstant(0))
+    case Some(BooleanType) =>
+      TreeFactories.mkLiteral(BooleanConstant(false))
+    case _                 =>
+      TreeFactories.mkLiteral(NullConstant)
   }
 }
 

@@ -118,7 +118,12 @@ trait ValDefTyperComponent extends TyperComponent {
           ()
       }
     })
-    val rhs    = typed(valdef.rhs).asInstanceOf[Expr]
+    val rhs    = if(valdef.mods.isField && !valdef.mods.isFinal &&
+                    valdef.rhs == NoTree) {
+      val dflt = getDefaultFieldValue(tpt.tpe)
+      valdef.owner.foreach(dflt.owner = _)
+      typed(dflt).asInstanceOf[Expr]
+    } else typed(valdef.rhs).asInstanceOf[Expr]
     val rtpe   = rhs.tpe.getOrElse(ErrorType)
     val ttpe   = tpt.tpe.getOrElse(ErrorType)
     valdef.tpe = ttpe
@@ -183,6 +188,9 @@ trait ValDefTyperComponent extends TyperComponent {
 
     res
   }
+
+  protected def getDefaultFieldValue(tpe: Option[Type]): Tree =
+    TreeUtils.getDefaultFieldValue(tpe)
 
   protected def checkDoubleDef(owner: Option[Symbol],
       name: Name, pos: Option[Position]): Unit =
