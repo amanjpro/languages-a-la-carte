@@ -10,7 +10,7 @@ import sana.ooj.typechecker._
 
 
 
-trait InitializerCheckerFamily extends CheckerFamily[(Tree, List[Symbol])] {
+trait ForwardRefCheckerFamily extends CheckerFamily[(Tree, List[Symbol])] {
   self =>
 
   override def default: Unit = ()
@@ -18,12 +18,12 @@ trait InitializerCheckerFamily extends CheckerFamily[(Tree, List[Symbol])] {
   def components: List[PartialFunction[(Tree, List[Symbol]), Unit]] =
     generateComponents[(Tree, List[Symbol]), Unit](
       "Program,CompilationUnit,PackageDef,ClassDef,Template,Block",
-      "InitializerCheckerComponent", "check", "")
+      "ForwardRefCheckerComponent", "check", "")
 
   def check: ((Tree, List[Symbol])) => Unit = family
 }
 
-object InitializerCheckerFamily extends InitializerCheckerFamily
+object ForwardRefCheckerFamily extends ForwardRefCheckerFamily
 
 
 

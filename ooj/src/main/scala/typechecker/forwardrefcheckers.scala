@@ -21,7 +21,7 @@ import sana.core._
 
 
 
-trait InitializerCheckerComponent
+trait ForwardRefCheckerComponent
   extends CheckerComponent[(Tree, List[Symbol])] {
   def check: ((Tree, List[Symbol])) => Unit
 }
@@ -29,40 +29,52 @@ trait InitializerCheckerComponent
 
 
 @component(tree, symbols)
-trait ProgramInitializerCheckerComponent extends InitializerCheckerComponent {
+trait ProgramForwardRefCheckerComponent extends ForwardRefCheckerComponent {
   (prg: ProgramApi) => {
     prg.members.foreach(x => check((x, symbols)))
   }
 }
 
 @component(tree, symbols)
-trait CompilationUnitInitializerCheckerComponent
-  extends InitializerCheckerComponent {
+trait CompilationUnitForwardRefCheckerComponent
+  extends ForwardRefCheckerComponent {
   (unit: CompilationUnitApi) => {
     check((unit.module, symbols))
   }
 }
 
 @component(tree, symbols)
-trait PackageDefInitializerCheckerComponent
-  extends InitializerCheckerComponent {
+trait PackageDefForwardRefCheckerComponent
+  extends ForwardRefCheckerComponent {
   (pkg: PackageDefApi) => {
     pkg.members.foreach(x => check((x, symbols)))
   }
 }
 
 @component(tree, symbols)
-trait ClassDefInitializerCheckerComponent extends InitializerCheckerComponent {
+trait ClassDefForwardRefCheckerComponent extends ForwardRefCheckerComponent {
   (clazz: ClassDefApi) => {
     check((clazz.body, symbols))
   }
 }
 
 @component(tree, symbols)
-trait TemplateInitializerCheckerComponent extends InitializerCheckerComponent {
+trait TemplateForwardRefCheckerComponent extends ForwardRefCheckerComponent {
   (template: TemplateApi) => {
     template.members.foldLeft(Nil: List[Symbol]) { (z, member) => member match {
-      case v: ValDefApi if v.mods.isStatic && v.mods.isField =>
+      case v: ValDefApi                    if v.mods.isField =>
+        v.rhs.bottomUp(())((z, t) => t match {
+          case id: IdentApi                    =>
+            id.symbol.foreach { sym =>
+              if(!id.isQualified && !symbols.contains(sym) &&
+                    v.owner == sym.owner &&
+                    sym.mods.isField)
+                error(ILLEGAL_FORWARD_REFERENCE,
+                  "", "", t.pos)
+            }
+          case _                               =>
+            ()
+        })
         v.symbol.map(_::z).getOrElse(z)
       case block: BlockApi if block.isStaticInit             =>
         check((block, z))
@@ -75,7 +87,7 @@ trait TemplateInitializerCheckerComponent extends InitializerCheckerComponent {
 
 
 @component(tree, symbols)
-trait BlockInitializerCheckerComponent extends InitializerCheckerComponent {
+trait BlockForwardRefCheckerComponent extends ForwardRefCheckerComponent {
   (block: BlockApi) => {
     val clazz = enclosingClass(block.owner)
     if(block.isStaticInit) {
