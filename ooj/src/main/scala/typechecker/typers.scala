@@ -626,14 +626,22 @@ trait ApplyTyperComponent extends TyperComponent {
     val res = TreeCopiers.copyApply(apply)(fun = fun, args = args)
     if(isExplicitConstructorInvocation(res)) {
       args.foreach { arg =>
-        if(isThisFieldAccess(arg)) {
-          error(REFERENCE_FIELD_BEFORE_SUPERTYPE,
-            "", "", arg.pos)
-        }
+        arg.bottomUp(())((z, y) => {
+          if(y.symbol.flatMap(_.owner) == enclosingClass(res) &&
+              isThisFieldAccess(y)) {
+            error(REFERENCE_FIELD_BEFORE_SUPERTYPE,
+              "", "", y.pos)
+          }
+        })
       }
     }
     res
   }
+
+  protected def enclosingClass(t: Tree): Option[Symbol] = {
+    SymbolUtils.enclosingClass(t.owner)
+  }
+
   protected def isExplicitConstructorInvocation(tree: Tree): Boolean =
     TreeUtils.isExplicitConstructorInvocation(tree)
 
