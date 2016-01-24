@@ -188,8 +188,8 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
           LabelNameCheckerFamily.check((t, Nil))
         val jumpChecker = (t: Tree) =>
           JumpCheckerFamily.check((t, Nil))
-        val initChecker = (t: Tree) =>
-          InitializerCheckerFamily.check((t, Nil))
+        val forwardRefChecker = (t: Tree) =>
+          ForwardRefCheckerFamily.check((t, Nil))
 
         val f = SymbolAssignerFamily.assign join
                   NamerFamily.name join
@@ -199,7 +199,7 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
                           ShapeCheckerFamily.check join
                             labelChecker join
                               jumpChecker join
-                                initChecker
+                                forwardRefChecker
         f(x)
       }
     }
