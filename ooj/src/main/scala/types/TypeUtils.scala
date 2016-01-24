@@ -4,6 +4,8 @@ import ch.usi.inf.l3.sana
 import sana.ooj.names.StdNames
 import sana.calcj.types._
 import sana.tiny.types.Type
+import sana.tiny.ast.Expr
+import sana.tiny.ast.Implicits._
 import sana.ooj.symbols.SymbolUtils
 
 trait TypeUtils extends sana.primj.types.TypeUtils {
@@ -87,6 +89,23 @@ trait TypeUtils extends sana.primj.types.TypeUtils {
     ClassType(qual, name, Set(SymbolUtils.objectClassSymbol))
   }
 
+  override def unifyTernaryBranches(lhs: Expr, rhs: Expr): Option[Type] = {
+    (lhs.tpe, rhs.tpe) match {
+      case (Some(NullType), Some(tpe))                                 =>
+        Some(tpe)
+      case (Some(tpe), Some(NullType))                                 =>
+        Some(tpe)
+      case (Some(tpe1: NumericType),
+            Some(tpe2: NumericType))                                   =>
+        super.unifyTernaryBranches(lhs, rhs)
+      case (Some(ltpe), Some(rtpe))                                    =>
+        if(ltpe <:< rtpe)      Some(rtpe)
+        else if(rtpe <:< ltpe) Some(ltpe)
+        else                   None
+      case _                                                           =>
+        super.unifyTernaryBranches(lhs, rhs)
+    }
+  }
 
   def toBoxedType(tpe: Type): Option[Type] = tpe match {
     case BooleanType            =>
