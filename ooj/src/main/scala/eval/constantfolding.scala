@@ -699,18 +699,33 @@ trait TernaryConstantFoldingComponent
     val (cond,  env1) = constantFold((tern.cond,  env))
     val (thenp, env2) = constantFold((tern.thenp, env1))
     val (elsep, env3) = constantFold((tern.elsep, env2))
-    val res = cond match {
-      case Literal(BooleanConstant(true))  =>
-        thenp
-      case Literal(BooleanConstant(false)) =>
-        elsep
-      case _                               =>
-        TreeCopiers.copyTernary(tern)(cond = cond.asInstanceOf[Expr],
+    val newTern       =
+      TreeCopiers.copyTernary(tern)(cond = cond.asInstanceOf[Expr],
         thenp = thenp.asInstanceOf[Expr],
         elsep = elsep.asInstanceOf[Expr])
+    val unifiedTpe    = unifyTernaryBranches(thenp.asInstanceOf[Expr],
+                                             elsep.asInstanceOf[Expr])
+
+    val res = cond match {
+      case Literal(BooleanConstant(true))  if(unifiedTpe != None &&
+                                              isConstantLiteral(thenp) &&
+                                              isConstantLiteral(elsep))   =>
+        thenp
+      case Literal(BooleanConstant(false)) if(unifiedTpe != None &&
+                                              isConstantLiteral(thenp) &&
+                                              isConstantLiteral(elsep))   =>
+        elsep
+      case _                               =>
+        newTern
     }
     (res, env3)
   }
+
+  protected def isConstantLiteral(tree: Tree): Boolean =
+    TreeUtils.isConstantLiteral(tree)
+
+  protected def unifyTernaryBranches(lhs: Expr, rhs: Expr): Option[Type] =
+    TypeUtils.unifyTernaryBranches(lhs, rhs)
 }
 
 @component(tree, env)
