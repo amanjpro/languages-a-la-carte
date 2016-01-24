@@ -76,28 +76,7 @@ trait PackageDefTyperComponent extends TyperComponent {
   }
 }
 
-@component
-trait TernaryTyperComponent extends
-  primj.typechecker.TernaryTyperComponent {
 
-  override protected def unify(lhs: Expr, rhs: Expr): Option[Type] = {
-    (lhs.tpe, rhs.tpe) match {
-      case (Some(NullType), Some(tpe))                                 =>
-        Some(tpe)
-      case (Some(tpe), Some(NullType))                                 =>
-        Some(tpe)
-      case (Some(tpe1: NumericType),
-            Some(tpe2: NumericType))                                   =>
-        super.unify(lhs, rhs)
-      case (Some(ltpe), Some(rtpe))                                    =>
-        if(ltpe <:< rtpe)      Some(rtpe)
-        else if(rtpe <:< ltpe) Some(ltpe)
-        else                   None
-      case _                                                           =>
-        super.unify(lhs, rhs)
-    }
-  }
-}
 
 @component
 trait ValDefTyperComponent extends TyperComponent {
@@ -1033,4 +1012,12 @@ trait AssignTyperComponent extends primj.typechecker.AssignTyperComponent {
       error(REASSIGNING_FINAL_VARIABLE,
         lhs.toString, lhs.toString, lhs.pos)
   }
+}
+
+@component
+trait TernaryTyperComponent extends
+  primj.typechecker.TernaryTyperComponent {
+
+  override protected def unifyTernaryBranches(lhs: Expr,
+      rhs: Expr): Option[Type] = TypeUtils.unifyTernaryBranches(lhs, rhs)
 }

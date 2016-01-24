@@ -193,7 +193,7 @@ trait TernaryTyperComponent extends TyperComponent {
       case (cond: Expr, thenp: Expr, elsep: Expr)     =>
         cond.tpe match {
           case Some(tpe) if tpe =:= BooleanType         =>
-            val rtpe = unify(thenp, elsep)
+            val rtpe = unifyTernaryBranches(thenp, elsep)
             rtpe match {
               case None                     =>
                 error(TYPE_MISMATCH,
@@ -218,28 +218,8 @@ trait TernaryTyperComponent extends TyperComponent {
     }
   }
 
-  protected def unify(lhs: Expr, rhs: Expr): Option[Type] = {
-    (lhs.tpe, rhs.tpe) match {
-      case (Some(t1), Some(t2)) if t1 =:= t2              =>
-        Some(t1)
-      case (Some(ByteType), Some(ShortType))              =>
-        Some(ShortType)
-      case (Some(ShortType), Some(ByteType))              =>
-        Some(ShortType)
-      case (Some(tpe1: NumericType),
-            Some(tpe2: NumericType))                      =>
-        if(isNarrawableTo(rhs, tpe1)) {
-          Some(tpe1)
-        }
-        else if(isNarrawableTo(lhs, tpe2)) {
-          Some(tpe2)
-        } else {
-          // INFO: This will be extended once we have OOJ
-          Some(binaryNumericPromotion(tpe1, tpe2))
-        }
-      case _                                              => None
-    }
-  }
+  protected def unifyTernaryBranches(lhs: Expr, rhs: Expr): Option[Type] =
+    TypeUtils.unifyTernaryBranches(lhs, rhs)
 
   protected def isNarrawableTo(e: Tree, t: Type): Boolean =
     TypePromotions.isNarrawableTo(e, t)
