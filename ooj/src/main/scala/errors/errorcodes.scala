@@ -178,6 +178,11 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
     val message: String =
       "Accessing fields (before declaration) in static initializer"
   }
+
+  case object ILLEGAL_FORWARD_REFERENCE extends ErrorCode {
+    val message: String =
+      "Illegal forward reference"
+  }
 }
 
 object ErrorCodes extends ErrorCodes
