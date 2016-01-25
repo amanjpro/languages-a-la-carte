@@ -627,10 +627,14 @@ trait ApplyTyperComponent extends TyperComponent {
     if(isExplicitConstructorInvocation(res)) {
       args.foreach { arg =>
         arg.bottomUp(())((z, y) => {
-          if(y.symbol.flatMap(_.owner) == enclosingClass(res) &&
-              isThisFieldAccess(y)) {
-            error(REFERENCE_FIELD_BEFORE_SUPERTYPE,
-              "", "", y.pos)
+          y match {
+            case id: IdentApi  if pointsToField(id)  =>
+              if(definedByEnclosingClass(res, y.symbol)) {
+                error(REFERENCE_FIELD_BEFORE_SUPERTYPE,
+                  "", "", y.pos)
+              }
+            case _                                   =>
+              ()
           }
         })
       }
@@ -638,15 +642,20 @@ trait ApplyTyperComponent extends TyperComponent {
     res
   }
 
-  protected def enclosingClass(t: Tree): Option[Symbol] = {
-    SymbolUtils.enclosingClass(t.owner)
+  protected def definedByEnclosingClass(t: Tree,
+                                        sym: Option[Symbol]): Boolean = {
+    val r = for {
+      encl <- SymbolUtils.enclosingClass(t.owner)
+      s    <- sym
+    } yield encl.defines(s)
+    r.getOrElse(false)
   }
 
   protected def isExplicitConstructorInvocation(tree: Tree): Boolean =
     TreeUtils.isExplicitConstructorInvocation(tree)
 
-  protected def isThisFieldAccess(tree: Tree): Boolean =
-    TreeUtils.isThisFieldAccess(tree)
+  protected def pointsToField(id: IdentApi): Boolean =
+    id.symbol.map(_.mods.isField).getOrElse(false)
 }
 
 
