@@ -97,8 +97,11 @@ trait ValDefTyperComponent extends TyperComponent {
           ()
       }
     })
-    val rhs    = if(valdef.mods.isField && !valdef.mods.isFinal &&
+    val rhs    = if(valdef.mods.isField &&
+                    (valdef.mods.isStatic || !valdef.mods.isFinal) &&
                     valdef.rhs == NoTree) {
+      if(valdef.mods.isFinal)
+        valdef.hasDefaultInit = true
       val dflt = getDefaultFieldValue(tpt.tpe)
       valdef.owner.foreach(dflt.owner = _)
       typed(dflt).asInstanceOf[Expr]
@@ -163,7 +166,6 @@ trait ValDefTyperComponent extends TyperComponent {
       error(LOCAL_VARIABLE_OWNED_BY_NON_LOCAL,
         valdef.toString, "A local variable", valdef.pos)
     }
-
 
     res
   }
@@ -715,7 +717,8 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent
       val id = nameIdent(ident)
       id match {
         case id: IdentApi                          =>
-          nameIdent(id, true)
+          val r = nameIdent(id, true)
+          r
         case tuse                                =>
           typed(tuse)
       }
