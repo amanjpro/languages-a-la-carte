@@ -230,8 +230,9 @@ trait CastSymbolAssignerComponent extends SymbolAssignerComponent {
       cast.expr.owner = o
       cast.tpt.owner  = o
     }
+    val tpt  = assign(cast.tpt).asInstanceOf[UseTree]
     val expr = assign(cast.expr).asInstanceOf[Expr]
-    TreeCopiers.copyCast(cast)(expr = expr)
+    TreeCopiers.copyCast(cast)(tpt = tpt, expr = expr)
   }
 }
 
