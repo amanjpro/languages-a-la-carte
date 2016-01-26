@@ -1,0 +1,85 @@
+// passes
+// TYPE_MISMATCH
+// FINAL_FIELD_IS_ALREADY_INITIALIZED
+// FINAL_FIELD_IS_ALREADY_INITIALIZED
+// FINAL_FIELD_IS_ALREADY_INITIALIZED
+// FINAL_FIELD_IS_ALREADY_INITIALIZED
+// FINAL_FIELDS_MIGHT_NOT_BE_INITIALIZED
+// FINAL_FIELDS_MIGHT_NOT_BE_INITIALIZED
+// FINAL_FIELD_IS_ALREADY_INITIALIZED
+// FINAL_FIELD_IS_ALREADY_INITIALIZED
+// FINAL_FIELD_IS_ALREADY_INITIALIZED
+// FINAL_FIELD_IS_ALREADY_INITIALIZED
+// FINAL_FIELD_IS_ALREADY_INITIALIZED
+// FINAL_FIELDS_MIGHT_NOT_BE_INITIALIZED
+// CYCLIC_CONSTRUCTOR_CALL
+// CYCLIC_CONSTRUCTOR_CALL
+// CYCLIC_CONSTRUCTOR_CALL
+
+class FinalFieldTest {
+    final int k;
+    final int f = 2;
+    final int d;
+
+    final static int st;
+    final static int st2 = 2;
+
+    FinalFieldTest() { // fails
+        k = 2;
+        k = 2; // fails
+        f = 2; // fails
+    }
+
+    FinalFieldTest(byte d) { // fails
+        super();
+        k = 2;
+    }
+
+    FinalFieldTest(int k) {
+        this();
+        this.k = k; // fails
+    }
+
+    FinalFieldTest(double k) {
+        this();
+    }
+
+
+    FinalFieldTest(double k, double d) {
+      this();
+      st = 2; // fails
+      st2 = 2; // fails
+    }
+
+    FinalFieldTest(double k, int d) { // fails
+      super();
+      st = 2; // fails
+      st2 = 2; // fails
+    }
+
+    static {
+        st = 2;
+        st2 = 2; // fails
+    }
+
+    static {
+      st = 2; // fails
+    }
+
+
+
+    FinalFieldTest(char c) {
+      this((java.lang.Object)null); // fails
+      java.lang.String d = (java.lang.Object)null; // fails
+      java.lang.String l = "";
+    }
+
+    FinalFieldTest(java.lang.String c) { // fails
+      this('c');
+    }
+
+    FinalFieldTest(java.lang.Object c) {
+      this(""); // fails
+    }
+
+}

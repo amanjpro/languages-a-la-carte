@@ -183,6 +183,21 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
     val message: String =
       "Illegal forward reference"
   }
+
+  case object FINAL_FIELD_IS_ALREADY_INITIALIZED extends ErrorCode {
+    val message: String =
+      "Final field is already initialized"
+  }
+
+  case object FINAL_FIELDS_MIGHT_NOT_BE_INITIALIZED extends ErrorCode {
+    val message: String =
+      "The following fields might not have been initialized"
+  }
+
+  case object CYCLIC_CONSTRUCTOR_CALL extends ErrorCode {
+    val message: String =
+      "Cyclic constructor call detected"
+  }
 }
 
 object ErrorCodes extends ErrorCodes

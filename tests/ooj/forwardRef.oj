@@ -1,0 +1,13 @@
+// fails
+// ILLEGAL_FORWARD_REFERENCE
+
+
+class Test {
+  int x = this.z;
+  int y = z;
+  int z = 2;
+}
+
+
+
+
