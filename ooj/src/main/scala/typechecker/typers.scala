@@ -1025,11 +1025,11 @@ trait BinaryTyperComponent extends calcj.typechecker.BinaryTyperComponent {
 @component
 trait AssignTyperComponent extends primj.typechecker.AssignTyperComponent {
   override protected def checkFinalReassigning(lhs: Tree): Unit = {
-    val isInStaticInit =
+    val isInInitializers =
       SymbolUtils.enclosingNonLocal(lhs.owner)
-        .map(_.mods.isStaticInit)
+        .map(sym => sym.mods.isStaticInit || sym.mods.isConstructor)
         .getOrElse(false)
-    if(TreeUtils.isFinal(lhs) && !isInStaticInit)
+    if(TreeUtils.isFinal(lhs) && !isInInitializers)
       // INFO: Static init is final re-assigning is dealt with in control flow
       // checks
       error(REASSIGNING_FINAL_VARIABLE,
