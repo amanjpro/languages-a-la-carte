@@ -641,8 +641,14 @@ class Parser extends parsers.Parser {
       val stmts = ctx.blockStatement match {
         case null                           => Nil
         case list                           =>
-          list.asScala.toList.map { (x) =>
-            visit(x)
+          list.asScala.toList.flatMap { (x) =>
+            if(x.localVariableDeclarationStatement != null) {
+              val ctx = x.localVariableDeclarationStatement
+                         .localVariableDeclaration
+              localVariableDeclaration(ctx)
+            } else {
+              List(visit(x.statement))
+            }
           }
       }
       TreeFactories.mkBlock(call ++ stmts, pos(ctx))
@@ -798,10 +804,8 @@ class Parser extends parsers.Parser {
 
     override def visitBlockStatement(ctx:
       Java1Parser.BlockStatementContext): Tree = {
-      if(ctx.statement == null)
-        visit(ctx.localVariableDeclarationStatement)
-      else
-        visit(ctx.statement)
+      // INFO: Do not use this method
+      visitChildren(ctx)
     }
 
     override def visitLocalVariableDeclarationStatement(ctx:
