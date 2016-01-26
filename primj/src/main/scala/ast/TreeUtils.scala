@@ -65,7 +65,7 @@ trait TreeUtils extends calcj.ast.TreeUtils {
       // brokenj adds: Switch, continue, break, label
       case _: IfApi | _: WhileApi | _: ForApi | _: BlockApi |
          _: ReturnApi | _: ValDefApi | NoTree     => true
-      case _                                => false
+      case _                                      => false
     }
     isValidStatementExpression(e) || isStmt
   }
@@ -123,7 +123,7 @@ trait TreeUtils extends calcj.ast.TreeUtils {
     case _: IfApi                    => false
     case _: BlockApi                 => false
     case _: TypeUseApi               => false
-    case _                        => true
+    case _                           => true
   }
 
 

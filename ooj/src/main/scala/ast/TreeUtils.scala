@@ -55,11 +55,17 @@ trait TreeUtils extends ast.TreeUtils {
     }
   }
 
-  def isType(tree: Tree): Boolean = tree match {
-    case _: TypeUseApi                   => true
-    case Select(_, _: TypeUseApi)        => true
-    case _                               => false
+  override def isTypeUse(tree: UseTree): Boolean = tree match {
+    case _: IdentApi                    => false
+    case _: TypeUseApi                  => true
+    case Select(_, t)                   =>
+      isTypeUse(t)
   }
+
+  // def isType(tree: Tree): Boolean = tree match {
+  //   case t: UseTree                      => isTypeUse(t)
+  //   case _                               => false
+  // }
 
   def isValidClassMember(tree: Tree): Boolean = tree match {
     case _: MethodDefApi                 => true

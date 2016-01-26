@@ -921,7 +921,7 @@ trait SelectTyperComponent extends TyperComponent {
   (select: SelectApi) => {
     val qual = typed(select.qual)
     qual.symbol.foreach(select.tree.owner = _)
-    if(isType(qual)) {
+    if(isTypeUse(qual)) {
       select.tree.shouldBeStatic = true
     }
     val tree = typed(select.tree).asInstanceOf[SimpleUseTree]
@@ -931,7 +931,10 @@ trait SelectTyperComponent extends TyperComponent {
   }
 
 
-  def isType(tree: Tree): Boolean = TreeUtils.isType(tree)
+  def isTypeUse(tree: Tree): Boolean = tree match {
+    case t: UseTree => TreeUtils.isTypeUse(t)
+    case _          => false
+  }
 }
 
 

@@ -30,7 +30,7 @@ trait BlockShapeCheckerComponent extends ShapeCheckerComponent {
     block.stmts.foreach { tree =>
       if(!isValidStmt(tree)) {
         error(BAD_STATEMENT,
-          tree.toString, "a statement", tree.pos)
+          "", "", tree.pos)
       } else ()
       check(tree)
     }
@@ -181,7 +181,7 @@ trait ProgramShapeCheckerComponent extends ShapeCheckerComponent {
 @component
 trait MethodDefShapeCheckerComponent extends ShapeCheckerComponent {
   (meth: MethodDefApi)  => {
-    if(!isType(meth.ret)) {
+    if(!isTypeUse(meth.ret)) {
       error(TYPE_NAME_EXPECTED,
         meth.ret.toString, "a type", meth.ret.pos)
     } else ()
@@ -189,7 +189,7 @@ trait MethodDefShapeCheckerComponent extends ShapeCheckerComponent {
     check(meth.body)
   }
 
-  protected def isType(tree: UseTree): Boolean =
+  protected def isTypeUse(tree: UseTree): Boolean =
     TreeUtils.isTypeUse(tree)
 }
 
@@ -210,7 +210,7 @@ trait UnaryShapeCheckerComponent extends ShapeCheckerComponent {
 @component
 trait ValDefShapeCheckerComponent extends ShapeCheckerComponent {
   (valdef: ValDefApi) => {
-    if(!isType(valdef.tpt)) {
+    if(!isTypeUse(valdef.tpt)) {
       // TODO: Better error message
       error(TYPE_NAME_EXPECTED,
         valdef.tpt.toString, "a type", valdef.tpt.pos)
@@ -244,12 +244,12 @@ trait ValDefShapeCheckerComponent extends ShapeCheckerComponent {
     else
       // TODO: Better error message
       error(UNEXPETED_TREE,
-        valdef.toString, "an expression", valdef.rhs.pos)
+        "", "", valdef.rhs.pos)
 
     check(valdef.rhs)
   }
 
-  protected def isType(tree: UseTree): Boolean =
+  protected def isTypeUse(tree: UseTree): Boolean =
     TreeUtils.isTypeUse(tree)
 
   protected def isSimpleExpression(tree: Tree): Boolean =

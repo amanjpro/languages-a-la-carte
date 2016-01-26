@@ -185,14 +185,17 @@ trait SelectDefTyperComponent extends DefTyperComponent {
     val tree = typed(select.tree).asInstanceOf[SimpleUseTree]
     tree.tpe.foreach(select.tpe = _)
     tree.symbol.foreach(select.symbol = _)
-    if(isType(qual)) {
+    if(isTypeUse(qual)) {
       tree.shouldBeStatic = true
     }
     TreeCopiers.copySelect(select)(qual, tree)
   }
 
 
-  def isType(tree: Tree): Boolean = TreeUtils.isType(tree)
+  def isTypeUse(tree: Tree): Boolean = tree match {
+    case t: UseTree => TreeUtils.isTypeUse(t)
+    case _          => false
+  }
 }
 
 @component

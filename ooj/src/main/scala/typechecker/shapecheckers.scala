@@ -100,8 +100,8 @@ trait MethodDefShapeCheckerComponent extends
   protected def isConstructor(sym: Option[Symbol]): Boolean =
     sym.map(s => SymbolUtils.isConstructor(s)).getOrElse(false)
 
-  override protected def isType(tree: UseTree): Boolean =
-    TreeUtils.isType(tree)
+  override protected def isTypeUse(tree: UseTree): Boolean =
+    TreeUtils.isTypeUse(tree)
 }
 
 @component
@@ -118,7 +118,7 @@ trait ClassDefShapeCheckerComponent extends
   ShapeCheckerComponent {
   (clazz: ClassDefApi) => {
     clazz.parents.foreach { p =>
-      if(!isType(p)) {
+      if(!isTypeUse(p)) {
         error(TYPE_NAME_EXPECTED,
           p.toString, "a type", p.pos)
       } else ()
@@ -127,8 +127,8 @@ trait ClassDefShapeCheckerComponent extends
     check(clazz.body)
   }
 
-  protected def isType(tree: UseTree): Boolean =
-    TreeUtils.isType(tree)
+  protected def isTypeUse(tree: UseTree): Boolean =
+    TreeUtils.isTypeUse(tree)
 }
 
 
@@ -153,8 +153,8 @@ trait ValDefShapeCheckerComponent extends
   primj.typechecker.ValDefShapeCheckerComponent {
 
 
-  override protected def isType(tree: UseTree): Boolean =
-    TreeUtils.isType(tree)
+  override protected def isTypeUse(tree: UseTree): Boolean =
+    TreeUtils.isTypeUse(tree)
 
   override protected def isSimpleExpression(tree: Tree): Boolean =
     TreeUtils.isSimpleExpression(tree)
