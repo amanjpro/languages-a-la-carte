@@ -90,11 +90,11 @@ trait BinaryTyperComponent extends TyperComponent {
             Some((BooleanType, BooleanType, BooleanType))
           case (BooleanType, _)                   =>
             error(TYPE_MISMATCH,
-              rtpe.toString, "bolean", bin.rhs.pos)
+              rtpe.toString, "boolean", bin.rhs.pos)
             None
           case _                                  =>
             error(TYPE_MISMATCH,
-              ltpe.toString, "bolean", bin.lhs.pos)
+              ltpe.toString, "boolean", bin.lhs.pos)
             None
         }
       // case Add                                    =>
