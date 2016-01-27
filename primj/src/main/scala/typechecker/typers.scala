@@ -323,7 +323,7 @@ trait UnaryTyperComponent extends calcj.typechecker.UnaryTyperComponent {
             unary.expr.toString, unary.expr.toString, unary.expr.pos)
         else ()
         unary
-      case _                                                        =>
+      case unary                                                    =>
         unary
     }
   }
