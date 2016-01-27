@@ -66,7 +66,7 @@ trait AssignTyperComponent extends TyperComponent {
     (lhs.tpe, rhs.tpe) match {
       case (Some(ltpe), Some(rtpe))
           if TypeUtils.isAssignable(rhs, rtpe, ltpe)  =>
-        lhs.tpe.foreach(assign.tpe = _)
+        rhs.tpe.foreach(assign.tpe = _)
         TreeCopiers.copyAssign(assign)(lhs = lhs, rhs = rhs)
       case (Some(ltpe), Some(rtpe))                      =>
         error(TYPE_MISMATCH,
