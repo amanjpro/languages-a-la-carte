@@ -28,6 +28,7 @@ import ooj.names.StdNames
 import ooj.types.TypeUtils
 import ooj.eval.Env
 import ooj.typechecker.ConstructorCheckerEnv
+import ooj.typechecker.DefinitiveAssignedEnv
 import ooj.antlr._
 
 import org.antlr.v4.runtime._
@@ -193,6 +194,10 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
           ForwardRefCheckerFamily.check((t, Nil))
         val constructorsChecker = (t: Tree) =>
           ConstructorsCheckerFamily.check((t, new ConstructorCheckerEnv))
+        val definitiveAssignmentChecker = (t: Tree) => {
+          VariableDefinitionCheckerFamily.check((t, new DefinitiveAssignedEnv))
+          t
+        }
 
         val f = SymbolAssignerFamily.assign join
                   NamerFamily.name join
@@ -203,7 +208,8 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
                             labelChecker join
                               jumpChecker join
                                 forwardRefChecker join
-                                  constructorsChecker
+                                  constructorsChecker join
+                                    definitiveAssignmentChecker
         f(x)
       }
     }

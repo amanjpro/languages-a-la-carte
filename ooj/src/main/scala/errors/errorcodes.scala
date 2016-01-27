@@ -198,6 +198,11 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
     val message: String =
       "Cyclic constructor call detected"
   }
+
+  case object VARIABLE_MIGHT_NOT_HAVE_BEEN_INITIALIZED extends ErrorCode {
+    val message: String =
+      "Variable might not have been initialized"
+  }
 }
 
 object ErrorCodes extends ErrorCodes
