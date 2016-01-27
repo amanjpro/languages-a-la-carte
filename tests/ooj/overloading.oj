@@ -1,6 +1,7 @@
 // fails
 // TYPE_MISMATCH
 // NON_VOID_RETURN
+// VARIABLE_MIGHT_NOT_HAVE_BEEN_INITIALIZED
 
 
 
@@ -58,7 +59,7 @@ class Test extends Test1 {
     // This should fail
     // Object obj;
     java.lang.Object obj;
-    super.equals(obj);
+    super.equals(obj); // fails
     super.equals(new Test2());
     equals(new Test2());
     this.k(1).m();

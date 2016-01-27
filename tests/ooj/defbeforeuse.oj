@@ -1,0 +1,58 @@
+// fails
+// VARIABLE_MIGHT_NOT_HAVE_BEEN_INITIALIZED
+// VARIABLE_MIGHT_NOT_HAVE_BEEN_INITIALIZED
+// VARIABLE_MIGHT_NOT_HAVE_BEEN_INITIALIZED
+
+
+
+
+
+
+class DefBefereUse {
+
+  void m1(int v) {
+    int k;
+    int c;
+    if((v > 0) && ((k = 2) >= 2))
+      c = k;
+    else
+      c = k; // fails
+  }
+
+
+  void m2(int n) {
+    int k;
+    while(true) {
+      k = n;
+      if(k >= 5) break;
+      n = 6;
+    }
+    int d = k;
+  }
+
+  void m3() {
+    int k;
+    int n = 5;
+    if(n > 2)
+      k = 3;
+    int d = k; // fails
+  }
+
+  void flow(boolean flag) {
+    int k;
+    if(flag)
+      k = 3;
+    else
+      k = 4;
+    int d = k;
+  }
+
+  void flow2(boolean flag) {
+    int k;
+    if(flag)
+      k = 3;
+    if(!flag)
+      k = 4;
+    int d = k; // fails
+  }
+}
