@@ -318,7 +318,7 @@ trait WhileVariableDefinitionCheckerComponent extends
       wile.cond match {
         case Literal(BooleanConstant(true))  =>
           true
-        case                                 =>
+        case _                               =>
           false
       }
     }
