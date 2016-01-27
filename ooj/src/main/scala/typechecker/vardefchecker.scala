@@ -297,11 +297,11 @@ trait WhileVariableDefinitionCheckerComponent extends
     if(!wile.isDoWhile) {
       check((wile.cond, env))
       wile.cond match {
-        case Literal(BooleanConstant(true)) =>
+        case Literal(BooleanConstant(true))  =>
           true
-        case Literal(BooleanConstant(true)) =>
+        case Literal(BooleanConstant(false)) =>
           false
-        case _                              =>
+        case _                               =>
           val benv = env.duplicate
           benv.mask(FalseCase)
           benv.unionTracks
@@ -315,7 +315,12 @@ trait WhileVariableDefinitionCheckerComponent extends
       check((wile.cond, env))
       env.mask(TrueCase)
       env.unionTracks
-      false
+      wile.cond match {
+        case Literal(BooleanConstant(true))  =>
+          true
+        case                                 =>
+          false
+      }
     }
   }
 }
@@ -327,11 +332,11 @@ trait ForVariableDefinitionCheckerComponent extends
     forloop.inits.foreach( init => check((init, env)))
     check((forloop.cond, env))
     forloop.cond match {
-      case Literal(BooleanConstant(true)) =>
+      case Literal(BooleanConstant(true))  =>
         true
-      case Literal(BooleanConstant(true)) =>
+      case Literal(BooleanConstant(false)) =>
         false
-      case _                              =>
+      case _                               =>
         val benv = env.duplicate
         benv.mask(FalseCase)
         benv.unionTracks
