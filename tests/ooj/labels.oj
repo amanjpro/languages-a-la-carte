@@ -11,6 +11,8 @@ class A {
     while(true) {
       continue l; // fails
     }
+  }
+  void m2 () {
     while(true) {
       break l; // fails
     }

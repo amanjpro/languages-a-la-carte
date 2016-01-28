@@ -1,0 +1,84 @@
+// fails
+// UNREACHABLE_STATEMENT
+// VARIABLE_MIGHT_NOT_HAVE_BEEN_INITIALIZED
+// VARIABLE_MIGHT_NOT_HAVE_BEEN_INITIALIZED
+// VARIABLE_MIGHT_NOT_HAVE_BEEN_INITIALIZED
+// UNREACHABLE_STATEMENT
+// UNREACHABLE_STATEMENT
+
+
+
+class Reachability {
+  void m() {
+    int n = 5;
+    while(n > 7) n = 2;
+  }
+
+  void m1() {
+    while(false) { // fails
+      int x = 2;
+    }
+    if(false) {
+      int x = 2;
+    }
+  }
+
+
+  void m2(int c) {
+    int j, j1, j2, j3, j4, j5;
+
+    do {
+      if(c < 20)
+        c = 2;
+      else continue;
+      c = 3;
+    } while(j <2); // fails
+
+    do {
+      if(c < 20)
+        c = 2;
+      else break;
+      c = 3;
+    } while(j1 <2); // fails
+
+    for(;j2 <2;) { // fails
+      if(c < 20)
+        c = 2;
+      else break;
+    }
+
+    do {
+      if(c < 20)
+        break;
+      else break;
+      c = 3; // fails
+    } while(j3 <2);
+
+    for(;;) {
+      break;
+    }
+
+    int k = 3;
+
+
+    for(int i = 3;true;j4++) {
+      if(true)
+        break;
+      else return;
+    }
+
+    for(int i = 3;true;j5++) {
+      if(true)
+        break;
+      else continue;
+    }
+    k = 4;
+
+    for(;;) {
+      continue;
+    }
+    k = 4; // fails
+
+  }
+}
+

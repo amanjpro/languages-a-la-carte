@@ -7,17 +7,19 @@
 
 
 class A {
-  void m () {
+  void m1 () {
     int k = 0;
     c: while(true) {
       break c;
     }
+  }
+
+  void m2 () {
     c: while(true) {
       continue c;
     }
-    c: while(true) {
-      continue;
-    }
+  }
+  void m3 () {
 
     l: {
       break l;
@@ -27,6 +29,10 @@ class A {
     }
     l: {
       break; // fails
+    }
+
+    c: while(true) {
+      continue;
     }
   }
 }

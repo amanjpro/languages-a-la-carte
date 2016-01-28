@@ -25,7 +25,7 @@ class DefBefereUse {
     while(true) {
       k = n;
       if(k >= 5) break;
-      n = 6;
+      n = k;
     }
     int d = k;
   }

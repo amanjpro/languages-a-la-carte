@@ -203,6 +203,11 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
     val message: String =
       "Variable might not have been initialized"
   }
+
+  case object UNREACHABLE_STATEMENT extends ErrorCode {
+    val message: String =
+      "The statment is not reachable"
+  }
 }
 
 object ErrorCodes extends ErrorCodes

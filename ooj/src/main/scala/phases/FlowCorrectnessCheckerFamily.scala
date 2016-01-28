@@ -11,22 +11,23 @@ import sana.ooj.typechecker._
 
 
 
-trait VariableDefinitionCheckerFamily extends
-  TransformationFamily[(Tree, DefinitiveAssignedEnv), Boolean] {
+trait FlowCorrectnessCheckerFamily extends
+  TransformationFamily[(Tree, FlowEnv), CompletenessStatus] {
   self =>
 
-  override def default: Boolean = false
+  override def default: CompletenessStatus = N
 
   def components:
-    List[PartialFunction[(Tree, DefinitiveAssignedEnv), Boolean]] =
-    generateComponents[(Tree, DefinitiveAssignedEnv), Boolean](OojNodes.nodes,
-      "VariableDefinitionCheckerComponent", "check", "")
+    List[PartialFunction[(Tree, FlowEnv), CompletenessStatus]] =
+    generateComponents[(Tree, FlowEnv), CompletenessStatus](
+      OojNodes.nodes,
+      "FlowCorrectnessCheckerComponent", "check", "")
 
-  def check: ((Tree, DefinitiveAssignedEnv)) => Boolean = family
+  def check: ((Tree, FlowEnv)) => CompletenessStatus = family
 }
 
-object VariableDefinitionCheckerFamily extends
-  VariableDefinitionCheckerFamily
+object FlowCorrectnessCheckerFamily extends
+  FlowCorrectnessCheckerFamily
 
 
 

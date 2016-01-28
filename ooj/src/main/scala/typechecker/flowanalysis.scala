@@ -30,11 +30,11 @@ import sana.dsl._
 import sana.core._
 
 
-sealed trait SymbolCase
-case object TrueCase extends SymbolCase
-case object FalseCase extends SymbolCase
+sealed trait TrackCase
+case object TrueCase extends TrackCase
+case object FalseCase extends TrackCase
 
-class DefinitiveAssignedEnv {
+class FlowEnv {
   private var trueCaseSymbols: List[Symbol]   = Nil
   private var falseCaseSymbols: List[Symbol]  = Nil
 
@@ -49,18 +49,18 @@ class DefinitiveAssignedEnv {
     trueCaseSymbols.contains(sym) || falseCaseSymbols.contains(sym)
   }
 
-  def batchAdd(env: DefinitiveAssignedEnv,
-        lane: SymbolCase): Unit = lane match {
+  def batchAdd(env: FlowEnv,
+        lane: TrackCase): Unit = lane match {
     case TrueCase               =>
       trueCaseSymbols   = trueCaseSymbols.union(env.trueCaseSymbols)
     case FalseCase              =>
       falseCaseSymbols  = falseCaseSymbols.union(env.falseCaseSymbols)
   }
 
-  def mergeIn(env1: DefinitiveAssignedEnv,
-              env2: DefinitiveAssignedEnv): Unit = {
+  def mergeIn(env1: FlowEnv,
+              env2: FlowEnv): Unit = {
 
-    val temp = new DefinitiveAssignedEnv
+    val temp = new FlowEnv
     temp.batchAdd(env1, TrueCase)
     temp.batchAdd(env2, FalseCase)
 
@@ -69,7 +69,7 @@ class DefinitiveAssignedEnv {
     batchAdd(temp, FalseCase)
   }
 
-  def mask(lane: SymbolCase): Unit = lane match {
+  def mask(lane: TrackCase): Unit = lane match {
     case TrueCase                  =>
       this.trueCaseSymbols = Nil
     case FalseCase                 =>
@@ -77,7 +77,7 @@ class DefinitiveAssignedEnv {
   }
 
 
-  def getTrack(lane: SymbolCase): DefinitiveAssignedEnv = lane match {
+  def getTrack(lane: TrackCase): FlowEnv = lane match {
     case TrueCase                  =>
       val temp = duplicate
       temp.mask(FalseCase)
@@ -99,56 +99,96 @@ class DefinitiveAssignedEnv {
     falseCaseSymbols = trueCaseSymbols
   }
 
-  def duplicate: DefinitiveAssignedEnv = {
-    val temp = new DefinitiveAssignedEnv
+  def duplicate: FlowEnv = {
+    val temp = new FlowEnv
     temp.trueCaseSymbols   = this.trueCaseSymbols
     temp.falseCaseSymbols  = this.falseCaseSymbols
     temp
   }
 }
 
-// true:  means it completes abruptly
-// false: means it completes normally
-trait VariableDefinitionCheckerComponent
-  extends TransformationComponent[(Tree, DefinitiveAssignedEnv), Boolean] {
-  def check: ((Tree, DefinitiveAssignedEnv)) => Boolean
+trait CompletenessStatus {
+  def unify(other: CompletenessStatus): CompletenessStatus =
+    (this, other) match {
+      case (I, _)           => I
+      case (_, I)           => I
+      case (M, _)           => M
+      case (_, M)           => M
+      case (B, B)           => B
+      case (R, B)           => B
+      case (B, R)           => B
+      case (C, B)           => B
+      case (B, C)           => B
+      case (_, B)           => M
+      case (B, _)           => M
+      case (N, _)           => N
+      case (_, N)           => N
+      case (C, _)           => C
+      case (_, C)           => C
+      case (R, _)           => R
+      case (_, R)           => R
+    }
+}
+
+trait AbruptStatus extends CompletenessStatus
+case object I extends AbruptStatus                // infinite loop
+case object R extends AbruptStatus                // for return
+case object C extends AbruptStatus                // for continue
+case object B extends AbruptStatus                // for break
+case object M extends CompletenessStatus          // for uncertain breaks
+case object N extends CompletenessStatus          // normal completion
+
+
+/*
+ * This phase (or these components) perform additional flow-analysis and check
+ * the correctness of the program for:
+ * <li> Definitive assignment -- Java Spec 1.0, Chapter: 16 - page: 383
+ * <li> Unreachable statements -- Java Spec 1.0, Section: 14.19 - page: 295
+ */
+trait FlowCorrectnessCheckerComponent extends
+  TransformationComponent[(Tree, FlowEnv), CompletenessStatus] {
+  def check: ((Tree, FlowEnv)) => CompletenessStatus
 }
 
 @component(tree, env)
-trait ProgramVariableDefinitionCheckerComponent extends
-        VariableDefinitionCheckerComponent {
+trait ProgramFlowCorrectnessCheckerComponent extends
+        FlowCorrectnessCheckerComponent {
   (prg: ProgramApi) => {
-    prg.members.foldLeft(false)((z, member) => z || check((member, env)))
+    val z: CompletenessStatus = N
+    prg.members.foreach( member => check((member, env)))
+    N
   }
 }
 
 @component(tree, env)
-trait CompilationUnitVariableDefinitionCheckerComponent
-  extends VariableDefinitionCheckerComponent {
+trait CompilationUnitFlowCorrectnessCheckerComponent
+  extends FlowCorrectnessCheckerComponent {
   (unit: CompilationUnitApi) => {
     check((unit.module, env))
   }
 }
 
 @component(tree, env)
-trait PackageDefVariableDefinitionCheckerComponent
-  extends VariableDefinitionCheckerComponent {
+trait PackageDefFlowCorrectnessCheckerComponent
+  extends FlowCorrectnessCheckerComponent {
   (pkg: PackageDefApi) => {
-    pkg.members.foldLeft(false)((z, member) => z || check((member, env)))
+    val z: CompletenessStatus = N
+    pkg.members.foreach( member => check((member, env)))
+    N
   }
 }
 
 @component(tree, env)
-trait ClassDefVariableDefinitionCheckerComponent extends
-    VariableDefinitionCheckerComponent {
+trait ClassDefFlowCorrectnessCheckerComponent extends
+    FlowCorrectnessCheckerComponent {
   (clazz: ClassDefApi) => {
     check((clazz.body, env))
   }
 }
 
 @component(tree, env)
-trait TemplateVariableDefinitionCheckerComponent extends
-    VariableDefinitionCheckerComponent {
+trait TemplateFlowCorrectnessCheckerComponent extends
+    FlowCorrectnessCheckerComponent {
   (template: TemplateApi) => {
     template.members.foreach {
       case member: MethodDefApi                   =>
@@ -158,35 +198,44 @@ trait TemplateVariableDefinitionCheckerComponent extends
       case _                                      =>
         ()
     }
-    false
+    N
   }
 }
 
 @component(tree, env)
-trait MethodDefVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
+trait MethodDefFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
   (mthd: MethodDefApi) => {
     check((mthd.body, env))
   }
 }
 
 @component(tree, env)
-trait BlockVariableDefinitionCheckerComponent extends
-    VariableDefinitionCheckerComponent {
+trait BlockFlowCorrectnessCheckerComponent extends
+    FlowCorrectnessCheckerComponent {
   (block: BlockApi) => {
-    val r = block.stmts.foldLeft(false) {(z, stmt) =>
-      if(!z)
-        check((stmt, env))
-      else z
+    val z = (N: CompletenessStatus, false)
+    val (status, _) = block.stmts.foldLeft(z) {(z, stmt) =>
+      z._1 match {
+        case _: AbruptStatus if !z._2 =>
+          error(UNREACHABLE_STATEMENT,
+            "", "", stmt.pos)
+          (z._1, true)
+        case _: AbruptStatus          =>
+          z
+        case _                        =>
+          val r = check((stmt, env))
+          val s = if(r == B) B else r.unify(z._1)
+          (s, z._2)
+      }
     }
-    // env.nutralize // WHAT IS THIS?
-    r
+    status
   }
 }
 
 @component(tree, env)
-trait ValDefVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
+trait ValDefFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
   (valdef: ValDefApi) => {
     check((valdef.rhs, env))
     valdef.rhs match {
@@ -194,14 +243,14 @@ trait ValDefVariableDefinitionCheckerComponent extends
       case _        =>
         valdef.symbol.foreach(env.add(_))
     }
-    false
+    N
   }
 }
 
 
 @component(tree, env)
-trait IdentVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
+trait IdentFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
   (id: IdentApi) => {
     id.symbol.foreach { sym =>
       if(sym.mods.isLocalVariable &&
@@ -209,24 +258,24 @@ trait IdentVariableDefinitionCheckerComponent extends
         error(VARIABLE_MIGHT_NOT_HAVE_BEEN_INITIALIZED,
           "", "", id.pos)
     }
-    false
+    N
   }
 }
 
 @component(tree, env)
-trait AssignVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
+trait AssignFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
   (assign: AssignApi) => {
     check((assign.rhs, env))
     assign.lhs.symbol.foreach(env.add(_))
-    false
+    N
   }
 }
 
 // boring cases
 @component(tree, env)
-trait TernaryVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
+trait TernaryFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
   (tern: TernaryApi) => {
     check((tern.cond, env))
     val tenv = env.duplicate
@@ -242,124 +291,150 @@ trait TernaryVariableDefinitionCheckerComponent extends
     check((tern.elsep, eenv))
 
     env.mergeIn(tenv, eenv)
-    false
+    N
   }
 }
 @component(tree, env)
-trait IfVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
+trait IfFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
   (ifelse: IfApi) => {
     check((ifelse.cond, env))
 
     val tenv = env.duplicate
     tenv.mask(FalseCase)
     tenv.unionTracks
-    check((ifelse.thenp, tenv))
+    val tstatus = check((ifelse.thenp, tenv))
 
     val eenv = env.duplicate
     eenv.mask(TrueCase)
     eenv.unionTracks
-    check((ifelse.elsep, eenv))
+    val estatus = check((ifelse.elsep, eenv))
 
 
     // Now, neutralize them all together
     env.mergeIn(tenv, eenv)
-    false
+
+    tstatus.unify(estatus)
   }
 }
 
 @component(tree, env)
-trait CaseVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
+trait CaseFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
   (cse: CaseApi) => {
     cse.guards.foreach( guard => check((guard, env)))
-    check((cse.body, env))
-  }
-}
-
-@component(tree, env)
-trait SwitchVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
-  (switch: SwitchApi) => {
-    check((switch.expr, env))
-    switch.cases.foldLeft(false) {(z, cse) =>
-      if(!z)
-        check((cse, env))
-      else z
+    check((cse.body, env)) match {
+      case R              => R
+      case _              => N
     }
   }
 }
 
 @component(tree, env)
-trait WhileVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
+trait SwitchFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
+  (switch: SwitchApi) => {
+    check((switch.expr, env))
+    val z: CompletenessStatus = N
+    switch.cases.foldLeft(z) {(z, cse) =>
+      val r = check((cse, env))
+      r.unify(z)
+    }
+  }
+}
+
+@component(tree, env)
+trait WhileFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
   (wile: WhileApi) => {
     if(!wile.isDoWhile) {
       check((wile.cond, env))
       wile.cond match {
-        case Literal(BooleanConstant(true))  =>
-          true
         case Literal(BooleanConstant(false)) =>
-          false
+          error(UNREACHABLE_STATEMENT,
+            "", "", wile.body.pos)
+          N
         case _                               =>
           val benv = env.duplicate
           benv.mask(FalseCase)
           benv.unionTracks
-          check((wile.body, benv))
-          env.mask(TrueCase)
-          env.unionTracks
-          false
+          val r = check((wile.body, benv))
+          wile.cond match {
+            case Literal(BooleanConstant(true))  if r != B && r != M =>
+              env.batchAdd(benv, TrueCase)
+              env.unionTracks
+              I
+            case _                                                   =>
+              env.batchAdd(benv, FalseCase)
+              env.unionTracks
+              if(r == R) R
+              else N
+          }
       }
     } else {
-      check((wile.body, env))
-      check((wile.cond, env))
+      val r = check((wile.body, env))
+      if(r == C || r == N || r == M)
+        check((wile.cond, env))
       env.mask(TrueCase)
       env.unionTracks
       wile.cond match {
-        case Literal(BooleanConstant(true))  =>
-          true
-        case _                               =>
-          false
+        case Literal(BooleanConstant(true))  if r != B && r != M =>
+          I
+        case _                                                   =>
+          if(r == R) R
+          else N
       }
     }
   }
 }
 
 @component(tree, env)
-trait ForVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
+trait ForFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
   (forloop: ForApi) => {
     forloop.inits.foreach( init => check((init, env)))
     check((forloop.cond, env))
     forloop.cond match {
-      case Literal(BooleanConstant(true))  =>
-        true
       case Literal(BooleanConstant(false)) =>
-        false
+        error(UNREACHABLE_STATEMENT,
+          "", "", forloop.body.pos)
+        N
       case _                               =>
         val benv = env.duplicate
         benv.mask(FalseCase)
         benv.unionTracks
-        check((forloop.body, benv))
-        forloop.steps.foreach( step => check((step, benv)))
-        env.mask(TrueCase)
-        env.unionTracks
-        false
+        val r = check((forloop.body, benv))
+        if(r == N || r == C || r == M) {
+          forloop.steps.foreach( step => check((step, benv)))
+        }
+        forloop.cond match {
+          case Literal(BooleanConstant(true)) if r != B && r != M =>
+            env.batchAdd(benv, TrueCase)
+            env.unionTracks
+            I
+          case _                                                  =>
+            env.batchAdd(benv, FalseCase)
+            env.unionTracks
+            if(r == R) R
+            else N
+        }
     }
   }
 }
 
 @component(tree, env)
-trait ApplyVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
+trait ApplyFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
   (apply: ApplyApi) => {
-    apply.args.foldLeft(false)((z, arg) => z || check((arg, env)))
+    val z: CompletenessStatus = N
+    apply.args.foreach( arg => check((arg, env)))
+    N
   }
 }
 
 @component(tree, env)
-trait UnaryVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
+trait UnaryFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
   (unary: UnaryApi) => {
     check((unary.expr, env))
     unary.op match {
@@ -368,7 +443,7 @@ trait UnaryVariableDefinitionCheckerComponent extends
       case _                                                  =>
         ()
     }
-    false
+    N
   }
 
   protected def isBooleanType(tpe: Option[Type]): Boolean =
@@ -376,8 +451,8 @@ trait UnaryVariableDefinitionCheckerComponent extends
 }
 
 @component(tree, env)
-trait BinaryVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
+trait BinaryFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
   (bin: BinaryApi) => {
     val lenv = env.duplicate
     check((bin.lhs, lenv))
@@ -422,7 +497,7 @@ trait BinaryVariableDefinitionCheckerComponent extends
         env.batchAdd(lenv, TrueCase)
         env.batchAdd(lenv, FalseCase)
     }
-    false
+    N
   }
 
   protected def isBooleanType(tpe: Option[Type]): Boolean =
@@ -430,8 +505,8 @@ trait BinaryVariableDefinitionCheckerComponent extends
 }
 
 @component(tree, env)
-trait CastVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
+trait CastFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
   (cast: CastApi) => {
     check((cast.expr, env))
   }
@@ -440,67 +515,70 @@ trait CastVariableDefinitionCheckerComponent extends
 
 
 @component(tree, env)
-trait ReturnVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
+trait ReturnFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
   (ret: ReturnApi) => {
     ret.expr.map(e => check((e, env)))
-    true
+    R
   }
 }
 
 @component(tree, env)
-trait NewVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
+trait NewFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
   (nw: NewApi) =>
     check((nw.app, env))
 }
 
 @component(tree, env)
-trait SelectVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
+trait SelectFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
   (slct: SelectApi) =>
     check((slct.tree, env))
 }
 
 @component(tree, env)
-trait LabelVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
+trait LabelFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
   (lbl: LabelApi) =>
-    check((lbl.stmt, env))
+    check((lbl.stmt, env)) match {
+      case C            => C
+      case _            => N
+    }
 }
 
 @component(tree, env)
-trait TypeUseVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
-  (tuse: TypeUseApi) => false
+trait TypeUseFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
+  (tuse: TypeUseApi) => N
 }
 
 @component(tree, env)
-trait LiteralVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
-  (lit: LiteralApi) => false
+trait LiteralFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
+  (lit: LiteralApi) => N
 }
 
 @component(tree, env)
-trait BreakVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
-  (brk: BreakApi) => true
+trait BreakFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
+  (brk: BreakApi) => B
 }
 
 @component(tree, env)
-trait ContinueVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
-  (cntnu: ContinueApi) => true
+trait ContinueFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
+  (cntnu: ContinueApi) => C
 }
 
 @component(tree, env)
-trait ThisVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
-  (ths: ThisApi) => false
+trait ThisFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
+  (ths: ThisApi) => N
 }
 
 @component(tree, env)
-trait SuperVariableDefinitionCheckerComponent extends
-  VariableDefinitionCheckerComponent {
-  (spr: SuperApi) => false
+trait SuperFlowCorrectnessCheckerComponent extends
+  FlowCorrectnessCheckerComponent {
+  (spr: SuperApi) => N
 }
