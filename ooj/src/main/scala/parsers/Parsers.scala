@@ -1019,7 +1019,8 @@ class Parser extends parsers.Parser {
             .asScala.toList.map {(x) => visit(x).asInstanceOf[Expr]}
       }
       val cond     = ctx.expression match {
-        case null                          => NoTree
+        case null                          =>
+          TreeFactories.mkLiteral(BooleanConstant(true), pos(ctx))
         case expr                          => visit(expr).asInstanceOf[Expr]
       }
       val body     = visit(ctx.statement).asInstanceOf[Expr]
@@ -1049,7 +1050,8 @@ class Parser extends parsers.Parser {
             .asScala.toList.map {(x) => visit(x).asInstanceOf[Expr]}
       }
       val cond     = ctx.expression match {
-        case null                          => NoTree
+        case null                          =>
+          TreeFactories.mkLiteral(BooleanConstant(true), pos(ctx))
         case expr                          => visit(expr).asInstanceOf[Expr]
       }
       val body     = visit(ctx.statementNoShortIf).asInstanceOf[Expr]
