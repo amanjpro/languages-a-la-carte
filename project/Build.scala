@@ -94,8 +94,10 @@ object build extends Build {
     )
     deps match {
       case Seq()      => proj
-      case Seq(d)     => proj dependsOn d
-      case _          => proj dependsOn (deps.flatMap(_.dependencies): _*)
+      case _          =>
+      deps.foldLeft(proj)((z, y) => {
+        z dependsOn y
+      })
     }
   }
 
@@ -106,7 +108,7 @@ object build extends Build {
       // ++
       // site.settings ++ ghpages.settings: _*) ++ settings ),
     aggregate = Seq(framework, macros, testLang, tiny, calcj, primj,
-                   brokenj, ooj, dcct)
+                   brokenj, ooj, dcct, arrayj, arrooj)
       // arrayj)
   ) settings (unidocSettings: _*)
 
@@ -119,6 +121,8 @@ object build extends Build {
   lazy val primj       = project("primj", Seq(calcj), Seq(antlrSetting("primj")))
   lazy val brokenj     = project("brokenj", Seq(primj))
   lazy val ooj         = project("ooj", Seq(brokenj), Seq(antlrSetting("ooj")))
+  lazy val arrayj      = project("arrayj", Seq(brokenj))
+  lazy val arrooj      = project("arrooj", Seq(ooj, arrayj))
 
 
 
