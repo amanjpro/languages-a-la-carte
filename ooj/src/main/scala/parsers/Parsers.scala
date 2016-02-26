@@ -1176,8 +1176,8 @@ class Parser extends parsers.Parser {
       visitChildren(ctx)
     }
 
-    override def visitPrimaryNewArray(ctx:
-      Java1Parser.PrimaryNewArrayContext): Tree = {
+    override def visitPrimaryNewArraySelect(ctx:
+      Java1Parser.PrimaryNewArraySelectContext): Tree = {
       // TODO: Implement this when you support arrays
       visitChildren(ctx)
     }
@@ -1299,11 +1299,19 @@ class Parser extends parsers.Parser {
       visitChildren(ctx)
     }
 
-    override def visitArrayCreationExpression(ctx:
-      Java1Parser.ArrayCreationExpressionContext): Tree = {
+    
+    override def visitPrimitiveArrayCreation(ctx:
+      Java1Parser.PrimitiveArrayCreationContext): Tree = {
       // TODO: Implement this when you support arrays
       visitChildren(ctx)
     }
+
+    override def visitReferenceArrayCreation(ctx:
+      Java1Parser.ReferenceArrayCreationContext): Tree = {
+      // TODO: Implement this when you support arrays
+      visitChildren(ctx)
+    }
+
 
     override def visitDimExpr(ctx:
       Java1Parser.DimExprContext): Tree = {

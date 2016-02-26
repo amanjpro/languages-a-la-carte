@@ -488,7 +488,7 @@ primaryNoNewArray
 	| 'this'                                                 # PrimaryThis
 	| '(' expression ')'                                     # PrimaryExpr
 	| classInstanceCreationExpression                        # PrimaryNew
-	| arrayCreationExpression '.' Identifier                 # PrimaryNewArray
+	| arrayCreationExpression '.' Identifier                 # PrimaryNewArraySelect
 	| primaryNoNewArray '.' Identifier                       # PrimarySelect
 	| 'super' '.' Identifier                                 # PrimarySuperSelect
 	| name '(' argumentList? ')'                             # PrimaryApply
@@ -509,8 +509,8 @@ argumentList
   ;
 
 arrayCreationExpression
-	: 'new' primitiveType dimExpr+ dims?
-	| 'new' classOrInterfaceType dimExpr+ dims?
+	: 'new' primitiveType dimExpr+ dims?                # PrimitiveArrayCreation
+	| 'new' classOrInterfaceType dimExpr+ dims?         # ReferenceArrayCreation
   ;
 
 dimExpr
