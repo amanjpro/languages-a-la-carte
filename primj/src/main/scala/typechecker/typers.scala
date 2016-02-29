@@ -464,8 +464,10 @@ trait TypeUseTyperComponent extends TyperComponent {
           val sym = tuse.owner.flatMap(_.getSymbol(tuse.name,
               _.isInstanceOf[TypeSymbol]))
           sym.foreach(tuse.symbol = _)
+          tuse.hasBeenNamed = true
           sym
         case Some(sym)      =>
+          tuse.hasBeenNamed = true
           Some(sym)
       }
       symbol match {
