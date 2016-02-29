@@ -3,7 +3,7 @@ package ch.usi.inf.l3.sana.arrayj.ast
 import ch.usi.inf.l3.sana
 import sana.tiny
 import sana.brokenj
-import tiny.ast.UseTree
+import tiny.ast.{Tree, UseTree}
 import TreeExtractors._
 
 trait TreeUtils extends brokenj.ast.TreeUtils {
@@ -13,6 +13,22 @@ trait TreeUtils extends brokenj.ast.TreeUtils {
       isTypeUse(tpt)
     case _                             =>
       super.isTypeUse(tree)
+  }
+
+  override def isValidExpression(e: Tree): Boolean = e match {
+    case _: ArrayCreationApi => true
+    case _                   => super.isValidExpression(e)
+  }
+
+  def isArrayInitialization(e: Tree): Boolean = e match {
+    case _: ArrayInitializerApi => true
+    case _                      => false
+  }
+
+
+  def isArrayTypeUse(e: Tree): Boolean = e match {
+    case _: ArrayTypeUseApi => true
+    case _                  => false
   }
 }
 
