@@ -17,6 +17,6 @@ trait AugmentedArrayInitializer {
       .map(_.asInstanceOf[Type])
 
   def componentType_=(tpe: Type): Unit =
-    tree.attributes = tree.attributes + ('componentType -> componentType)
+    tree.attributes = tree.attributes + ('componentType -> tpe)
 }
 
