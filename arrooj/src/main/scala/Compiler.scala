@@ -1,0 +1,231 @@
+package ch.usi.inf.l3.sana.arrooj
+
+import ch.usi.inf.l3.sana
+import sana.core.Implicits._
+import sana.tiny
+import sana.calcj
+import sana.ooj
+import sana.arrayj
+import sana.arrooj
+import sana.primj
+import tiny.settings.SanaConfig
+import tiny.ast.Tree
+import tiny.types.Type
+import tiny.symbols.Symbol
+import tiny.modifiers.Flags
+import tiny.source.SourceReader
+import tiny.errors.ErrorReporting
+import tiny.names.Name
+import calcj.types._
+import calcj.symbols._
+import primj.symbols.{ProgramSymbol, MethodSymbol, VariableSymbol, VoidSymbol}
+import primj.types._
+import primj.modifiers.{PARAM, FINAL}
+import arrooj.ast.TreeFactories
+import arrooj.symbols.SymbolUtils
+import arrooj.phases._
+import arrooj.types.TypeUtils
+import ooj.modifiers._
+import arrooj.parser.Parser
+import ooj.antlr.{Java1Parser, Java1Lexer}
+import ooj.symbols.{PackageSymbol, ClassSymbol}
+import ooj.modifiers.Ops.noflags
+import ooj.names.StdNames
+import ooj.eval.Env
+import ooj.typechecker.{ConstructorCheckerEnv, FlowEnv}
+
+import org.antlr.v4.runtime._
+import org.antlr.v4.runtime.tree._
+
+trait Compiler extends tiny.CompilerApi[Tree, Unit] {
+  self =>
+
+
+  def langName: String = arrooj.langName
+  def langVersion: String = arrooj.langVersion
+  type ConfigType = SanaConfig
+  def config: ConfigType
+  def parser: tiny.parsers.Parser = arrooj.parser.Parser
+
+  ErrorReporting.isTest = config.isTest
+
+  def sourceReader: SourceReader =new SourceReader {
+    type P = Java1Parser
+    def newLexer(is: ANTLRInputStream): Lexer =
+      new Java1Lexer(is)
+    def newParser(tokens: CommonTokenStream): Java1Parser =
+      new Java1Parser(tokens)
+    def parserStart(parser: Java1Parser): ParseTree = parser.compilationUnit
+  }
+
+  def compile: Tree => Unit = {
+    Language.compile
+  }
+
+  object Language extends super.Language {
+    def init(): Unit = {
+      def singleParamConstructor(paramSymbol: Symbol,
+          owner: Symbol): MethodSymbol = {
+        val mods = PUBLIC_ACC | CONSTRUCTOR
+        val name = StdNames.CONSTRUCTOR_NAME
+        val cnstrTpe = Some(MethodType(VoidType, paramSymbol.tpe.toList))
+        val sym  = MethodSymbol(mods, name, Nil,
+            Some(VoidSymbol), cnstrTpe, Some(owner))
+        val psym    = VariableSymbol(PARAM | noflags,
+            Name("value"), Some(paramSymbol), Some(sym))
+        sym.params = List(psym)
+        sym
+      }
+
+      def createClassSymbol(name: Name, paramSym: Option[Symbol],
+              tpe: Type): ClassSymbol = {
+        val mods    = PUBLIC_ACC | FINAL
+        // val name    = StdNames.STRING_TYPE_NAME
+        val parents = List(SymbolUtils.objectClassSymbol)
+        val owner   = Some(SymbolUtils.langPackageSymbol)
+        // val tpe     = Some(TypeUtils.stringClassType)
+        val res     = ClassSymbol(mods, name, parents, owner, Some(tpe))
+        val cnstr   = paramSym match {
+          case None            =>
+            singleParamConstructor(res, res)
+          case Some(sym)       =>
+            singleParamConstructor(sym, res)
+        }
+        res.declare(cnstr)
+        res
+      }
+
+      val javaPackageSymbol: PackageSymbol = {
+        val name    = StdNames.JAVA_PACKAGE_NAME
+        val owner = Some(ProgramSymbol)
+        PackageSymbol(name, owner)
+      }
+
+      val langPackageSymbol: PackageSymbol = {
+        val name    = StdNames.LANG_PACKAGE_NAME
+        val owner = Some(javaPackageSymbol)
+        PackageSymbol(name, owner)
+      }
+
+      val obj: ClassSymbol = {
+        val mods    = Flags(PUBLIC_ACC)
+        val name    = StdNames.OBJECT_TYPE_NAME
+        val parents = Nil
+        val owner   = Some(langPackageSymbol)
+        val tpe     = Some(TypeUtils.objectClassType)
+        val res = ClassSymbol(mods, name, parents, owner, tpe)
+        res
+      }
+      langPackageSymbol.declare(obj)
+      javaPackageSymbol.declare(langPackageSymbol)
+      ProgramSymbol.declare(javaPackageSymbol)
+
+      val tpe     = obj.tpe
+      // cnstr tpe:
+      val cnstrTpe = Some(MethodType(VoidType, Nil))
+      val cnstr = MethodSymbol(PUBLIC_ACC | CONSTRUCTOR,
+        StdNames.CONSTRUCTOR_NAME, Nil, Some(VoidSymbol),
+        cnstrTpe, Some(obj))
+
+      // eqls tpe:
+      val eqlsTpe = Some(MethodType(BooleanType, tpe.toList))
+      val eqls = MethodSymbol(PUBLIC_ACC | noflags,
+        Name("equals"), Nil, Some(BooleanSymbol), eqlsTpe, Some(obj))
+      val psym    = VariableSymbol(PARAM | noflags,
+            Name("other"), Some(obj), Some(eqls))
+
+      eqls.params = List(psym)
+
+
+
+      val str = createClassSymbol(StdNames.STRING_TYPE_NAME,
+        None, TypeUtils.stringClassType)
+
+      val bool = createClassSymbol(StdNames.BOOLEAN_CLASS_NAME,
+        Some(BooleanSymbol), TypeUtils.booleanClassType)
+
+      val char = createClassSymbol(StdNames.CHARACTER_CLASS_NAME,
+        Some(CharSymbol), TypeUtils.characterClassType)
+
+      val int = createClassSymbol(StdNames.INTEGER_CLASS_NAME,
+        Some(IntSymbol), TypeUtils.integerClassType)
+
+      val long = createClassSymbol(StdNames.LONG_CLASS_NAME,
+        Some(LongSymbol), TypeUtils.longClassType)
+
+      val float = createClassSymbol(StdNames.FLOAT_CLASS_NAME,
+        Some(FloatSymbol), TypeUtils.floatClassType)
+
+      val double = createClassSymbol(StdNames.DOUBLE_CLASS_NAME,
+        Some(DoubleSymbol), TypeUtils.doubleClassType)
+
+      val toStrTpe = Some(MethodType(TypeUtils.stringClassType, Nil))
+      val toStr = MethodSymbol(Flags(PUBLIC_ACC),
+        Name("toString"), Nil, Some(str),
+        toStrTpe, Some(obj))
+
+
+      obj.declare(cnstr)
+      obj.declare(eqls)
+      obj.declare(toStr)
+      SymbolUtils.langPackageSymbol.declare(str)
+      SymbolUtils.langPackageSymbol.declare(bool)
+      SymbolUtils.langPackageSymbol.declare(char)
+      SymbolUtils.langPackageSymbol.declare(int)
+      SymbolUtils.langPackageSymbol.declare(long)
+      SymbolUtils.langPackageSymbol.declare(float)
+      SymbolUtils.langPackageSymbol.declare(double)
+
+
+      SymbolUtils.standardDefinitions.foreach { s =>
+        ProgramSymbol.declare(s)
+      }
+    }
+
+    def compile: Tree => Unit = {
+      (x: Tree) => {
+        val constantFolder = (t: Tree) => {
+          val (tc, env) = ConstantCollectingFamily.collect((t, Env.emptyEnv))
+          val (tf, _)   = ConstantFoldingFamily.constantFold((tc, env))
+          tf
+        }
+        val labelChecker = (t: Tree) =>
+          LabelNameCheckerFamily.check((t, Nil))
+        val jumpChecker = (t: Tree) =>
+          JumpCheckerFamily.check((t, Nil))
+        val forwardRefChecker = (t: Tree) =>
+          ForwardRefCheckerFamily.check((t, Nil))
+        val constructorsChecker = (t: Tree) =>
+          ConstructorsCheckerFamily.check((t, new ConstructorCheckerEnv))
+        val flowAnalyzer = (t: Tree) => {
+          FlowCorrectnessCheckerFamily.check((t, new FlowEnv))
+          t
+        }
+
+        val f = SymbolAssignerFamily.assign join
+                  NamerFamily.name join
+                    DefTyperFamily.typed join
+                      constantFolder join
+                        TyperFamily.typed join
+                          ShapeCheckerFamily.check join
+                            labelChecker join
+                              jumpChecker join
+                                forwardRefChecker join
+                                  constructorsChecker join
+                                    flowAnalyzer
+        f(x)
+      }
+    }
+  }
+
+  def start: Unit = {
+    Language.init()
+    val cunits  = config.files.map(f => parse(f)).toList
+    val program = TreeFactories.mkProgram(cunits)
+    compile(program)
+  }
+
+}
+
+class CompilerImpl(val config: SanaConfig) extends Compiler
+
