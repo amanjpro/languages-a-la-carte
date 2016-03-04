@@ -48,9 +48,12 @@ trait ArrayCreationTyperComponent extends TyperComponent {
 
     val res =
       TreeCopiers.copyArrayCreation(creation)(array = array, size = size)
-    array.tpe.foreach(res.tpe = _)
+    array.tpe.foreach(tpe => res.tpe = toArrayType(tpe))
     res
   }
+
+  protected def toArrayType(tpe: Type): Type =
+    ArrayType(tpe)
 
 
   protected def validateSizeType(size: Option[Expr]): Option[Expr] = {
@@ -75,16 +78,19 @@ trait ArrayAccessTyperComponent extends TyperComponent {
       val temp = typed(access.index).asInstanceOf[Expr]
       validateIndexType(temp)
     }
-    val res =
-      TreeCopiers.copyArrayAccess(access)(array = array, index = index)
-    array.tpe.foreach {
-      case atpe: ArrayTypeApi       =>
-        res.tpe = atpe.componentType
-      case _                        =>
-        error(NON_ARRAY_ELEMENT_ACCESS, "", "", access.pos)
-    }
+    val res = TreeCopiers.copyArrayAccess(access)(
+      array = array, index = index).asInstanceOf[ArrayAccessApi]
+    typeArrayAccess(res)
     res
   }
+
+  protected def typeArrayAccess(access: ArrayAccessApi): Unit =
+    access.array.tpe.map {
+      case atpe: ArrayTypeApi          =>
+        access.tpe = atpe.componentType
+      case _                           =>
+        error(NON_ARRAY_ELEMENT_ACCESS, "", "", access.pos)
+    }
 
   protected def validateIndexType(index: Expr): Expr =
     index.tpe.map { tpe =>
@@ -110,7 +116,17 @@ trait ArrayTypeUseTyperComponent extends TyperComponent {
 @component
 trait ArrayInitializerTyperComponent extends TyperComponent {
   (init: ArrayInitializerApi) => {
-    val elements = init.elements.map { elem =>
+    val elements = setComponentTypesIfNeeded(init)
+    val res      = TreeCopiers.copyArrayInitizalizer(init)(elements = elements)
+    checkArrayInitializerType(res)
+    res
+  }
+
+  protected def toArrayType(tpe: Type): Type =
+    ArrayType(tpe)
+
+  protected def setComponentTypesIfNeeded(
+    init: ArrayInitializerApi): List[Expr]= init.elements.map { elem =>
       (init.componentType, elem) match {
         case (Some(ArrayType(ArrayType(t))), elem: ArrayInitializerApi)    =>
           elem.componentType = t
@@ -118,10 +134,6 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
       }
       typed(elem).asInstanceOf[Expr]
     }
-    val res      = TreeCopiers.copyArrayInitizalizer(init)(elements = elements)
-    checkArrayInitializerType(res)
-    res
-  }
 
   protected def checkArrayInitializerType(init: ArrayInitializerApi): Unit = {
     val hasErrors = init.elements.foldLeft(false)((z, y) => {
@@ -137,9 +149,7 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
       }
       r.getOrElse(false)
     })
-    if(!hasErrors) {
-      init.componentType.foreach(init.tpe = _)
-    }
+    init.componentType.foreach(tpe => init.tpe = toArrayType(tpe))
   }
 }
 
@@ -147,13 +157,22 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
 @component
 trait ValDefTyperComponent extends primj.typechecker.ValDefTyperComponent {
   (valdef: ValDefApi)          => {
-    val tpt    = typed(valdef.tpt).asInstanceOf[UseTree]
-    (tpt.tpe, valdef.rhs) match {
-      case (Some(ArrayType(bt)), rhs: ArrayInitializerApi) =>
-        rhs.componentType = bt
-      case _                                               =>
-        ()
+    val res = valdef.rhs match {
+      case rhs: ArrayInitializerApi =>
+        val tpt = typed(valdef.tpt).asInstanceOf[UseTree]
+        getComponentType(tpt.tpe).foreach { bt =>
+          rhs.componentType = bt
+        }
+        TreeCopiers.copyValDef(valdef)(tpt = tpt)
+      case _                       =>
+        valdef
     }
-    super.apply(valdef)
+    super.apply(res)
+  }
+
+  protected def getComponentType(
+      tpe: Option[Type]): Option[Type] =  tpe.flatMap {
+    case tpe: ArrayTypeApi        => Some(tpe.componentType)
+    case _                        => None
   }
 }
