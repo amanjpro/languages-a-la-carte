@@ -192,7 +192,7 @@ trait SelectDefTyperComponent extends DefTyperComponent {
   }
 
 
-  def isTypeUse(tree: Tree): Boolean = tree match {
+  protected def isTypeUse(tree: Tree): Boolean = tree match {
     case t: UseTree => TreeUtils.isTypeUse(t)
     case _          => false
   }
