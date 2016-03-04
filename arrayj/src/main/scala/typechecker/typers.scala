@@ -1,4 +1,4 @@
-package ch.usi.inf.l3.sana.brokenj.typechecker
+package ch.usi.inf.l3.sana.arrayj.typechecker
 
 
 import ch.usi.inf.l3.sana
