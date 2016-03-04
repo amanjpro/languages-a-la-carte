@@ -51,6 +51,9 @@ trait WhileShapeCheckerComponent
 trait ForShapeCheckerComponent
   extends primj.typechecker.ForShapeCheckerComponent {
 
+  override protected def isValDefOrStatementExpression(t: Tree): Boolean =
+    TreeUtils.isValDefOrStatementExpression(t)
+
   override protected def isValidStmt(t: Tree): Boolean =
     TreeUtils.isValidStatement(t)
 
