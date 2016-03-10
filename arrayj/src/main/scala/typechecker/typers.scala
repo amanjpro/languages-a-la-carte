@@ -182,5 +182,11 @@ trait ValDefTyperComponent extends primj.typechecker.ValDefTyperComponent {
 }
 
 
+@component
+trait AssignTyperComponent extends primj.typechecker.AssignTyperComponent {
+  override protected def checkVariableLHS(lhs: Tree): Unit = {
+    if(!TreeUtils.isArrayAccessOrVariableAccess(lhs))
+      error(ASSIGNING_NOT_TO_VARIABLE,
+        lhs.toString, lhs.toString, lhs.pos)
   }
 }

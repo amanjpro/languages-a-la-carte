@@ -30,6 +30,9 @@ trait TreeUtils extends OTreeUtils {
 
   def isArrayTypeUse(e: Tree): Boolean =
     ATreeUtils.isArrayTypeUse(e)
+
+  def isArrayAccessOrVariableAccess(tree: Tree): Boolean =
+    ATreeUtils.isArrayAccessOrVariableAccess(tree)
 }
 
 object TreeUtils extends TreeUtils

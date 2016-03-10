@@ -30,6 +30,12 @@ trait TreeUtils extends brokenj.ast.TreeUtils {
     case _: ArrayTypeUseApi => true
     case _                  => false
   }
+
+
+  def isArrayAccessOrVariableAccess(tree: Tree): Boolean = tree match {
+    case ArrayAccess(array, _)        => isArrayAccessOrVariableAccess(array)
+    case tree                         => isVariable(tree)
+  }
 }
 
 object TreeUtils extends TreeUtils

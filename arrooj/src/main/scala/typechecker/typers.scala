@@ -125,3 +125,13 @@ trait ArrayCreationTyperComponent
   override protected def toArrayType(tpe: Type): Type =
     TypeUtils.mkArrayType(tpe)
 }
+
+
+@component
+trait AssignTyperComponent extends ooj.typechecker.AssignTyperComponent {
+  override protected def checkVariableLHS(lhs: Tree): Unit = {
+    if(!TreeUtils.isArrayAccessOrVariableAccess(lhs))
+      error(ASSIGNING_NOT_TO_VARIABLE,
+        lhs.toString, lhs.toString, lhs.pos)
+  }
+}
