@@ -24,7 +24,7 @@ trait TreeCopiers extends sana.tiny.ast.TreeCopiers {
 
 
   def copyLiteral(template: LiteralApi)
-      (constant: Constant): LiteralApi = {
+      (constant: Constant = template.constant): LiteralApi = {
     val res = TreeFactories.mkLiteral(constant)
     copyProperties(template, res)
     res
