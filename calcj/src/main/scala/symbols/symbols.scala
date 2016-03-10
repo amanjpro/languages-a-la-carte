@@ -8,7 +8,7 @@ import sana.tiny.modifiers.Flags
 import sana.tiny.modifiers.Ops._
 import sana.tiny.names.Name
 
-case object IntSymbol extends TypeSymbol {
+trait IntSymbol extends TypeSymbol {
   def tpe: Option[Type] = Some(IntType)
   def owner: Option[Symbol] = None
   def mods: Flags = noflags
@@ -29,7 +29,9 @@ case object IntSymbol extends TypeSymbol {
     p: Symbol => Boolean): Option[Symbol] = None
 }
 
-case object CharSymbol extends TypeSymbol {
+case object IntSymbol extends IntSymbol
+
+trait CharSymbol extends TypeSymbol {
   def tpe: Option[Type] = Some(CharType)
   def owner: Option[Symbol] = None
   def mods: Flags = noflags
@@ -48,7 +50,9 @@ case object CharSymbol extends TypeSymbol {
     p: Symbol => Boolean): Option[Symbol] = None
 }
 
-case object ShortSymbol extends TypeSymbol {
+case object CharSymbol extends CharSymbol
+
+trait ShortSymbol extends TypeSymbol {
   def tpe: Option[Type] = Some(ShortType)
   def owner: Option[Symbol] = None
   def mods: Flags = noflags
@@ -67,7 +71,9 @@ case object ShortSymbol extends TypeSymbol {
     p: Symbol => Boolean): Option[Symbol] = None
 }
 
-case object ByteSymbol extends TypeSymbol {
+case object ShortSymbol extends ShortSymbol
+
+trait ByteSymbol extends TypeSymbol {
   def tpe: Option[Type] = Some(ByteType)
   def owner: Option[Symbol] = None
   def mods: Flags = noflags
@@ -86,7 +92,9 @@ case object ByteSymbol extends TypeSymbol {
     p: Symbol => Boolean): Option[Symbol] = None
 }
 
-case object LongSymbol extends TypeSymbol {
+case object ByteSymbol extends ByteSymbol
+
+trait LongSymbol extends TypeSymbol {
   def tpe: Option[Type] = Some(LongType)
   def owner: Option[Symbol] = None
   def mods: Flags = noflags
@@ -105,7 +113,9 @@ case object LongSymbol extends TypeSymbol {
     p: Symbol => Boolean): Option[Symbol] = None
 }
 
-case object FloatSymbol extends TypeSymbol {
+case object LongSymbol extends LongSymbol
+
+trait FloatSymbol extends TypeSymbol {
   def tpe: Option[Type] = Some(FloatType)
   def owner: Option[Symbol] = None
   def mods: Flags = noflags
@@ -124,7 +134,9 @@ case object FloatSymbol extends TypeSymbol {
     p: Symbol => Boolean): Option[Symbol] = None
 }
 
-case object DoubleSymbol extends TypeSymbol {
+case object FloatSymbol extends FloatSymbol
+
+trait DoubleSymbol extends TypeSymbol {
   def tpe: Option[Type] = Some(DoubleType)
   def owner: Option[Symbol] = None
   def mods: Flags = noflags
@@ -143,8 +155,10 @@ case object DoubleSymbol extends TypeSymbol {
     p: Symbol => Boolean): Option[Symbol] = None
 }
 
+case object DoubleSymbol extends DoubleSymbol
 
-case object BooleanSymbol extends TypeSymbol {
+
+trait BooleanSymbol extends TypeSymbol {
   def tpe: Option[Type] = Some(BooleanType)
   def owner: Option[Symbol] = None
   def mods: Flags = noflags
@@ -162,3 +176,5 @@ case object BooleanSymbol extends TypeSymbol {
   override def getSymbol(name: Name,
     p: Symbol => Boolean): Option[Symbol] = None
 }
+
+case object BooleanSymbol extends BooleanSymbol
