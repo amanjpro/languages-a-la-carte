@@ -11,7 +11,7 @@ import sana.calcj.ast.TreeExtractors._
 import sana.calcj.symbols.SymbolUtils._
 
 
-object TypePromotions {
+trait TypePromotions {
   def binaryNumericPromotion(t1: NumericType,
     t2: NumericType): PrimitiveType = (t1, t2) match {
       case (DoubleType, _) => DoubleType
@@ -64,3 +64,5 @@ object TypePromotions {
   }
 }
 
+
+object TypePromotions extends TypePromotions
