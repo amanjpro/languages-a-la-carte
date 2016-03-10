@@ -9,82 +9,55 @@ import sana.tiny.ast.Implicits._
 import sana.ooj.symbols.SymbolUtils
 
 trait TypeUtils extends sana.primj.types.TypeUtils {
+  protected def javaLangPackageName: String = {
+    val java = StdNames.JAVA_PACKAGE_NAME.asString
+    val lang = StdNames.LANG_PACKAGE_NAME.asString
+    s"$java.$lang"
+  }
   lazy val objectClassType: ClassTypeApi = {
-    val qual            = {
-      val java = StdNames.JAVA_PACKAGE_NAME.asString
-      val lang = StdNames.LANG_PACKAGE_NAME.asString
-      s"$java.$lang"
-    }
+    val qual            = javaLangPackageName
     val name            = StdNames.OBJECT_TYPE_NAME
     ClassType(qual, name, Set.empty)
   }
 
   lazy val stringClassType: ClassTypeApi = {
-    val qual            = {
-      val java = StdNames.JAVA_PACKAGE_NAME.asString
-      val lang = StdNames.LANG_PACKAGE_NAME.asString
-      s"$java.$lang"
-    }
+    val qual            = javaLangPackageName
     val name            = StdNames.STRING_TYPE_NAME
     ClassType(qual, name, Set(SymbolUtils.objectClassSymbol))
   }
 
   lazy val booleanClassType: ClassTypeApi = {
-    val qual            = {
-      val java = StdNames.JAVA_PACKAGE_NAME.asString
-      val lang = StdNames.LANG_PACKAGE_NAME.asString
-      s"$java.$lang"
-    }
+    val qual            = javaLangPackageName
     val name            = StdNames.BOOLEAN_CLASS_NAME
     ClassType(qual, name, Set(SymbolUtils.objectClassSymbol))
   }
 
   lazy val characterClassType: ClassTypeApi = {
-    val qual            = {
-      val java = StdNames.JAVA_PACKAGE_NAME.asString
-      val lang = StdNames.LANG_PACKAGE_NAME.asString
-      s"$java.$lang"
-    }
+    val qual            = javaLangPackageName
     val name            = StdNames.CHARACTER_CLASS_NAME
     ClassType(qual, name, Set(SymbolUtils.objectClassSymbol))
   }
 
   lazy val integerClassType: ClassTypeApi = {
-    val qual            = {
-      val java = StdNames.JAVA_PACKAGE_NAME.asString
-      val lang = StdNames.LANG_PACKAGE_NAME.asString
-      s"$java.$lang"
-    }
+    val qual            = javaLangPackageName
     val name            = StdNames.INTEGER_CLASS_NAME
     ClassType(qual, name, Set(SymbolUtils.objectClassSymbol))
   }
 
   lazy val longClassType: ClassTypeApi = {
-    val qual            = {
-      val java = StdNames.JAVA_PACKAGE_NAME.asString
-      val lang = StdNames.LANG_PACKAGE_NAME.asString
-      s"$java.$lang"
-    }
+    val qual            = javaLangPackageName
     val name            = StdNames.LONG_CLASS_NAME
     ClassType(qual, name, Set(SymbolUtils.objectClassSymbol))
   }
 
   lazy val floatClassType: ClassTypeApi = {
-    val qual            = {
-      val java = StdNames.JAVA_PACKAGE_NAME.asString
-      val lang = StdNames.LANG_PACKAGE_NAME.asString
-      s"$java.$lang"
-    }
+    val qual            = javaLangPackageName
     val name            = StdNames.FLOAT_CLASS_NAME
     ClassType(qual, name, Set(SymbolUtils.objectClassSymbol))
   }
 
   lazy val doubleClassType: ClassTypeApi = {
-    val qual            = {
-      val java = StdNames.JAVA_PACKAGE_NAME.asString
-      val lang = StdNames.LANG_PACKAGE_NAME.asString
-      s"$java.$lang"
-    }
+    val qual            = javaLangPackageName
     val name            = StdNames.DOUBLE_CLASS_NAME
     ClassType(qual, name, Set(SymbolUtils.objectClassSymbol))
   }
