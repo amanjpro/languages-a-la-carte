@@ -176,7 +176,7 @@ protected[ast] class CompilationUnit(val module: PackageDefApi,
 }
 protected[ast] class Program(val members: List[Tree])
             extends ProgramApi {
-  override def toString: String = s"Program"
+  override def toString: String = s"Program($members)"
 }
 protected[ast] class PackageDef(val containingPackages: List[Name],
   val name: Name, val members: List[Tree]) extends PackageDefApi {
