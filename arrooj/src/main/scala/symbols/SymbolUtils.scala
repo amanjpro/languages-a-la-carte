@@ -5,19 +5,16 @@ import sana.tiny.symbols.Symbol
 import sana.tiny.types.Type
 import sana.tiny.names.Name
 import sana.calcj.types.IntType
-import sana.primj.types.MethodType
-import sana.primj.symbols.MethodSymbol
+import sana.primj.symbols.VariableSymbol
 import sana.ooj.modifiers._
 import sana.primj.modifiers._
 
 trait SymbolUtils extends sana.ooj.symbols.SymbolUtils {
-  def arrayLengthSymbol: Symbol = {
+  lazy val arrayLengthSymbol: Symbol = {
     val mods   = PUBLIC_ACC | FINAL
     val name   = Name("length")
-    val params = Nil
-    val ret    = getSymbol(IntType)
-    val tpe    = Some(MethodType(IntType, params))
-    MethodSymbol(mods, name, params, ret, tpe, None)
+    val tpt    = getSymbol(IntType)
+    VariableSymbol(mods, name, tpt, None)
   }
 
   def mkArraySymbol(componentSymbol: Symbol): ArraySymbol =
