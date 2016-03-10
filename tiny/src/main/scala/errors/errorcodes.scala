@@ -12,7 +12,7 @@ trait ErrorCodes {
   case object TYPE_MISMATCH extends ErrorCode {
     val message: String = "Type mismatch"
   }
-  case object UNEXPETED_TREE extends ErrorCode {
+  case object UNEXPECTED_TREE extends ErrorCode {
     val message: String = "Unexpected tree"
   }
 

@@ -131,12 +131,12 @@ trait ForShapeCheckerComponent extends ShapeCheckerComponent {
 
   protected def isValidInitStatements(forloop: ForApi): Unit = {
     if(!allValDefsOrNone(forloop.inits))
-      error(UNEXPETED_TREE,
+      error(UNEXPECTED_TREE,
         forloop.toString, "an expression", forloop.pos)
     else {
       forloop.inits.foreach { init =>
         if(!isValDefOrStatementExpression(init)) {
-          error(UNEXPETED_TREE, init.toString,
+          error(UNEXPECTED_TREE, init.toString,
                         "", init.pos)
         }
       }
@@ -218,28 +218,28 @@ trait ValDefShapeCheckerComponent extends ShapeCheckerComponent {
         valdef.tpt.toString, "a type", valdef.tpt.pos)
     } else ()
 
-    if(sensibleParamFlag(valdef.mods, valdef.owner))
+    if(!sensibleParamFlag(valdef.mods, valdef.owner))
         // TODO: Better error message
-        error(UNEXPETED_TREE,
+        error(UNEXPECTED_TREE,
           valdef.toString, "an expression", valdef.pos)
 
     // val enclMeth = SymbolUtils.enclosingMethod(valdef.symbol)
     // if(enclMeth != None
     //   && !(valdef.mods.isLocalVariable || valdef.mods.isParam)) {
     //   // TODO: Better error message
-    //   error(UNEXPETED_TREE,
+    //   error(UNEXPECTED_TREE,
     //     valdef.toString, "an expression", valdef.pos)
     // } else ()
     //
     // if(enclMeth == None && !valdef.mods.isField) {
     //   // TODO: Better error message
-    //   error(UNEXPETED_TREE,
+    //   error(UNEXPECTED_TREE,
     //     valdef.toString, "an expression", valdef.pos)
     // } else ()
 
     if(!isSimpleExpression(valdef.rhs))
       // TODO: Better error message
-      error(UNEXPETED_TREE,
+      error(UNEXPECTED_TREE,
         "", "", valdef.rhs.pos)
 
     check(valdef.rhs)

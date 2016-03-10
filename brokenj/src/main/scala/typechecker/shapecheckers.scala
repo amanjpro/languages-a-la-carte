@@ -25,10 +25,8 @@ import brokenj.ast.TreeUtils
 @component
 trait LabelShapeCheckerComponent extends ShapeCheckerComponent {
   (lbl: LabelApi) => {
-    if(canHaveLabel(lbl.stmt)) {
-      ()
-    } else {
-      error(UNEXPETED_TREE,
+    if(!canHaveLabel(lbl.stmt)) {
+      error(UNEXPECTED_TREE,
           lbl.stmt.toString, "an expression", lbl.stmt.pos)
     }
     check(lbl.stmt)
