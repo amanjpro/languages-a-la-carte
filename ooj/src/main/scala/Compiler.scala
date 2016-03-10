@@ -66,8 +66,8 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
         val mods = PUBLIC_ACC | CONSTRUCTOR
         val name = StdNames.CONSTRUCTOR_NAME
         val cnstrTpe = Some(MethodType(VoidType, paramSymbol.tpe.toList))
-        val sym  = MethodSymbol(mods, name, Nil,
-            Some(VoidSymbol), cnstrTpe, Some(owner))
+        val sym  = MethodSymbol(mods, name,
+            Some(VoidSymbol), Nil, cnstrTpe, Some(owner))
         val psym    = VariableSymbol(PARAM | noflags,
             Name("value"), Some(paramSymbol), Some(sym))
         sym.params = List(psym)
@@ -121,13 +121,13 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
       // cnstr tpe:
       val cnstrTpe = Some(MethodType(VoidType, Nil))
       val cnstr = MethodSymbol(PUBLIC_ACC | CONSTRUCTOR,
-        StdNames.CONSTRUCTOR_NAME, Nil, Some(VoidSymbol),
+        StdNames.CONSTRUCTOR_NAME, Some(VoidSymbol), Nil,
         cnstrTpe, Some(obj))
 
       // eqls tpe:
       val eqlsTpe = Some(MethodType(BooleanType, tpe.toList))
       val eqls = MethodSymbol(PUBLIC_ACC | noflags,
-        Name("equals"), Nil, Some(BooleanSymbol), eqlsTpe, Some(obj))
+        Name("equals"), Some(BooleanSymbol), Nil, eqlsTpe, Some(obj))
       val psym    = VariableSymbol(PARAM | noflags,
             Name("other"), Some(obj), Some(eqls))
 
@@ -158,7 +158,7 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
 
       val toStrTpe = Some(MethodType(TypeUtils.stringClassType, Nil))
       val toStr = MethodSymbol(Flags(PUBLIC_ACC),
-        Name("toString"), Nil, Some(str),
+        Name("toString"), Some(str), Nil,
         toStrTpe, Some(obj))
 
 
