@@ -14,7 +14,7 @@ import tiny.types._
 import primj.ast.TreeExtractors._
 import primj.ast.ValDefApi
 import tiny.types.TypeUtils._
-import tiny.symbols.{TypeSymbol, TermSymbol}
+import tiny.symbols.{Symbol, TypeSymbol, TermSymbol}
 import tiny.source.Position
 import tiny.errors.ErrorReporting.{error,warning}
 import calcj.typechecker.{TyperComponent, TypePromotions}
@@ -128,9 +128,14 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
   protected def setComponentTypesIfNeeded(
     init: ArrayInitializerApi): List[Expr]= init.elements.map { elem =>
       (init.componentType, elem) match {
-        case (Some(ArrayType(ArrayType(t))), elem: ArrayInitializerApi)    =>
-          elem.componentType = t
+        case (Some(bt), elem: ArrayInitializerApi)    =>
+          bt() match {
+            case ArrayType(ArrayType(t)) =>
+              elem.componentType = () => t
+            case _                       =>
+          }
         case _                                                             =>
+          ()
       }
       typed(elem).asInstanceOf[Expr]
     }
@@ -141,15 +146,15 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
         etpe <- y.tpe
         ctpe <- init.componentType
       } yield {
-        if(etpe <:< ctpe) z
+        if(etpe <:< ctpe()) z
         else {
-          error(TYPE_MISMATCH, ctpe.toString, etpe.toString, y.pos)
+          error(TYPE_MISMATCH, ctpe().toString, etpe.toString, y.pos)
           true
         }
       }
       r.getOrElse(false)
     })
-    init.componentType.foreach(tpe => init.tpe = toArrayType(tpe))
+    init.componentType.foreach(tpe => init.tpe = toArrayType(tpe()))
   }
 }
 
@@ -159,20 +164,23 @@ trait ValDefTyperComponent extends primj.typechecker.ValDefTyperComponent {
   (valdef: ValDefApi)          => {
     val res = valdef.rhs match {
       case rhs: ArrayInitializerApi =>
-        val tpt = typed(valdef.tpt).asInstanceOf[UseTree]
-        getComponentType(tpt.tpe).foreach { bt =>
+        getComponentType(valdef.symbol).foreach { bt =>
           rhs.componentType = bt
         }
-        TreeCopiers.copyValDef(valdef)(tpt = tpt)
       case _                       =>
-        valdef
+        ()
     }
-    super.apply(res)
+    super.apply(valdef)
   }
 
   protected def getComponentType(
-      tpe: Option[Type]): Option[Type] =  tpe.flatMap {
-    case tpe: ArrayTypeApi        => Some(tpe.componentType)
-    case _                        => None
+      symbol: Option[Symbol]): Option[() => Type] =
+    symbol.flatMap(_.tpe.flatMap {
+      case tpe: ArrayType        => Some(() => tpe.componentType)
+      case _                     => None
+    })
+}
+
+
   }
 }

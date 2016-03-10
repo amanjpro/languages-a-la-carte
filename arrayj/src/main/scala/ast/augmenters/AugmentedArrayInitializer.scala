@@ -10,13 +10,13 @@ trait AugmentedArrayInitializer {
 
   def tree: ArrayInitializerApi
 
-  def componentType: Option[Type] =
+  def componentType: Option[() => Type] =
     tree
       .attributes
       .get('componentType)
-      .map(_.asInstanceOf[Type])
+      .map(_.asInstanceOf[() => Type])
 
-  def componentType_=(tpe: Type): Unit =
+  def componentType_=(tpe: () => Type): Unit =
     tree.attributes = tree.attributes + ('componentType -> tpe)
 }
 

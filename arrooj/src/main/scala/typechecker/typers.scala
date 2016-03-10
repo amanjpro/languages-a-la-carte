@@ -13,6 +13,7 @@ import sana.calcj
 import sana.dsl._
 import tiny.ast.{UseTree, Expr, Tree}
 import tiny.types.Type
+import tiny.symbols.Symbol
 import tiny.errors.ErrorReporting.{error, warning}
 import calcj.typechecker.TyperComponent
 import arrayj.ast.{TreeUtils => _,
@@ -67,14 +68,20 @@ trait ArrayInitializerTyperComponent
   extends arrayj.typechecker.ArrayInitializerTyperComponent {
 
   override protected def setComponentTypesIfNeeded(
-    init: ArrayInitializerApi): List[Expr] = init.elements.map { elem =>
+    init: ArrayInitializerApi): List[Expr]= init.elements.map { elem =>
       (init.componentType, elem) match {
-        case (Some(ArrayType(ArrayType(t))), elem: ArrayInitializerApi)    =>
-          elem.componentType = t
+        case (Some(bt), elem: ArrayInitializerApi)    =>
+          bt() match {
+            case ArrayType(ArrayType(t)) =>
+              elem.componentType = () => t
+            case _                       =>
+          }
         case _                                                             =>
+          ()
       }
       typed(elem).asInstanceOf[Expr]
     }
+
 
   override protected def toArrayType(tpe: Type): Type =
     TypeUtils.mkArrayType(tpe)
@@ -85,22 +92,23 @@ trait ValDefTyperComponent extends ooj.typechecker.ValDefTyperComponent {
   (valdef: ValDefApi)          => {
     val res = valdef.rhs match {
       case rhs: ArrayInitializerApi =>
-        val tpt = typed(valdef.tpt).asInstanceOf[UseTree]
-        getComponentType(tpt.tpe).foreach { bt =>
+        getComponentType(valdef.symbol).foreach { bt =>
           rhs.componentType = bt
         }
-        TreeCopiers.copyValDef(valdef)(tpt = tpt)
       case _                       =>
-        valdef
+        ()
     }
-    super.apply(res)
+    super.apply(valdef)
   }
 
+
   protected def getComponentType(
-      tpe: Option[Type]): Option[Type] =  tpe.flatMap {
-    case tpe: ArrayType        => Some(tpe.componentType)
-    case _                     => None
-  }
+      symbol: Option[Symbol]): Option[() => Type] =
+    symbol.flatMap(_.tpe.flatMap {
+      case tpe: ArrayType        => Some(() => tpe.componentType)
+      case _                     => None
+    })
+
 }
 
 @component
