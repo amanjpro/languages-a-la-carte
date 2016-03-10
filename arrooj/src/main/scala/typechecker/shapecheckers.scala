@@ -11,7 +11,7 @@ import sana.calcj
 
 
 import sana.dsl._
-import tiny.ast.{Tree, UseTree}
+import tiny.ast.{Tree, UseTree, Expr}
 import tiny.errors.ErrorReporting.{error,warning}
 import primj.typechecker.ShapeCheckerComponent
 import arrayj.ast.{TreeUtils => _, _}
@@ -91,7 +91,7 @@ trait ValDefShapeCheckerComponent
 
 
 @component
-trait ArrayjCreationShapeCheckerComponent
+trait ArrayCreationShapeCheckerComponent
   extends ShapeCheckerComponent {
 
   (creation: ArrayCreationApi) => {
@@ -122,7 +122,7 @@ trait ArrayInitializerShapeCheckerComponent
 }
 
 @component
-trait ArrayjAccessShapeCheckerComponent
+trait ArrayAccessShapeCheckerComponent
   extends ShapeCheckerComponent {
 
   (access: ArrayAccessApi) => {
@@ -138,7 +138,7 @@ trait ArrayjAccessShapeCheckerComponent
 }
 
 @component
-trait ArrayjTypeUseShapeCheckerComponent
+trait ArrayTypeUseShapeCheckerComponent
   extends ShapeCheckerComponent {
 
   (tuse: ArrayTypeUseApi) => {
@@ -158,4 +158,13 @@ trait ClassDefShapeCheckerComponent extends
   ooj.typechecker.ClassDefShapeCheckerComponent {
   override protected def isTypeUse(tree: UseTree): Boolean =
     TreeUtils.isTypeUse(tree)
+}
+
+@component
+trait LabelShapeCheckerComponent extends
+  brokenj.typechecker.LabelShapeCheckerComponent {
+
+
+  override protected def canHaveLabel(stmt: Expr): Boolean =
+    TreeUtils.canHaveLabel(stmt)
 }
