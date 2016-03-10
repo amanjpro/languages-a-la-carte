@@ -1,0 +1,20 @@
+// fails
+// BAD_STATEMENT
+
+class A {
+  int m(int l) {
+    for(int k=0, z = 10; k < 10; k++,z--) {
+      y = 10; // forward reference
+      int k1 = 1;
+      k = 10;
+      18;
+    }
+    return 10;
+  }
+
+  int x = 10;
+  int y = 10;
+  // char k = 'k';
+
+
+}

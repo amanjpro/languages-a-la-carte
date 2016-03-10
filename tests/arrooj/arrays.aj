@@ -11,6 +11,9 @@ class Arrays {
   void m() {
     int k = array[2][3];
     k     = array2[3];
+    for(int i = 0; i < array2.length; i++) {
+      array2[i] = i;
+    }
   }
 }
 
