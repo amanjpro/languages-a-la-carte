@@ -125,17 +125,7 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
       owner.foreach(parent.owner = _)
       assign(parent).asInstanceOf[UseTree]
     }
-    val sym = owner match {
-      case Some(cunit: CompilationUnitSymbol)
-            if Some(clazz.name.asString) != clazz.sourceName              =>
-        ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
-      case Some(cunit: CompilationUnitSymbol)                             =>
-        val s = ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
-        cunit.owner.foreach(_.declare(s))
-        s
-      case _                                                              =>
-        ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
-    }
+    val sym = createClassSymbol(clazz, owner)
     clazz.symbol = sym
     val template = {
       val shouldCreateConstructor =
@@ -173,6 +163,19 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
     TreeCopiers.copyClassDef(clazz)(parents = parents, body = template)
   }
 
+
+  protected def createClassSymbol(clazz: ClassDefApi,
+    owner: Option[Symbol]): ClassSymbol = owner match {
+      case Some(cunit: CompilationUnitSymbol)
+            if Some(clazz.name.asString) != clazz.sourceName              =>
+        ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
+      case Some(cunit: CompilationUnitSymbol)                             =>
+        val s = ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
+        cunit.owner.foreach(_.declare(s))
+        s
+      case _                                                              =>
+        ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
+    }
 
   protected def classDoubleDefCheck(owner: Option[Symbol],
     name: Name, pos: Option[Position]): Unit = owner match {
@@ -274,8 +277,7 @@ trait MethodDefSymbolAssignerComponent
     extends SymbolAssignerComponent {
   (mthd: MethodDefApi)          => {
     val owner   = mthd.owner
-    val symbol  = MethodSymbol(mthd.mods, mthd.name,
-      Nil, None, None, owner)
+    val symbol  = createMethodSymbol(mthd, owner)
     owner.foreach(sym => sym.declare(symbol))
     val tpt     = if(mthd.mods.isConstructor) {
       mthd.declaredClassNameForConstructor = useName(mthd.ret)
@@ -323,6 +325,10 @@ trait MethodDefSymbolAssignerComponent
     TreeCopiers.copyMethodDef(mthd)(ret = tpt,
       params = params, body = body)
   }
+
+  protected def createMethodSymbol(mthd: MethodDefApi,
+    owner: Option[Symbol]): MethodSymbol =
+    MethodSymbol(mthd.mods, mthd.name, None, Nil, None, owner)
 
   protected def constructorCall(pos: Option[Position]): Expr = {
     val id = TreeFactories.mkIdent(constructorName, pos)
