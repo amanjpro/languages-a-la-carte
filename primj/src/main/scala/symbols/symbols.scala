@@ -13,7 +13,7 @@ import sana.tiny.names.StdNames.noname
 
 
 
-object ProgramSymbol extends Symbol {
+trait ProgramSymbol extends Symbol {
   decls = decls ++ SymbolUtils.standardDefinitions
 
   def name: Name = noname
@@ -30,9 +30,30 @@ object ProgramSymbol extends Symbol {
   override def hashCode(): Int = name.hashCode * 43
 }
 
-case class VariableSymbol(var mods: Flags, var name: Name,
-  var typeSymbol: Option[Symbol], var owner: Option[Symbol])
-  extends TermSymbol {
+object VariableSymbol {
+  private class VariableSymbolImpl(var mods: Flags, var name: Name,
+    var typeSymbol: Option[Symbol], var owner: Option[Symbol])
+    extends VariableSymbol
+
+  def apply(mods: Flags, name: Name, typeSymbol: Option[Symbol],
+      owner: Option[Symbol]): VariableSymbol =
+        new VariableSymbolImpl(mods, name, typeSymbol, owner)
+
+  def unapply(sym: VariableSymbol):
+    Option[(Flags, Name, Option[Symbol], Option[Symbol])] = sym match {
+      case null      => None
+      case _         => Some((sym.mods, sym.name, sym.typeSymbol, sym.owner))
+    }
+}
+
+case object ProgramSymbol extends ProgramSymbol
+
+
+trait VariableSymbol extends TermSymbol {
+  var mods: Flags
+  var name: Name
+  var typeSymbol: Option[Symbol]
+  var owner: Option[Symbol]
 
   def tpe: Option[Type] = typeSymbol.flatMap(_.tpe)
   def tpe_=(tpe: Option[Type]): Unit = ???
@@ -48,7 +69,7 @@ case class VariableSymbol(var mods: Flags, var name: Name,
   }
 
   override def equals(other: Any): Boolean = other match {
-    case null                 => false
+    case null                    => false
     case that: VariableSymbol =>
       this.mods == that.mods &&
         this.name == that.name &&
@@ -61,15 +82,38 @@ case class VariableSymbol(var mods: Flags, var name: Name,
     typeSymbol.hashCode * mods.hashCode
 }
 
-case class MethodSymbol(var mods: Flags, var name: Name,
-  var params: List[Symbol],
-  var ret: Option[Symbol],
-  var tpe: Option[Type],
-  var owner: Option[Symbol])
-  extends TermSymbol {
+object MethodSymbol {
+  private class MethodSymbolImpl(var mods: Flags, var name: Name,
+    var ret: Option[Symbol],
+    var params: List[Symbol],
+    var tpe: Option[Type],
+    var owner: Option[Symbol]) extends MethodSymbol
+
+  def apply(mods: Flags, name: Name, ret: Option[Symbol],
+    params: List[Symbol], tpe: Option[Type],
+    owner: Option[Symbol]): MethodSymbol =
+    new MethodSymbolImpl(mods, name, ret, params, tpe, owner)
+
+  def unapply(sym: MethodSymbol):
+    Option[(Flags, Name, Option[Symbol], List[Symbol],
+      Option[Type], Option[Symbol])] =
+    sym match {
+      case null    => None
+      case _       =>
+        Some((sym.mods, sym.name, sym.ret, sym.params, sym.tpe, sym.owner))
+    }
+}
+
+trait MethodSymbol extends TermSymbol {
+  var mods: Flags
+  var name: Name
+  var params: List[Symbol]
+  var ret: Option[Symbol]
+  var tpe: Option[Type]
+  var owner: Option[Symbol]
 
   override def equals(other: Any): Boolean = other match {
-    case null                 => false
+    case null                    => false
     case that: MethodSymbol   =>
       this.name == that.name &&
         this.tpe == that.tpe &&
@@ -83,24 +127,38 @@ case class MethodSymbol(var mods: Flags, var name: Name,
 }
 
 
-case class ScopeSymbol(var owner: Option[Symbol]) extends Symbol {
+object ScopeSymbol {
+  private class ScopeSymbolImpl(var owner: Option[Symbol])
+    extends ScopeSymbol
+
+  def apply(owner: Option[Symbol]): ScopeSymbol =
+    new ScopeSymbolImpl(owner)
+
+  def unapply(sym: ScopeSymbol): Option[Option[Symbol]] = sym match {
+    case null        => None
+    case _           => Some(sym.owner)
+  }
+}
+
+trait ScopeSymbol extends Symbol {
+  var owner: Option[Symbol]
   var name: Name = noname
   var mods: Flags = noflags
   var tpe: Option[Type] = None
 
   override def equals(other: Any): Boolean = other match {
-    case null                 => false
+    case null                    => false
     case that: ScopeSymbol    =>
       this.name == that.name &&
         this.tpe == that.tpe
-    case _                    =>
+    case _                       =>
       false
   }
   override def toString(): String = s"Scope symbol"
   override def hashCode(): Int = name.hashCode * 43 + tpe.hashCode
 }
 
-object VoidSymbol extends TypeSymbol {
+trait VoidSymbol extends TypeSymbol {
   def tpe: Option[Type] = Some(VoidType)
   def owner: Option[Symbol] = None
   def mods: Flags = noflags
@@ -122,3 +180,5 @@ object VoidSymbol extends TypeSymbol {
 
   override def toString(): String = s"Void Symbol"
 }
+
+case object VoidSymbol extends VoidSymbol

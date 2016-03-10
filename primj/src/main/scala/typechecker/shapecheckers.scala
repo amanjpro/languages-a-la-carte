@@ -14,7 +14,9 @@ import calcj.ast.operators.{Inc, Dec}
 import tiny.errors.ErrorReporting.{error,warning}
 import primj.ast._
 import primj.ast.TreeUtils
-import primj.symbols._
+import primj.symbols.MethodSymbol
+import tiny.modifiers.Flags
+import tiny.symbols.Symbol
 import primj.modifiers.Ops._
 import primj.errors.ErrorCodes._
 
@@ -216,14 +218,10 @@ trait ValDefShapeCheckerComponent extends ShapeCheckerComponent {
         valdef.tpt.toString, "a type", valdef.tpt.pos)
     } else ()
 
-    valdef.owner match {
-      case Some(_: MethodSymbol) if  !valdef.mods.isParam  =>
+    if(sensibleParamFlag(valdef.mods, valdef.owner))
         // TODO: Better error message
         error(UNEXPETED_TREE,
           valdef.toString, "an expression", valdef.pos)
-      case _                                               =>
-        ()
-    }
 
     // val enclMeth = SymbolUtils.enclosingMethod(valdef.symbol)
     // if(enclMeth != None
@@ -239,14 +237,20 @@ trait ValDefShapeCheckerComponent extends ShapeCheckerComponent {
     //     valdef.toString, "an expression", valdef.pos)
     // } else ()
 
-    if(isSimpleExpression(valdef.rhs))
-      ()
-    else
+    if(!isSimpleExpression(valdef.rhs))
       // TODO: Better error message
       error(UNEXPETED_TREE,
         "", "", valdef.rhs.pos)
 
     check(valdef.rhs)
+  }
+
+  protected def sensibleParamFlag(mods: Flags,
+    sym: Option[Symbol]): Boolean = sym match {
+    case Some(_: MethodSymbol) =>
+      mods.isParam
+    case _                     =>
+      !mods.isParam
   }
 
   protected def isTypeUse(tree: UseTree): Boolean =

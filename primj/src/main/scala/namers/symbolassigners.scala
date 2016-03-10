@@ -79,8 +79,8 @@ trait ProgramSymbolAssignerComponent extends SymbolAssignerComponent {
 trait MethodDefSymbolAssignerComponent extends SymbolAssignerComponent {
   (mthd: MethodDefApi)          => {
     val owner   = mthd.owner
-    val symbol  = MethodSymbol(noflags, mthd.name,
-      Nil, None, None, owner)
+    val symbol  = MethodSymbol(noflags, mthd.name, None,
+      Nil, None, owner)
     checkDoubleDef(owner, mthd.name, mthd.pos)
     owner.foreach(sym => sym.declare(symbol))
     owner.foreach(mthd.ret.owner  = _)
@@ -159,10 +159,8 @@ trait ForSymbolAssignerComponent extends SymbolAssignerComponent {
       init.owner = symbol
       assign(init)
     }
-    owner.foreach { o =>
-      forloop.cond.owner  = o
-      forloop.body.owner = o
-    }
+    forloop.cond.owner  = symbol
+    forloop.body.owner = symbol
     val cond = assign(forloop.cond).asInstanceOf[Expr]
     val steps = forloop.steps.map { step =>
       step.owner = symbol

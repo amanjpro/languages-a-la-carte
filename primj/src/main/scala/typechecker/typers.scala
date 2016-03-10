@@ -20,7 +20,7 @@ import calcj.ast.UnaryApi
 import calcj.ast.operators._
 import primj.ast._
 import primj.ast.TreeFactories._
-import primj.symbols._
+import primj.symbols.{VariableSymbol, MethodSymbol, SymbolUtils}
 import primj.errors.ErrorCodes._
 import primj.types._
 import primj.modifiers.Ops._
@@ -65,7 +65,7 @@ trait AssignTyperComponent extends TyperComponent {
     assign: AssignApi): AssignApi = {
     (lhs.tpe, rhs.tpe) match {
       case (Some(ltpe), Some(rtpe))
-          if TypeUtils.isAssignable(rhs, rtpe, ltpe)  =>
+          if TypeUtils.isAssignable(rhs, rtpe, ltpe)     =>
         rhs.tpe.foreach(assign.tpe = _)
         TreeCopiers.copyAssign(assign)(lhs = lhs, rhs = rhs)
       case (Some(ltpe), Some(rtpe))                      =>
@@ -163,7 +163,7 @@ trait ForTyperComponent extends TyperComponent {
     (cond, body) match {
       case (cond: Expr, body: Expr)  =>
         cond.tpe match {
-          case Some(tpe) if tpe =:= BooleanType         =>
+          case Some(tpe) if tpe <:< BooleanType         =>
             TreeCopiers.copyFor(forloop)(inits = inits,
                          cond  = cond,
                          steps = steps,
@@ -343,9 +343,9 @@ trait ValDefTyperComponent extends TyperComponent {
     valdef.symbol.foreach(sym => {
       sym.tpe.foreach(valdef.tpe = _)
       sym match {
-        case vs: VariableSymbol =>
+        case vs: VariableSymbol    =>
           vs.typeSymbol = tpt.symbol
-        case _                  =>
+        case _                     =>
           ()
       }
     })
@@ -400,9 +400,9 @@ trait MethodDefTyperComponent extends TyperComponent {
     mthd.tpe = tpe
     mthd.symbol.foreach( sym => {
       sym match {
-        case m: MethodSymbol =>
+        case m: MethodSymbol    =>
           m.ret = tpt.symbol
-        case _               =>
+        case _                  =>
           ()
       }
       sym.tpe = Some(tpe)
