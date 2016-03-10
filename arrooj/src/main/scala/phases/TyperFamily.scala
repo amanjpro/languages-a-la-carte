@@ -20,6 +20,7 @@ import sana.calcj.typechecker.{UnaryTyperComponent => _,
                                _}
 import sana.brokenj.typechecker._
 import sana.ooj.typechecker.{SelectTyperComponent => _,
+                             AssignTyperComponent => _,
                              ValDefTyperComponent => _, _}
 import sana.arrooj.typechecker._
 
