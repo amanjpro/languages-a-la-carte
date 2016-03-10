@@ -134,9 +134,9 @@ trait MethodDefDefTyperComponent extends DefTyperComponent {
     mthd.tpe = tpe
     mthd.symbol.foreach( sym => {
       sym match {
-        case m: MethodSymbol =>
+        case m: MethodSymbol    =>
           m.ret = tpt.symbol
-        case _               =>
+        case _                  =>
           ()
       }
       sym.tpe = Some(tpe)
@@ -164,9 +164,9 @@ trait ValDefDefTyperComponent extends DefTyperComponent {
     valdef.tpe  = rtpe
     valdef.symbol.foreach {sym =>
       sym match {
-        case vs: VariableSymbol =>
+        case vs: VariableSymbol    =>
           vs.typeSymbol = tpt.symbol
-        case _                  =>
+        case _                     =>
           ()
       }
     }

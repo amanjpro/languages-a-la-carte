@@ -8,7 +8,6 @@ import sana.tiny
 
 import ooj.ast._
 import primj.ast.{BlockApi, ValDefApi, AssignApi}
-import primj.symbols.MethodSymbol
 import tiny.ast.{Tree, IdentApi, NoTree}
 import tiny.symbols.Symbol
 import ooj.modifiers.Ops._

@@ -8,7 +8,7 @@ import sana.tiny.symbols.{Symbol, TermSymbol, TypeSymbol}
 import sana.calcj.symbols.BooleanSymbol
 import sana.calcj.types.BooleanType
 import sana.primj.types.MethodType
-import sana.primj.symbols.{MethodSymbol, VariableSymbol}
+import sana.primj.symbols.MethodSymbol
 import sana.primj.types.VoidType
 import sana.tiny.modifiers.Flags
 import sana.primj.modifiers.PARAM
@@ -46,9 +46,23 @@ import sana.ooj.types.TypeUtils
 //
 // }
 //
-case class PackageSymbol(var name: Name,
-        var owner: Option[Symbol]) extends TermSymbol {
+object PackageSymbol {
+  private class PackageSymbolImpl(var name: Name,
+    var owner: Option[Symbol]) extends PackageSymbol
 
+  def apply(name: Name, owner: Option[Symbol]): PackageSymbol =
+    new PackageSymbolImpl(name, owner)
+
+
+  def unapply(sym: PackageSymbol): Option[(Name, Option[Symbol])] = sym match {
+    case null              => None
+    case _                 => Some((sym.name, sym.owner))
+  }
+}
+
+trait PackageSymbol extends TermSymbol {
+  var name: Name
+  var owner: Option[Symbol]
   def mods: Flags = noflags
   def mods_=(mods: Flags): Unit = ???
 
@@ -246,10 +260,31 @@ object ClassSymbol {
   }
 }
 
-case class CompilationUnitSymbol(var module: Option[Symbol],
-  var sourceName: String, var sourcePath: List[String],
-  var owner: Option[Symbol]) extends Symbol {
+object CompilationUnitSymbol {
+  private class CompilationUnitSymbolImpl(var module: Option[Symbol],
+    var sourceName: String, var sourcePath: List[String],
+    var owner: Option[Symbol]) extends CompilationUnitSymbol
 
+  def apply(module: Option[Symbol], sourceName: String,
+    sourcePath: List[String], owner: Option[Symbol]): CompilationUnitSymbol =
+      new CompilationUnitSymbolImpl(module, sourceName, sourcePath, owner)
+
+
+  def unapply(sym: CompilationUnitSymbol):
+    Option[(Option[Symbol], String, List[String], Option[Symbol])] =
+    sym match {
+      case null                    => None
+      case _                       =>
+        Some((sym.module, sym.sourceName, sym.sourcePath, sym.owner))
+    }
+}
+
+
+trait CompilationUnitSymbol extends Symbol {
+  var module: Option[Symbol]
+  var sourceName: String
+  var sourcePath: List[String]
+  var owner: Option[Symbol]
 
   def mods: Flags = noflags
   def mods_=(tpe: Flags) = ???

@@ -20,7 +20,8 @@ import calcj.types._
 import calcj.ast.operators.{Add, Eq, Neq, BOp}
 import calcj.ast.BinaryApi
 import primj.ast.{ApplyApi, ValDefApi}
-import primj.symbols.{ProgramSymbol, MethodSymbol, VariableSymbol, ScopeSymbol}
+import primj.symbols.{ProgramSymbol, MethodSymbol,
+                      VariableSymbol, ScopeSymbol}
 import primj.types.{TypeUtils => _, _}
 import ooj.modifiers.Ops._
 import primj.modifiers.PARAM
@@ -91,9 +92,9 @@ trait ValDefTyperComponent extends TyperComponent {
     valdef.symbol.foreach(sym => {
       sym.tpe.foreach(valdef.tpe = _)
       sym match {
-        case vs: VariableSymbol =>
+        case vs: VariableSymbol    =>
           vs.typeSymbol = tpt.symbol
-        case _                  =>
+        case _                     =>
           ()
       }
     })
@@ -130,9 +131,9 @@ trait ValDefTyperComponent extends TyperComponent {
 
     res.symbol.foreach(sym => {
       sym match {
-        case vs: VariableSymbol =>
+        case vs: VariableSymbol    =>
           vs.typeSymbol = res.tpt.symbol
-        case _                  =>
+        case _                     =>
           ()
       }
     })
@@ -904,14 +905,14 @@ trait IdentNamer {
 
   protected def applicableMethod(symbol: Symbol,
     atpes: List[Type]): Boolean = symbol match {
-    case ms: MethodSymbol =>
+    case ms: MethodSymbol    =>
       ms.tpe match {
         case Some(mt: MethodType)   =>
           SymbolUtils.methodCanBeApplied(mt.params, atpes)
         case _                      =>
           false
       }
-    case _                =>
+    case _                   =>
       false
   }
 }
