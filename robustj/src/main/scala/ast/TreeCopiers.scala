@@ -16,7 +16,7 @@ import sana.arrooj.ast.{TreeCopiers => TC}
 import sana.calcj.ast.operators.{BOp, UOp}
 
 
-trait TreeCopiers extends {
+trait TreeCopiers {
 
   protected def copyProperties(template: Tree,
       newTree: Tree): Unit = newTree.attributes = template.attributes
