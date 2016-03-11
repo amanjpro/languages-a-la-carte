@@ -15,5 +15,6 @@ object Ops {
   implicit class FlagOps(mask: Flags)
       extends robustj.modifiers.Ops.FlagOps(mask) {
     val isSynchronized: Boolean            = mask.hasFlag(SYNCHRONIZED)
+    val isVolatile: Boolean                = mask.hasFlag(VOLATILE)
   }
 }
