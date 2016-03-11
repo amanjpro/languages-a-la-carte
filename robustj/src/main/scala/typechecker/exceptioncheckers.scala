@@ -95,7 +95,7 @@ trait ExceptionUtils {
   */
   def updateFirstOccurance(t: Type,
     he: List[HandledException]): Option[List[HandledException]] = he match {
-      case (h::hs) if h.tpe == t           =>
+      case (h::hs) if t <:< h.tpe          =>
         if(h.state == ThrownClause) Some(he)
         else Some(HandledException(h.tpe, h.pos, UsedCaught)::hs)
       case (h::hs)                         =>
