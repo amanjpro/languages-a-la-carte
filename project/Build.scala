@@ -125,9 +125,9 @@ object build extends Build {
   lazy val arrayj      = project("arrayj", Seq(brokenj))
   lazy val arrooj      = project("arrooj", Seq(ooj, arrayj))
   lazy val robustj     = project("robustj", Seq(arrooj))
-  lazy val dynj        = project("dynj", Seq(dynj))
-  lazy val ppj         = project("ppj", Seq(ppj))
-  lazy val modulej     = project("modulej", Seq(modulej))
+  lazy val dynj        = project("dynj", Seq(robustj))
+  lazy val ppj         = project("ppj", Seq(dynj))
+  lazy val modulej     = project("modulej", Seq(ppj))
 
 
 
