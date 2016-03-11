@@ -14,7 +14,6 @@ trait TreeCopiers extends sana.robustj.ast.TreeCopiers {
   def copySynchronized(template: SynchronizedApi)(
       expr: Expr = template.expr, block: BlockApi = template.block,
       pos: Option[Position] = template.pos,
-      symbol: Option[Symbol] = template.symbol,
       owner: Option[Symbol]  = template.owner): SynchronizedApi = {
     val res = TreeFactories.mkSynchronized(expr, block)
     copyProperties(template, res)

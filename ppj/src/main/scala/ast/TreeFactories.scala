@@ -12,12 +12,11 @@ import sana.primj.ast.BlockApi
 
 trait TreeFactories extends sana.robustj.ast.TreeFactories {
   def mkSynchronized(expr: Expr, block: BlockApi,
-    pos: Option[Position] = None, symbol: Option[Symbol] = None,
+    pos: Option[Position] = None,
     owner: Option[Symbol] = None): SynchronizedApi = {
     val res = new Synchronized(expr, block)
     pos.foreach(res.pos = _)
     owner.foreach(res.owner = _)
-    symbol.foreach(res.symbol = _)
     res
   }
 }
