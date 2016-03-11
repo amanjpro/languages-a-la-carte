@@ -20,7 +20,7 @@ import tiny.errors.ErrorReporting.{error,warning}
 import primj.typechecker.ShapeCheckerComponent
 import tiny.ast.Implicits._
 import dynj.errors.ErrorCodes._
-import dynj.ast.operators.IsInstanceOf
+import dynj.ast.operators.InstanceOf
 import robustj.ast.TreeUtils
 
 @component
@@ -32,7 +32,7 @@ trait BinaryShapeCheckerComponent extends ShapeCheckerComponent {
       error(BAD_EXPRESSION, "", "", bin.lhs.pos)
 
     bin.op match {
-      case IsInstanceOf if !isTypeUse(bin.rhs)         =>
+      case InstanceOf   if !isTypeUse(bin.rhs)         =>
         error(BAD_EXPRESSION, "", "", bin.rhs.pos)
       case _            if !isValidExpression(bin.rhs) =>
         error(BAD_EXPRESSION, "", "", bin.rhs.pos)

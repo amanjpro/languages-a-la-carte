@@ -16,7 +16,7 @@ import calcj.ast.BinaryApi
 import calcj.types.BooleanType
 import ooj.types.RefType
 import dynj.errors.ErrorCodes._
-import dynj.ast.operators.IsInstanceOf
+import dynj.ast.operators.InstanceOf
 
 
 @component
@@ -24,7 +24,7 @@ trait BinaryTyperComponent extends ooj.typechecker.BinaryTyperComponent {
 
   override protected def binaryTyper(ltpe: Type,
     rtpe: Type, bin: BinaryApi): Option[(Type, Type, Type)] = bin.op match {
-    case IsInstanceOf                              =>
+    case InstanceOf                                 =>
       if(ltpe.isInstanceOf[RefType] && rtpe.isInstanceOf[RefType]) {
         Some((ltpe, rtpe, BooleanType))
       } else {
