@@ -69,6 +69,10 @@ class FlowEnv {
     batchAdd(temp, FalseCase)
   }
 
+  def unify(env: FlowEnv): Unit = {
+    trueCaseSymbols  = this.trueCaseSymbols.intersect(env.trueCaseSymbols)
+    falseCaseSymbols = this.falseCaseSymbols.intersect(env.falseCaseSymbols)
+  }
   def mask(lane: TrackCase): Unit = lane match {
     case TrueCase                  =>
       this.trueCaseSymbols = Nil
