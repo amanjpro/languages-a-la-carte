@@ -263,7 +263,8 @@ trait TryExceptionHandlingCheckerComponent
 
   protected def checkHandledExceptions(he: List[HandledException]): Unit =
     for {
-      handled <- he if isDefinitivelyCheckedException(Some(handled.tpe))
+      handled <- he if isDefinitivelyCheckedException(Some(handled.tpe)) &&
+                       handled.status == UnusedCaught
     } {
       error(HANDLING_NON_THROWN_EXCEPTION, "", "", Some(handled.pos))
     }
