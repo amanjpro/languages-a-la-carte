@@ -70,12 +70,16 @@ trait PackageSymbol extends TermSymbol {
   def tpe_=(tpe: Option[Type]): Unit = ???
 
   def qualifiedName: String = {
-    val ownersFullName = owner.flatMap {
-      case psym: PackageSymbol => Some(psym.qualifiedName)
-      case _                   => None
+    qualifiedNameAsList.map(_.asString).mkString(".")
+  }
+
+  def qualifiedNameAsList: List[Name] = {
+    owner match {
+      case Some(psym: PackageSymbol) =>
+        psym.qualifiedNameAsList ++ List(name)
+      case _                         =>
+        List(name)
     }
-    ownersFullName.map((oname) =>
-        s"$oname.${name.asString}").getOrElse(name.asString)
   }
 
   override def equals(other: Any): Boolean = other match {
