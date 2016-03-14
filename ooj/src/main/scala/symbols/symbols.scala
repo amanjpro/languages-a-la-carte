@@ -73,6 +73,12 @@ trait PackageSymbol extends TermSymbol {
     qualifiedNameAsList.map(_.asString).mkString(".")
   }
 
+  /**
+   * Returns the fully qualified name of this package symbol. The
+   * outer most package is the head of the list.
+   *
+   * The list is guaranteed not to be empty
+   */
   def qualifiedNameAsList: List[Name] = {
     owner match {
       case Some(psym: PackageSymbol) =>
