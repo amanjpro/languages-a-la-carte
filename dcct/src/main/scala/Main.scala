@@ -26,6 +26,7 @@ object Main {
 
 
     val config = processOptions(args, langName, langVersion,
+      //TODO Why this is the tiny framework name here?
         tiny.frameworkName) match {
       case Right(config) => config
       case Left(msg)     =>

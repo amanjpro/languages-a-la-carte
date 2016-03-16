@@ -4,6 +4,7 @@ import ch.usi.inf.l3.sana
 import sana.tiny
 import sana.calcj
 import sana.primj
+import sana.dcct
 import tiny.source.{SourceFile, Position}
 import tiny.symbols._
 import tiny.ast.{TreeCopiers => _, _}
@@ -15,11 +16,9 @@ import calcj.ast.{TreeCopiers => _, _}
 import calcj.ast.operators._
 import primj.ast._
 import primj.ast.TreeFactories._
-import primj.antlr._
+import dcct.antlr._
 import primj.modifiers._
 import primj.modifiers.Ops._
-
-
 
 import org.antlr.v4.runtime.misc.NotNull
 import org.antlr.v4.runtime.ParserRuleContext
@@ -32,7 +31,7 @@ class Parser extends parsers.Parser {
 
 
   def parse(source: SourceFile): Tree = {
-    val tree = new PrimjVisitor(source.name,
+    val tree = new DcctVisitor(source.name,
       source.lines).visit(source.content)
     logger.debug(tree.toString)
     // Program(tree, None, source.name)
@@ -43,8 +42,8 @@ class Parser extends parsers.Parser {
     }
   }
 
-  class PrimjVisitor(val source: String,
-    lines: Array[String]) extends PrimjBaseVisitor[Tree] {
+  class DcctVisitor(val source: String,
+    lines: Array[String]) extends DcctBaseVisitor[Tree] {
     def pos(ctx: ParserRuleContext): Option[Position] = {
       val token = ctx.getStart
       Some(Position(source, lines,
@@ -109,396 +108,425 @@ class Parser extends parsers.Parser {
       }
     }
 
-    override def visitAssign(@NotNull ctx: PrimjParser.AssignContext): Tree = {
-      val name   = ctx.Identifier.getText
-      val id     = mkIdent(Name(name), pos(ctx))
-      val e2     = visit(ctx.expression).asInstanceOf[Expr]
-      val op: Option[BOp] = ctx.op.getText match {
-        case "+="   => Some(Add)
-        case "-="   => Some(Sub)
-        case "*="   => Some(Mul)
-        case "/="   => Some(Div)
-        case "%="   => Some(Mod)
-        case "&="   => Some(BAnd)
-        case "|="   => Some(BOr)
-        case "^="   => Some(BXor)
-        case "<<="  => Some(SHL)
-        case ">>="  => Some(SHR)
-        case ">>>=" => Some(USHR)
-        case "="    => None
-      }
-      op match {
-        case None     =>
-          mkAssign(id, e2, pos(ctx))
-        case Some(op) =>
-          val rhs = mkBinary(id, op, e2, pos(ctx))
-          mkAssign(id, rhs, pos(ctx))
-      }
+//    override def visitAssign(@NotNull ctx: DcctParser.AssignContext): Tree = {
+//      val name   = ctx.Identifier.getText
+//      val id     = mkIdent(Name(name), pos(ctx))
+//      val e2     = visit(ctx.expression).asInstanceOf[Expr]
+//      val op: Option[BOp] = ctx.op.getText match {
+//        case "+="   => Some(Add)
+//        case "-="   => Some(Sub)
+//        case "*="   => Some(Mul)
+//        case "/="   => Some(Div)
+//        case "%="   => Some(Mod)
+//        case "&="   => Some(BAnd)
+//        case "|="   => Some(BOr)
+//        case "^="   => Some(BXor)
+//        case "<<="  => Some(SHL)
+//        case ">>="  => Some(SHR)
+//        case ">>>=" => Some(USHR)
+//        case "="    => None
+//      }
+//      op match {
+//        case None     =>
+//          mkAssign(id, e2, pos(ctx))
+//        case Some(op) =>
+//          val rhs = mkBinary(id, op, e2, pos(ctx))
+//          mkAssign(id, rhs, pos(ctx))
+//      }
+//    }
+//
+
+
+//    def createVarDecls(@NotNull ctx:
+//      DcctParser.VariableDeclarationContext,
+//      mods: Flags): List[ValDefApi] = {
+//      val mods1   = if(ctx.mods != null)
+//                      mods | FINAL
+//                    else mods
+//      val tpe    = visit(ctx.`type`)
+//      val names  = ctx.Identifier.asScala.toList.map(_.getText)
+//      val exprs  = ctx.varRHS.asScala.toList.map {
+//        case null => NoTree
+//        case e    => visit(e).asInstanceOf[Expr]
+//      }
+//      tpe match {
+//        case tu: TypeUse =>
+//          names.zip(exprs).map {
+//            case (name, expr) =>
+//              mkValDef(mods1, tu, Name(name), expr, pos(ctx))
+//          }
+//        case _           =>
+//          // TODO: report an error
+//          throw new Exception("TypeUse is expected")
+//      }
+//    }
+//
+//    def createVarDefs(@NotNull ctx:
+//      DcctParser.VariableDefinitionContext,
+//      mods: Flags): List[ValDefApi] = {
+//
+//      val mods1   = if(ctx.mods != null)
+//                      mods | FINAL
+//                    else
+//                      mods
+//      val tpe    = visit(ctx.`type`)
+//      val names  = ctx.Identifier.asScala.toList.map(_.getText)
+//      val exprs  = ctx.expression.asScala.toList.map {
+//        case es => visit(es).asInstanceOf[Expr]
+//      }
+//      tpe match {
+//        case tu: TypeUseApi =>
+//          names.zip(exprs).map {
+//            case (name, expr) =>
+//              mkValDef(mods1, tu, Name(name), expr, pos(ctx))
+//          }
+//        case _           =>
+//          // TODO: report an error
+//          throw new Exception("Expression is expected")
+//      }
+//    }
+//
+    override def visitProgram(@NotNull ctx: DcctParser.ProgramContext): Tree = {
+      visitChildren(ctx)
+    }
+
+    override def visitSchema(@NotNull ctx: DcctParser.SchemaContext): Tree = {
+      visitChildren(ctx)
     }
 
 
-
-    def createVarDecls(@NotNull ctx:
-      PrimjParser.VariableDeclarationContext,
-      mods: Flags): List[ValDefApi] = {
-      val mods1   = if(ctx.mods != null)
-                      mods | FINAL
-                    else mods
-      val tpe    = visit(ctx.`type`)
-      val names  = ctx.Identifier.asScala.toList.map(_.getText)
-      val exprs  = ctx.varRHS.asScala.toList.map {
-        case null => NoTree
-        case e    => visit(e).asInstanceOf[Expr]
-      }
-      tpe match {
-        case tu: TypeUse =>
-          names.zip(exprs).map {
-            case (name, expr) =>
-              mkValDef(mods1, tu, Name(name), expr, pos(ctx))
-          }
-        case _           =>
-          // TODO: report an error
-          throw new Exception("TypeUse is expected")
-      }
+    override def visitIndexType(@NotNull ctx: DcctParser.IndexTypeContext): Tree = {
+      visitChildren(ctx)
     }
 
-    def createVarDefs(@NotNull ctx:
-      PrimjParser.VariableDefinitionContext,
-      mods: Flags): List[ValDefApi] = {
-
-      val mods1   = if(ctx.mods != null)
-                      mods | FINAL
-                    else
-                      mods
-      val tpe    = visit(ctx.`type`)
-      val names  = ctx.Identifier.asScala.toList.map(_.getText)
-      val exprs  = ctx.expression.asScala.toList.map {
-        case es => visit(es).asInstanceOf[Expr]
-      }
-      tpe match {
-        case tu: TypeUseApi =>
-          names.zip(exprs).map {
-            case (name, expr) =>
-              mkValDef(mods1, tu, Name(name), expr, pos(ctx))
-          }
-        case _           =>
-          // TODO: report an error
-          throw new Exception("Expression is expected")
-      }
-    }
-
-    override def visitProgram(@NotNull ctx: PrimjParser.ProgramContext): Tree = {
-      val defs = ctx.defDecleration.asScala.toList.flatMap { (kid) =>
-        if(kid.methodDeclaration != null)
-          List(visit(kid).asInstanceOf[DefTree])
-        else //if (kid.variableDeclaration != null)
-          createVarDecls(kid.variableDeclaration, Flags(FIELD))
-      }
-      mkProgram(defs, "")
-    }
-
-    override def visitFormalParameter(@NotNull ctx:
-      PrimjParser.FormalParameterContext): Tree = {
-      val mods    = if(ctx.mods != null)
-                      PARAM | FINAL
-                    else
-                      Flags(PARAM)
-      val tpe = mkTypeUse(Name(ctx.`type`.getText), pos(ctx))
-      val name = Name(ctx.Identifier.getText)
-      mkValDef(mods, tpe, name, NoTree, pos(ctx))
+    override def visitDecls(@NotNull ctx: DcctParser.DeclsContext): Tree = {
+      visitChildren(ctx)
     }
 
 
-		override def visitMethodDeclaration(@NotNull ctx:
-      PrimjParser.MethodDeclarationContext): Tree = {
-      val tpe    = visit(ctx.`type`)
-      val name   = ctx.Identifier.getText
-      val params = ctx.formalParameters.formalParameterList match {
-        case null                                      => List()
-        case ps if ps.formalParameter != null          =>
-          ps.formalParameter.asScala.toList.map {
-            case e  => visit(e).asInstanceOf[ValDefApi]
-          }
-        case _                                         => List()
-      }
-      val body   = visit(ctx.methodBody)
-      (tpe, body) match {
-        case (tu: TypeUseApi, b: BlockApi) =>
-          mkMethodDef(tu, Name(name), params, b,
-            pos(ctx))
-        case _                       =>
-          // TODO: report an error
-          throw new Exception("Bad tree shape")
-      }
-    }
-
-    override def visitVarRHS(@NotNull ctx: PrimjParser.VarRHSContext): Tree = {
-      if(ctx.expression == null) NoTree
-      else visit(ctx.expression)
+    override def visitDecl(@NotNull ctx: DcctParser.DeclContext): Tree = {
+      visitChildren(ctx)
     }
 
 
-		override def visitVoidType(@NotNull ctx: PrimjParser.VoidTypeContext): Tree = {
-      mkTypeUse(Name("void"), pos(ctx))
+    override def visitEntityDecl(@NotNull ctx: DcctParser.EntityDeclContext): Tree = {
+      visitChildren(ctx)
+    }
+    
+    override def visitElements(@NotNull ctx: DcctParser.ElementsContext): Tree = {
+      visitChildren(ctx)
     }
 
-		override def visitBlock(@NotNull ctx: PrimjParser.BlockContext): Tree = {
-      val stmts   = ctx.statement match {
-        case null    => Nil
-        case stmts   => stmts.asScala.toList.flatMap { stmt =>
-          stmt match {
-            case vr: PrimjParser.VarStmtContext =>
-              createVarDecls(vr.variableDeclaration,
-                Flags(LOCAL_VARIABLE))
-            case _                  =>
-              List(visit(stmt))
-          }
-        }
-      }
-      mkBlock(stmts, pos(ctx))
+    
+    override def visitElement(@NotNull ctx: DcctParser.ElementContext): Tree = {
+      visitChildren(ctx)
     }
 
-		override def visitIf(@NotNull ctx: PrimjParser.IfContext): Tree = {
-      val cond  = visit(ctx.parExpression)
-      val thenp = visit(ctx.statement.get(0))
-      val elsep = ctx.statement.size match {
-        case 2 => visit(ctx.statement.get(1))
-        case 1 => NoTree
-      }
-      (cond, thenp, elsep) match {
-        case (c: Expr, t: Expr, e: Expr) =>
-          mkIf(c, t, e, pos(ctx))
-        case _                           =>
-          // TODO: report an error
-          throw new Exception("Bad tree shape")
-      }
+    override def visitEntityIdentifier(@NotNull ctx: DcctParser.EntityIdentifierContext): Tree = {
+      visitChildren(ctx)
     }
-		override def visitFor(@NotNull ctx: PrimjParser.ForContext): Tree = {
-      val inits = ctx.forControl.forInit match {
-        case null  => Nil
-        case inits =>
-          if(inits.expressionList != null)
-            visit(inits.expressionList)
-                .asInstanceOf[java.util.List[Tree]].asScala.toList
-          else
-            createVarDefs(inits.variableDefinition,
-              Flags(LOCAL_VARIABLE))
-      }
-      val cond  = ctx.forControl.expression match {
-        case null => NoTree
-        case e    => visit(e)
-      }
-      val steps = ctx.forControl.forUpdate match {
-        case null  => Nil
-        case es    =>
-          es.expressionList.expression.asScala.toList map {
-            case e => visit(e).asInstanceOf[Expr]
-          }
-      }
-      val body  = visit(ctx.statement)
-      (cond, body) match {
-        case (c: Expr, b: Expr) =>
-          mkFor(inits, c, steps, b, pos(ctx))
-        case _                  =>
-          // TODO: report an error
-          throw new Exception("Bad tree shape")
-      }
-    }
-		override def visitWhile(@NotNull ctx: PrimjParser.WhileContext): Tree = {
-      val cond = visit(ctx.parExpression)
-      val body = visit(ctx.statement)
-      (cond, body) match {
-        case (c: Expr, b: Expr) =>
-          mkWhile(false, c, b, pos(ctx))
-        case _                  =>
-          // TODO: report an error
-          throw new Exception("Bad tree shape")
-      }
-    }
-		override def visitDoWhile(@NotNull ctx: PrimjParser.DoWhileContext): Tree = {
-      val cond = visit(ctx.parExpression)
-      val body = visit(ctx.statement)
-      (cond, body) match {
-        case (c: Expr, b: Expr) =>
-          mkWhile(true, c, b, pos(ctx))
-        case _                  =>
-          // TODO: report an error
-          throw new Exception("Bad tree shape")
-      }
-    }
-
-		override def visitReturn(@NotNull ctx: PrimjParser.ReturnContext): Tree = {
-      ctx.expression match {
-        case null                =>
-          mkReturn(None, pos(ctx))
-        case expr                =>
-          val e = visit(expr)
-          e match {
-            case e: Expr         =>
-              mkReturn(Some(e), pos(ctx))
-          case _                 =>
-            // TODO: report an error
-            throw new Exception("Bad tree shape")
-          }
-      }
-    }
-
-    override def visitBlockStmt(@NotNull ctx:
-      PrimjParser.BlockStmtContext): Tree = {
-      visit(ctx.block)
-    }
-
-    override def visitExprStmt(@NotNull ctx: PrimjParser.ExprStmtContext): Tree = {
-      visit(ctx.expression)
-    }
-
-    override def visitVarStmt(@NotNull ctx: PrimjParser.VarStmtContext): Tree = {
-      visit(ctx.variableDeclaration)
-    }
-
-    override def visitAssignStmt(@NotNull ctx:
-      PrimjParser.AssignStmtContext): Tree = {
-      visit(ctx.assign)
-    }
-
-    override def visitEmpty(@NotNull ctx: PrimjParser.EmptyContext): Tree = {
-      NoTree
-    }
-		override def visitTernary(@NotNull ctx: PrimjParser.TernaryContext): Tree = {
-      val cond  = visit(ctx.parExpression)
-      val thenp = visit(ctx.expression.get(0))
-      val elsep = visit(ctx.expression.get(1))
-      (cond, thenp, elsep) match {
-        case (c: Expr, t: Expr, e: Expr) =>
-          mkTernary(c, t, e, pos(ctx))
-        case _                           =>
-          // TODO: report an error
-          throw new Exception("Bad tree shape")
-      }
-    }
-		override def visitApply(@NotNull ctx: PrimjParser.ApplyContext): Tree = {
-      val name   = ctx.Identifier.getText
-      val id     = mkIdent(Name(name), pos(ctx))
-      val args   = ctx.arguments.expressionList match {
-        case null           => Nil
-        case args           =>
-          args.expression.asScala.toList.map {
-            case e => visit(e).asInstanceOf[Expr]
-          }
-        }
-      mkApply(id, args, pos(ctx))
-    }
-
-
-    override def visitUnaryNum(@NotNull ctx: PrimjParser.UnaryNumContext): Tree = {
-      createUnaryOrPostfix(false, ctx.expression, ctx.op.getText, ctx)
-    }
-
-    override def visitUnaryElse(@NotNull ctx: PrimjParser.UnaryElseContext): Tree = {
-      createUnaryOrPostfix(false, ctx.expression, ctx.op.getText, ctx)
-    }
-
-    override def visitPostfix(@NotNull ctx: PrimjParser.PostfixContext): Tree = {
-      createUnaryOrPostfix(true, ctx.expression, ctx.op.getText, ctx)
-    }
-
-    override def visitId(@NotNull ctx: PrimjParser.IdContext): Tree = {
-      mkIdent(Name(ctx.getText), pos(ctx))
-    }
-
-    override def visitPrimitiveType(
-      @NotNull ctx: PrimjParser.PrimitiveTypeContext): Tree = {
-      mkTypeUse(Name(ctx.getText), pos(ctx))
-    }
-
-    override def visitCast(@NotNull ctx: PrimjParser.CastContext): Tree = {
-      val e = visit(ctx.expression)
-      val tpt = visit(ctx.primitiveType)
-      (tpt, e) match {
-        case (tpt: TypeUseApi, e: Expr) =>
-          mkCast(tpt, e, pos(ctx))
-        case _               =>
-          // TODO: report an error
-          throw new Exception("(TypeUse) Expression is expected")
-      }
-    }
-
-
-    // Binary visitors
-
-    override def visitMul(@NotNull ctx: PrimjParser.MulContext): Tree = {
-      createBinary(ctx.expression, ctx.op.getText, ctx)
-    }
-
-    override def visitAdd(@NotNull ctx: PrimjParser.AddContext): Tree = {
-      createBinary(ctx.expression, ctx.op.getText, ctx)
-    }
-
-    override def visitShifts(@NotNull ctx: PrimjParser.ShiftsContext): Tree = {
-      createBinary(ctx.expression, ctx.op.getText, ctx)
-    }
-
-    override def visitRel(@NotNull ctx: PrimjParser.RelContext): Tree = {
-      createBinary(ctx.expression, ctx.op.getText, ctx)
-    }
-
-    override def visitEqu(@NotNull ctx: PrimjParser.EquContext): Tree = {
-      createBinary(ctx.expression, ctx.op.getText, ctx)
-    }
-
-    override def visitBAnd(@NotNull ctx: PrimjParser.BAndContext): Tree = {
-      createBinary(ctx.expression, "&", ctx)
-    }
-
-    override def visitBXor(@NotNull ctx: PrimjParser.BXorContext): Tree = {
-      createBinary(ctx.expression, "^", ctx)
-    }
-
-    override def visitBOr(@NotNull ctx: PrimjParser.BOrContext): Tree = {
-      createBinary(ctx.expression, "|", ctx)
-    }
-
-    override def visitAnd(@NotNull ctx: PrimjParser.AndContext): Tree =  {
-      createBinary(ctx.expression, "&&", ctx)
-    }
-
-    override def visitOr(@NotNull ctx: PrimjParser.OrContext): Tree =  {
-      createBinary(ctx.expression, "||", ctx)
-    }
-
-
-
-
-    // Literaleral visitors
-
-    override def visitIntLit(@NotNull ctx: PrimjParser.IntLitContext): Tree = {
-      val txt = ctx.getText
-      (txt.endsWith("l") || txt.endsWith("L")) match {
-        case true  => mkLiteral(LongConstant(ctx.getText.toInt), pos(ctx))
-        case false => mkLiteral(IntConstant(ctx.getText.toInt), pos(ctx))
-      }
-    }
-
-    override def visitFloatLit(@NotNull ctx: PrimjParser.FloatLitContext): Tree = {
-      val txt = ctx.getText
-      (txt.endsWith("f") || txt.endsWith("F")) match {
-        case true  => mkLiteral(FloatConstant(ctx.getText.toFloat), pos(ctx))
-        case false => mkLiteral(DoubleConstant(ctx.getText.toDouble), pos(ctx))
-      }
-    }
-
-    override def visitCharLit(@NotNull ctx: PrimjParser.CharLitContext): Tree = {
-      mkLiteral(CharConstant(ctx.getText.head), pos(ctx))
-    }
-
-    // override def visitStrLit(@NotNull ctx: PrimjParser.StrLitContext): Tree = {
-    //   Lit(StringConstant(ctx.getText), pos(ctx))
-    // }
-
-
-    override def visitBoolLit(@NotNull ctx: PrimjParser.BoolLitContext): Tree = {
-      mkLiteral(BooleanConstant(ctx.getText.toBoolean), pos(ctx))
-    }
+//    override def visitFormalParameter(@NotNull ctx:
+//      DcctParser.FormalParameterContext): Tree = {
+//      val mods    = if(ctx.mods != null)
+//                      PARAM | FINAL
+//                    else
+//                      Flags(PARAM)
+//      val tpe = mkTypeUse(Name(ctx.`type`.getText), pos(ctx))
+//      val name = Name(ctx.Identifier.getText)
+//      mkValDef(mods, tpe, name, NoTree, pos(ctx))
+//    }
+//
+//
+//		override def visitMethodDeclaration(@NotNull ctx:
+//      DcctParser.MethodDeclarationContext): Tree = {
+//      val tpe    = visit(ctx.`type`)
+//      val name   = ctx.Identifier.getText
+//      val params = ctx.formalParameters.formalParameterList match {
+//        case null                                      => List()
+//        case ps if ps.formalParameter != null          =>
+//          ps.formalParameter.asScala.toList.map {
+//            case e  => visit(e).asInstanceOf[ValDefApi]
+//          }
+//        case _                                         => List()
+//      }
+//      val body   = visit(ctx.methodBody)
+//      (tpe, body) match {
+//        case (tu: TypeUseApi, b: BlockApi) =>
+//          mkMethodDef(tu, Name(name), params, b,
+//            pos(ctx))
+//        case _                       =>
+//          // TODO: report an error
+//          throw new Exception("Bad tree shape")
+//      }
+//    }
+//
+//    override def visitVarRHS(@NotNull ctx: DcctParser.VarRHSContext): Tree = {
+//      if(ctx.expression == null) NoTree
+//      else visit(ctx.expression)
+//    }
+//
+//
+//		override def visitVoidType(@NotNull ctx: DcctParser.VoidTypeContext): Tree = {
+//      mkTypeUse(Name("void"), pos(ctx))
+//    }
+//
+//		override def visitBlock(@NotNull ctx: DcctParser.BlockContext): Tree = {
+//      val stmts   = ctx.statement match {
+//        case null    => Nil
+//        case stmts   => stmts.asScala.toList.flatMap { stmt =>
+//          stmt match {
+//            case vr: DcctParser.VarStmtContext =>
+//              createVarDecls(vr.variableDeclaration,
+//                Flags(LOCAL_VARIABLE))
+//            case _                  =>
+//              List(visit(stmt))
+//          }
+//        }
+//      }
+//      mkBlock(stmts, pos(ctx))
+//    }
+//
+//		override def visitIf(@NotNull ctx: DcctParser.IfContext): Tree = {
+//      val cond  = visit(ctx.parExpression)
+//      val thenp = visit(ctx.statement.get(0))
+//      val elsep = ctx.statement.size match {
+//        case 2 => visit(ctx.statement.get(1))
+//        case 1 => NoTree
+//      }
+//      (cond, thenp, elsep) match {
+//        case (c: Expr, t: Expr, e: Expr) =>
+//          mkIf(c, t, e, pos(ctx))
+//        case _                           =>
+//          // TODO: report an error
+//          throw new Exception("Bad tree shape")
+//      }
+//    }
+//		override def visitFor(@NotNull ctx: DcctParser.ForContext): Tree = {
+//      val inits = ctx.forControl.forInit match {
+//        case null  => Nil
+//        case inits =>
+//          if(inits.expressionList != null)
+//            visit(inits.expressionList)
+//                .asInstanceOf[java.util.List[Tree]].asScala.toList
+//          else
+//            createVarDefs(inits.variableDefinition,
+//              Flags(LOCAL_VARIABLE))
+//      }
+//      val cond  = ctx.forControl.expression match {
+//        case null => NoTree
+//        case e    => visit(e)
+//      }
+//      val steps = ctx.forControl.forUpdate match {
+//        case null  => Nil
+//        case es    =>
+//          es.expressionList.expression.asScala.toList map {
+//            case e => visit(e).asInstanceOf[Expr]
+//          }
+//      }
+//      val body  = visit(ctx.statement)
+//      (cond, body) match {
+//        case (c: Expr, b: Expr) =>
+//          mkFor(inits, c, steps, b, pos(ctx))
+//        case _                  =>
+//          // TODO: report an error
+//          throw new Exception("Bad tree shape")
+//      }
+//    }
+//		override def visitWhile(@NotNull ctx: DcctParser.WhileContext): Tree = {
+//      val cond = visit(ctx.parExpression)
+//      val body = visit(ctx.statement)
+//      (cond, body) match {
+//        case (c: Expr, b: Expr) =>
+//          mkWhile(false, c, b, pos(ctx))
+//        case _                  =>
+//          // TODO: report an error
+//          throw new Exception("Bad tree shape")
+//      }
+//    }
+//		override def visitDoWhile(@NotNull ctx: DcctParser.DoWhileContext): Tree = {
+//      val cond = visit(ctx.parExpression)
+//      val body = visit(ctx.statement)
+//      (cond, body) match {
+//        case (c: Expr, b: Expr) =>
+//          mkWhile(true, c, b, pos(ctx))
+//        case _                  =>
+//          // TODO: report an error
+//          throw new Exception("Bad tree shape")
+//      }
+//    }
+//
+//		override def visitReturn(@NotNull ctx: DcctParser.ReturnContext): Tree = {
+//      ctx.expression match {
+//        case null                =>
+//          mkReturn(None, pos(ctx))
+//        case expr                =>
+//          val e = visit(expr)
+//          e match {
+//            case e: Expr         =>
+//              mkReturn(Some(e), pos(ctx))
+//          case _                 =>
+//            // TODO: report an error
+//            throw new Exception("Bad tree shape")
+//          }
+//      }
+//    }
+//
+//    override def visitBlockStmt(@NotNull ctx:
+//      DcctParser.BlockStmtContext): Tree = {
+//      visit(ctx.block)
+//    }
+//
+//    override def visitExprStmt(@NotNull ctx: DcctParser.ExprStmtContext): Tree = {
+//      visit(ctx.expression)
+//    }
+//
+//    override def visitVarStmt(@NotNull ctx: DcctParser.VarStmtContext): Tree = {
+//      visit(ctx.variableDeclaration)
+//    }
+//
+//    override def visitAssignStmt(@NotNull ctx:
+//      DcctParser.AssignStmtContext): Tree = {
+//      visit(ctx.assign)
+//    }
+//
+//    override def visitEmpty(@NotNull ctx: DcctParser.EmptyContext): Tree = {
+//      NoTree
+//    }
+//		override def visitTernary(@NotNull ctx: DcctParser.TernaryContext): Tree = {
+//      val cond  = visit(ctx.parExpression)
+//      val thenp = visit(ctx.expression.get(0))
+//      val elsep = visit(ctx.expression.get(1))
+//      (cond, thenp, elsep) match {
+//        case (c: Expr, t: Expr, e: Expr) =>
+//          mkTernary(c, t, e, pos(ctx))
+//        case _                           =>
+//          // TODO: report an error
+//          throw new Exception("Bad tree shape")
+//      }
+//    }
+//		override def visitApply(@NotNull ctx: DcctParser.ApplyContext): Tree = {
+//      val name   = ctx.Identifier.getText
+//      val id     = mkIdent(Name(name), pos(ctx))
+//      val args   = ctx.arguments.expressionList match {
+//        case null           => Nil
+//        case args           =>
+//          args.expression.asScala.toList.map {
+//            case e => visit(e).asInstanceOf[Expr]
+//          }
+//        }
+//      mkApply(id, args, pos(ctx))
+//    }
+//
+//
+//    override def visitUnaryNum(@NotNull ctx: DcctParser.UnaryNumContext): Tree = {
+//      createUnaryOrPostfix(false, ctx.expression, ctx.op.getText, ctx)
+//    }
+//
+//    override def visitUnaryElse(@NotNull ctx: DcctParser.UnaryElseContext): Tree = {
+//      createUnaryOrPostfix(false, ctx.expression, ctx.op.getText, ctx)
+//    }
+//
+//    override def visitPostfix(@NotNull ctx: DcctParser.PostfixContext): Tree = {
+//      createUnaryOrPostfix(true, ctx.expression, ctx.op.getText, ctx)
+//    }
+//
+//    override def visitId(@NotNull ctx: DcctParser.IdContext): Tree = {
+//      mkIdent(Name(ctx.getText), pos(ctx))
+//    }
+//
+//    override def visitPrimitiveType(
+//      @NotNull ctx: DcctParser.PrimitiveTypeContext): Tree = {
+//      mkTypeUse(Name(ctx.getText), pos(ctx))
+//    }
+//
+//    override def visitCast(@NotNull ctx: DcctParser.CastContext): Tree = {
+//      val e = visit(ctx.expression)
+//      val tpt = visit(ctx.primitiveType)
+//      (tpt, e) match {
+//        case (tpt: TypeUseApi, e: Expr) =>
+//          mkCast(tpt, e, pos(ctx))
+//        case _               =>
+//          // TODO: report an error
+//          throw new Exception("(TypeUse) Expression is expected")
+//      }
+//    }
+//
+//
+//    // Binary visitors
+//
+//    override def visitMul(@NotNull ctx: DcctParser.MulContext): Tree = {
+//      createBinary(ctx.expression, ctx.op.getText, ctx)
+//    }
+//
+//    override def visitAdd(@NotNull ctx: DcctParser.AddContext): Tree = {
+//      createBinary(ctx.expression, ctx.op.getText, ctx)
+//    }
+//
+//    override def visitShifts(@NotNull ctx: DcctParser.ShiftsContext): Tree = {
+//      createBinary(ctx.expression, ctx.op.getText, ctx)
+//    }
+//
+//    override def visitRel(@NotNull ctx: DcctParser.RelContext): Tree = {
+//      createBinary(ctx.expression, ctx.op.getText, ctx)
+//    }
+//
+//    override def visitEqu(@NotNull ctx: DcctParser.EquContext): Tree = {
+//      createBinary(ctx.expression, ctx.op.getText, ctx)
+//    }
+//
+//    override def visitBAnd(@NotNull ctx: DcctParser.BAndContext): Tree = {
+//      createBinary(ctx.expression, "&", ctx)
+//    }
+//
+//    override def visitBXor(@NotNull ctx: DcctParser.BXorContext): Tree = {
+//      createBinary(ctx.expression, "^", ctx)
+//    }
+//
+//    override def visitBOr(@NotNull ctx: DcctParser.BOrContext): Tree = {
+//      createBinary(ctx.expression, "|", ctx)
+//    }
+//
+//    override def visitAnd(@NotNull ctx: DcctParser.AndContext): Tree =  {
+//      createBinary(ctx.expression, "&&", ctx)
+//    }
+//
+//    override def visitOr(@NotNull ctx: DcctParser.OrContext): Tree =  {
+//      createBinary(ctx.expression, "||", ctx)
+//    }
+//
+//
+//
+//
+//    // Literaleral visitors
+//
+//    override def visitIntLit(@NotNull ctx: DcctParser.IntLitContext): Tree = {
+//      val txt = ctx.getText
+//      (txt.endsWith("l") || txt.endsWith("L")) match {
+//        case true  => mkLiteral(LongConstant(ctx.getText.toInt), pos(ctx))
+//        case false => mkLiteral(IntConstant(ctx.getText.toInt), pos(ctx))
+//      }
+//    }
+//
+//    override def visitFloatLit(@NotNull ctx: DcctParser.FloatLitContext): Tree = {
+//      val txt = ctx.getText
+//      (txt.endsWith("f") || txt.endsWith("F")) match {
+//        case true  => mkLiteral(FloatConstant(ctx.getText.toFloat), pos(ctx))
+//        case false => mkLiteral(DoubleConstant(ctx.getText.toDouble), pos(ctx))
+//      }
+//    }
+//
+//    override def visitCharLit(@NotNull ctx: DcctParser.CharLitContext): Tree = {
+//      mkLiteral(CharConstant(ctx.getText.head), pos(ctx))
+//    }
+//
+//    // override def visitStrLit(@NotNull ctx: DcctParser.StrLitContext): Tree = {
+//    //   Lit(StringConstant(ctx.getText), pos(ctx))
+//    // }
+//
+//
+//    override def visitBoolLit(@NotNull ctx: DcctParser.BoolLitContext): Tree = {
+//      mkLiteral(BooleanConstant(ctx.getText.toBoolean), pos(ctx))
+//    }
   }
 }
 object Parser extends Parser

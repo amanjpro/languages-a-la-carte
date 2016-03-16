@@ -4,7 +4,7 @@ grammar Dcct;
 // Parser
 
 program
-  : schema ';' expression EOF
+  : schema ';'EOF
   ;
 
 schema
@@ -16,54 +16,20 @@ indexType
   : 'Int'
   | 'String'
   | entityIdentifier
-  | arrayIdentifier
   ;
 
-cloudType
-  : 'CInt'
-  | 'CString'
-  | cloudSetType
-  | cloudTypeIdentifier
-  ;
-
-cloudSetType
-  : 'CSet' '<' indexType '>'
-  ;
-
-expressionType
-  : indexType
-  | 'Set' '<' expressionType '>'
-  | expressionType '->' expressionType
-  | tupleType
-  ;
-
-tupleType
-  : '(' tupleElemType ')'
-  ;
-
-tupleElemType
-  : expressionType
-  | expressionType ',' tupleElemType
+decls
+  : decl
+  | decl ';' decls
   ;
 
 decl
   : entityDecl
-  | arrayDecl
-  | propertyDecl
   ;
 
 entityDecl
   : 'entity' entityIdentifier '(' elements ')'
   ;
-
-arrayDecl
-  : 'array' arrayIdentifier '[' elements ']'
-  ;
-
-propertyDecl
-  : 'property' Identifier ':' indexType '->' cloudType
-  ;
-
 
 elements
   : element ',' elements
@@ -77,90 +43,6 @@ element
 // Identifiers
 entityIdentifier
   : Identifier
-  ;
-
-arrayIdentifier
-  : Identifier
-  ;
-
-cloudTypeIdentifier
-  : Identifier
-  ;
-
-
-expression
-  : 'new' entityIdentifier '(' expressions ')'
-  | 'delete' expression
-  | arrayIdentifier '[' expressions ']'
-  | expression '(' expressions ')'
-  | expression '.' expression
-  | 'all' entityIdentifier
-  | 'entries' Identifier
-  | 'yield'
-  | 'flush'
-  | expression expression
-  | expression ';' expression
-  | '(' expressions ')'
-  | expression bop expression
-  | foreach
-  | value
-  | varDeclaration
-  ;
-
-
-bop
-  : '=='
-  | '!='
-  ;
-
-varDeclaration
-  : 'var' Identifier '=' value
-  ;
-
-
-value
-  : Identifier
-  | literals
-  | Identifier '[' values ']'
-  | '(' values ')'
-  | '(' Identifier ':' expressionType ')' '=>' expression
-  ;
-
-decls
-  : decl
-  | decl ';' decls
-  ;
-
-
-ifelse
-  : 'if' '(' expression ')' block 'else' block
-  ;
-
-block
-  : '{' expression '}'
-  ;
-
-
-expressions
-  : expression ',' expressions
-  | expression
-  ;
-
-values
-  : value ',' value
-  | value
-  ;
-
-foreach
-  : 'foreach' Identifier 'in' ('all' | 'entries') expression '.' expression
-    ('where' expression bop expression)?
-    ('orderby' expression '.' expression)?
-    block
-  ;
-
-literals
-  : IntegerLiteral
-  | StringLiteral
   ;
 
 // LEXER
