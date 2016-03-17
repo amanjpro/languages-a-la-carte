@@ -51,7 +51,7 @@ trait CompilationUnitApi extends Tree {
   }
 }
 
-trait PackageDefApi extends NamedTree {
+trait PackageDefApi extends TermTree {
   def members: List[Tree]
 
   def name: Name
