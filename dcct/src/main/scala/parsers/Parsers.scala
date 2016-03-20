@@ -107,6 +107,46 @@ class Parser extends parsers.Parser {
           throw new Exception("Expression is expected but got: " + e1 + " " + e2)
       }
     }
+    
+    override def visitProgram(@NotNull ctx: DcctParser.ProgramContext): Tree = {
+      visitChildren(ctx)
+    }
+
+    override def visitSchema(@NotNull ctx: DcctParser.SchemaContext): Tree = {
+      visitChildren(ctx)
+    }
+
+
+    override def visitIndexType(@NotNull ctx: DcctParser.IndexTypeContext): Tree = {
+      visitChildren(ctx)
+    }
+
+    override def visitDecls(@NotNull ctx: DcctParser.DeclsContext): Tree = {
+      visitChildren(ctx)
+    }
+
+
+    override def visitDecl(@NotNull ctx: DcctParser.DeclContext): Tree = {
+      visitChildren(ctx)
+    }
+
+
+    override def visitEntityDecl(@NotNull ctx: DcctParser.EntityDeclContext): Tree = {
+      visitChildren(ctx)
+    }
+    
+    override def visitElements(@NotNull ctx: DcctParser.ElementsContext): Tree = {
+      visitChildren(ctx)
+    }
+
+    
+    override def visitElement(@NotNull ctx: DcctParser.ElementContext): Tree = {
+      visitChildren(ctx)
+    }
+
+    override def visitEntityIdentifier(@NotNull ctx: DcctParser.EntityIdentifierContext): Tree = {
+      visitChildren(ctx)
+    }
 
 //    override def visitAssign(@NotNull ctx: DcctParser.AssignContext): Tree = {
 //      val name   = ctx.Identifier.getText
@@ -186,45 +226,6 @@ class Parser extends parsers.Parser {
 //      }
 //    }
 //
-    override def visitProgram(@NotNull ctx: DcctParser.ProgramContext): Tree = {
-      visitChildren(ctx)
-    }
-
-    override def visitSchema(@NotNull ctx: DcctParser.SchemaContext): Tree = {
-      visitChildren(ctx)
-    }
-
-
-    override def visitIndexType(@NotNull ctx: DcctParser.IndexTypeContext): Tree = {
-      visitChildren(ctx)
-    }
-
-    override def visitDecls(@NotNull ctx: DcctParser.DeclsContext): Tree = {
-      visitChildren(ctx)
-    }
-
-
-    override def visitDecl(@NotNull ctx: DcctParser.DeclContext): Tree = {
-      visitChildren(ctx)
-    }
-
-
-    override def visitEntityDecl(@NotNull ctx: DcctParser.EntityDeclContext): Tree = {
-      visitChildren(ctx)
-    }
-    
-    override def visitElements(@NotNull ctx: DcctParser.ElementsContext): Tree = {
-      visitChildren(ctx)
-    }
-
-    
-    override def visitElement(@NotNull ctx: DcctParser.ElementContext): Tree = {
-      visitChildren(ctx)
-    }
-
-    override def visitEntityIdentifier(@NotNull ctx: DcctParser.EntityIdentifierContext): Tree = {
-      visitChildren(ctx)
-    }
 //    override def visitFormalParameter(@NotNull ctx:
 //      DcctParser.FormalParameterContext): Tree = {
 //      val mods    = if(ctx.mods != null)
