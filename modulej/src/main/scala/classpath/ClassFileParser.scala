@@ -40,6 +40,7 @@ import ppj.modifiers._
 import ppj.modifiers.Ops._
 import robustj.names.StdNames._
 import modulej.ast.TreeExtractors._
+import ooj.ast.Implicits._
 
 
 import org.objectweb.asm._
@@ -50,7 +51,7 @@ import java.io.{IOException, ByteArrayOutputStream,
 
 import scala.collection.mutable
 
-trait ClassFileParsersApi {
+trait ClassFileLoaderApi {
 
   def classPaths: List[JFile]
   lazy val urls: List[URL] = classPaths.map(_.toURI.toURL)
@@ -65,8 +66,11 @@ trait ClassFileParsersApi {
     val innerClasses = reader.innerClasses.map(loadClass(_))
     val body         =
       TreeFactories.mkTemplate(innerClasses ++ reader.clazz.body.members)
-    TreeFactories.mkClassDef(reader.clazz.mods | COMPILED, reader.clazz.name,
+    val clazz        =
+      TreeFactories.mkClassDef(reader.clazz.mods | COMPILED, reader.clazz.name,
               reader.clazz.parents, body)
+    clazz.sourceName = reader.source
+    clazz
   }
 
 
@@ -137,6 +141,7 @@ trait ClassFileParsersApi {
     var clazzFactory: TemplateApi => ClassDefApi = _
 
     var members: List[DefTree] = Nil
+    var source: String = _
     var innerClasses: List[String] = Nil
 
     protected def chopOneParam(paramString: String): (String, String) = {
@@ -294,6 +299,7 @@ trait ClassFileParsersApi {
     }
 
     override def visitSource(source: String, debug: String): Unit = {
+      this.source = source
     }
 
     override def visitOuterClass(owner: String, name: String,
@@ -376,4 +382,5 @@ trait ClassFileParsersApi {
   }
 }
 
-class ClassFileParsers(val classPaths: List[JFile]) extends ClassFileParsersApi
+class ClassFileLoader(val classPaths: List[JFile])
+  extends ClassFileLoaderApi
