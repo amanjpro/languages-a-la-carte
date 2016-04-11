@@ -190,12 +190,15 @@ variableInitializer
 
 // 19.8.3 Methods
 methodDeclaration
-  : methodHeader methodBody
+  : (typeMethodHeader | voidMethodHeader) methodBody
   ;
 
-methodHeader
-  : modifier* type methodDeclarator throwsClause?           # TypedMethodHeader
-  | modifier* 'void' methodDeclaratorNoDims throwsClause?   # VoidMethodHeader
+typeMethodHeader
+  : modifier* type methodDeclarator throwsClause?
+  ;
+
+voidMethodHeader
+  : modifier* 'void' methodDeclaratorNoDims throwsClause?
   ;
 
 methodDeclarator
@@ -274,7 +277,7 @@ constantDeclaration
   ;
 
 abstractMethodDeclaration
-	: methodHeader ';'
+	: (typeMethodHeader | voidMethodHeader) ';'
   ;
 
 

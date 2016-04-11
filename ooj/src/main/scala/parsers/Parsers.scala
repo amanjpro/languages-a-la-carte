@@ -527,7 +527,10 @@ class Parser extends parsers.Parser {
 
     override def visitMethodDeclaration(ctx:
       Java1Parser.MethodDeclarationContext): Tree = {
-      visit(ctx.methodHeader()) match {
+      val mthd = if(ctx.typeMethodHeader == null)
+        visit(ctx.voidMethodHeader)
+      else visit(ctx.typeMethodHeader)
+      mthd match {
         case md: MethodDefApi                     =>
           val body = visit(ctx.methodBody).asInstanceOf[Expr]
           TreeFactories.mkMethodDef(md.mods, md.ret, md.name,
@@ -554,8 +557,8 @@ class Parser extends parsers.Parser {
       }
     }
 
-    override def visitTypedMethodHeader(ctx:
-      Java1Parser.TypedMethodHeaderContext): Tree = {
+    override def visitTypeMethodHeader(ctx:
+      Java1Parser.TypeMethodHeaderContext): Tree = {
       val mods       = modifiersTo(ctx.modifier, true)
       val tpt        = {
         val use  = visit(ctx.`type`()).asInstanceOf[UseTree]
@@ -760,7 +763,10 @@ class Parser extends parsers.Parser {
 
     override def visitAbstractMethodDeclaration(ctx:
       Java1Parser.AbstractMethodDeclarationContext): Tree = {
-      visit(ctx.methodHeader) match {
+      val mthd = if(ctx.typeMethodHeader == null)
+        visit(ctx.voidMethodHeader)
+      else visit(ctx.typeMethodHeader)
+      mthd match {
         case md: MethodDefApi          =>
           TreeFactories.mkMethodDef(md.mods | ABSTRACT,
             md.ret, md.name, md.params, md.body,
