@@ -15,7 +15,7 @@ import sana.brokenj.ast.{TreeCopiers => TC, _}
 
 
 
-trait TreeCopiers extends {
+trait TreeCopiers {
 
   protected def copyProperties(template: Tree,
       newTree: Tree): Unit = newTree.attributes = template.attributes
