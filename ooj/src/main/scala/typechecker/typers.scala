@@ -992,22 +992,23 @@ trait BinaryTyperComponent extends calcj.typechecker.BinaryTyperComponent {
             val slct  = TreeFactories.mkSelect(jlp, cnstr, e.pos)
             val app   = TreeFactories.mkApply(slct, List(e), e.pos)
             val nw    = TreeFactories.mkNew(app)
-            java.symbol = SymbolUtils.javaPackageSymbol
-            lang.symbol = SymbolUtils.langPackageSymbol
-            SymbolUtils.getSymbol(t).foreach { s =>
-              SymbolUtils.toBoxedSymbol(s).foreach { s =>
-                tuse.symbol = s
-              }
-            }
-            nw.foreach(t => e.owner.foreach(t.owner = _))
-            e.owner.foreach(s => {
-              lang.enclosing = s
-              tuse.enclosing = s
-            })
-            lang.isQualified = true
-            tuse.isQualified = true
-            java.owner = ProgramSymbol
-            nw
+            compiler.typeCheck(e.owner)(nw).asInstanceOf[Expr]
+            // java.symbol = SymbolUtils.javaPackageSymbol
+            // lang.symbol = SymbolUtils.langPackageSymbol
+            // SymbolUtils.getSymbol(t).foreach { s =>
+            //   SymbolUtils.toBoxedSymbol(s).foreach { s =>
+            //     tuse.symbol = s
+            //   }
+            // }
+            // nw.foreach(t => e.owner.foreach(t.owner = _))
+            // e.owner.foreach(s => {
+            //   lang.enclosing = s
+            //   tuse.enclosing = s
+            // })
+            // lang.isQualified = true
+            // tuse.isQualified = true
+            // java.owner = ProgramSymbol
+            // nw
           case _                              =>
             super.castIfNeeded(e, t1, t2)
         }
