@@ -7,8 +7,8 @@ import sana.primj
 import sana.brokenj
 import sana.ooj
 
-import sana.core.TransformationComponent
-import sana.dsl._
+import tiny.core.TransformationComponent
+import tiny.dsl._
 import tiny.ast.{TreeCopiers => _, TreeFactories => _, _}
 import tiny.errors.ErrorReporting.{error,warning}
 import tiny.symbols._

@@ -11,7 +11,7 @@ import sana.tiny
 import sana.calcj
 
 
-import sana.dsl._
+import tiny.dsl._
 import calcj.typechecker.TyperComponent
 import robustj.ast._
 import tiny.ast.{Tree, NoTree, Expr, UseTree}

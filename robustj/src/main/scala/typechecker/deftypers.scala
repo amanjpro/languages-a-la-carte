@@ -10,8 +10,8 @@ import sana.arrooj
 import sana.ooj
 import sana.robustj
 
-import sana.core.TransformationComponent
-import sana.dsl._
+import tiny.core.TransformationComponent
+import tiny.dsl._
 import robustj.ast.{TreeFactories, MethodDefApi}
 import tiny.ast.UseTree
 

@@ -5,8 +5,8 @@ import sana.primj
 import sana.tiny
 import sana.calcj
 
-import sana.core.TransformationComponent
-import sana.dsl._
+import tiny.core.TransformationComponent
+import tiny.dsl._
 import tiny.ast.{TreeCopiers => _, _}
 import tiny.names.Name
 import tiny.source.Position

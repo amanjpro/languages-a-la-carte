@@ -11,7 +11,7 @@ import sana.tiny
 import sana.calcj
 
 
-import sana.dsl._
+import tiny.dsl._
 import tiny.ast.{Tree, Expr, UseTree}
 import tiny.errors.ErrorReporting.{error,warning}
 import primj.typechecker.ShapeCheckerComponent

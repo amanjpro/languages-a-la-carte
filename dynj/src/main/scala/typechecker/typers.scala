@@ -8,7 +8,7 @@ import sana.dynj
 import sana.robustj
 
 
-import sana.dsl._
+import tiny.dsl._
 
 import tiny.errors.ErrorReporting.{error,warning}
 import tiny.ast.Implicits._

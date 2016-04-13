@@ -13,7 +13,7 @@ import sana.tiny
 import sana.calcj
 
 
-import sana.dsl._
+import tiny.dsl._
 import tiny.ast.Tree
 import calcj.ast.BinaryApi
 import tiny.errors.ErrorReporting.{error,warning}

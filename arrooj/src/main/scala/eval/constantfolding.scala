@@ -9,8 +9,8 @@ import sana.primj
 import sana.tiny
 import sana.calcj
 
-import sana.core.TransformationComponent
-import sana.dsl._
+import tiny.core.TransformationComponent
+import tiny.dsl._
 
 
 import ooj.eval.ConstantFoldingComponent

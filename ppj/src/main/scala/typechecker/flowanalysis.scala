@@ -10,7 +10,7 @@ import sana.ooj
 import sana.ppj
 import sana.robustj
 
-import sana.dsl._
+import tiny.dsl._
 import tiny.ast.{Tree, Expr}
 import tiny.errors.ErrorReporting.{error,warning}
 import tiny.errors.ErrorCodes._

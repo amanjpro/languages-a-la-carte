@@ -5,8 +5,8 @@ import sana.primj
 import sana.tiny
 import sana.calcj
 
-import sana.core.CheckerComponent
-import sana.dsl._
+import tiny.core.CheckerComponent
+import tiny.dsl._
 import tiny.ast._
 import primj.ast.Implicits._
 import calcj.ast._

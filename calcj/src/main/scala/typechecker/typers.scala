@@ -1,11 +1,11 @@
 package ch.usi.inf.l3.sana.calcj.typechecker
 
 import ch.usi.inf.l3.sana
-import sana.core.{TransformationComponent, TransformationFamily}
 import sana.tiny
 import sana.calcj
 
-import sana.dsl._
+import tiny.dsl._
+import tiny.core.{TransformationComponent, TransformationFamily}
 import tiny.ast.{TreeCopiers => _, _}
 import sana.tiny.ast.Implicits._
 import tiny.types._

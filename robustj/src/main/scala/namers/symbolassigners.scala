@@ -10,8 +10,8 @@ import sana.arrooj
 import sana.ooj
 import sana.robustj
 
-import sana.core.TransformationComponent
-import sana.dsl._
+import tiny.core.TransformationComponent
+import tiny.dsl._
 import tiny.ast.{TreeCopiers => _, TreeFactories => _, _}
 import arrooj.ast.Implicits._
 import tiny.symbols._

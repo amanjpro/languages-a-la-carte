@@ -11,8 +11,8 @@ import sana.calcj
 import sana.tiny
 
 
-import sana.dsl._
-import sana.core._
+import tiny.dsl._
+import tiny.core._
 import ooj.typechecker.{N, FlowCorrectnessCheckerComponent}
 import arrayj.ast.{ArrayCreationApi, ArrayAccessApi,
                    ArrayTypeUseApi, ArrayInitializerApi}

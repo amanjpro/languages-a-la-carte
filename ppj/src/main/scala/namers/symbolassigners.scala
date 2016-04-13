@@ -8,7 +8,7 @@ import sana.brokenj
 import sana.arrayj
 import sana.ppj
 
-import sana.dsl._
+import tiny.dsl._
 import tiny.ast.Expr
 import tiny.ast.Implicits._
 import primj.ast.BlockApi

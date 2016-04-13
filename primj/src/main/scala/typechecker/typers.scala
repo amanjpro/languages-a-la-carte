@@ -6,7 +6,7 @@ import sana.primj
 import sana.tiny
 import sana.calcj
 
-import sana.dsl._
+import tiny.dsl._
 import tiny.ast.{TreeCopiers => _, _}
 import tiny.names.Name
 import primj.ast.Implicits._

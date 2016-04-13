@@ -7,7 +7,7 @@ import sana.primj
 import sana.tiny
 import sana.calcj
 
-import sana.dsl._
+import tiny.dsl._
 
 import arrayj.ast._
 import brokenj.typechecker.LabelNameCheckerComponent

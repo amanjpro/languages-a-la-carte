@@ -7,8 +7,8 @@ import sana.primj
 import sana.tiny
 import sana.calcj
 
-import sana.core.CheckerComponent
-import sana.dsl._
+import tiny.core.CheckerComponent
+import tiny.dsl._
 import primj.ast.Implicits._
 import tiny.names.Name
 import calcj.ast.operators.{Inc, Dec}

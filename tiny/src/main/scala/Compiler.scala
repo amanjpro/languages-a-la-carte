@@ -1,7 +1,7 @@
 package ch.usi.inf.l3.sana.tiny
 
 
-import ch.usi.inf.l3.sana.core.LanguageModule
+import ch.usi.inf.l3.sana.tiny.core.LanguageModule
 import source.{SourceReader, SourceFile}
 import parsers.Parser
 import ast.Tree

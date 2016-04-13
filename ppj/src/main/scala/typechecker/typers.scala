@@ -13,7 +13,7 @@ import sana.tiny
 import sana.calcj
 
 
-import sana.dsl._
+import tiny.dsl._
 import calcj.typechecker.TyperComponent
 import tiny.ast.{Tree, Expr, NoTree}
 import tiny.errors.ErrorReporting.{error,warning}

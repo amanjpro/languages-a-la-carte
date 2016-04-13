@@ -1,4 +1,4 @@
-package ch.usi.inf.l3.sana.core
+package ch.usi.inf.l3.sana.tiny.core
 
 trait PhaseFamily[P, R] {
   self =>

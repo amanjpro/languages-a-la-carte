@@ -1,9 +1,9 @@
 package ch.usi.inf.l3.sana.ooj.phases
 
 import ch.usi.inf.l3.sana
-import sana.dsl._
-import sana.core._
-import sana.core.Implicits._
+import sana.tiny.dsl._
+import sana.tiny.core._
+import sana.tiny.core.Implicits._
 import sana.tiny.ast.{Tree, NoTree}
 import sana.ooj.OojNodes
 import sana.ooj.typechecker._

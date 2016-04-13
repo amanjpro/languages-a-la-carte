@@ -26,8 +26,8 @@ import ooj.symbols.SymbolUtils
 import ooj.ast.TreeExtractors._
 import ooj.errors.ErrorCodes._
 
-import sana.dsl._
-import sana.core._
+import tiny.dsl._
+import tiny.core._
 
 
 sealed trait TrackCase

@@ -18,8 +18,8 @@ import tiny.errors.ErrorReporting.{error,warning}
 import ooj.errors.ErrorCodes._
 import scala.collection.mutable
 
-import sana.dsl._
-import sana.core._
+import tiny.dsl._
+import tiny.core._
 
 
 class ConstructorCheckerEnv (private val constructorGraph:

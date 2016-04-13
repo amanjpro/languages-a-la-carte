@@ -3,9 +3,9 @@ package ch.usi.inf.l3.sana.test.tyeprs
 
 import org.scalatest._
 import ch.usi.inf.l3.sana
-import sana.core._
-import sana.dsl._
-import sana.core.Implicits._
+import sana.tiny.core._
+import sana.tiny.dsl._
+import sana.tiny.core.Implicits._
 import sana.tiny.symbols.Symbol
 import sana.tiny.ast._
 import sana.tiny.ast.Implicits._

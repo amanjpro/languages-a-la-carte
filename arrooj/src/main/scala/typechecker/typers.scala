@@ -10,7 +10,7 @@ import sana.primj
 import sana.tiny
 import sana.calcj
 
-import sana.dsl._
+import tiny.dsl._
 import tiny.ast.{UseTree, Expr, Tree}
 import tiny.types.Type
 import tiny.symbols.Symbol

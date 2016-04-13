@@ -16,8 +16,8 @@ import ooj.symbols.SymbolUtils
 import tiny.errors.ErrorReporting.{error,warning}
 import ooj.errors.ErrorCodes._
 
-import sana.dsl._
-import sana.core._
+import tiny.dsl._
+import tiny.core._
 
 
 

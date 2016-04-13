@@ -8,7 +8,7 @@ import sana.primj
 import sana.tiny
 import sana.calcj
 
-import sana.dsl._
+import tiny.dsl._
 import tiny.ast.{TreeCopiers => _, _}
 import tiny.types._
 import primj.ast.TreeExtractors._

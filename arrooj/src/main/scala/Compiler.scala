@@ -1,13 +1,13 @@
 package ch.usi.inf.l3.sana.arrooj
 
 import ch.usi.inf.l3.sana
-import sana.core.Implicits._
 import sana.tiny
 import sana.calcj
 import sana.ooj
 import sana.arrayj
 import sana.arrooj
 import sana.primj
+import tiny.core.Implicits._
 import tiny.settings.SanaConfig
 import tiny.ast.Tree
 import tiny.types.Type

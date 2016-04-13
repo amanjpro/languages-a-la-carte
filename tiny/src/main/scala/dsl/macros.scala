@@ -1,4 +1,4 @@
-package ch.usi.inf.l3.sana
+package ch.usi.inf.l3.sana.tiny
 
 
 import scala.reflect.macros.blackbox.Context

@@ -9,7 +9,7 @@ import sana.tiny
 import sana.calcj
 
 
-import sana.dsl._
+import tiny.dsl._
 import tiny.ast.{Tree, UseTree, Expr}
 import tiny.errors.ErrorReporting.{error,warning}
 import primj.typechecker.ShapeCheckerComponent

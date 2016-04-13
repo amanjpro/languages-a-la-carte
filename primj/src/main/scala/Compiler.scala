@@ -1,10 +1,10 @@
 package ch.usi.inf.l3.sana.primj
 
 import ch.usi.inf.l3.sana
-import sana.core.Implicits._
 import sana.tiny
 import sana.primj
 import tiny.settings.SanaConfig
+import tiny.core.Implicits._
 import tiny.ast.Tree
 import tiny.source.SourceReader
 import tiny.errors.ErrorReporting
