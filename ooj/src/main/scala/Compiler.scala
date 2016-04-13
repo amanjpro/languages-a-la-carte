@@ -9,6 +9,7 @@ import tiny.core.CompilerInterface
 import tiny.core.Implicits._
 import tiny.settings.SanaConfig
 import tiny.ast.Tree
+import tiny.ast.Implicits._
 import tiny.types.Type
 import tiny.symbols.Symbol
 import tiny.modifiers.Flags
@@ -187,9 +188,11 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
     private[this] lazy val typer       = TyperFamily(compiler)
 
     def compiler: CompilerInterface = new CompilerInterface {
-      def typeCheck(tree: Tree): Tree =
+      def typeCheck(owner: Option[Symbol])(tree: Tree): Tree = {
+        owner.foreach(tree.owner = _)
         symassigner.assign.join(
           namer.name.join(deftyper.typed.join(typer.typed)))(tree)
+      }
       def parse(source: String*): Tree   = ???
       def load(fname: String): Option[Tree]   = None
       def unparse(tree: Tree): String   = ???

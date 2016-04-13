@@ -198,7 +198,7 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
       }
       def parse(source: String*): Tree   = ???
       def load(fname: String): Option[Tree]   = None
-      def unparse(tree: Tree): String = ???
+      def unparse(tree: Tree): String   = ???
     }
 
     def compile: Tree => Unit = {
@@ -206,7 +206,8 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
         val constantFolder = (t: Tree) => {
           val (tc, env) = ConstantCollectingFamily(compiler)
             .collect((t, Env.emptyEnv))
-          val (tf, _)   = ConstantFoldingFamily(compiler).constantFold((tc, env))
+          val (tf, _)   = ConstantFoldingFamily(compiler)
+            .constantFold((tc, env))
           tf
         }
         val labelChecker = (t: Tree) =>
@@ -216,8 +217,8 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
         val forwardRefChecker = (t: Tree) =>
           ForwardRefCheckerFamily(compiler).check((t, Nil))
         val constructorsChecker = (t: Tree) =>
-          ConstructorsCheckerFamily(compiler).check(
-            (t, new ConstructorCheckerEnv))
+          ConstructorsCheckerFamily(compiler)
+            .check((t, new ConstructorCheckerEnv))
         val flowAnalyzer = (t: Tree) => {
           FlowCorrectnessCheckerFamily(compiler).check((t, new FlowEnv))
           t

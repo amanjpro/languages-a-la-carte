@@ -7,6 +7,7 @@ import tiny.settings.SanaConfig
 import tiny.core.CompilerInterface
 import tiny.core.Implicits._
 import tiny.ast.Tree
+import tiny.ast.Implicits._
 import tiny.source.SourceReader
 import tiny.errors.ErrorReporting
 import tiny.symbols.Symbol
@@ -55,8 +56,10 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
     private[this] lazy val typer       = PrimjTyperFamily(compiler)
 
     def compiler: CompilerInterface = new CompilerInterface {
-      def typeCheck(tree: Tree): Tree =
+      def typeCheck(owner: Option[Symbol])(tree: Tree): Tree = {
+        owner.foreach(tree.owner = _)
         symassigner.assign.join(namer.name.join(typer.typed))(tree)
+      }
       def load(fname: String): Option[Tree]   = None
       def parse(source: String*): Tree   = ???
       def unparse(tree: Tree): String   = ???
