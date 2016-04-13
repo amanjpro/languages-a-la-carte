@@ -196,7 +196,7 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
         symassigner.assign.join(
           namer.name.join(deftyper.typed.join(typer.typed)))(tree)
       }
-      def parse(source: String*): Tree   = ???
+      def parse(source: String): Tree   = ???
       def load(fname: String): Option[Tree]   = None
       def unparse(tree: Tree): String   = ???
     }

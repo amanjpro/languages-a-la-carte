@@ -61,7 +61,7 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
         symassigner.assign.join(namer.name.join(typer.typed))(tree)
       }
       def load(fname: String): Option[Tree]   = None
-      def parse(source: String*): Tree   = ???
+      def parse(source: String): Tree   = ???
       def unparse(tree: Tree): String   = ???
     }
 
