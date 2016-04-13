@@ -60,6 +60,7 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
         owner.foreach(tree.owner = _)
         symassigner.assign.join(namer.name.join(typer.typed))(tree)
       }
+      def definesModule(module: String): Boolean = false
       def load(fname: String): Option[Tree]   = None
       def parse(source: String): Tree   = ???
       def unparse(tree: Tree): String   = ???
