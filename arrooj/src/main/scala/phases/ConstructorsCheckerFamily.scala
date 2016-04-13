@@ -11,7 +11,7 @@ import sana.ooj.typechecker._
 
 
 
-trait ConstructorsCheckerFamily
+trait ConstructorsCheckerFamilyApi
   extends CheckerFamily[(Tree, ConstructorCheckerEnv)] {
   self =>
 
@@ -25,7 +25,8 @@ trait ConstructorsCheckerFamily
   def check: ((Tree, ConstructorCheckerEnv)) => Unit = family
 }
 
-object ConstructorsCheckerFamily extends ConstructorsCheckerFamily
+case class ConstructorsCheckerFamily(compiler: CompilerInterface)
+  extends ConstructorsCheckerFamilyApi
 
 
 

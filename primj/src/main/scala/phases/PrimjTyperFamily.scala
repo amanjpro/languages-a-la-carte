@@ -12,7 +12,7 @@ import sana.calcj.typechecker.{UnaryTyperComponent => _, _}
 
 
 
-trait PrimjTyperFamily extends
+trait PrimjTyperFamilyApi extends
   TransformationFamily[Tree, Tree] {
   self =>
 
@@ -25,7 +25,8 @@ trait PrimjTyperFamily extends
   def typed: Tree => Tree = family
 }
 
-object PrimjTyperFamily extends PrimjTyperFamily
+case class PrimjTyperFamily(compiler: CompilerInterface)
+  extends PrimjTyperFamilyApi
 
 
 

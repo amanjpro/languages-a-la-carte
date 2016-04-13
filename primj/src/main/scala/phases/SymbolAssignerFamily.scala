@@ -12,7 +12,7 @@ import sana.primj.namers._
 
 
 
-trait PrimjSymbolAssignerFamily
+trait PrimjSymbolAssignerFamilyApi
   extends TransformationFamily[Tree, Tree] {
   self =>
 
@@ -26,4 +26,5 @@ trait PrimjSymbolAssignerFamily
   def assign: Tree => Tree = family
 }
 
-object PrimjSymbolAssignerFamily extends PrimjSymbolAssignerFamily
+case class PrimjSymbolAssignerFamily(compiler: CompilerInterface)
+  extends PrimjSymbolAssignerFamilyApi

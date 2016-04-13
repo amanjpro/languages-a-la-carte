@@ -15,7 +15,7 @@ import sana.ooj.typechecker._
 
 
 
-trait LabelNameCheckerFamily extends CheckerFamily[(Tree, List[LabelApi])] {
+trait LabelNameCheckerFamilyApi extends CheckerFamily[(Tree, List[LabelApi])] {
   self =>
 
   override def default: Unit = ()
@@ -28,7 +28,8 @@ trait LabelNameCheckerFamily extends CheckerFamily[(Tree, List[LabelApi])] {
   def check: ((Tree, List[LabelApi])) => Unit = family
 }
 
-object LabelNameCheckerFamily extends LabelNameCheckerFamily
+case class LabelNameCheckerFamily(compiler: CompilerInterface)
+  extends LabelNameCheckerFamilyApi
 
 
 

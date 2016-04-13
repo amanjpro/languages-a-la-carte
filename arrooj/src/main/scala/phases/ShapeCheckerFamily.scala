@@ -42,7 +42,7 @@ import sana.arrooj.typechecker._
 
 
 
-trait ShapeCheckerFamily extends CheckerFamily[Tree] {
+trait ShapeCheckerFamilyApi extends CheckerFamily[Tree] {
   self =>
 
   override def default: Unit = ()
@@ -58,7 +58,8 @@ trait ShapeCheckerFamily extends CheckerFamily[Tree] {
   def check: Tree => Unit = family
 }
 
-object ShapeCheckerFamily extends ShapeCheckerFamily
+case class ShapeCheckerFamily(compiler: CompilerInterface)
+  extends ShapeCheckerFamilyApi
 
 
 

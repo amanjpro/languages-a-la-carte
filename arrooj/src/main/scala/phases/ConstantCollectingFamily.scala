@@ -11,7 +11,7 @@ import sana.ooj.eval._
 
 
 
-trait ConstantCollectingFamily
+trait ConstantCollectingFamilyApi
   extends TransformationFamily[(Tree, Env), (Tree, Env)] {
   self =>
 
@@ -25,7 +25,8 @@ trait ConstantCollectingFamily
   def collect: ((Tree, Env)) => (Tree, Env) = family
 }
 
-object ConstantCollectingFamily extends ConstantCollectingFamily
+case class ConstantCollectingFamily(compiler: CompilerInterface)
+  extends ConstantCollectingFamilyApi
 
 
 

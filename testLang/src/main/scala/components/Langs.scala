@@ -206,16 +206,20 @@ trait TypeCheckerFamily extends TransformationFamily[Expr, Expr] {
   def components: List[PartialFunction[Expr, Expr]] =
     List(new IntLitTypeCheckerComponent {
            def typeCheck: Expr => Expr = self.typeCheck
+           def compiler: CompilerInterface = ???
          },
          new AddTypeCheckerComponent{
            def typeCheck: Expr => Expr = self.typeCheck
+           def compiler: CompilerInterface = ???
          },
          new MulTypeCheckerComponent{
            def typeCheck: Expr => Expr = self.typeCheck
+           def compiler: CompilerInterface = ???
          })
 
 
   def typeCheck: Expr => Expr = family
+  def compiler: CompilerInterface = ???
 }
 
 object TypeCheckerFamily extends TypeCheckerFamily
@@ -224,15 +228,19 @@ object TypeCheckerFamily extends TypeCheckerFamily
 trait PrettyPrinterFamily extends TransformationFamily[Expr, String] {
   self =>
 
+  def compiler: CompilerInterface = ???
   def components: List[PartialFunction[Expr, String]] =
     List(new IntLitPrettyPrinterComponent {
            def pprint: Expr => String = self.pprint
+           def compiler: CompilerInterface = ???
          },
          new AddPrettyPrinterComponent{
            def pprint: Expr => String = self.pprint
+           def compiler: CompilerInterface = ???
          },
          new MulPrettyPrinterComponent{
            def pprint: Expr => String = self.pprint
+           def compiler: CompilerInterface = ???
          })
 
   def pprint: Expr => String = family
@@ -249,15 +257,19 @@ trait TestCheckerFamily extends CheckerFamily[Expr] {
   def components: List[PartialFunction[Expr, Unit]] =
     List(new IntLitTestChecerComponent {
            def check: Expr => Unit = self.check
+           def compiler: CompilerInterface = ???
          },
          new AddTestCheckerComponent{
            def check: Expr => Unit = self.check
+           def compiler: CompilerInterface = ???
          },
          new MulTestCheckerComponent{
            def check: Expr => Unit = self.check
+           def compiler: CompilerInterface = ???
          })
 
   def check: Expr => Unit = family
+  def compiler: CompilerInterface = ???
 }
 
 object TestCheckerFamily extends TestCheckerFamily
@@ -281,9 +293,11 @@ trait SimpleTypeCheckerFamily extends TypeCheckerFamily {
   override def components: List[PartialFunction[Expr, Expr]] =
     List(new IntLitTypeCheckerComponent {
            def typeCheck: Expr => Expr = self.typeCheck
+           def compiler: CompilerInterface = ???
          },
          new AddTypeCheckerComponent{
            def typeCheck: Expr => Expr = self.typeCheck
+           def compiler: CompilerInterface = ???
          })
 }
 

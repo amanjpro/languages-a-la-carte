@@ -10,7 +10,7 @@ import sana.ooj.typechecker._
 
 
 
-trait DefTyperFamily extends TransformationFamily[Tree, Tree] {
+trait DefTyperFamilyApi extends TransformationFamily[Tree, Tree] {
   self =>
 
   override def default: Tree = NoTree
@@ -23,7 +23,8 @@ trait DefTyperFamily extends TransformationFamily[Tree, Tree] {
   def typed: Tree => Tree = family
 }
 
-object DefTyperFamily extends DefTyperFamily
+case class DefTyperFamily(compiler: CompilerInterface)
+  extends DefTyperFamilyApi
 
 
 

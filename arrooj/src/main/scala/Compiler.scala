@@ -7,6 +7,7 @@ import sana.ooj
 import sana.arrayj
 import sana.arrooj
 import sana.primj
+import tiny.core.CompilerInterface
 import tiny.core.Implicits._
 import tiny.settings.SanaConfig
 import tiny.ast.Tree
@@ -182,32 +183,49 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
       }
     }
 
+    // type-checking phases
+    private[this] lazy val symassigner = SymbolAssignerFamily(compiler)
+    private[this] lazy val namer       = NamerFamily(compiler)
+    private[this] lazy val deftyper    = DefTyperFamily(compiler)
+    private[this] lazy val typer       = TyperFamily(compiler)
+
+    def compiler: CompilerInterface = new CompilerInterface {
+      def typeCheck(tree: Tree): Tree =
+        symassigner.assign.join(
+          namer.name.join(deftyper.typed.join(typer.typed)))(tree)
+      def parse(source: String*): Tree   = ???
+      def load(fname: String): Option[Tree]   = None
+      def unparse(tree: Tree): String = ???
+    }
+
     def compile: Tree => Unit = {
       (x: Tree) => {
         val constantFolder = (t: Tree) => {
-          val (tc, env) = ConstantCollectingFamily.collect((t, Env.emptyEnv))
-          val (tf, _)   = ConstantFoldingFamily.constantFold((tc, env))
+          val (tc, env) = ConstantCollectingFamily(compiler)
+            .collect((t, Env.emptyEnv))
+          val (tf, _)   = ConstantFoldingFamily(compiler).constantFold((tc, env))
           tf
         }
         val labelChecker = (t: Tree) =>
-          LabelNameCheckerFamily.check((t, Nil))
+          LabelNameCheckerFamily(compiler).check((t, Nil))
         val jumpChecker = (t: Tree) =>
-          JumpCheckerFamily.check((t, Nil))
+          JumpCheckerFamily(compiler).check((t, Nil))
         val forwardRefChecker = (t: Tree) =>
-          ForwardRefCheckerFamily.check((t, Nil))
+          ForwardRefCheckerFamily(compiler).check((t, Nil))
         val constructorsChecker = (t: Tree) =>
-          ConstructorsCheckerFamily.check((t, new ConstructorCheckerEnv))
+          ConstructorsCheckerFamily(compiler).check(
+            (t, new ConstructorCheckerEnv))
         val flowAnalyzer = (t: Tree) => {
-          FlowCorrectnessCheckerFamily.check((t, new FlowEnv))
+          FlowCorrectnessCheckerFamily(compiler).check((t, new FlowEnv))
           t
         }
 
-        val f = SymbolAssignerFamily.assign join
-                  NamerFamily.name join
-                    DefTyperFamily.typed join
+        val f = symassigner.assign join
+                  namer.name join
+                    deftyper.typed join
                       constantFolder join
-                        TyperFamily.typed join
-                          ShapeCheckerFamily.check join
+                        typer.typed join
+                          ShapeCheckerFamily(compiler).check join
                             labelChecker join
                               jumpChecker join
                                 forwardRefChecker join

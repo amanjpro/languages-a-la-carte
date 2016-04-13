@@ -11,7 +11,7 @@ import sana.ooj.eval._
 
 
 
-trait ConstantFoldingFamily
+trait ConstantFoldingFamilyApi
   extends TransformationFamily[(Tree, Env), (Tree, Env)] {
   self =>
 
@@ -24,7 +24,8 @@ trait ConstantFoldingFamily
   def constantFold: ((Tree, Env)) => (Tree, Env) = family
 }
 
-object ConstantFoldingFamily extends ConstantFoldingFamily
+case class ConstantFoldingFamily(compiler: CompilerInterface)
+  extends ConstantFoldingFamilyApi
 
 
 

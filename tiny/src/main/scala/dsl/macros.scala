@@ -152,6 +152,7 @@ object MacroImpls {
       val clazzName = TypeName(tree + commonNameString)
       q"""
         new $clazzName {
+          def compiler = self.compiler
           def $cbName = self.$cbName
         }
       """

@@ -11,7 +11,7 @@ import sana.calcj.typechecker._
 
 
 
-trait PrimjShapeCheckerFamily extends CheckerFamily[Tree] {
+trait PrimjShapeCheckerFamilyApi extends CheckerFamily[Tree] {
   self =>
 
   override def default: Unit = ()
@@ -24,7 +24,8 @@ trait PrimjShapeCheckerFamily extends CheckerFamily[Tree] {
   def check: Tree => Unit = family
 }
 
-object PrimjShapeCheckerFamily extends PrimjShapeCheckerFamily
+case class PrimjShapeCheckerFamily(compiler: CompilerInterface)
+  extends PrimjShapeCheckerFamilyApi
 
 
 

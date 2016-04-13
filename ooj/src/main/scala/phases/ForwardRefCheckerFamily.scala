@@ -10,7 +10,7 @@ import sana.ooj.typechecker._
 
 
 
-trait ForwardRefCheckerFamily extends CheckerFamily[(Tree, List[Symbol])] {
+trait ForwardRefCheckerFamilyApi extends CheckerFamily[(Tree, List[Symbol])] {
   self =>
 
   override def default: Unit = ()
@@ -23,7 +23,8 @@ trait ForwardRefCheckerFamily extends CheckerFamily[(Tree, List[Symbol])] {
   def check: ((Tree, List[Symbol])) => Unit = family
 }
 
-object ForwardRefCheckerFamily extends ForwardRefCheckerFamily
+case class ForwardRefCheckerFamily(compiler: CompilerInterface)
+  extends ForwardRefCheckerFamilyApi
 
 
 

@@ -1,7 +1,7 @@
 package ch.usi.inf.l3.sana.tiny
 
 
-import ch.usi.inf.l3.sana.tiny.core.LanguageModule
+import ch.usi.inf.l3.sana.tiny.core.{LanguageModule, CompilerInterface}
 import source.{SourceReader, SourceFile}
 import parsers.Parser
 import ast.Tree
@@ -29,6 +29,7 @@ trait CompilerApi[Input, Output] {
 
   trait Language extends LanguageModule[Input, Output] {
     def init(): Unit
+    def compiler: CompilerInterface
     def compile: Input => Output
   }
 

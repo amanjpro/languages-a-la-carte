@@ -12,7 +12,7 @@ import sana.arrooj.typechecker._
 
 
 
-trait FlowCorrectnessCheckerFamily extends
+trait FlowCorrectnessCheckerFamilyApi extends
   TransformationFamily[(Tree, FlowEnv), CompletenessStatus] {
   self =>
 
@@ -27,8 +27,8 @@ trait FlowCorrectnessCheckerFamily extends
   def check: ((Tree, FlowEnv)) => CompletenessStatus = family
 }
 
-object FlowCorrectnessCheckerFamily extends
-  FlowCorrectnessCheckerFamily
+case class FlowCorrectnessCheckerFamily(compiler: CompilerInterface) extends
+  FlowCorrectnessCheckerFamilyApi
 
 
 

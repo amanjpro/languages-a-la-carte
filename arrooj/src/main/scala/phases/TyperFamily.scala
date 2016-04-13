@@ -25,7 +25,7 @@ import sana.ooj.typechecker.{SelectTyperComponent => _,
 import sana.arrooj.typechecker._
 
 
-trait TyperFamily extends TransformationFamily[Tree, Tree] {
+trait TyperFamilyApi extends TransformationFamily[Tree, Tree] {
   self =>
 
   override def default: Tree = NoTree
@@ -37,7 +37,7 @@ trait TyperFamily extends TransformationFamily[Tree, Tree] {
   def typed: Tree => Tree = family
 }
 
-object TyperFamily extends TyperFamily
+case class TyperFamily(compiler: CompilerInterface) extends TyperFamilyApi
 
 
 

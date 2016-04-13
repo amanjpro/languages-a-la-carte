@@ -35,9 +35,11 @@ trait PhaseComponent[P, R] extends PartialFunction[P, R] {
   type Input  = P
   type Output = R
 
+  def compiler: CompilerInterface
+
   def point(r: R): PhaseComponent[P, R] = new PhaseComponent[P, R] {
     def apply(p: P): R = r
-
+    val compiler: CompilerInterface = self.compiler
     def isDefinedAt(p: P): Boolean = true
   }
 
@@ -46,7 +48,7 @@ trait PhaseComponent[P, R] extends PartialFunction[P, R] {
   def flatMap[T](other: R => PhaseComponent[P, T]): PhaseComponent[P, T] = {
     new PhaseComponent[P, T] {
       def apply(p: P): T = other(self(p)).apply(p)
-
+      val compiler: CompilerInterface = self.compiler
       def isDefinedAt(p: P): Boolean = self.isDefinedAt(p)
     }
   }

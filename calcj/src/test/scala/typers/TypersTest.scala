@@ -29,6 +29,7 @@ class TyperTest extends FlatSpec with Matchers {
     self =>
 
     override def default: Tree = NoTree
+    def compiler: CompilerInterface = ???
 
     def components: List[PartialFunction[Tree, Tree]] =
       generateComponents[Tree, Tree](langs,

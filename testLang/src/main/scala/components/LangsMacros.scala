@@ -147,6 +147,7 @@ trait TypeCheckerFamily extends TransformationFamily[Expr, Expr] {
   self =>
 
   override def default: Expr = NoExpr
+  def compiler: CompilerInterface = ???
 
   def components: List[PartialFunction[Expr, Expr]] =
     generateComponents[Expr, Expr](ComplexLangs.langs,
@@ -160,6 +161,7 @@ object TypeCheckerFamily extends TypeCheckerFamily
 trait PrettyPrinterFamily extends TransformationFamily[Expr, String] {
   self =>
 
+  def compiler: CompilerInterface = ???
   def components: List[PartialFunction[Expr, String]] =
     generateComponents[Expr, String](ComplexLangs.langs,
       "PrettyPrinterComponent", "pprint", "")
@@ -174,6 +176,7 @@ trait TestCheckerFamily extends CheckerFamily[Expr] {
   self =>
 
   override def default: Unit = println("Tree not supported")
+  def compiler: CompilerInterface = ???
 
   def components: List[PartialFunction[Expr, Unit]] =
     generateComponents[Expr, Unit](ComplexLangs.langs,
@@ -189,6 +192,7 @@ object TestCheckerFamily extends TestCheckerFamily
 // A complex language module
 trait ComplexExprLang extends LanguageModule[Expr, String] {
 
+  def compiler: CompilerInterface = ???
   def compile: Expr => String = {
     TypeCheckerFamily.typeCheck join TestCheckerFamily.check join PrettyPrinterFamily.pprint
   }

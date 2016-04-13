@@ -14,7 +14,7 @@ import sana.ooj.namers._
 
 
 
-trait NamerFamily extends TransformationFamily[Tree, Tree] {
+trait NamerFamilyApi extends TransformationFamily[Tree, Tree] {
   self =>
 
   override def default: Tree = NoTree
@@ -29,7 +29,7 @@ trait NamerFamily extends TransformationFamily[Tree, Tree] {
   def name: Tree => Tree = family
 }
 
-object NamerFamily extends NamerFamily
+case class NamerFamily(compiler: CompilerInterface) extends NamerFamilyApi
 
 
 

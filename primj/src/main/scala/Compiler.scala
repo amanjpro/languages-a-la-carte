@@ -4,6 +4,7 @@ import ch.usi.inf.l3.sana
 import sana.tiny
 import sana.primj
 import tiny.settings.SanaConfig
+import tiny.core.CompilerInterface
 import tiny.core.Implicits._
 import tiny.ast.Tree
 import tiny.source.SourceReader
@@ -40,20 +41,35 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
     Language.compile
   }
 
+
   object Language extends super.Language {
     def init(): Unit = {
       SymbolUtils.standardDefinitions.foreach { s =>
         ProgramSymbol.declare(s)
       }
     }
+
+    // type-checking phases
+    private[this] lazy val symassigner = PrimjSymbolAssignerFamily(compiler)
+    private[this] lazy val namer       = PrimjNamerFamily(compiler)
+    private[this] lazy val typer       = PrimjTyperFamily(compiler)
+
+    def compiler: CompilerInterface = new CompilerInterface {
+      def typeCheck(tree: Tree): Tree =
+        symassigner.assign.join(namer.name.join(typer.typed))(tree)
+      def load(fname: String): Option[Tree]   = None
+      def parse(source: String*): Tree   = ???
+      def unparse(tree: Tree): String   = ???
+    }
+
     def compile: Tree => Unit = {
       init()
       (x: Tree) => {
         val f =
-          (PrimjSymbolAssignerFamily.assign join
-            (PrimjNamerFamily.name join
-              (PrimjTyperFamily.typed join
-                (PrimjShapeCheckerFamily.check))))
+          (symassigner.assign join
+            (namer.name join
+              (typer.typed join
+                (PrimjShapeCheckerFamily(compiler).check))))
         f(x)
       }
     }

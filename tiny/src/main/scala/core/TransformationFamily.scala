@@ -4,6 +4,7 @@ trait PhaseFamily[P, R] {
   self =>
 
   def default: R = ???
+  def compiler: CompilerInterface
 
   def components: List[PartialFunction[P, R]]
 

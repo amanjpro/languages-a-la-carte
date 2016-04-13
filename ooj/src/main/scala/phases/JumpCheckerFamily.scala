@@ -14,7 +14,7 @@ import sana.ooj.typechecker._
 
 
 
-trait JumpCheckerFamily extends CheckerFamily[(Tree, List[Tree])] {
+trait JumpCheckerFamilyApi extends CheckerFamily[(Tree, List[Tree])] {
   self =>
 
   override def default: Unit = ()
@@ -27,7 +27,8 @@ trait JumpCheckerFamily extends CheckerFamily[(Tree, List[Tree])] {
   def check: ((Tree, List[Tree])) => Unit = family
 }
 
-object JumpCheckerFamily extends JumpCheckerFamily
+case class JumpCheckerFamily(compiler: CompilerInterface)
+  extends JumpCheckerFamilyApi
 
 
 

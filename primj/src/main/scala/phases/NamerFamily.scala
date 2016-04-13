@@ -10,7 +10,7 @@ import sana.primj.namers._
 
 
 
-trait PrimjNamerFamily extends TransformationFamily[Tree, Tree] {
+trait PrimjNamerFamilyApi extends TransformationFamily[Tree, Tree] {
   self =>
 
   override def default: Tree = NoTree
@@ -24,7 +24,8 @@ trait PrimjNamerFamily extends TransformationFamily[Tree, Tree] {
   def name: Tree => Tree = family
 }
 
-object PrimjNamerFamily extends PrimjNamerFamily
+case class PrimjNamerFamily(compiler: CompilerInterface)
+  extends PrimjNamerFamilyApi
 
 
 

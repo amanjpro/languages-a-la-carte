@@ -17,7 +17,7 @@ import sana.ooj.namers._
 
 
 
-trait SymbolAssignerFamily
+trait SymbolAssignerFamilyApi
   extends TransformationFamily[Tree, Tree] {
   self =>
 
@@ -31,4 +31,5 @@ trait SymbolAssignerFamily
   def assign: Tree => Tree = family
 }
 
-object SymbolAssignerFamily extends SymbolAssignerFamily
+case class SymbolAssignerFamily(compiler: CompilerInterface)
+  extends SymbolAssignerFamilyApi
