@@ -35,3 +35,12 @@ trait CompilationUnitSymbolAssignerComponent extends SymbolAssignerComponent {
     TreeCopiers.copyCompilationUnit(cunit)(imports = imports, module = pkg)
   }
 }
+
+@component
+trait CompilationUnitSymbolAssignerComponent extends SymbolAssignerComponent {
+  (imprt: ImportApi)     => {
+    imprt.owner.foreach(owner => imprt.qual = owner)
+    val qual = assign(imprt.qual).asInstanceOf[UseTree]
+    TreeCopiers.copyImport(imprt)(qual = qual)
+  }
+}
