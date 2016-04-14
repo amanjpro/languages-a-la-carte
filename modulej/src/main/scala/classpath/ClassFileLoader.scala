@@ -53,13 +53,15 @@ import scala.collection.mutable
 
 trait ClassFileLoaderApi {
 
-  def classPaths: List[JFile]
-  lazy val urls: List[URL] = classPaths.map(_.toURI.toURL)
-  def classLoader: SanaClassLoader =  new SanaClassLoader(urls.toArray)
+  protected def classPaths: List[JFile]
+  private[this] lazy val urls: Array[URL] =
+    classPaths.map(_.toURI.toURL).toArray
+  private[this] lazy val classLoader: SanaClassLoader =
+    new SanaClassLoader(urls)
 
 
-  def loadClass(name: String): ClassDefApi = {
-    val classData = classLoader.getResourceAsStream(name)
+  def loadClass(name: String): Tree = {
+    val classData    = classLoader.getResourceAsStream(name)
     val cr           = new ClassReader(classData)
     val reader       = new ClassFileParser(name)
     cr.accept(reader, 0)
@@ -70,7 +72,16 @@ trait ClassFileLoaderApi {
       TreeFactories.mkClassDef(reader.clazz.mods | COMPILED, reader.clazz.name,
               reader.clazz.parents, body)
     clazz.sourceName = reader.source
-    clazz
+    def toPackages(pkgs: List[String], member: Tree): Tree = pkgs match {
+      case Nil                             => member
+      case (x::Nil)                        =>
+        TreeFactories.mkPackageDef(Nil, Name(x), List(member))
+      case (x::xs)                         =>
+        val rest = toPackages(xs, member)
+        TreeFactories.mkPackageDef(Nil, Name(x), List(rest))
+    }
+
+    toPackages(name.split("[.]").toList.dropRight(1), clazz)
   }
 
 
