@@ -4,11 +4,21 @@ package ch.usi.inf.l3.sana.modulej.ast
 import ch.usi.inf.l3.sana
 import sana.ppj
 import sana.tiny
-import sana.primj
+import sana.ooj
 
 import tiny.ast.UseTree
+import ooj.ast.PackageDefApi
 
 trait TreeExtractors extends ppj.ast.TreeExtractors {
+  trait CompilationUnitExtractor {
+    def unapply(tree: CompilationUnitApi):
+      Option[(List[ImportApi], PackageDefApi,
+        String, List[String])] = tree match {
+      case null          => None
+      case _             =>
+        Some((tree.imports, tree.module, tree.sourceName, tree.sourcePath))
+    }
+  }
 
   trait ImportExtractor {
     def unapply(tree: ImportApi): Option[(UseTree, Boolean)] = tree match {
@@ -51,7 +61,6 @@ object TreeExtractors extends TreeExtractors {
   val ArrayTypeUse     = new ArrayTypeUseExtractor {}
   val ArrayCreation    = new ArrayCreationExtractor {}
 
-  val CompilationUnit  = new CompilationUnitExtractor {}
   val PackageDef       = new PackageDefExtractor {}
   val ClassDef         = new ClassDefExtractor {}
   val Template         = new TemplateExtractor {}
@@ -67,4 +76,5 @@ object TreeExtractors extends TreeExtractors {
   val Synchronized     = new SynchronizedExtractor {}
 
   val Import           = new ImportExtractor {}
+  val CompilationUnit  = new CompilationUnitExtractor {}
 }

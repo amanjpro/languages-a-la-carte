@@ -58,9 +58,7 @@ trait TreeCopiers {
 
   def copyProgram(template: ProgramApi)(members: List[Tree] =
     template.members): ProgramApi = {
-    val res = TreeFactories.mkProgram(members)
-    copyProperties(template, res)
-    res
+    TC.copyProgram(template)(members)
   }
 
   def copyCompilationUnit(template: CompilationUnitApi)(
