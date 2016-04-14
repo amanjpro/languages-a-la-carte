@@ -13,6 +13,7 @@ import primj.namers.SymbolAssignerComponent
 import modulej.ast._
 import ooj.ast.PackageDefApi
 import modulej.symbols.CompilationUnitSymbol
+import tiny.ast.UseTree
 import tiny.ast.Implicits._
 
 @component
@@ -37,9 +38,9 @@ trait CompilationUnitSymbolAssignerComponent extends SymbolAssignerComponent {
 }
 
 @component
-trait CompilationUnitSymbolAssignerComponent extends SymbolAssignerComponent {
+trait ImportSymbolAssignerComponent extends SymbolAssignerComponent {
   (imprt: ImportApi)     => {
-    imprt.owner.foreach(owner => imprt.qual = owner)
+    imprt.owner.foreach(owner => imprt.qual.owner = owner)
     val qual = assign(imprt.qual).asInstanceOf[UseTree]
     TreeCopiers.copyImport(imprt)(qual = qual)
   }
