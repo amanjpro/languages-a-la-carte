@@ -8,41 +8,37 @@ program
   ;
 
 schema
-  : decls
+  : cloudDataDecl* 
   ;
 
 // Types
+
+// TODO just use generic identifier and rely on type checking to rule out wrong
+// identifiers? Before we had entityIdent and arrayIdent now just ident. It
+// seems to be more sensible for this to be a type error rather than a parse
+// error.
+
 indexType
   : 'Int'
   | 'String'
-  | entityIdentifier
+  | Identifier // of array or 
   ;
 
-decls
-  : decl
-  | decl ';' decls
-  ;
-
-decl
+cloudDataDecl
   : entityDecl
   ;
 
+// Entities
 entityDecl
-  : 'entity' entityIdentifier '(' elements ')'
+  : 'entity' Identifier '(' elements ')'
   ;
 
 elements
-  : element ',' elements
-  | element
+  :   element (',' element)*
   ;
 
 element
   : Identifier ':' indexType
-  ;
-
-// Identifiers
-entityIdentifier
-  : Identifier
   ;
 
 // LEXER

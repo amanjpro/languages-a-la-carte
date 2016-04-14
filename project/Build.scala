@@ -134,5 +134,5 @@ object build extends Build {
 
 
   // Consistency language example
-  lazy val dcct        = project("dcct", Seq(primj), Seq(antlrSetting("dcct")))
+  lazy val dcct        = project("dcct", Seq(ooj), Seq(antlrSetting("dcct")))
 }

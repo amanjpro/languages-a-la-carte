@@ -6,10 +6,10 @@ import sana.core._
 import sana.core.Implicits._
 import sana.tiny.symbols.Symbol
 import sana.tiny.ast.{Tree, NoTree}
+import sana.dcct.DCCTNodes
 import sana.primj.PrimjNodes
 import sana.primj.namers._
-
-
+import sana.ooj.namers.ClassDefSymbolAssignerComponent
 
 
 trait DcctSymbolAssignerFamily
@@ -19,7 +19,7 @@ trait DcctSymbolAssignerFamily
   override def default: Tree = NoTree
 
   def components: List[PartialFunction[Tree, Tree]] =
-    generateComponents[Tree, Tree](PrimjNodes.nodes,
+    generateComponents[Tree, Tree](DCCTNodes.nodes,
       "SymbolAssignerComponent", "assign", "")
       // "Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal")
 

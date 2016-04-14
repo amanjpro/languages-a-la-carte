@@ -5,5 +5,6 @@ import tiny.symbols.Symbol
 import tiny.ast.Tree
 
 package object phases {
-  // type AssignerInput = (Tree, Option[Symbol])
+  // TODO Why was this commented?
+   type AssignerInput = (Tree, Option[Symbol])
 }

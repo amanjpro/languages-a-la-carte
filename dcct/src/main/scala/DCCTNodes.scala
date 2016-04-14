@@ -1,25 +1,15 @@
 package ch.usi.inf.l3.sana.dcct
 
-
+// TODO add the rest here later.
 object DCCTNodes {
   final val nodes =
     """Program,
-       MethodDef,
+       ClassDef, 
        ValDef,
        Ident,
-       TypeUse,
-       If,
-       While,
-       For,
-       Ternary,
-       Apply,
-       Return,
-       Assign,
-       Cast,
-       Binary,
-       Unary,
-       Literal"""
-
+       TypeUse
+       """
+// TODO should EntityDef be ClassDef?
 
 }
 

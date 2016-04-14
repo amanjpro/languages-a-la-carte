@@ -4,6 +4,7 @@ import ch.usi.inf.l3.sana
 import sana.tiny
 import sana.calcj
 import sana.primj
+import sana.ooj
 import sana.dcct
 import tiny.source.{SourceFile, Position}
 import tiny.symbols._
@@ -19,6 +20,9 @@ import primj.ast.TreeFactories._
 import dcct.antlr._
 import primj.modifiers._
 import primj.modifiers.Ops._
+import ooj.ast._
+import ooj.ast.TreeFactories._
+
 
 import org.antlr.v4.runtime.misc.NotNull
 import org.antlr.v4.runtime.ParserRuleContext
@@ -27,7 +31,11 @@ import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor
 
 import scala.collection.JavaConverters._
 
-class Parser extends parsers.Parser {
+// TODO not sure in general whether to use ooj or primj versions of 
+// tree factories
+
+
+class Parser extends tiny.parsers.Parser {
 
 
   def parse(source: SourceFile): Tree = {
@@ -36,8 +44,8 @@ class Parser extends parsers.Parser {
     logger.debug(tree.toString)
     // Program(tree, None, source.name)
     tree match {
-      case program: ProgramApi =>
-        TreeCopiers.copyProgram(program)(sourceName = source.name)
+      case program: primj.ast.ProgramApi =>
+        primj.ast.TreeCopiers.copyProgram(program)(sourceName = source.name)
       case _                => tree
     }
   }
@@ -64,9 +72,9 @@ class Parser extends parsers.Parser {
       }
       (e1, op) match {
         case (e: Expr, op: POp) if isPostfix =>
-          mkUnary(true, op, e, pos(ctx))
+          primj.ast.TreeFactories.mkUnary(true, op, e, pos(ctx))
         case (e: Expr, op: UOp) =>
-          mkUnary(false, op, e, pos(ctx))
+          primj.ast.TreeFactories.mkUnary(false, op, e, pos(ctx))
         case _                  =>
           // TODO: report an error
           throw new Exception(
@@ -101,52 +109,70 @@ class Parser extends parsers.Parser {
       val e2 = visit(es.get(1))
       (e1, e2) match {
         case (x: Expr, y: Expr) =>
-          mkBinary(x, op, y, pos(ctx))
+          primj.ast.TreeFactories.mkBinary(x, op, y, pos(ctx))
         case _                  =>
           // TODO: report an error
           throw new Exception("Expression is expected but got: " + e1 + " " + e2)
       }
     }
     
+    /**
+     * Extract defs from the scehema and return the program tree containing them.
+     */
     override def visitProgram(@NotNull ctx: DcctParser.ProgramContext): Tree = {
-      visitChildren(ctx)
+      logger.info("Visiting program...")
+      // Extract entity and array defs from schema
+      val cloudTypeDefs = ctx.schema().cloudDataDecl().asScala.toList.map {
+        // I expect definitely an entity def here "currently"
+        child => visit(child).asInstanceOf[ClassDefApi]
+      }
+     primj.ast.TreeFactories.mkProgram(cloudTypeDefs, source)
+      // visitChildren(ctx)
     }
 
     override def visitSchema(@NotNull ctx: DcctParser.SchemaContext): Tree = {
+      logger.info("Visiting schema...")
+      // I kind of skip this?
       visitChildren(ctx)
     }
-
 
     override def visitIndexType(@NotNull ctx: DcctParser.IndexTypeContext): Tree = {
+      // TODO not sure what to do here either! 
       visitChildren(ctx)
     }
 
-    override def visitDecls(@NotNull ctx: DcctParser.DeclsContext): Tree = {
-      visitChildren(ctx)
-    }
-
-
-    override def visitDecl(@NotNull ctx: DcctParser.DeclContext): Tree = {
+    override def visitCloudDataDecl(@NotNull ctx: DcctParser.CloudDataDeclContext): Tree = {
       visitChildren(ctx)
     }
 
 
     override def visitEntityDecl(@NotNull ctx: DcctParser.EntityDeclContext): Tree = {
+      // Should give me the ident name?
+      val entityIdent = ctx.Identifier().getText
+      val elements = ctx.elements().element().asScala.toList.map {
+        element => visit(element).asInstanceOf[ValDefApi] // correct type?
+      }
+      // TODO first parameter is flags. Figure out what I should put there.
+      // TODO 4th param is body, put properties there later.
+      mkClassDef(null, Name(entityIdent), null, null)
       visitChildren(ctx)
     }
     
     override def visitElements(@NotNull ctx: DcctParser.ElementsContext): Tree = {
+      // TODO not sure what to do here either
       visitChildren(ctx)
     }
 
     
     override def visitElement(@NotNull ctx: DcctParser.ElementContext): Tree = {
-      visitChildren(ctx)
+      val elemIdent = ctx.Identifier()
+      val elemType = ctx.indexType()
+      
+      val tpe = primj.ast.TreeFactories.mkTypeUse(Name(elemType.getText), pos(ctx))
+      val name = Name(ctx.Identifier.getText)
+      ooj.ast.TreeFactories.mkValDef(Flags(PARAM), tpe, name, NoTree, pos(ctx))
     }
 
-    override def visitEntityIdentifier(@NotNull ctx: DcctParser.EntityIdentifierContext): Tree = {
-      visitChildren(ctx)
-    }
 
 //    override def visitAssign(@NotNull ctx: DcctParser.AssignContext): Tree = {
 //      val name   = ctx.Identifier.getText

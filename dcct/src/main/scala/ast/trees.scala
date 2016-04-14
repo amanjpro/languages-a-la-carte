@@ -92,8 +92,8 @@ import primj.types._
  */
 trait ArrayDefApi extends NamedTree {
   def name: Name
-  def indices: List[TypeUseApi]
-  def properties: List[Expr] // TODO not sure about the type here.
+  def indices: List[UseTree]
+  def properties: List[Expr] 
   
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
     val r1 = indices.foldLeft(z)((z, y) => {
@@ -180,10 +180,10 @@ trait ForEachApi extends Expr {
 protected[ast] class ForEach(val inits: List[Tree], val allOrEntries: primj.ast.ApplyApi,
   val cond: Expr, val body: Expr) extends ForEachApi {
   override def toString: String =
-    s"For($inits, $cond, $allOrEntries, $body)"
+    s"ForEach($inits, $cond, $allOrEntries, $body)"
 }
 
-protected[ast] class ArrayDef(val name: Name, val indices: List[TypeUseApi], val properties: List[Expr]) extends ArrayDefApi {
+protected[ast] class ArrayDef(val name: Name, val indices: List[UseTree], val properties: List[Expr]) extends ArrayDefApi {
   override def toString: String =
     s"Array$indices,$properties)"
 } 
