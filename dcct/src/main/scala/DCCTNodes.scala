@@ -4,7 +4,8 @@ package ch.usi.inf.l3.sana.dcct
 object DCCTNodes {
   final val nodes =
     """Program,
-       ClassDef, 
+       ClassDef,
+       Template, 
        ValDef,
        Ident,
        TypeUse

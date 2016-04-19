@@ -7,24 +7,25 @@ import sana.core.Implicits._
 import sana.tiny.ast.{Tree, NoTree}
 import sana.primj.PrimjNodes
 import sana.primj.namers._
+import sana.ooj.namers.{TemplateSymbolAssignerComponent, ClassDefSymbolAssignerComponent, ClassDefNamerComponent, TemplateNamerComponent}
 
 
 
-trait PrimjNamerFamily extends TransformationFamily[Tree, Tree] {
+trait DcctNamerFamily extends TransformationFamily[Tree, Tree] {
   self =>
 
   override def default: Tree = NoTree
 
   def components: List[PartialFunction[Tree, Tree]] =
     generateComponents[Tree, Tree](
-      "Program,MethodDef,ValDef,TypeUse,Ident",
+      "Program,ClassDef,Template,ValDef,TypeUse,Ident",
       "NamerComponent", "name", "")
       // "Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal")
 
   def name: Tree => Tree = family
 }
 
-object PrimjNamerFamily extends PrimjNamerFamily
+object DcctNamerFamily extends DcctNamerFamily
 
 
 

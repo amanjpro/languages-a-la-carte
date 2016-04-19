@@ -41,7 +41,8 @@ class Parser extends tiny.parsers.Parser {
   def parse(source: SourceFile): Tree = {
     val tree = new DcctVisitor(source.name,
       source.lines).visit(source.content)
-    logger.debug(tree.toString)
+    println(tree)
+    logger.info(s"[PARSE TREE]\n $tree")
     // Program(tree, None, source.name)
     tree match {
       case program: primj.ast.ProgramApi =>
@@ -120,10 +121,12 @@ class Parser extends tiny.parsers.Parser {
      * Extract defs from the scehema and return the program tree containing them.
      */
     override def visitProgram(@NotNull ctx: DcctParser.ProgramContext): Tree = {
-      logger.info("Visiting program...")
+      logger.info("Parsing program started...")
       // Extract entity and array defs from schema
+      // TODO handle nonexistence of schema!
       val cloudTypeDefs = ctx.schema().cloudDataDecl().asScala.toList.map {
         // I expect definitely an entity def here "currently"
+        // TODO handke emptiness of cloud data decls
         child => visit(child).asInstanceOf[ClassDefApi]
       }
      primj.ast.TreeFactories.mkProgram(cloudTypeDefs, source)
@@ -142,7 +145,7 @@ class Parser extends tiny.parsers.Parser {
     }
 
     override def visitCloudDataDecl(@NotNull ctx: DcctParser.CloudDataDeclContext): Tree = {
-      visitChildren(ctx)
+      visit(ctx.entityDecl())
     }
 
 
@@ -154,8 +157,7 @@ class Parser extends tiny.parsers.Parser {
       }
       // TODO first parameter is flags. Figure out what I should put there.
       // TODO 4th param is body, put properties there later.
-      mkClassDef(null, Name(entityIdent), null, null)
-      visitChildren(ctx)
+      mkClassDef(noflags, Name(entityIdent), Nil, mkTemplate(elements, pos(ctx)), pos(ctx))
     }
     
     override def visitElements(@NotNull ctx: DcctParser.ElementsContext): Tree = {
@@ -170,6 +172,16 @@ class Parser extends tiny.parsers.Parser {
       
       val tpe = primj.ast.TreeFactories.mkTypeUse(Name(elemType.getText), pos(ctx))
       val name = Name(ctx.Identifier.getText)
+      // Param here indicates that the entity we are currently processing is weak,
+      // and when the entity it is dependent on is removed (any ValDef with PARAM) 
+      // flag, we have to delete this entity as well. 
+      
+      // TODO we have a problem here, maybe I want to pass parameters as well as a 
+      // dependency! the language under question does not allow that, however, I will
+      // ignore that for now, and later will distinguish between these two by
+      // defining a new flag. In this case PARAM will be a parameter, 
+      // DEPENDENCY will be the dependency!
+      
       ooj.ast.TreeFactories.mkValDef(Flags(PARAM), tpe, name, NoTree, pos(ctx))
     }
 
