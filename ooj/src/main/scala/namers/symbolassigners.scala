@@ -127,7 +127,37 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
     }
     val sym = createClassSymbol(clazz, owner)
     clazz.symbol = sym
-    val template = {
+    val template = addDefaultConstructor(clazz, sym)
+    classDoubleDefCheck(owner, clazz.name, clazz.pos)
+    owner.foreach(_.declare(sym))
+    TreeCopiers.copyClassDef(clazz)(parents = parents, body = template)
+  }
+
+
+  protected def createClassSymbol(clazz: ClassDefApi,
+    owner: Option[Symbol]): ClassSymbol = owner match {
+      case Some(cunit: CompilationUnitSymbol)
+            if Some(clazz.name.asString) != clazz.sourceName              =>
+        ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
+      case Some(cunit: CompilationUnitSymbol)                             =>
+        val s = ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
+        cunit.owner.foreach(_.declare(s))
+        s
+      case _                                                              =>
+        ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
+    }
+
+  protected def classDoubleDefCheck(owner: Option[Symbol],
+    name: Name, pos: Option[Position]): Unit = owner match {
+    case Some(owner) if owner.directlyDefinesName(name,
+                               _.isInstanceOf[ClassSymbol])     =>
+      error(CLASS_ALREADY_DEFINED,
+          "", "", pos)
+    case _                                                      =>
+      ()
+  }
+  
+  protected def addDefaultConstructor(clazz: ClassDefApi, sym: ClassSymbol ): TemplateApi = {
       val shouldCreateConstructor =
         !(clazz.body.members.exists(isConstructor(_))) &&
           ! clazz.mods.isInterface
@@ -158,34 +188,6 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
           assign(temp).asInstanceOf[TemplateApi]
       }
     }
-    classDoubleDefCheck(owner, clazz.name, clazz.pos)
-    owner.foreach(_.declare(sym))
-    TreeCopiers.copyClassDef(clazz)(parents = parents, body = template)
-  }
-
-
-  protected def createClassSymbol(clazz: ClassDefApi,
-    owner: Option[Symbol]): ClassSymbol = owner match {
-      case Some(cunit: CompilationUnitSymbol)
-            if Some(clazz.name.asString) != clazz.sourceName              =>
-        ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
-      case Some(cunit: CompilationUnitSymbol)                             =>
-        val s = ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
-        cunit.owner.foreach(_.declare(s))
-        s
-      case _                                                              =>
-        ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
-    }
-
-  protected def classDoubleDefCheck(owner: Option[Symbol],
-    name: Name, pos: Option[Position]): Unit = owner match {
-    case Some(owner) if owner.directlyDefinesName(name,
-                               _.isInstanceOf[ClassSymbol])     =>
-      error(CLASS_ALREADY_DEFINED,
-          "", "", pos)
-    case _                                                      =>
-      ()
-  }
 
   protected def constructorName: Name       = StdNames.CONSTRUCTOR_NAME
   protected def voidSymbol: Option[Symbol]  = Some(VoidSymbol)

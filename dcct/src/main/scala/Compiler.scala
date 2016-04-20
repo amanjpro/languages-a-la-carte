@@ -138,8 +138,8 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
         //        (PrimjShapeCheckerFamily.check))))
 
         val f =
-          ( (DcctSymbolAssignerFamily.assign) join
-            (DcctNamerFamily.name) )
+         ( ( (DcctSymbolAssignerFamily.assign) join
+            (DcctNamerFamily.name) ) join (DcctCodeGenFamily.codegen) )
 
         f(x)
       }

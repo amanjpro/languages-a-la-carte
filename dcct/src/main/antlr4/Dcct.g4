@@ -4,7 +4,7 @@ grammar Dcct;
 // Parser
 
 program
-  : schema ';'EOF
+  : schema EOF
   ;
 
 schema

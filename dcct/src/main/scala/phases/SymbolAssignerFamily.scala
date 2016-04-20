@@ -8,7 +8,8 @@ import sana.tiny.symbols.Symbol
 import sana.tiny.ast.{Tree, NoTree}
 import sana.dcct.DCCTNodes
 import sana.primj.namers._
-import sana.ooj.namers.{TemplateSymbolAssignerComponent, ClassDefSymbolAssignerComponent}
+import sana.ooj.namers.TemplateSymbolAssignerComponent
+import sana.dcct.namers._
 
 
 trait DcctSymbolAssignerFamily

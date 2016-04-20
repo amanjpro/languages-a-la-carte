@@ -14,6 +14,7 @@ import tiny.ast._
 import tiny.symbols._
 import tiny.ast.Implicits._
 import tiny.source.Position
+import tiny.debug.logger
 import calcj.ast._
 import calcj.ast.operators.{Inc, Dec}
 import tiny.errors.ErrorReporting.{error,warning}
@@ -52,7 +53,9 @@ trait EntityCodeGenComponent  extends CodeGenComponent{
     val entityDef = entity.body.members.foldLeft(s"CREATE TABLE $entity.name (")( (c, x) => {
       val field = x.asInstanceOf[ValDefApi]
       val fName = field.name
-      val fType = field.tpt.asInstanceOf[TypeTree].name
+      logger.info(s"field name $fName")
+      val fType = field.tpt.asInstanceOf[TypeUseApi].name
+      logger.info(s"field type $fType")
       fName + " " + fType + "\n"
     })
   entityDef + " )"
