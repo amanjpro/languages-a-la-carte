@@ -32,16 +32,17 @@ trait CodeGenComponent extends TransformationComponent[Tree, String] {
   def codegen: Tree => String
 }
 
-
+// TODO move the task of formatting strings to some other module or something!
 @component 
 trait ProgramCodeGenComponent  extends CodeGenComponent{
   (prg: primj.ast.ProgramApi) => {
     val dataDefScript = prg.members.foldLeft("")((c,x) => c + codegen(x) + "\n")
-    
-    s"DROP KEYSPACE IF EXISTS $prg.sourceName \n" +
-    s"CREATE KEYSPACE $prg.sourceName \n" +
+    val prgName = prg.sourceName.toString()
+    val keyspaceName = prgName.substring(prgName.lastIndexOf("/") + 1, prgName.lastIndexOf("."))
+    s"DROP KEYSPACE IF EXISTS $keyspaceName \n" +
+    s"CREATE KEYSPACE $keyspaceName \n" +
     "WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 3}; \n" + 
-    s"USE $prg.sourceName; \n" + 
+    s"USE $keyspaceName; \n" + 
     dataDefScript
   }
 }
@@ -50,14 +51,12 @@ trait ProgramCodeGenComponent  extends CodeGenComponent{
 @component 
 trait EntityCodeGenComponent  extends CodeGenComponent{
   (entity: ooj.ast.ClassDefApi) => {
-    val entityDef = entity.body.members.foldLeft(s"CREATE TABLE $entity.name (")( (c, x) => {
+    val entityDef = entity.body.members.foldLeft(s"CREATE TABLE ${entity.name} (\n")( (c, x) => {
       val field = x.asInstanceOf[ValDefApi]
       val fName = field.name
-      logger.info(s"field name $fName")
-      val fType = field.tpt.asInstanceOf[TypeUseApi].name
-      logger.info(s"field type $fType")
-      fName + " " + fType + "\n"
+      val fType = field.tpt.asInstanceOf[TypeUseApi].name.toString().toLowerCase
+      c + "\t" + fName + " " + fType + ",\n"
     })
-  entityDef + " )"
+  entityDef + ")"
   }
 }
