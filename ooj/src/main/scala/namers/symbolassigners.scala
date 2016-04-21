@@ -127,7 +127,11 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
     }
     val sym = createClassSymbol(clazz, owner)
     clazz.symbol = sym
-    val template = addDefaultConstructor(clazz, sym)
+    val template = {
+      val temp = addDefaultConstructor(clazz, sym)
+      temp.owner        = sym
+      assign(temp).asInstanceOf[TemplateApi]
+    }
     classDoubleDefCheck(owner, clazz.name, clazz.pos)
     owner.foreach(_.declare(sym))
     TreeCopiers.copyClassDef(clazz)(parents = parents, body = template)
@@ -163,8 +167,7 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
           ! clazz.mods.isInterface
       shouldCreateConstructor match {
         case false               =>
-          clazz.body.owner = sym
-          assign(clazz.body).asInstanceOf[TemplateApi]
+          clazz.body
         case true                =>
           // TODO: Do we need to have a refactoring for creating constructors?
           // I would say yes!!!
@@ -182,10 +185,8 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
           val ret           = TreeFactories.mkTypeUse(clazz.name, clazz.pos)
           val const         = TreeFactories.mkMethodDef(mods, ret,
             constructorName, Nil, body, clazz.pos)
-          val temp          = TreeCopiers.copyTemplate(clazz.body)(members =
+          TreeCopiers.copyTemplate(clazz.body)(members =
             const::clazz.body.members)
-          temp.owner        = sym
-          assign(temp).asInstanceOf[TemplateApi]
       }
     }
 

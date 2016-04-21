@@ -6,7 +6,7 @@ import sana.primj
 import tiny.settings.{SanaConfig,CommandLineArgumentParser}
 import tiny.errors.ErrorReporting
 import tiny.debug.logger
-import typechecker._
+
 
 object Main {
   def processOptions(args: Array[String],
@@ -26,7 +26,6 @@ object Main {
 
 
     val config = processOptions(args, langName, langVersion,
-      //TODO Why this is the tiny framework name here?
         tiny.frameworkName) match {
       case Right(config) => config
       case Left(msg)     =>

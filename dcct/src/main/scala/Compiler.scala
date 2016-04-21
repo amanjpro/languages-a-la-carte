@@ -15,7 +15,8 @@ import tiny.modifiers.Flags
 import sana.primj.modifiers._
 import tiny.source.SourceReader
 import tiny.errors.ErrorReporting
-import primj.symbols.{ProgramSymbol, SymbolUtils, MethodSymbol, VoidSymbol, VariableSymbol}
+import tiny.debug.logger
+import primj.symbols.{ProgramSymbol, MethodSymbol, VoidSymbol, VariableSymbol}
 import primj.types.{ MethodType, VoidType }
 import ooj.symbols.{PackageSymbol, SymbolUtils, ClassSymbol}
 import ooj.modifiers._
@@ -23,6 +24,7 @@ import ooj.modifiers.Ops.noflags
 import ooj.names.StdNames
 import ooj.types.TypeUtils
 import ooj.eval.Env
+import dcct.symbols.SymbolUtils
 
 import dcct.phases._
 import dcct.antlr._
@@ -112,8 +114,10 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
       langPackageSymbol.declare(obj)
       javaPackageSymbol.declare(langPackageSymbol)
       ProgramSymbol.declare(javaPackageSymbol)
-
-      val tpe     = obj.tpe
+      dcct.symbols.SymbolUtils.standardDefinitions.foreach { x =>
+        ProgramSymbol.declare(x)
+      }
+//      val tpe     = obj.tpe
 
 
 
@@ -121,9 +125,11 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
 //        None, TypeUtils.stringClassType)
 // TODO I need to create new symbol utils and symbols for cloud types. 
       
-      ooj.symbols.SymbolUtils.standardDefinitions.foreach { s =>
-        ProgramSymbol.declare(s)
-      }
+//      ooj.symbols.SymbolUtils.standardDefinitions.foreach { s =>
+//        ProgramSymbol.declare(s)
+//      }
+//      
+      
     }
     def compile: Tree => Unit = {
       init()
@@ -141,7 +147,11 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
          ( ( (DcctSymbolAssignerFamily.assign) join
             (DcctNamerFamily.name) ) join (DcctCodeGenFamily.codegen) )
 
-        f(x)
+        val targetCode = f(x)
+        val targetFile = config.files.toList.head
+        logger.info(s"[TARGET CODE]\n $targetCode ")
+        logger.info(s"Writing target code to $targetFile")
+        
       }
     }
   }
