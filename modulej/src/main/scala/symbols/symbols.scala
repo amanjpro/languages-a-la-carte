@@ -8,29 +8,32 @@ import sana.tiny
 import tiny.symbols.Symbol
 
 object CompilationUnitSymbol {
-  private class CompilationUnitSymbolImpl(var imports: List[Symbol],
+  private class CompilationUnitSymbolImpl(
+    var importURIs: List[(Symbol, String)],
     var module: Option[Symbol],
     var sourceName: String, var sourcePath: List[String],
     var owner: Option[Symbol]) extends CompilationUnitSymbol
 
-  def apply(imports: List[Symbol], module: Option[Symbol], sourceName: String,
+  def apply(importURIs: List[(Symbol, String)],
+    module: Option[Symbol], sourceName: String,
     sourcePath: List[String], owner: Option[Symbol]): CompilationUnitSymbol =
-      new CompilationUnitSymbolImpl(imports, module,
+      new CompilationUnitSymbolImpl(importURIs, module,
         sourceName, sourcePath, owner)
 
 
   def unapply(sym: CompilationUnitSymbol):
-    Option[(List[Symbol], Option[Symbol], String,
+    Option[(List[(Symbol, String)], Option[Symbol], String,
       List[String], Option[Symbol])] =
     sym match {
       case null                    => None
       case _                       =>
-        Some((sym.imports, sym.module, sym.sourceName,
+        Some((sym.importURIs, sym.module, sym.sourceName,
           sym.sourcePath, sym.owner))
     }
 }
 
 
 trait CompilationUnitSymbol extends ooj.symbols.CompilationUnitSymbol {
-  var imports: List[Symbol]
+  // String is fully qualified uri for this import statement
+  var importURIs: List[(Symbol, String)]
 }
