@@ -1,17 +1,18 @@
-package ch.usi.inf.l3.sana.arrooj
+package ch.usi.inf.l3.sana.modulej
 
 import ch.usi.inf.l3.sana
 import sana.tiny
 import sana.calcj
 import sana.ooj
 import sana.arrayj
-import sana.arrooj
 import sana.primj
+import sana.modulej
+import sana.robustj
 import tiny.core.CompilerInterface
 import tiny.core.Implicits._
 import tiny.settings.SanaConfig
 import tiny.ast.Tree
-import tiny.ast.Implicits._
+import modulej.ast.Implicits._
 import tiny.types.Type
 import tiny.symbols.Symbol
 import tiny.modifiers.Flags
@@ -20,19 +21,19 @@ import tiny.errors.ErrorReporting
 import tiny.names.Name
 import calcj.types._
 import calcj.symbols._
-import primj.symbols.{ProgramSymbol, MethodSymbol, VariableSymbol, VoidSymbol}
-import primj.types._
-import primj.modifiers.{PARAM, FINAL}
-import arrooj.ast.TreeFactories
-import arrooj.symbols.SymbolUtils
-import arrooj.phases._
-import arrooj.types.TypeUtils
+import primj.symbols.ProgramSymbol
+import modulej.symbols.SymbolUtils
+import modulej.phases._
+import modulej.ast.TreeFactories
+import modulej.classpath.ClassPathLoader
+import robustj.types.TypeUtils
 import ooj.modifiers._
-import arrooj.parser.Parser
+import primj.modifiers._
+import modulej.parser.Parser
 import ooj.antlr.{Java1Parser, Java1Lexer}
 import ooj.symbols.{PackageSymbol, ClassSymbol}
 import ooj.modifiers.Ops.noflags
-import ooj.names.StdNames
+import robustj.names.StdNames
 import ooj.eval.Env
 import ooj.typechecker.{ConstructorCheckerEnv, FlowEnv}
 
@@ -43,11 +44,11 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
   self =>
 
 
-  def langName: String = arrooj.langName
-  def langVersion: String = arrooj.langVersion
+  def langName: String = modulej.langName
+  def langVersion: String = modulej.langVersion
   type ConfigType = SanaConfig
   def config: ConfigType
-  def parser: tiny.parsers.Parser = arrooj.parser.Parser
+  def parser: tiny.parsers.Parser = modulej.parser.Parser
 
   ErrorReporting.isTest = config.isTest
 
@@ -66,35 +67,10 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
 
   object Language extends super.Language {
     def init(): Unit = {
-      def singleParamConstructor(paramSymbol: Symbol,
-          owner: Symbol): MethodSymbol = {
-        val mods = PUBLIC_ACC | CONSTRUCTOR
-        val name = StdNames.CONSTRUCTOR_NAME
-        val cnstrTpe = Some(MethodType(VoidType, paramSymbol.tpe.toList))
-        val sym  = MethodSymbol(mods, name,
-            Some(VoidSymbol), Nil, cnstrTpe, Some(owner))
-        val psym    = VariableSymbol(PARAM | noflags,
-            Name("value"), Some(paramSymbol), Some(sym))
-        sym.params = List(psym)
-        sym
-      }
 
-      def createClassSymbol(name: Name, paramSym: Option[Symbol],
-              tpe: Type): ClassSymbol = {
-        val mods    = PUBLIC_ACC | FINAL
-        // val name    = StdNames.STRING_TYPE_NAME
-        val parents = List(SymbolUtils.objectClassSymbol)
-        val owner   = Some(SymbolUtils.langPackageSymbol)
-        // val tpe     = Some(TypeUtils.stringClassType)
-        val res     = ClassSymbol(mods, name, parents, owner, Some(tpe))
-        val cnstr   = paramSym match {
-          case None            =>
-            singleParamConstructor(res, res)
-          case Some(sym)       =>
-            singleParamConstructor(sym, res)
-        }
-        res.declare(cnstr)
-        res
+      
+      SymbolUtils.standardDefinitions.foreach { s =>
+        ProgramSymbol.declare(s)
       }
 
       val javaPackageSymbol: PackageSymbol = {
@@ -102,86 +78,14 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
         val owner = Some(ProgramSymbol)
         PackageSymbol(name, owner)
       }
+      ProgramSymbol.declare(javaPackageSymbol)
 
       val langPackageSymbol: PackageSymbol = {
         val name    = StdNames.LANG_PACKAGE_NAME
         val owner = Some(javaPackageSymbol)
         PackageSymbol(name, owner)
       }
-
-      val obj: ClassSymbol = {
-        val mods    = Flags(PUBLIC_ACC)
-        val name    = StdNames.OBJECT_TYPE_NAME
-        val parents = Nil
-        val owner   = Some(langPackageSymbol)
-        val tpe     = Some(TypeUtils.objectClassType)
-        val res = ClassSymbol(mods, name, parents, owner, tpe)
-        res
-      }
-      langPackageSymbol.declare(obj)
       javaPackageSymbol.declare(langPackageSymbol)
-      ProgramSymbol.declare(javaPackageSymbol)
-
-      val tpe     = obj.tpe
-      // cnstr tpe:
-      val cnstrTpe = Some(MethodType(VoidType, Nil))
-      val cnstr = MethodSymbol(PUBLIC_ACC | CONSTRUCTOR,
-        StdNames.CONSTRUCTOR_NAME, Some(VoidSymbol), Nil,
-        cnstrTpe, Some(obj))
-
-      // eqls tpe:
-      val eqlsTpe = Some(MethodType(BooleanType, tpe.toList))
-      val eqls = MethodSymbol(PUBLIC_ACC | noflags,
-        Name("equals"), Some(BooleanSymbol), Nil, eqlsTpe, Some(obj))
-      val psym    = VariableSymbol(PARAM | noflags,
-            Name("other"), Some(obj), Some(eqls))
-
-      eqls.params = List(psym)
-
-
-
-      val str = createClassSymbol(StdNames.STRING_TYPE_NAME,
-        None, TypeUtils.stringClassType)
-
-      val bool = createClassSymbol(StdNames.BOOLEAN_CLASS_NAME,
-        Some(BooleanSymbol), TypeUtils.booleanClassType)
-
-      val char = createClassSymbol(StdNames.CHARACTER_CLASS_NAME,
-        Some(CharSymbol), TypeUtils.characterClassType)
-
-      val int = createClassSymbol(StdNames.INTEGER_CLASS_NAME,
-        Some(IntSymbol), TypeUtils.integerClassType)
-
-      val long = createClassSymbol(StdNames.LONG_CLASS_NAME,
-        Some(LongSymbol), TypeUtils.longClassType)
-
-      val float = createClassSymbol(StdNames.FLOAT_CLASS_NAME,
-        Some(FloatSymbol), TypeUtils.floatClassType)
-
-      val double = createClassSymbol(StdNames.DOUBLE_CLASS_NAME,
-        Some(DoubleSymbol), TypeUtils.doubleClassType)
-
-      val toStrTpe = Some(MethodType(TypeUtils.stringClassType, Nil))
-      val toStr = MethodSymbol(Flags(PUBLIC_ACC),
-        Name("toString"), Some(str), Nil,
-        toStrTpe, Some(obj))
-
-
-      obj.declare(cnstr)
-      obj.declare(eqls)
-      obj.declare(toStr)
-      SymbolUtils.langPackageSymbol.declare(str)
-      SymbolUtils.langPackageSymbol.declare(bool)
-      SymbolUtils.langPackageSymbol.declare(char)
-      SymbolUtils.langPackageSymbol.declare(int)
-      SymbolUtils.langPackageSymbol.declare(long)
-      SymbolUtils.langPackageSymbol.declare(float)
-      SymbolUtils.langPackageSymbol.declare(double)
-
-
-      SymbolUtils.standardDefinitions.foreach { s =>
-        ProgramSymbol.declare(s)
-      }
     }
 
     // type-checking phases
@@ -191,14 +95,28 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
     private[this] lazy val typer       = TyperFamily(compiler)
 
     def compiler: CompilerInterface = new CompilerInterface {
+      val classpath =
+        config.classpath.toList.map(new java.io.File(_))
+      val loader    = new ClassPathLoader(classpath)
+
       def typeCheck(owner: Option[Symbol])(tree: Tree): Tree = {
         owner.foreach(tree.owner = _)
         symassigner.assign.join(
           namer.name.join(deftyper.typed.join(typer.typed)))(tree)
       }
-      def definesModule(module: String): Boolean = false
+      def definesModule(module: String): Boolean = {
+        loader.defines(module, false)
+      }
+
       def parse(source: String): Tree   = ???
-      def load(fname: String): Option[Tree]   = None
+
+      def load(fname: String): Option[Tree]   = {
+        val otree = loader.load(fname)
+        otree.map { tree =>
+          symassigner.assign.join(namer.name.join(deftyper.typed))(tree)
+        }
+      }
+
       def unparse(tree: Tree): String   = ???
     }
 
@@ -224,6 +142,10 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
           FlowCorrectnessCheckerFamily(compiler).check((t, new FlowEnv))
           t
         }
+        val exceptionHandlingChecker = (t: Tree) => {
+          ExceptionHandlingCheckerFamily(compiler).check((t, Nil))
+          t
+        }
 
         val f = symassigner.assign join
                   namer.name join
@@ -235,7 +157,8 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
                               jumpChecker join
                                 forwardRefChecker join
                                   constructorsChecker join
-                                    flowAnalyzer
+                                    flowAnalyzer join
+                                      exceptionHandlingChecker
         f(x)
       }
     }
