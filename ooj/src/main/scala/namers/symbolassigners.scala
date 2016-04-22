@@ -65,8 +65,10 @@ trait CompilationUnitSymbolAssignerComponent extends SymbolAssignerComponent {
       owner.declare(sym)
     })
     cunit.module.owner = sym
+    cunit.symbol       = sym
     val pkg            = assign(cunit.module).asInstanceOf[PackageDefApi]
     sym.module         = pkg.symbol
+    sym.owner.foreach(cunit.owner = _)
     TreeCopiers.copyCompilationUnit(cunit)(module = pkg)
   }
 }
@@ -75,21 +77,19 @@ trait CompilationUnitSymbolAssignerComponent extends SymbolAssignerComponent {
 trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
   (pkg: PackageDefApi) => {
     val owner = pkg.owner
-    val (newOwner, sym) = owner match {
-      case Some(cunit: CompilationUnitSymbol) =>
-        val sym     = createSymbol(pkg.containingPackages,
-          pkg.name, Some(ProgramSymbol))
-        cunit.owner = Some(sym)
-        (cunit, sym)
-      case _                                  =>
-        val sym     = createSymbol(pkg.containingPackages,
-          pkg.name, owner)
-        sym.owner = owner
-        (sym, sym)
-    }
+    val sym     = createSymbol(pkg.containingPackages,
+      pkg.name, Some(programSymbol))
+    sym.owner.foreach(pkg.owner = _)
     pkg.symbol = sym
+    val memberOwner = owner match {
+      case Some(cunit: CompilationUnitSymbol) =>
+        cunit.owner = Some(sym)
+        cunit
+      case _                                  =>
+        sym
+    }
     val members = pkg.members.map { member =>
-      member.owner = newOwner
+      member.owner = memberOwner
       assign(member)
     }
     TreeCopiers.copyPackageDef(pkg)(members = members)
@@ -100,7 +100,7 @@ trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
     owner: Option[Symbol]): Symbol = {
     names match {
       case (n::ns) if name != StdNames.DEFAULT_PACKAGE_NAME      =>
-        val s = createSymbol(Nil, n, owner)
+        val s   = createSymbol(Nil, n, owner)
         createSymbol(ns, name, Some(s))
       case _                                                     =>
         owner.flatMap(_.getDirectlyDefinedSymbol(name,
@@ -115,6 +115,8 @@ trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
 
     }
   }
+
+  protected def programSymbol: Symbol = ProgramSymbol
 }
 
 @component
