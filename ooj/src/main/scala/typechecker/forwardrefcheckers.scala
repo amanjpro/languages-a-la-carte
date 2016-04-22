@@ -61,27 +61,29 @@ trait ClassDefForwardRefCheckerComponent extends ForwardRefCheckerComponent {
 @component(tree, symbols)
 trait TemplateForwardRefCheckerComponent extends ForwardRefCheckerComponent {
   (template: TemplateApi) => {
-    template.members.foldLeft(Nil: List[Symbol]) { (z, member) => member match {
-      case v: ValDefApi                    if v.mods.isField =>
-        v.rhs.bottomUp(())((z, t) => t match {
-          case id: IdentApi                    =>
-            id.symbol.foreach { sym =>
-              if(!id.isQualified && !symbols.contains(sym) &&
-                    v.owner == sym.owner &&
-                    sym.mods.isField)
-                error(ILLEGAL_FORWARD_REFERENCE,
-                  "", "", t.pos)
-            }
-          case _                               =>
-            ()
-        })
-        v.symbol.map(_::z).getOrElse(z)
-      case block: BlockApi if block.isStaticInit             =>
-        check((block, z))
-        z
-      case _                                                 =>
-        z
-    }}
+    template.members.foldLeft(Nil: List[Symbol]) { (symbols, member) =>
+      member match {
+        case v: ValDefApi                    if v.mods.isField =>
+          v.rhs.foreach {
+            case id: IdentApi                    =>
+              id.symbol.foreach { sym =>
+                if(!id.isQualified && !symbols.contains(sym) &&
+                      v.owner == sym.owner &&
+                      sym.mods.isField)
+                  error(ILLEGAL_FORWARD_REFERENCE,
+                    id.name.asString, "", id.pos)
+              }
+            case _                               =>
+              ()
+          }
+          v.symbol.map(_::symbols).getOrElse(symbols)
+        case block: BlockApi if block.isStaticInit             =>
+          check((block, symbols))
+          symbols
+        case _                                                 =>
+          symbols
+      }
+    }
   }
 }
 
