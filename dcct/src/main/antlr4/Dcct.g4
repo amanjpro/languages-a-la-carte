@@ -4,7 +4,7 @@ grammar Dcct;
 // Parser
 
 program
-  : schema EOF
+  : schema expression* EOF
   ;
 
 schema
@@ -21,18 +21,39 @@ schema
 indexType
   : 'Int'
   | 'String'
-  | Identifier // of array or 
+  | Identifier // of array or entity
+  ;
+
+  
+cloudType
+  : 'CInt'
+  | 'CString'
+  | cloudSetType
+  ;
+  
+expressionType
+  : indexType
+  | 'Set' '<' expressionType '>'
+  | expressionType '->' expressionType
+  ;
+  
+cloudSetType
+  : 'CSet' '<' indexType '>'
   ;
 
 cloudDataDecl
   : entityDecl
+  | arrayDecl
   ;
+
 
 // Entities
+// TODO think if I need to make the body optional
 entityDecl
-  : 'entity' Identifier '(' elements ')'
+  : 'entity' Identifier '(' elements ')' '{' properties '}'
   ;
 
+//TODO I think I am enforcing one or more elements, fix...
 elements
   :   element (',' element)*
   ;
@@ -40,6 +61,91 @@ elements
 element
   : Identifier ':' indexType
   ;
+  
+properties
+  : property ';' (property ';')*
+  ;
+  
+property
+  : Identifier ':' cloudType
+  ; 
+  
+  
+// Arrays
+  arrayDecl
+  : 'array' Identifier '[' elements ']' '{' properties '}'
+  ;
+  
+  
+// Expressions, expression, and related stuff
+expressions
+  :   expression (',' expression)*
+  ;
+
+
+ expression
+  : 'new' Identifier '(' expressions ')'
+  | 'delete' expression
+  | Identifier '[' expressions ']'
+  | expression '(' expressions ')'
+  | expression '.' expression
+  | 'all' Identifier
+  | 'entries' Identifier
+  | 'yield'
+  | 'flush'
+  | expression expression
+  | expression ';' expression
+  | '(' expressions ')'
+  | expression bop expression
+  | foreach
+  | value
+  | varDeclaration
+  ;
+  
+bop
+  : '=='
+  | '!='
+  ;
+
+varDeclaration
+  : 'var' Identifier '=' value
+  ;
+
+
+value
+  : Identifier
+  | literals
+  | Identifier '[' values ']'
+  | '(' values ')'
+  | '(' Identifier ':' expressionType ')' '=>' expression
+  ;
+
+
+ifelse
+  : 'if' '(' expression ')' block 'else' block
+  ;
+
+block
+  : '{' expression '}'
+  ;
+
+values
+  : value ',' value
+  | value
+  ;
+
+foreach
+  : 'foreach' Identifier 'in' ('all' | 'entries') expression '.' expression
+    ('where' expression bop expression)?
+    ('orderby' expression '.' expression)?
+    block
+  ;
+
+literals
+  : IntegerLiteral
+  | StringLiteral
+  ;
+ 
 
 // LEXER
 
@@ -60,7 +166,6 @@ ALL        : 'all';
 ENTRIES    : 'entries';
 YIELD      : 'yield';
 FLUSH      : 'flush';
-PROPERTY   : 'property';
 IF         : 'if';
 ELSE       : 'else';
 FOREACH    : 'foreach';
@@ -141,29 +246,20 @@ StringCharacter
   :   ~["\\]
   |   EscapeSequence
   ;
-
 // §3.10.6 Escape Sequences for Character and String Literals
-
 fragment
 EscapeSequence
   :   '\\' [btnfr"'\\]
   ;
-
-
-
-
 //
 // Whitespace and comments
 //
-
 WS
   :  [ \t\r\n\u000C]+ -> skip
   ;
-
 COMMENT
   :   '/*' .*? '*/' -> skip
   ;
-
 LINE_COMMENT
   :   '//' ~[\r\n]* -> skip
   ;
