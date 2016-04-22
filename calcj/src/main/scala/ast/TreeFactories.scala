@@ -28,7 +28,7 @@ trait TreeFactories extends sana.tiny.ast.TreeFactories {
               pos: Option[Position] = None,
               owner: Option[Symbol] = None): LiteralApi = {
     val res = new Literal(constant)
-    res.tpe = constant.tpe
+    // res.tpe = constant.tpe
     owner.foreach(res.owner = _)
     pos.foreach(res.pos = _)
     res
