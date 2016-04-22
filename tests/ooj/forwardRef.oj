@@ -4,8 +4,9 @@
 
 class Test {
   int x = this.z;
-  int y = z;
+  int y = z; // fails
   int z = 2;
+  int a = z;
 }
 
 
