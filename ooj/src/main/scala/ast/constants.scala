@@ -26,7 +26,7 @@ case object NullConstant extends Constant {
 case class StringConstant(value: String) extends Constant {
   type Value = String
 
-  val tpe: Type = TypeUtils.stringClassType
+  lazy val tpe: Type = TypeUtils.stringClassType
 }
 
 
