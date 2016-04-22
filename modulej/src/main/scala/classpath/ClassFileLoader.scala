@@ -36,6 +36,7 @@ import primj.modifiers._
 import ooj.modifiers._
 import robustj.modifiers._
 import ppj.modifiers._
+import modulej.modifiers._
 
 import ppj.modifiers.Ops._
 import robustj.names.StdNames._
@@ -51,7 +52,7 @@ import java.io.{IOException, ByteArrayOutputStream,
 
 import scala.collection.mutable
 
-trait ClassFileLoaderApi {
+trait ClassPathLoaderApi {
 
   protected def classPaths: List[JFile]
   private[this] lazy val urls: Array[URL] =
@@ -59,29 +60,117 @@ trait ClassFileLoaderApi {
   private[this] lazy val classLoader: SanaClassLoader =
     new SanaClassLoader(urls)
 
+  type Path     = String
+  type FullName = String
 
-  def loadClass(name: String): Tree = {
-    val classData    = classLoader.getResourceAsStream(name)
-    val cr           = new ClassReader(classData)
-    val reader       = new ClassFileParser(name)
-    cr.accept(reader, 0)
-    val innerClasses = reader.innerClasses.map(loadClass(_))
-    val body         =
-      TreeFactories.mkTemplate(innerClasses ++ reader.clazz.body.members)
-    val clazz        =
-      TreeFactories.mkClassDef(reader.clazz.mods | COMPILED, reader.clazz.name,
-              reader.clazz.parents, body)
-    clazz.sourceName = reader.source
-    def toPackages(pkgs: List[String], member: Tree): Tree = pkgs match {
-      case Nil                             => member
-      case (x::Nil)                        =>
-        TreeFactories.mkPackageDef(Nil, Name(x), List(member))
-      case (x::xs)                         =>
-        val rest = toPackages(xs, member)
-        TreeFactories.mkPackageDef(Nil, Name(x), List(rest))
-    }
+  private[this] var loadedClasses: List[FullName] = Nil
 
-    toPackages(name.split("[.]").toList.dropRight(1), clazz)
+  private[this] val sep = JFile.separator
+  val binaryFileExtension: String = ".class"
+
+
+  def defines(fullyQualifiedName: FullName, isClass: Boolean): Boolean = {
+    val fname = fullyQualifiedName.replaceAll("[.]", "/")
+    classPaths.foldLeft(false)((z, y) => {
+      if(!z) {
+        val f = if(isClass) {
+          new JFile(s"${y}${sep}${fname}${binaryFileExtension}")
+        } else
+          new JFile(s"${y}${sep}${fname}")
+        f.exists && ((isClass && f.isFile) || (!isClass && f.isDirectory))
+      } else z
+    })
+  }
+
+  def load(fullyQualifiedName: FullName): Option[Tree] = {
+    val cname = findPath(fullyQualifiedName)
+    val res = cname.map(loadClass(_,
+      fullyQualifiedName.split("[.]").toList.dropRight(1),
+      fullyQualifiedName))
+    res.map(TreeFactories.mkProgram(_))
+  }
+
+  protected def findPath(fullyQualifiedName: FullName): Option[Path] = {
+    val z: Option[String] = None
+    val fname = fullyQualifiedName.replaceAll("[.]", "/")
+    classPaths.foldLeft(z)((z, y) => {
+      z match {
+        case  None =>
+          val n = s"${y}${sep}${fname}${binaryFileExtension}"
+          val f = new JFile(n)
+          if(f.exists && f.isFile) {
+            Some(f.getCanonicalPath)
+          } else None
+        case _     =>
+          z
+      }
+    })
+  }
+  protected def loadClass(url: Path, pkgs: List[String],
+          fullName: FullName): List[Tree] = {
+    val (res, queue)      = loadClassAux(url, pkgs, fullName)
+    val queuedClasses     = queue.foldLeft(Nil: List[Tree])((z, y) => {
+      if(!loadedClasses.contains(y)) {
+        findPath(y) match {
+          case Some(cname) =>
+            loadClass(cname,
+              y.split("[.]").toList.dropRight(1), y) ++ z
+          case None        =>
+            z
+        }
+      } else z
+    })
+    res.toList ++ queuedClasses
+  }
+
+  protected def loadClassAux(url: Path,
+          pkgs: List[String],
+          fullName: FullName): (Option[Tree], List[FullName]) = {
+    if(!loadedClasses.contains(fullName)) {
+      loadedClasses = fullName :: loadedClasses
+      val classData    = classLoader.getResourceAsStream(url)
+      val cr           = new ClassReader(classData)
+      val reader       = new ClassFileParser(fullName)
+      cr.accept(reader, 0)
+      val queue1       = reader.queue
+      reader.queue = Nil
+      val (innerClasses, queue2) = {
+        val temp = reader.innerClasses
+          .map ( ic => {
+            val name = fullName + "$" + ic
+            val url  = findPath(name)
+            url match {
+              case Some(url)      =>
+                loadClassAux(url, pkgs, name)
+              case None           =>
+                (None, Nil)
+            }
+          })
+        val z:(List[Tree], List[FullName]) = (Nil, Nil)
+        temp.foldLeft(z)((z, y) => {
+          y._1 match {
+            case None           =>
+              (z._1, z._2 ++ y._2)
+            case Some(y1)       =>
+              (y1::z._1, z._2 ++ y._2)
+          }
+        })
+      }
+      val body         =
+        TreeFactories.mkTemplate(innerClasses ++ reader.clazz.body.members)
+      val clazz        =
+        TreeFactories.mkClassDef(reader.clazz.mods | COMPILED,
+          reader.clazz.name, reader.clazz.parents, body)
+      clazz.sourceName = reader.source
+      def toPackages(pkgs: List[String], member: Tree,
+                acc: List[Name]): Tree = pkgs match {
+        case Nil                             => member
+        case (x::xs)                         =>
+          val rest = toPackages(xs, member, acc ++ List(Name(x)))
+          TreeFactories.mkPackageDef(acc, Name(x), List(rest))
+      }
+      (Some(toPackages(pkgs, clazz, Nil)), queue1 ++ queue2)
+    } else (None, Nil)
   }
 
 
@@ -108,9 +197,8 @@ trait ClassFileLoaderApi {
       }
 
 
-    override def getResourceAsStream(name: String): InputStream = {
-      findResource(name.replace('.', '/') + ".class").openStream
-    }
+    override def getResourceAsStream(name: String): InputStream =
+      new java.io.FileInputStream(name)
 
     private def loadClassData(name: String): Array[Byte] = {
       val in: BufferedInputStream =
@@ -146,7 +234,12 @@ trait ClassFileLoaderApi {
     val className: String) extends ClassVisitor(version) with Opcodes {
 
     def this(className: String) = this(Opcodes.ASM4, className)
-    private[this] val bytecodeClassName = className.replace('.', '/')
+    private[this] val bytecodeClassName = {
+      className.replaceAll("[.]", "/")
+    }
+    private[this] val simpleClassName   = bytecodeClassName
+      // className.split("[.]").toList.last
+    // }
 
     var clazz: ClassDefApi = _
     var clazzFactory: TemplateApi => ClassDefApi = _
@@ -154,6 +247,7 @@ trait ClassFileLoaderApi {
     var members: List[DefTree] = Nil
     var source: String = _
     var innerClasses: List[String] = Nil
+    var queue: List[FullName] = Nil
 
     protected def chopOneParam(paramString: String): (String, String) = {
       if(paramString.startsWith("B") ||
@@ -220,26 +314,31 @@ trait ClassFileLoaderApi {
         case nme if nme.startsWith("[") =>
           val last        = nme.lastIndexOf("[")
           val (dims, tpe) = nme.splitAt(last + 1)
-          val tuse        = TreeFactories.mkTypeUse(Name(tpe))
+          val tuse        = stringToUseTree(tpe, classSig)
           dims.foldLeft(tuse: UseTree)((z, y) => {
             TreeFactories.mkArrayTypeUse(z)
           })
         case nme        =>
           val sig2 = if(classSig) nme
                      else nme.substring(1, nme.size -1)
-          stringToUseTree(sig2.split("/").toList) match {
+          queue = sig2.replaceAll("[/]", ".")::queue
+          val use = stringToUseTree(sig2.split("/").toList)
+          val t = use match {
             case select@Select(qual, id: Ident)            =>
               val tuse = TreeFactories.mkTypeUse(id.name)
               TreeFactories.mkSelect(qual, tuse)
+            case id@Ident(name)                            =>
+              TreeFactories.mkTypeUse(name)
             case use                                       =>
               use
           }
+          t
       }
     }
 
     private def stringToUseTree(sig: List[String]): UseTree = sig match {
       case List(x)                =>
-        TreeFactories.mkTypeUse(Name(x))
+        TreeFactories.mkIdent(Name(x))
       case Nil                    =>
         throw new Exception("This should not happen")
       case xs                     =>
@@ -257,6 +356,10 @@ trait ClassFileLoaderApi {
     }
 
 
+    protected def parseNativeFlag(access: Int): Flags = {
+      if(hasFlag(access, Opcodes.ACC_NATIVE))     Flags(NATIVE)
+      else                                        noflags
+    }
     protected def parseFinalFlag(access: Int): Flags = {
       if(hasFlag(access, Opcodes.ACC_FINAL))      Flags(FINAL)
       else                                        noflags
@@ -330,11 +433,9 @@ trait ClassFileLoaderApi {
     override def visitInnerClass(name: String, outerName: String,
             innerName: String, access: Int): Unit = {
       val acc   = parseAccessFlag(access)
-      val sName = name.replace('/', '.')
-      if(! acc.isPrivateAcc && outerName == bytecodeClassName)
+      val sName = innerName.replaceAll("[/]", ".")
+      if(sName == bytecodeClassName)
         innerClasses = sName::innerClasses
-      else
-        ()
     }
 
 
@@ -360,6 +461,7 @@ trait ClassFileLoaderApi {
       val isFinal       = parseFinalFlag(access)
       val isStatic      = parseStaticFlag(access)
       val isAbstract    = parseAbstractFlag(access)
+      val isNative      = parseAbstractFlag(access)
       val isConstructor = if(name == CONSTRUCTOR_NAME.asString) {
         Flags(CONSTRUCTOR)
       } else noflags
@@ -370,15 +472,21 @@ trait ClassFileLoaderApi {
       val (paramString, retString) = {
         val endParamIndex = desc.indexOf(')')
         val (fst, snd)    = desc.splitAt(endParamIndex)
-        (fst.substring(1), snd.substring(1))
+        if(name == CONSTRUCTOR_NAME.asString)
+          (fst.substring(1), s"A$simpleClassName}")
+        else
+          (fst.substring(1), snd.substring(1))
       }
 
       val ret    = stringToUseTree(retString, false)
       val params = methodParams(paramString)
 
-      val throwsClause: List[UseTree] = exceptions.toList.map { e =>
-        stringToUseTree(e, true)
-      }
+      val throwsClause: List[UseTree] = if(exceptions != null) {
+        exceptions.toList.map { e =>
+          stringToUseTree(e, true)
+        }
+      } else Nil
+
       val meth = TreeFactories.mkMethodDef(mods, ret, Name(name), params,
         throwsClause, NoTree)
       members = meth::members
@@ -393,5 +501,5 @@ trait ClassFileLoaderApi {
   }
 }
 
-class ClassFileLoader(val classPaths: List[JFile])
-  extends ClassFileLoaderApi
+class ClassPathLoader(val classPaths: List[JFile])
+  extends ClassPathLoaderApi
