@@ -395,7 +395,13 @@ class Parser extends parsers.Parser {
 
     override def visitSingleTypeImportDeclaration(ctx:
       Java1Parser.SingleTypeImportDeclarationContext): Tree = {
-      val name = visit(ctx.name).asInstanceOf[UseTree]
+      val name = visit(ctx.name) match {
+        case s@Select(q, id: IdentApi) =>
+          val tuse = TreeFactories.mkTypeUse(id.name, id.pos)
+          TreeCopiers.copySelect(s)(tree = tuse)
+        case t                         =>
+          t.asInstanceOf[UseTree]
+      }
       TreeFactories.mkImport(name, false, pos(ctx))
     }
 
