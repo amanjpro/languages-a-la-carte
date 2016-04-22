@@ -18,7 +18,7 @@ trait TreeFactories extends ooj.ast.TreeFactories {
     symbol: Option[Symbol] = None,
     owner: Option[Symbol] = None,
     tpe: Option[Type] = None): ArrayInitializerApi =
-    TreeFactories.mkArrayInitizalizer(elements, pos, symbol, owner, tpe)
+    ATreeFactories.mkArrayInitizalizer(elements, pos, symbol, owner, tpe)
 
 
   def mkArrayAccess(array: Expr, index: Expr,
@@ -26,14 +26,14 @@ trait TreeFactories extends ooj.ast.TreeFactories {
     symbol: Option[Symbol] = None,
     owner: Option[Symbol] = None,
     tpe: Option[Type] = None): ArrayAccessApi =
-    TreeFactories.mkArrayAccess(array, index, pos, symbol, owner, tpe)
+    ATreeFactories.mkArrayAccess(array, index, pos, symbol, owner, tpe)
 
   def mkArrayTypeUse(tpt: UseTree,
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None,
     owner: Option[Symbol] = None,
     tpe: Option[Type] = None): ArrayTypeUseApi =
-    TreeFactories.mkArrayTypeUse(tpt, pos, symbol, owner, tpe)
+    ATreeFactories.mkArrayTypeUse(tpt, pos, symbol, owner, tpe)
 
   def mkArrayCreation(array: Expr,
     size: Option[Expr],
@@ -41,7 +41,7 @@ trait TreeFactories extends ooj.ast.TreeFactories {
     symbol: Option[Symbol] = None,
     owner: Option[Symbol] = None,
     tpe: Option[Type] = None): ArrayCreationApi =
-    TreeFactories.mkArrayCreation(array, size, pos, symbol, owner, tpe)
+    ATreeFactories.mkArrayCreation(array, size, pos, symbol, owner, tpe)
 }
 
 object TreeFactories extends TreeFactories
