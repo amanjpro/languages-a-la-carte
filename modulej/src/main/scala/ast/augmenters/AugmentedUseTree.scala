@@ -17,6 +17,11 @@ trait AugmentedUseTree {
   def isImportQual_=(flag: Boolean): Unit =
     tree.attributes = tree.attributes + ('isImportQual -> flag)
 
+  def fullyQualifiedName: Option[String] =
+    tree.attributes.get('fullyQualifiedName).map(_.asInstanceOf[String])
+
+  def fullyQualifiedName_=(fname: String): Unit =
+    tree.attributes = tree.attributes + ('fullyQualifiedName -> fname)
 
 }
 

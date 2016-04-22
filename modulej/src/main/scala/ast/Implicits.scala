@@ -1,8 +1,10 @@
 package ch.usi.inf.l3.sana.modulej.ast
 
 import ch.usi.inf.l3.sana.tiny.ast.augmenters._
-import ch.usi.inf.l3.sana.arrayj.ast.augmenters._
+import ch.usi.inf.l3.sana.primj.ast.augmenters.{AugmentedSimpleUseTree => _,
+  _}
 import ch.usi.inf.l3.sana.ooj.ast.augmenters._
+import ch.usi.inf.l3.sana.arrayj.ast.augmenters._
 import ch.usi.inf.l3.sana.modulej.ast.augmenters._
 import ch.usi.inf.l3.sana.tiny.ast.{Tree, SimpleUseTree, IdentApi, TypeUseApi,
                                     UseTree}
