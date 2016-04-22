@@ -20,6 +20,7 @@ import primj.symbols.{SymbolUtils => _, _}
 import primj.errors.ErrorCodes._
 import primj.ast.{ApplyApi, BlockApi}
 import ooj.ast._
+import ooj.ast.TreeExtractors._
 import ooj.types.ClassType
 import ooj.names.StdNames
 import ooj.modifiers._
@@ -74,22 +75,7 @@ trait ClassDefNamerComponent extends NamerComponent {
   (clazz: ClassDefApi) => {
     // If there is no explicit Object parent, add it
     // implicitly
-    val parents = {
-      val temp = clazz.parents.map((parent) =>
-          name(parent).asInstanceOf[UseTree])
-      val sym  = objectClassSymbol
-      temp.exists(_.symbol == Some(sym)) match {
-        case true       => temp
-        case _          =>
-          val tuse = TreeFactories.mkTypeUse(sym.name,
-            clazz.pos,
-            Some(sym),
-            None,
-            sym.owner)
-          tuse.isInExtendsClause = true
-          tuse::temp
-      }
-    }
+    val parents = addObjectParentIfNeeded(clazz)
     val parentSymbols = parents.flatMap(_.symbol match {
       case Some(cs: ClassSymbol) => Some(cs)
       case _                     => None
@@ -114,11 +100,54 @@ trait ClassDefNamerComponent extends NamerComponent {
     TreeCopiers.copyClassDef(clazz)(body = body, parents = parents)
   }
 
-  protected def objectClassSymbol: ClassSymbol =
-    SymbolUtils.objectClassSymbol
+  protected def addObjectParentIfNeeded(clazz: ClassDefApi): List[UseTree] = {
+
+    def test(use: UseTree): Boolean  = use match {
+      case Select(_, tuse)    =>
+        tuse.name == objectClassName && tuse.owner == Some(langPackageSymbol)
+      case tuse               =>
+        tuse.name == objectClassName && tuse.owner == Some(langPackageSymbol)
+    }
+
+    val parents =
+      clazz.parents.map((parent) => name(parent).asInstanceOf[UseTree])
+
+    parents.exists(test(_)) match {
+      case true       => parents
+      case _          =>
+        val java = TreeFactories.mkIdent(javaPackageName,
+          clazz.pos, owner = clazz.symbol)
+        val lang = TreeFactories.mkIdent(langPackageName,
+          clazz.pos, owner = clazz.symbol)
+        val slct = TreeFactories.mkSelect(java, lang, clazz.pos,
+          owner = clazz.symbol)
+        val obj  = TreeFactories.mkTypeUse(objectClassName,
+          clazz.pos,
+          owner = clazz.symbol)
+        val res = TreeFactories.mkSelect(slct, obj, clazz.pos,
+          owner = clazz.symbol)
+        obj.isInExtendsClause = true
+        val res2 = name(res).asInstanceOf[UseTree]
+        res2::parents
+    }
+
+  }
 
   protected def packageName(symbol: ClassSymbol): String =
     SymbolUtils.packageName(symbol)
+
+  protected def javaPackageName: Name =
+    StdNames.JAVA_PACKAGE_NAME
+
+  protected def langPackageName: Name =
+    StdNames.LANG_PACKAGE_NAME
+
+  protected def langPackageSymbol: PackageSymbol =
+    SymbolUtils.langPackageSymbol
+
+  protected def objectClassName: Name =
+    StdNames.OBJECT_TYPE_NAME
+
 }
 
 @component
@@ -179,10 +208,10 @@ trait MethodDefNamerComponent extends
 @component
 trait SelectNamerComponent extends NamerComponent {
   (select: SelectApi) => {
-    val qual    = name(select.qual)
+    val qual           = name(select.qual)
     val slctdOwner     = qual.symbol
     slctdOwner.foreach(select.tree.owner = _)
-    val tree    = name(select.tree).asInstanceOf[SimpleUseTree]
+    val tree           = name(select.tree).asInstanceOf[SimpleUseTree]
     tree.symbol.foreach(select.symbol = _)
     TreeCopiers.copySelect(select)(qual = qual, tree = tree)
   }
@@ -203,9 +232,7 @@ trait BlockNamerComponent extends NamerComponent {
 // }
 
 @component
-trait IdentNamerComponent
-  extends primj.namers.IdentNamerComponent
-  with IdentNamer {
+trait IdentNamerComponent extends NamerComponent {
 
   (id: IdentApi)       => {
     id.hasBeenNamed = true
@@ -219,13 +246,19 @@ trait IdentNamerComponent
         res
     }
   }
+
+
+  protected def nameIdent(id: IdentApi): UseTree =
+    identNamer.nameIdent(id)
+
+  private[this] val identNamer = new IdentNamer {}
 }
 
 
 
 
 trait IdentNamer {
-  protected def nameIdent(original: IdentApi): SimpleUseTree = {
+  def nameIdent(original: IdentApi): UseTree = {
     val id = TreeCopiers.copyIdent(original)(name = original.name)
     // At the beginning: we treat all (Ident)s as ambiguous names.
     // Can we see any (VariableSymbol)s with this name from the current scope?
@@ -242,8 +275,6 @@ trait IdentNamer {
                 _.isInstanceOf[PackageSymbol]))
               temp match {
                 case None      =>
-                  // TODO: Look for imports later when we introduce
-                  // them: Section 6.5.2
                   id
                 case Some(sym) =>
                   id.symbol = sym

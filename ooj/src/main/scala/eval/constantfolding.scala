@@ -285,22 +285,25 @@ trait SelectConstantFoldingComponent
 
 @component(tree, env)
 trait TypeUseConstantFoldingComponent
-  extends ConstantFoldingComponent
-  with ooj.typechecker.TypeUseNamer {
+  extends ConstantFoldingComponent {
   (tuse: TypeUseApi) => {
     (nameTypeUse(tuse), env)
   }
+
+  protected def nameTypeUse(tuse: TypeUseApi): UseTree =
+    typeUseNamer.nameTypeUse(tuse)
+
+  private[this] val typeUseNamer = new ooj.typechecker.TypeUseNamer {}
+
 }
 
 @component(tree, env)
 trait IdentConstantFoldingComponent
-  extends ConstantFoldingComponent
-  with ooj.namers.IdentNamer
-  with ooj.typechecker.IdentNamer {
+  extends ConstantFoldingComponent {
   (id: IdentApi)    => {
     nameIdent(id) match {
       case id: IdentApi            =>
-        val ident = nameIdent(id, false)
+        val ident = typeAndNameIdent(id)
         ident.symbol.map { sym =>
           env.getValue(sym) match {
             case Some(ExprValue(expr))                    =>
@@ -330,6 +333,16 @@ trait IdentConstantFoldingComponent
         (id, env)
     }
   }
+
+  protected def nameIdent(id: IdentApi): UseTree =
+    identNamer.nameIdent(id)
+
+  protected def typeAndNameIdent(id: IdentApi): UseTree =
+    identNamer.nameIdent(id, false)
+
+  private[this] val identNamer =
+    new ooj.namers.IdentNamer with ooj.typechecker.IdentNamer {}
+
 }
 
 @component(tree, env)

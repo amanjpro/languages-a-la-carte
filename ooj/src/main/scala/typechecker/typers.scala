@@ -664,19 +664,23 @@ trait ApplyTyperComponent extends TyperComponent {
 
 @component
 trait TypeUseTyperComponent
-  extends primj.typechecker.TypeUseTyperComponent
-  with TypeUseNamer {
+  extends primj.typechecker.TypeUseTyperComponent {
   (tuse: TypeUseApi) => {
     val tuseCopy = if(!tuse.hasBeenNamed) {
       nameTypeUse(tuse)
     } else tuse
     super.apply(tuseCopy)
   }
+
+  protected def nameTypeUse(tuse: TypeUseApi): UseTree =
+    typeUseNamer.nameTypeUse(tuse)
+
+  private[this] val typeUseNamer = new TypeUseNamer {}
 }
 
 
 trait TypeUseNamer {
-  def nameTypeUse(tuse: TypeUseApi): TypeUseApi = {
+  def nameTypeUse(tuse: TypeUseApi): UseTree = {
     val tuseCopy = TreeCopiers.copyTypeUse(tuse)(name = tuse.name)
     tuseCopy.owner.foreach(sym => {
       sym.getSymbol(tuseCopy.name, _.isInstanceOf[TypeSymbol]) match {
@@ -687,7 +691,7 @@ trait TypeUseNamer {
     tuseCopy.symbol match {
       case None          if tuseCopy.isQualified         =>
         // INFO:
-        // In the class is private to the compilation unit, and
+        // If the class is private to the compilation unit, and
         // we are in the compilation unit then ignore the qualified
         // owner and search in the current compilation unit.
         for {
@@ -707,24 +711,33 @@ trait TypeUseNamer {
     }
     tuseCopy
   }
+
 }
 
 @component
-trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent
-      with ooj.namers.IdentNamer
-      with ooj.typechecker.IdentNamer {
+trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
   (ident: IdentApi) => {
     if(!ident.hasBeenNamed) {
       val id = nameIdent(ident)
       id match {
-        case id: IdentApi                          =>
-          val r = nameIdent(id, true)
+        case id: IdentApi                        =>
+          val r = typeAndNameIdent(id)
           r
-        case tuse                                =>
-          typed(tuse)
+        case other                               =>
+          typed(other)
       }
     } else ident
   }
+
+  protected def nameIdent(id: IdentApi): UseTree =
+    identNamer.nameIdent(id)
+
+  protected def typeAndNameIdent(id: IdentApi): UseTree =
+    identNamer.nameIdent(id, true)
+
+  private[this] val identNamer =
+    new ooj.namers.IdentNamer with ooj.typechecker.IdentNamer {}
+
 
 
   // protected def alreadyDefined(sym: Symbol,

@@ -127,6 +127,8 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
     }
     val sym = createClassSymbol(clazz, owner)
     clazz.symbol = sym
+    classDoubleDefCheck(owner, clazz.name, clazz.pos)
+    owner.foreach(_.declare(sym))
     val template = {
       val shouldCreateConstructor =
         !(clazz.body.members.exists(isConstructor(_))) &&
@@ -158,8 +160,6 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
           assign(temp).asInstanceOf[TemplateApi]
       }
     }
-    classDoubleDefCheck(owner, clazz.name, clazz.pos)
-    owner.foreach(_.declare(sym))
     TreeCopiers.copyClassDef(clazz)(parents = parents, body = template)
   }
 
