@@ -6,6 +6,7 @@ import ch.usi.inf.l3.sana.tiny.symbols.Symbol
 
 
 trait CompilerInterface {
+
   /**
     * Type-checks a tree in the given context.
     *
@@ -28,7 +29,8 @@ trait CompilerInterface {
 
   /**
     * Loads a binary file (class in JVM) and resolves its
-    * type information and names.
+    * type information and names. This method only loads
+    * the classfile if it is not already loaded.
     *
     * @param fname the fully qualified name of the class.
     */
