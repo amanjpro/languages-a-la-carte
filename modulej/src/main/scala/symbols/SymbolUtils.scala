@@ -6,6 +6,7 @@ import sana.tiny.types.Type
 import sana.tiny.names.Name
 import sana.calcj.types.IntType
 import sana.ooj.symbols.ClassSymbol
+import sana.primj.symbols.ProgramSymbol
 import sana.ooj.modifiers._
 import sana.robustj.names.StdNames
 
@@ -24,6 +25,9 @@ trait SymbolUtils extends sana.robustj.symbols.SymbolUtils {
         fullyQualifiedSymbolList(ow) ++ List(pkg)
       case _                          => List(pkg)
     }
+
+  def rootSymbol: Option[Symbol] =
+    Some(ProgramSymbol)
 }
 
 object SymbolUtils extends SymbolUtils
