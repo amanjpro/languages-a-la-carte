@@ -23,30 +23,30 @@ import modulej.modifiers.Ops._
 import calcj.typechecker.TyperComponent
 
 
-@component
-trait ImportTyperComponent extends TyperComponent {
-  (imprt: ImportApi) => {
-    val qual = typed(imprt.qual).asInstanceOf[UseTree]
-    qual.symbol match {
-      case None       if !imprt.isOnDemand                     =>
-        error(IMPORTED_PACKAGE_IS_MISSING,
-          "", "", qual.pos)
-      case None                                                =>
-        error(IMPORTED_CLASS_IS_MISSING,
-          "", "", qual.pos)
-      case _                                                   =>
-        ()
-    }
-    TreeCopiers.copyImport(imprt)(qual = qual)
-  }
-}
+// @component
+// trait ImportTyperComponent extends TyperComponent {
+//   (imprt: ImportApi) => {
+//     val qual = typed(imprt.qual).asInstanceOf[UseTree]
+//     qual.symbol match {
+//       case None       if !imprt.isOnDemand                     =>
+//         error(IMPORTED_PACKAGE_IS_MISSING,
+//           "", "", qual.pos)
+//       case None                                                =>
+//         error(IMPORTED_CLASS_IS_MISSING,
+//           "", "", qual.pos)
+//       case _                                                   =>
+//         ()
+//     }
+//     TreeCopiers.copyImport(imprt)(qual = qual)
+//   }
+// }
 
 @component
 trait CompilationUnitTyperComponent extends TyperComponent {
   (unit: CompilationUnitApi) => {
     val pkg     = typed(unit.module).asInstanceOf[PackageDefApi]
-    val imports = unit.imports.map(typed(_).asInstanceOf[ImportApi])
-    TreeCopiers.copyCompilationUnit(unit)(imports = imports, module = pkg)
+    // val imports = unit.imports.map(typed(_).asInstanceOf[ImportApi])
+    TreeCopiers.copyCompilationUnit(unit)(module = pkg)
   }
 }
 
