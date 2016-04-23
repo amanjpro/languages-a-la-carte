@@ -1,12 +1,14 @@
 package ch.usi.inf.l3.sana.dcct
 
 import ch.usi.inf.l3.sana
-import sana.core.Implicits._
 import sana.tiny
 import sana.primj
 import sana.dcct
 import sana.ooj
 import tiny.settings.SanaConfig
+import tiny.core.Implicits._
+import tiny.core.CompilerInterface
+import tiny.ast.Implicits._
 import tiny.ast.Tree
 import tiny.types.Type
 import tiny.names.Name
@@ -18,13 +20,12 @@ import tiny.errors.ErrorReporting
 import tiny.debug.logger
 import primj.symbols.{ProgramSymbol, MethodSymbol, VoidSymbol, VariableSymbol}
 import primj.types.{ MethodType, VoidType }
-import ooj.symbols.{PackageSymbol, SymbolUtils, ClassSymbol}
+import ooj.symbols.{PackageSymbol, ClassSymbol}
 import ooj.modifiers._
 import ooj.modifiers.Ops.noflags
 import ooj.names.StdNames
 import ooj.types.TypeUtils
 import ooj.eval.Env
-import dcct.symbols.SymbolUtils
 
 import dcct.phases._
 import dcct.antlr._
@@ -131,6 +132,25 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
 //      
       
     }
+
+    def compiler: CompilerInterface = new CompilerInterface {
+      def typeCheck(owner: Option[Symbol])(tree: Tree): Tree = {
+        owner.foreach(tree.owner = _)
+        symassigner.assign.join(namer.name)(tree)
+        // TODO Uncomment this when you want
+        // owner.foreach(tree.owner = _)
+        // symassigner.assign.join(namer.name.join(typer.typed))(tree)
+      }
+      def definesModule(module: String): Boolean = false
+      def load(fname: String): Option[Tree]   = None
+      def parse(source: String): Tree   = ???
+      def unparse(tree: Tree): String   = ???
+    }
+
+    private[this] lazy val symassigner   = DcctSymbolAssignerFamily(compiler)
+    private[this] lazy val namer         = DcctNamerFamily(compiler)
+    // TODO: Add typer to here when you have it
+
     def compile: Tree => Unit = {
       init()
       (x: Tree) => {
@@ -144,8 +164,8 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
         //        (PrimjShapeCheckerFamily.check))))
 
         val f =
-         ( ( (DcctSymbolAssignerFamily.assign) join
-            (DcctNamerFamily.name) ) join (DcctCodeGenFamily.codegen) )
+         ( ( (symassigner.assign) join
+            (namer.name) ) join (DcctCodeGenFamily(compiler).codegen) )
 
         val targetCode = f(x)
         val targetFile = config.files.toList.head

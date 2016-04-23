@@ -6,9 +6,8 @@ import sana.ooj
 import sana.tiny
 import sana.calcj
 import sana.primj
-import sana.dsl
 
-import dsl._
+import tiny.dsl._
 
 import tiny.ast.{TreeCopiers => _, _}
 import calcj.ast.{TreeCopiers => _, _}

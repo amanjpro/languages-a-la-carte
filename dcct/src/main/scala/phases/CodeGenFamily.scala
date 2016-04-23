@@ -1,14 +1,14 @@
 package ch.usi.inf.l3.sana.dcct.phases
 
 import ch.usi.inf.l3.sana
-import sana.dsl._
-import sana.core._
-import sana.core.Implicits._
+import sana.tiny.dsl._
+import sana.tiny.core._
+import sana.tiny.core.Implicits._
 import sana.tiny.ast.{Tree, NoTree}
 import sana.dcct.codegenerator._
 
 
-trait DcctCodeGenFamily extends TransformationFamily[Tree, String] {
+trait DcctCodeGenFamilyApi extends TransformationFamily[Tree, String] {
   self =>
 
   override def default: String = ""
@@ -22,7 +22,8 @@ trait DcctCodeGenFamily extends TransformationFamily[Tree, String] {
   def codegen: Tree => String = family
 }
 
-object DcctCodeGenFamily extends DcctCodeGenFamily
+case class DcctCodeGenFamily(compiler: CompilerInterface)
+  extends DcctCodeGenFamilyApi
 
 
 

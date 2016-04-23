@@ -1,9 +1,9 @@
 package ch.usi.inf.l3.sana.dcct.phases
 
 import ch.usi.inf.l3.sana
-import sana.dsl._
-import sana.core._
-import sana.core.Implicits._
+import sana.tiny.dsl._
+import sana.tiny.core._
+import sana.tiny.core.Implicits._
 import sana.tiny.ast.{Tree, NoTree}
 import sana.tiny.symbols.Symbol
 import sana.primj.PrimjNodes
@@ -12,7 +12,7 @@ import sana.calcj.typechecker.{UnaryTyperComponent => _, _}
 
 
 
-trait PrimjTyperFamily extends
+trait DcctTyperFamilyApi extends
   TransformationFamily[Tree, Tree] {
   self =>
 
@@ -25,7 +25,8 @@ trait PrimjTyperFamily extends
   def typed: Tree => Tree = family
 }
 
-object PrimjTyperFamily extends PrimjTyperFamily
+case class DcctTyperFamily(compiler: CompilerInterface) extends
+  DcctTyperFamilyApi
 
 
 

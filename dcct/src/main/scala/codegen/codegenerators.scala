@@ -8,8 +8,8 @@ import sana.primj
 import sana.tiny
 import sana.calcj
 
-import sana.core.TransformationComponent
-import sana.dsl._
+import tiny.core.TransformationComponent
+import tiny.dsl._
 import tiny.ast._
 import tiny.symbols._
 import tiny.ast.Implicits._

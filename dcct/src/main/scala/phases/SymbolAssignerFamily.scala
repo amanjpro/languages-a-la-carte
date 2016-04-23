@@ -1,9 +1,9 @@
 package ch.usi.inf.l3.sana.dcct.phases
 
 import ch.usi.inf.l3.sana
-import sana.dsl._
-import sana.core._
-import sana.core.Implicits._
+import sana.tiny.dsl._
+import sana.tiny.core._
+import sana.tiny.core.Implicits._
 import sana.tiny.symbols.Symbol
 import sana.tiny.ast.{Tree, NoTree}
 import sana.dcct.DCCTNodes
@@ -12,7 +12,7 @@ import sana.ooj.namers.TemplateSymbolAssignerComponent
 import sana.dcct.namers._
 
 
-trait DcctSymbolAssignerFamily
+trait DcctSymbolAssignerFamilyApi
   extends TransformationFamily[Tree, Tree] {
   self =>
 
@@ -26,4 +26,5 @@ trait DcctSymbolAssignerFamily
   def assign: Tree => Tree = family
 }
 
-object DcctSymbolAssignerFamily extends DcctSymbolAssignerFamily
+case class DcctSymbolAssignerFamily(compiler: CompilerInterface)
+  extends DcctSymbolAssignerFamilyApi

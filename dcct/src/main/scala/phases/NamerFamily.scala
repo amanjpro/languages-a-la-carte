@@ -1,9 +1,9 @@
 package ch.usi.inf.l3.sana.dcct.phases
 
 import ch.usi.inf.l3.sana
-import sana.dsl._
-import sana.core._
-import sana.core.Implicits._
+import sana.tiny.dsl._
+import sana.tiny.core._
+import sana.tiny.core.Implicits._
 import sana.tiny.ast.{Tree, NoTree}
 import sana.primj.PrimjNodes
 import sana.primj.namers._
@@ -11,7 +11,7 @@ import sana.ooj.namers.{TemplateSymbolAssignerComponent, ClassDefSymbolAssignerC
 
 
 
-trait DcctNamerFamily extends TransformationFamily[Tree, Tree] {
+trait DcctNamerFamilyApi extends TransformationFamily[Tree, Tree] {
   self =>
 
   override def default: Tree = NoTree
@@ -25,7 +25,8 @@ trait DcctNamerFamily extends TransformationFamily[Tree, Tree] {
   def name: Tree => Tree = family
 }
 
-object DcctNamerFamily extends DcctNamerFamily
+case class DcctNamerFamily(compiler: CompilerInterface)
+  extends DcctNamerFamilyApi
 
 
 
