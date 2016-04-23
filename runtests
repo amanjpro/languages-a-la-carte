@@ -16,6 +16,10 @@ val green = "\u001b[92m"
 val endcolor = "\u001b[0m"
 
 
+val MODULEJ_CLASSPATH = "classpaths/java1.0/classes/"
+val MODULEJ           = "bin/modulej.jar"
+
+
 val random = new Random
 
 var passed: Int  = 0
@@ -66,8 +70,12 @@ def test(file: String, prg: String, oracle: List[String],
       var rr: List[String] = Nil
       val countLogger = ProcessLogger(line => (),
                                       line => rr = rr ++ List(line))
-
-      s"scala $prg --Ytest --Xlog off $file" ! countLogger
+      if(prg == MODULEJ) {
+        val cmd =
+          s"scala $prg --classpath $MODULEJ_CLASSPATH --Ytest --Xlog off $file"
+        cmd ! countLogger
+      } else
+        s"scala $prg --Ytest --Xlog off $file" ! countLogger
       val programErrors = rr.flatMap((err) => {
         val trimmed = err.trim
         if(trimmed != "") List(s"// $trimmed")
@@ -155,7 +163,7 @@ def start(opts: List[String]): Unit = {
     case List(dir)                  =>
       testDir(s"tests/$dir", s"bin/$dir.jar")
     case _                                   =>
-      println("usage: ./runtests [all | language to be tested]")
+      println("usage: ./runtests [recompile] [all | language to be tested]")
   }
 }
 
