@@ -12,6 +12,7 @@ package object debug {
       frameworkName.toLowerCase
     val loggingDir = new File(commonPath)
     loggingDir.mkdirs
+    println("LOGGER IS HERE " + loggingDir)
     val loggingPath = commonPath + sp + "logs.log"
     new Logger(loggingPath)
   }

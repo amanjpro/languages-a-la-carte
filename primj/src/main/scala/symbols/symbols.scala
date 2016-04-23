@@ -14,7 +14,6 @@ import sana.tiny.names.StdNames.noname
 
 
 trait ProgramSymbol extends Symbol {
-  decls = decls ++ SymbolUtils.standardDefinitions
 
   def name: Name = noname
   def mods: Flags = noflags

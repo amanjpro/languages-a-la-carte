@@ -132,35 +132,9 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
     classDoubleDefCheck(owner, clazz.name, clazz.pos)
     owner.foreach(_.declare(sym))
     val template = {
-      val shouldCreateConstructor =
-        !(clazz.body.members.exists(isConstructor(_))) &&
-          ! clazz.mods.isInterface
-      shouldCreateConstructor match {
-        case false               =>
-          clazz.body.owner = sym
-          assign(clazz.body).asInstanceOf[TemplateApi]
-        case true                =>
-          // TODO: Do we need to have a refactoring for creating constructors?
-          // I would say yes!!!
-          // INFO: No constructors? Add it!
-          val mods          = {
-            if(clazz.mods.isPublicAcc)         CONSTRUCTOR | PUBLIC_ACC
-            else                               CONSTRUCTOR | PACKAGE_ACC
-          }
-          val spr           = TreeFactories.mkSuper(clazz.pos)
-          val id            = TreeFactories.mkIdent(constructorName, clazz.pos)
-          id.isConstructorIdent = true
-          val slct          = TreeFactories.mkSelect(spr, id, clazz.pos)
-          val app           = TreeFactories.mkApply(slct, Nil, clazz.pos)
-          val body          = TreeFactories.mkBlock(List(app), clazz.pos)
-          val ret           = TreeFactories.mkTypeUse(clazz.name, clazz.pos)
-          val const         = TreeFactories.mkMethodDef(mods, ret,
-            constructorName, Nil, body, clazz.pos)
-          val temp          = TreeCopiers.copyTemplate(clazz.body)(members =
-            const::clazz.body.members)
-          temp.owner        = sym
-          assign(temp).asInstanceOf[TemplateApi]
-      }
+      val temp = addDefaultConstructor(clazz, sym)
+      temp.owner        = sym
+      assign(temp).asInstanceOf[TemplateApi]
     }
     TreeCopiers.copyClassDef(clazz)(parents = parents, body = template)
   }
@@ -188,6 +162,35 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
     case _                                                      =>
       ()
   }
+  
+  protected def addDefaultConstructor(clazz: ClassDefApi, sym: ClassSymbol ): TemplateApi = {
+      val shouldCreateConstructor =
+        !(clazz.body.members.exists(isConstructor(_))) &&
+          ! clazz.mods.isInterface
+      shouldCreateConstructor match {
+        case false               =>
+          clazz.body
+        case true                =>
+          // TODO: Do we need to have a refactoring for creating constructors?
+          // I would say yes!!!
+          // INFO: No constructors? Add it!
+          val mods          = {
+            if(clazz.mods.isPublicAcc)         CONSTRUCTOR | PUBLIC_ACC
+            else                               CONSTRUCTOR | PACKAGE_ACC
+          }
+          val spr           = TreeFactories.mkSuper(clazz.pos)
+          val id            = TreeFactories.mkIdent(constructorName, clazz.pos)
+          id.isConstructorIdent = true
+          val slct          = TreeFactories.mkSelect(spr, id, clazz.pos)
+          val app           = TreeFactories.mkApply(slct, Nil, clazz.pos)
+          val body          = TreeFactories.mkBlock(List(app), clazz.pos)
+          val ret           = TreeFactories.mkTypeUse(clazz.name, clazz.pos)
+          val const         = TreeFactories.mkMethodDef(mods, ret,
+            constructorName, Nil, body, clazz.pos)
+          TreeCopiers.copyTemplate(clazz.body)(members =
+            const::clazz.body.members)
+      }
+    }
 
   protected def constructorName: Name       = StdNames.CONSTRUCTOR_NAME
   protected def voidSymbol: Option[Symbol]  = Some(VoidSymbol)

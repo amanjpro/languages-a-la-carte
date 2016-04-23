@@ -4,97 +4,92 @@ grammar Dcct;
 // Parser
 
 program
-  : schema ';' expression EOF
+  : schema expression* EOF
   ;
 
 schema
-  : decls
+  : cloudDataDecl* 
   ;
 
 // Types
+
+// TODO just use generic identifier and rely on type checking to rule out wrong
+// identifiers? Before we had entityIdent and arrayIdent now just ident. It
+// seems to be more sensible for this to be a type error rather than a parse
+// error.
+
 indexType
   : 'Int'
   | 'String'
-  | entityIdentifier
-  | arrayIdentifier
+  | Identifier // of array or entity
   ;
 
+  
 cloudType
   : 'CInt'
   | 'CString'
   | cloudSetType
-  | cloudTypeIdentifier
   ;
-
-cloudSetType
-  : 'CSet' '<' indexType '>'
-  ;
-
+  
 expressionType
   : indexType
   | 'Set' '<' expressionType '>'
   | expressionType '->' expressionType
-  | tupleType
+  ;
+  
+cloudSetType
+  : 'CSet' '<' indexType '>'
   ;
 
-tupleType
-  : '(' tupleElemType ')'
-  ;
-
-tupleElemType
-  : expressionType
-  | expressionType ',' tupleElemType
-  ;
-
-decl
+cloudDataDecl
   : entityDecl
   | arrayDecl
-  | propertyDecl
   ;
 
+
+// Entities
+// TODO think if I need to make the body optional
 entityDecl
-  : 'entity' entityIdentifier '(' elements ')'
+  : 'entity' Identifier '(' elements ')' '{' properties '}'
   ;
 
-arrayDecl
-  : 'array' arrayIdentifier '[' elements ']'
-  ;
-
-propertyDecl
-  : 'property' Identifier ':' indexType '->' cloudType
-  ;
-
-
+//TODO I think I am enforcing one or more elements, fix...
 elements
-  : element ',' elements
-  | element
+  :   element (',' element)*
   ;
 
 element
   : Identifier ':' indexType
   ;
-
-// Identifiers
-entityIdentifier
-  : Identifier
+  
+properties
+  : property ';' (property ';')*
+  ;
+  
+property
+  : Identifier ':' cloudType
+  ; 
+  
+  
+// Arrays
+  arrayDecl
+  : 'array' Identifier '[' elements ']' '{' properties '}'
+  ;
+  
+  
+// Expressions, expression, and related stuff
+expressions
+  :   expression (',' expression)*
   ;
 
-arrayIdentifier
-  : Identifier
-  ;
 
-cloudTypeIdentifier
-  : Identifier
-  ;
-
-
-expression
-  : 'new' entityIdentifier '(' expressions ')'
+ expression
+  : 'new' Identifier '(' expressions ')'
   | 'delete' expression
-  | arrayIdentifier '[' expressions ']'
+  | Identifier '[' expressions ']'
   | expression '(' expressions ')'
   | expression '.' expression
-  | 'all' entityIdentifier
+  | 'all' Identifier
   | 'entries' Identifier
   | 'yield'
   | 'flush'
@@ -106,8 +101,7 @@ expression
   | value
   | varDeclaration
   ;
-
-
+  
 bop
   : '=='
   | '!='
@@ -126,11 +120,6 @@ value
   | '(' Identifier ':' expressionType ')' '=>' expression
   ;
 
-decls
-  : decl
-  | decl ';' decls
-  ;
-
 
 ifelse
   : 'if' '(' expression ')' block 'else' block
@@ -138,12 +127,6 @@ ifelse
 
 block
   : '{' expression '}'
-  ;
-
-
-expressions
-  : expression ',' expressions
-  | expression
   ;
 
 values
@@ -162,6 +145,7 @@ literals
   : IntegerLiteral
   | StringLiteral
   ;
+ 
 
 // LEXER
 
@@ -182,7 +166,6 @@ ALL        : 'all';
 ENTRIES    : 'entries';
 YIELD      : 'yield';
 FLUSH      : 'flush';
-PROPERTY   : 'property';
 IF         : 'if';
 ELSE       : 'else';
 FOREACH    : 'foreach';
@@ -263,29 +246,20 @@ StringCharacter
   :   ~["\\]
   |   EscapeSequence
   ;
-
 // §3.10.6 Escape Sequences for Character and String Literals
-
 fragment
 EscapeSequence
   :   '\\' [btnfr"'\\]
   ;
-
-
-
-
 //
 // Whitespace and comments
 //
-
 WS
   :  [ \t\r\n\u000C]+ -> skip
   ;
-
 COMMENT
   :   '/*' .*? '*/' -> skip
   ;
-
 LINE_COMMENT
   :   '//' ~[\r\n]* -> skip
   ;
