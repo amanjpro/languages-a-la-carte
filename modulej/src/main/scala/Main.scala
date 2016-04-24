@@ -42,6 +42,7 @@ object Main {
     ErrorReporting.isErroneous match {
       case true     =>
         ErrorReporting.errors.foreach(Console.err.println(_))
+        println(ErrorReporting.errors.length + " errors found")
       case _        =>
         println("Compilation Successful")
     }

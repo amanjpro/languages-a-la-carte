@@ -68,7 +68,7 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
   object Language extends super.Language {
     def init(): Unit = {
 
-      
+
       SymbolUtils.standardDefinitions.foreach { s =>
         ProgramSymbol.declare(s)
       }
@@ -166,9 +166,15 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
 
   def start: Unit = {
     Language.init()
-    val cunits  = config.files.map(f => parse(f)).toList
-    val program = TreeFactories.mkProgram(cunits)
-    compile(program)
+    val cunits  = {
+      val files = config.files.filter(_.endsWith(".java"))
+      files.map(f => parse(f))
+    }
+    if(cunits != Nil) {
+      val program = TreeFactories.mkProgram(cunits)
+      compile(program)
+    } else
+      println("No files to compile")
   }
 
 }
