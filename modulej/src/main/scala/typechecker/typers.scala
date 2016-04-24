@@ -117,13 +117,13 @@ trait SelectTyperComponent extends ooj.typechecker.SelectTyperComponent {
 
 @component
 trait MethodDefTyperComponent extends
-  ppj.typechecker.MethodDefTyperComponent {
+    ppj.typechecker.MethodDefTyperComponent {
 
   (mthd: MethodDefApi) => {
-    val mthd2 = typed(mthd).asInstanceOf[MethodDefApi]
+    val mthd2 = super.apply(mthd).asInstanceOf[MethodDefApi]
 
     if(mthd2.mods.isNative && !isConstructor(mthd.symbol) &&
-          mthd.body != NoTree) {
+          mthd2.body != NoTree) {
       error(NATIVE_METHOD_CANNOT_HAVE_BODY,
           "", "", mthd.pos)
     }
@@ -140,9 +140,9 @@ trait MethodDefTyperComponent extends
   override def allPathsReturn(expr: Tree): Boolean = {
     enclosingMethod(expr.symbol) match {
       case Some(mthd)                         =>
-        mthd.mods.isFinal || allPathsReturn(expr)
+        mthd.mods.isNative || super.allPathsReturn(expr)
       case None                               =>
-        allPathsReturn(expr)
+        super.allPathsReturn(expr)
     }
   }
 }
