@@ -89,7 +89,7 @@ trait ClassDefNamerComponent extends NamerComponent {
       case Some(csym: ClassSymbol) =>
         val qname   = packageName(csym)
         val name    = csym.name
-        val psyms   = clazz.parents.flatMap(_.symbol).toSet
+        val psyms   = parents.flatMap(_.symbol).toSet
         val tpe     = ClassType(qname, name, psyms)
         clazz.symbol.foreach(_.tpe = Some(tpe))
         clazz.tpe = tpe
@@ -121,8 +121,7 @@ trait ClassDefNamerComponent extends NamerComponent {
         val slct = TreeFactories.mkSelect(java, lang, clazz.pos,
           owner = clazz.owner)
         val obj  = TreeFactories.mkTypeUse(objectClassName,
-          clazz.pos,
-          owner = clazz.owner)
+          clazz.pos, owner = clazz.owner)
         val res = TreeFactories.mkSelect(slct, obj, clazz.pos,
           owner = clazz.owner)
         obj.isInExtendsClause = true
