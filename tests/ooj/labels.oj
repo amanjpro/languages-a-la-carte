@@ -7,6 +7,8 @@
 
 
 class A {
+  A a = new A();
+  A n() { return null; }
   void m () {
     while(true) {
       continue l; // fails
