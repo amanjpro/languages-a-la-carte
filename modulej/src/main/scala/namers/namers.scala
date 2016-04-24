@@ -30,9 +30,14 @@ trait ClassDefNamerComponent extends ooj.namers.ClassDefNamerComponent {
   override protected def addObjectParentIfNeeded(
     clazz: ClassDefApi): List[UseTree] = {
     if(clazz.name == objectClassName &&
-      clazz.owner == Some(langPackageSymbol)) clazz.parents
+      enclosingPackage(clazz.symbol) == Some(langPackageSymbol))
+      clazz.parents.map(parent => name(parent).asInstanceOf[UseTree])
     else super.addObjectParentIfNeeded(clazz)
   }
+
+
+  protected def enclosingPackage(sym: Option[Symbol]): Option[Symbol] =
+    SymbolUtils.enclosingPackage(sym)
 
 }
 

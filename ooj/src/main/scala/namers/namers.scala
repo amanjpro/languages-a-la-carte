@@ -102,33 +102,33 @@ trait ClassDefNamerComponent extends NamerComponent {
 
   protected def addObjectParentIfNeeded(clazz: ClassDefApi): List[UseTree] = {
 
-    def test(use: UseTree): Boolean  = use match {
+    def isObjectClass(use: NamedTree): Boolean  = use match {
       case Select(_, tuse)    =>
         tuse.name == objectClassName && tuse.owner == Some(langPackageSymbol)
-      case tuse               =>
-        tuse.name == objectClassName && tuse.owner == Some(langPackageSymbol)
+      case tree               =>
+        tree.name == objectClassName && tree.owner == Some(langPackageSymbol)
     }
 
     val parents =
-      clazz.parents.map((parent) => name(parent).asInstanceOf[UseTree])
+      clazz.parents.map(parent => name(parent).asInstanceOf[UseTree])
 
-    parents.exists(test(_)) match {
-      case true       => parents
-      case _          =>
+    parents.exists(isObjectClass(_)) match {
+      case false                                =>
         val java = TreeFactories.mkIdent(javaPackageName,
-          clazz.pos, owner = clazz.symbol)
+          clazz.pos, owner = clazz.owner)
         val lang = TreeFactories.mkIdent(langPackageName,
-          clazz.pos, owner = clazz.symbol)
+          clazz.pos, owner = clazz.owner)
         val slct = TreeFactories.mkSelect(java, lang, clazz.pos,
-          owner = clazz.symbol)
+          owner = clazz.owner)
         val obj  = TreeFactories.mkTypeUse(objectClassName,
           clazz.pos,
-          owner = clazz.symbol)
+          owner = clazz.owner)
         val res = TreeFactories.mkSelect(slct, obj, clazz.pos,
-          owner = clazz.symbol)
+          owner = clazz.owner)
         obj.isInExtendsClause = true
         val res2 = name(res).asInstanceOf[UseTree]
         res2::parents
+      case true                                => parents
     }
 
   }
