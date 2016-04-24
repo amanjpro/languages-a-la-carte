@@ -24,7 +24,7 @@ trait ErrorCodes extends arrooj.errors.ErrorCodes {
 
   case object NO_CATCH_FOUND extends ErrorCode {
     val message: String =
-      "``try'' statements should catches at least one exception"
+      "``try'' statements should catch at least one exception"
   }
 
   case object UNREPORTED_EXCEPTION extends ErrorCode {
