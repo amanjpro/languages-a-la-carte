@@ -35,13 +35,17 @@ case object TrueCase extends TrackCase
 case object FalseCase extends TrackCase
 
 class FlowEnv {
-  private var trueCaseSymbols: List[Symbol]   = Nil
-  private var falseCaseSymbols: List[Symbol]  = Nil
+  private var trueCaseSymbols: Set[Symbol]   = Set.empty
+  private var falseCaseSymbols: Set[Symbol]  = Set.empty
 
+  def emptyTracks(): Unit = {
+    this.falseCaseSymbols = Set.empty
+    this.trueCaseSymbols  = Set.empty
+  }
 
   def add(sym: Symbol): Unit = {
-    trueCaseSymbols = sym::trueCaseSymbols
-    falseCaseSymbols = sym::falseCaseSymbols
+    trueCaseSymbols = trueCaseSymbols + sym
+    falseCaseSymbols = falseCaseSymbols + sym
   }
 
 
@@ -75,9 +79,9 @@ class FlowEnv {
   }
   def mask(lane: TrackCase): Unit = lane match {
     case TrueCase                  =>
-      this.trueCaseSymbols = Nil
+      this.trueCaseSymbols = Set.empty
     case FalseCase                 =>
-      this.falseCaseSymbols = Nil
+      this.falseCaseSymbols = Set.empty
   }
 
 
@@ -177,7 +181,10 @@ trait PackageDefFlowCorrectnessCheckerComponent
   extends FlowCorrectnessCheckerComponent {
   (pkg: PackageDefApi) => {
     val z: CompletenessStatus = N
-    pkg.members.foreach( member => check((member, env)))
+    pkg.members.foreach { member =>
+      env.emptyTracks
+      check((member, env))
+    }
     N
   }
 }
@@ -196,8 +203,10 @@ trait TemplateFlowCorrectnessCheckerComponent extends
   (template: TemplateApi) => {
     template.members.foreach {
       case member: MethodDefApi                   =>
+        env.emptyTracks
         check((member, env))
       case member: BlockApi                       =>
+        env.emptyTracks
         check((member, env))
       case _                                      =>
         ()
