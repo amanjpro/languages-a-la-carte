@@ -36,19 +36,35 @@ trait TreeUtils {
     tpe match {
       case IntType         =>
         TreeCopiers.copyLiteral(lit)(constant = {
-          IntConstant(lit.constant.value.toString.toInt)
+          lit.constant.value match {
+            case ch: Char      => IntConstant(ch.toInt)
+            case _             =>
+              IntConstant(lit.constant.value.toString.toInt)
+          }
         })
       case LongType        =>
         TreeCopiers.copyLiteral(lit)(constant = {
-          LongConstant(lit.constant.value.toString.toLong)
+          lit.constant.value match {
+            case ch: Char      => LongConstant(ch.toLong)
+            case _             =>
+              LongConstant(lit.constant.value.toString.toLong)
+          }
         })
       case FloatType       =>
         TreeCopiers.copyLiteral(lit)(constant = {
-          FloatConstant(lit.constant.value.toString.toFloat)
+          lit.constant.value match {
+            case ch: Char      => FloatConstant(ch.toFloat)
+            case _             =>
+              FloatConstant(lit.constant.value.toString.toFloat)
+          }
         })
       case DoubleType      =>
         TreeCopiers.copyLiteral(lit)(constant = {
-          DoubleConstant(lit.constant.value.toString.toDouble)
+          lit.constant.value match {
+            case ch: Char      => DoubleConstant(ch.toDouble)
+            case _             =>
+              DoubleConstant(lit.constant.value.toString.toDouble)
+          }
         })
       case _               =>
         lit

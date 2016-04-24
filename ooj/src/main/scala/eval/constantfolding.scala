@@ -382,7 +382,7 @@ trait BinaryConstantFoldingComponent
               val res = TreeCopiers.copyLiteral(lit)(
                 constant = IntConstant (
                   bop2BinaryInt(bin.op)(
-                  l1.value.asInstanceOf[Int], l2.value.asInstanceOf[Int])))
+                  toInt(l1.value), toInt(l2.value))))
               (res, env2)
             } else if(l1.tpe.isInstanceOf[NumericType] &&
                       l2.tpe.isInstanceOf[NumericType]) {
@@ -391,19 +391,19 @@ trait BinaryConstantFoldingComponent
                 val res = TreeCopiers.copyLiteral(lit)(
                   constant = LongConstant(
                     bop2BinaryLong(bin.op)(
-                    l1.value.asInstanceOf[Int], l2.value.asInstanceOf[Int])))
+                    toInt(l1.value), toInt(l2.value))))
                 (res, env2)
               } else if(l1.tpe <:< FloatType && l2.tpe <:< FloatType) {
                 val res = TreeCopiers.copyLiteral(lit)(
                   constant = FloatConstant (
                     bop2BinaryFloat(bin.op)(
-                    l1.value.asInstanceOf[Int], l2.value.asInstanceOf[Int])))
+                    toInt(l1.value), toInt(l2.value))))
                 (res, env2)
               } else if(l1.tpe <:< DoubleType || l2.tpe <:< DoubleType) {
                 val res = TreeCopiers.copyLiteral(lit)(
                   constant = DoubleConstant (
                     bop2BinaryDouble(bin.op)(
-                    l1.value.asInstanceOf[Int], l2.value.asInstanceOf[Int])))
+                    toInt(l1.value), toInt(l2.value))))
                 (res, env2)
               } else (bin, env2)
             } else {
@@ -433,8 +433,8 @@ trait BinaryConstantFoldingComponent
                 case USHR  => _ >>> _
               }
               val c2v = (c: Constant) => {
-                if(c.tpe =:= LongType)       c.value.asInstanceOf[Long]
-                else                         c.value.asInstanceOf[Int]
+                if(c.tpe =:= LongType)       toLong(c.value)
+                else                         toInt(c.value)
               }
 
               val lhs = c2v(l1)
@@ -442,17 +442,17 @@ trait BinaryConstantFoldingComponent
               val const = if(l1.tpe =:= LongType) {
                 if(l2.tpe =:= LongType)
                   LongConstant(fLongLong(
-                    lhs.asInstanceOf[Long], rhs.asInstanceOf[Long]))
+                    toLong(lhs), toLong(rhs)))
                 else
                   LongConstant(fLongInt(
-                    lhs.asInstanceOf[Long], rhs.asInstanceOf[Int]))
+                    toLong(lhs), toInt(rhs)))
               } else {
                 if(l2.tpe =:= LongType)
                   IntConstant(fIntLong(
-                    lhs.asInstanceOf[Int], rhs.asInstanceOf[Long]))
+                    toInt(lhs), toLong(rhs)))
                 else
                   IntConstant(fIntInt(
-                    lhs.asInstanceOf[Int], rhs.asInstanceOf[Int]))
+                    toInt(lhs), toInt(rhs)))
               }
               val res = TreeCopiers.copyLiteral(lit)(constant = const)
               (res, env2)
@@ -489,22 +489,22 @@ trait BinaryConstantFoldingComponent
               val const = if(l1.tpe <:< IntType &&
                  l2.tpe <:< IntType) {
                 BooleanConstant (
-                  relInt(l1.value.asInstanceOf[Int],
-                           l2.value.asInstanceOf[Int]))
+                  relInt(toInt(l1.value),
+                           toInt(l2.value)))
               } else if(l1.tpe.isInstanceOf[IntegralType] &&
                  l2.tpe.isInstanceOf[IntegralType]) {
                 BooleanConstant (
-                  relLong(l1.value.asInstanceOf[Long],
-                           l2.value.asInstanceOf[Long]))
+                  relLong(toLong(l1.value),
+                           toLong(l2.value)))
               } else if(l1.tpe <:< FloatType &&
                  l2.tpe <:< FloatType) {
                 BooleanConstant (
-                  relFloat(l1.value.asInstanceOf[Float],
-                           l2.value.asInstanceOf[Float]))
+                  relFloat(toFloat(l1.value),
+                           toFloat(l2.value)))
               } else {
                 BooleanConstant (
-                  relDouble(l1.value.asInstanceOf[Double],
-                            l2.value.asInstanceOf[Double]))
+                  relDouble(toDouble(l1.value),
+                            toDouble(l2.value)))
               }
               val res = TreeCopiers.copyLiteral(lit)(constant = const)
               (res, env2)
@@ -530,22 +530,22 @@ trait BinaryConstantFoldingComponent
               val const = if(l1.tpe <:< IntType &&
                  l2.tpe <:< IntType) {
                 BooleanConstant (
-                  eqAnyVal(l1.value.asInstanceOf[Int],
-                           l2.value.asInstanceOf[Int]))
+                  eqAnyVal(toInt(l1.value),
+                           toInt(l2.value)))
               } else if(l1.tpe.isInstanceOf[IntegralType] &&
                  l2.tpe.isInstanceOf[IntegralType]) {
                 BooleanConstant (
-                  eqAnyVal(l1.value.asInstanceOf[Long],
-                           l2.value.asInstanceOf[Long]))
+                  eqAnyVal(toLong(l1.value),
+                           toLong(l2.value)))
               } else if(l1.tpe <:< FloatType &&
                  l2.tpe <:< FloatType) {
                 BooleanConstant (
-                  eqAnyVal(l1.value.asInstanceOf[Float],
-                           l2.value.asInstanceOf[Float]))
+                  eqAnyVal(toFloat(l1.value),
+                           toFloat(l2.value)))
               } else {
                 BooleanConstant (
-                  eqAnyVal(l1.value.asInstanceOf[Double],
-                           l2.value.asInstanceOf[Double]))
+                  eqAnyVal(toDouble(l1.value),
+                           toDouble(l2.value)))
               }
               val res = TreeCopiers.copyLiteral(lit)(constant = const)
               (res, env2)
@@ -578,12 +578,12 @@ trait BinaryConstantFoldingComponent
               val cnst = if(l1.tpe <:< BooleanType &&
                  l2.tpe <:< BooleanType) {
                 IntConstant(
-                  bitwiseInt(l1.value.asInstanceOf[Int],
-                             l2.value.asInstanceOf[Int]))
+                  bitwiseInt(toInt(l1.value),
+                             toInt(l2.value)))
               } else {
                 LongConstant(
-                  bitwiseLong(l1.value.asInstanceOf[Long],
-                             l2.value.asInstanceOf[Long]))
+                  bitwiseLong(toLong(l1.value),
+                             toLong(l2.value)))
               }
               val res = TreeCopiers.copyLiteral(lit)(constant = cnst)
               (res, env2)
@@ -613,6 +613,26 @@ trait BinaryConstantFoldingComponent
       case _                                            =>
         (bin, env2)
     }
+  }
+
+  protected def toInt(value: Any): Int = value match {
+    case ch: Char            => ch.toInt
+    case _                   => value.toString.toInt
+  }
+
+  protected def toFloat(value: Any): Float = value match {
+    case ch: Char            => ch.toFloat
+    case _                   => value.toString.toFloat
+  }
+
+  protected def toLong(value: Any): Long = value match {
+    case ch: Char            => ch.toLong
+    case _                   => value.toString.toLong
+  }
+
+  protected def toDouble(value: Any): Double = value match {
+    case ch: Char            => ch.toDouble
+    case _                   => value.toString.toDouble
   }
 
   protected def bop2BinaryInt(op: BOp): (Int, Int) => Int = op match {
@@ -665,33 +685,33 @@ trait UnaryConstantFoldingComponent
             (res, env1)
           case Pos    if l.tpe.isInstanceOf[NumericType]    =>
             val const = if(l.tpe <:< IntType) {
-              IntConstant(l.value.asInstanceOf[Int])
+              IntConstant(toInt(l.value))
             } else if(l.tpe =:= LongType) {
-              LongConstant(l.value.asInstanceOf[Long])
+              LongConstant(toLong(l.value))
             } else if(l.tpe =:= FloatType) {
-              FloatConstant(l.value.asInstanceOf[Float])
+              FloatConstant(toFloat(l.value))
             } else {
-              DoubleConstant(l.value.asInstanceOf[Double])
+              DoubleConstant(toDouble(l.value))
             }
             val res = TreeCopiers.copyLiteral(lit)(constant = const)
             (res, env1)
           case Neg    if l.tpe.isInstanceOf[NumericType]    =>
             val const = if(l.tpe <:< IntType) {
-              IntConstant(- l.value.asInstanceOf[Int])
+              IntConstant(- toInt(l.value))
             } else if(l.tpe =:= LongType) {
-              LongConstant(- l.value.asInstanceOf[Long])
+              LongConstant(- toLong(l.value))
             } else if(l.tpe =:= FloatType) {
-              FloatConstant(- l.value.asInstanceOf[Float])
+              FloatConstant(- toFloat(l.value))
             } else {
-              DoubleConstant(- l.value.asInstanceOf[Double])
+              DoubleConstant(- toDouble(l.value))
             }
             val res = TreeCopiers.copyLiteral(lit)(constant = const)
             (res, env1)
           case BCompl if l.tpe.isInstanceOf[IntegralType]   =>
             val const = if(l.tpe <:< IntType) {
-              IntConstant(~ l.value.asInstanceOf[Int])
+              IntConstant(~ toInt(l.value))
             } else {
-              LongConstant(~ l.value.asInstanceOf[Long])
+              LongConstant(~ toLong(l.value))
             }
             val res = TreeCopiers.copyLiteral(lit)(constant = const)
             (res, env1)
@@ -701,6 +721,27 @@ trait UnaryConstantFoldingComponent
       case _          =>
         (unary, env1)
     }
+  }
+
+
+  protected def toInt(value: Any): Int = value match {
+    case ch: Char            => ch.toInt
+    case _                   => value.toString.toInt
+  }
+
+  protected def toFloat(value: Any): Float = value match {
+    case ch: Char            => ch.toFloat
+    case _                   => value.toString.toFloat
+  }
+
+  protected def toLong(value: Any): Long = value match {
+    case ch: Char            => ch.toLong
+    case _                   => value.toString.toLong
+  }
+
+  protected def toDouble(value: Any): Double = value match {
+    case ch: Char            => ch.toDouble
+    case _                   => value.toString.toDouble
   }
 }
 
