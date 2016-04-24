@@ -356,8 +356,18 @@ class Parser extends parsers.Parser {
     }
 
 
-    override def visitArrayType(ctx: Java1Parser.ArrayTypeContext): Tree = {
-      val use = visitChildren(ctx).asInstanceOf[UseTree]
+    override def visitArrayArrayType(ctx: Java1Parser.ArrayArrayTypeContext): Tree = {
+      val use = visit(ctx.arrayType).asInstanceOf[UseTree]
+      dimsToArrayType(use, 1)
+    }
+
+    override def visitPrimitiveArrayType(ctx: Java1Parser.PrimitiveArrayTypeContext): Tree = {
+      val use = visit(ctx.primitiveType).asInstanceOf[UseTree]
+      dimsToArrayType(use, 1)
+    }
+
+    override def visitNameArrayType(ctx: Java1Parser.NameArrayTypeContext): Tree = {
+      val use = visit(ctx.name).asInstanceOf[UseTree]
       dimsToArrayType(use, 1)
     }
 

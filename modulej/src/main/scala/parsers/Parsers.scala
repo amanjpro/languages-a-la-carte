@@ -206,8 +206,8 @@ class Parser extends parsers.Parser {
 
     def createBinary[T <: ParserRuleContext](es: java.util.List[T],
       trm: String, ctx: ParserRuleContext): Expr = {
-      val e1 = visitChildren(es.get(0)).asInstanceOf[Expr]
-      val e2 = visitChildren(es.get(1)).asInstanceOf[Expr]
+      val e1 = visit(es.get(0)).asInstanceOf[Expr]
+      val e2 = visit(es.get(1)).asInstanceOf[Expr]
       createBinary(e1, e2, trm, ctx)
 
     }
@@ -273,13 +273,68 @@ class Parser extends parsers.Parser {
         pkg, fileName, Nil)
     }
 
+    protected def toInt(str: String): Int = try {
+      Integer.decode(str).intValue
+    } catch {
+      case ex: Exception          =>
+        if(isBinary(str)) {
+          Integer.parseInt(str.substring(2), 2)
+        } else {
+          // INFO: This branch is taken from OpenJDK's Java's compiler:
+          // javac/util/Convert.java
+          // url: http://hg.openjdk.java.net/jdk6/jdk6/langtools/file/2a66a69ffe48/src/share/classes/com/sun/tools/javac/util/Convert.java
+          val chars = str.toList.tail.tail
+          val radix = 16
+          val limit = Integer.MAX_VALUE / (radix/2);
+          var n = 0;
+          chars.foldLeft(0)((z, y) => {
+            val d = java.lang.Character.digit(y, 16)
+            if(z <0 ||
+                z > limit ||
+                n * radix > Integer.MAX_VALUE - d)
+                  throw new NumberFormatException();
+            n * radix + d;
+          })
+        }
+    }
+
+    def toLong(str: String): Long = {
+      try {
+        java.lang.Long.decode(str).longValue
+      } catch {
+        case ex: Exception          =>
+          // INFO: This branch is taken from OpenJDK's Java's compiler:
+          // javac/util/Convert.java
+          // url: http://hg.openjdk.java.net/jdk6/jdk6/langtools/file/2a66a69ffe48/src/share/classes/com/sun/tools/javac/util/Convert.java
+          val chars = str.toList.tail.tail
+          val radix = 16
+          val limit: Long = java.lang.Long.MAX_VALUE / (radix/2);
+          chars.foldLeft(0L)((z, y) => {
+              val d: Long = java.lang.Character.digit(y, radix);
+              if (z < 0L ||
+                  z > limit ||
+                  z * radix > java.lang.Long.MAX_VALUE - d) {
+                  throw new NumberFormatException();
+                }
+              z * radix + d;
+          })
+      }
+    }
+
+    protected def isBinary(str: String): Boolean =
+      str.startsWith("0b") && str.substring(2).exists { ch =>
+        !(ch == '1' || ch == '0')
+      }
+
     override def visitIntLit(ctx: Java1Parser.IntLitContext): Tree = {
       val txt = ctx.getText
       (txt.endsWith("l") || txt.endsWith("L")) match {
         case true  =>
-          TreeFactories.mkLiteral(LongConstant(ctx.getText.toInt), pos(ctx))
+          TreeFactories.mkLiteral(
+            LongConstant(toLong(txt.dropRight(1))), pos(ctx))
         case false =>
-          TreeFactories.mkLiteral(IntConstant(ctx.getText.toInt), pos(ctx))
+          val v = toInt(txt)
+          TreeFactories.mkLiteral(IntConstant(v), pos(ctx))
       }
     }
 
@@ -292,9 +347,11 @@ class Parser extends parsers.Parser {
       val txt = ctx.getText
       (txt.endsWith("f") || txt.endsWith("F")) match {
         case true  =>
-          TreeFactories.mkLiteral(FloatConstant(ctx.getText.toFloat), pos(ctx))
+          val v = txt.dropRight(1).toFloat
+          TreeFactories.mkLiteral(FloatConstant(v), pos(ctx))
         case false =>
-          TreeFactories.mkLiteral(DoubleConstant(ctx.getText.toDouble), pos(ctx))
+          val v = txt.toDouble
+          TreeFactories.mkLiteral(DoubleConstant(v), pos(ctx))
       }
     }
 
@@ -371,8 +428,18 @@ class Parser extends parsers.Parser {
     }
 
 
-    override def visitArrayType(ctx: Java1Parser.ArrayTypeContext): Tree = {
-      val use = visitChildren(ctx).asInstanceOf[UseTree]
+    override def visitArrayArrayType(ctx: Java1Parser.ArrayArrayTypeContext): Tree = {
+      val use = visit(ctx.arrayType).asInstanceOf[UseTree]
+      dimsToArrayType(use, 1)
+    }
+
+    override def visitPrimitiveArrayType(ctx: Java1Parser.PrimitiveArrayTypeContext): Tree = {
+      val use = visit(ctx.primitiveType).asInstanceOf[UseTree]
+      dimsToArrayType(use, 1)
+    }
+
+    override def visitNameArrayType(ctx: Java1Parser.NameArrayTypeContext): Tree = {
+      val use = visit(ctx.name).asInstanceOf[UseTree]
       dimsToArrayType(use, 1)
     }
 
@@ -425,17 +492,7 @@ class Parser extends parsers.Parser {
       val name       = Name(ctx.Identifier.getText)
       val parent     = ctx.parent() match {
         case null                  =>
-          val ps      = pos(ctx.Identifier.getSymbol)
-          // an Identifier to point to java package
-          val javaPkg = TreeFactories.mkIdent(JAVA_PACKAGE_NAME, ps)
-          // an Identifier to point to lang package
-          val langPkg = TreeFactories.mkIdent(LANG_PACKAGE_NAME, ps)
-          // an Identifier to point to Object type
-          val objType = TreeFactories.mkTypeUse(OBJECT_TYPE_NAME, ps)
-          objType.isInExtendsClause = true
-          // Create a Select out of it
-          TreeFactories.mkSelect(TreeFactories.mkSelect(javaPkg, langPkg, ps),
-                objType, ps)
+          None
         case _                     =>
           val res =
             visit(ctx.parent().classOrInterfaceType()).asInstanceOf[UseTree]
@@ -447,7 +504,7 @@ class Parser extends parsers.Parser {
             case _                               =>
               ()
           }
-          res
+          Some(res)
       }
       val body       = visit(ctx.classBody()).asInstanceOf[TemplateApi]
       val interfaces = interfacesContextToTypeUses(ctx.interfaces())
@@ -461,7 +518,7 @@ class Parser extends parsers.Parser {
         }
       }
       val res = TreeFactories.mkClassDef(mods, name,
-        parent::interfaces, body, pos(ctx))
+        parent.toList ++ interfaces, body, pos(ctx))
       if(mods.isPublicAcc)
         res.sourceName = fileName
       res

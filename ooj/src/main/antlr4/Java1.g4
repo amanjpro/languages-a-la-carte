@@ -89,9 +89,9 @@ classOrInterfaceType
 
 
 arrayType
-  : primitiveType '[' ']'
-  | name '[' ']'
-  | arrayType '[' ']'
+  : primitiveType '[' ']'         # PrimitiveArrayType
+  | name '[' ']'                  # NameArrayType
+  | arrayType '[' ']'             # ArrayArrayType
   ;
 
 // 19.5 Names
