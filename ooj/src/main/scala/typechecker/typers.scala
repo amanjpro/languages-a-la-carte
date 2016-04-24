@@ -1050,6 +1050,12 @@ trait AssignTyperComponent extends primj.typechecker.AssignTyperComponent {
       error(REASSIGNING_FINAL_VARIABLE,
         lhs.toString, lhs.toString, lhs.pos)
   }
+
+  override protected def checkVariableLHS(lhs: Tree): Unit = {
+    if(!TreeUtils.isVariable(lhs))
+      error(ASSIGNING_NOT_TO_VARIABLE,
+        lhs.toString, lhs.toString, lhs.pos)
+  }
 }
 
 @component
