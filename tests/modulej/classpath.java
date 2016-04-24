@@ -5,7 +5,9 @@
 // NAME_NOT_FOUND
 // TYPE_MISMATCH
 
-import java.lang.*;
+package java.util;
+
+// import java.lang.*;
 import java.io.File;
 import java.io.FileJ;  // fails
 
@@ -19,5 +21,11 @@ class A extends Object {
                                        3- The missing constructor of JFille
                                        4- The unresolved types information
                                      */
+  
+
+  public String m(String a) {
+    String s = "";
+    return m(s);
+  }
 }
 
