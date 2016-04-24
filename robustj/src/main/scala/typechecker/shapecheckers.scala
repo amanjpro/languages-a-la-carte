@@ -30,7 +30,7 @@ trait TryShapeCheckerComponent extends ShapeCheckerComponent {
     check(tri.tryClause)
     tri.catches.foreach(check(_))
     tri.finallyClause.foreach(check(_))
-    if(tri.catches.isEmpty) {
+    if(tri.catches.isEmpty && tri.finallyClause == None) {
       error(NO_CATCH_FOUND, "", "", tri.pos)
     }
   }
@@ -43,6 +43,7 @@ trait CatchShapeCheckerComponent extends ShapeCheckerComponent {
     check(ctch.eparam)
     check(ctch.catchClause)
   }
+
 }
 
 
@@ -69,7 +70,7 @@ trait ValDefShapeCheckerComponent
   override protected def sensibleParamFlag(mods: Flags,
     sym: Option[Symbol]): Boolean = sym match {
     case Some(s: ScopeSymbol)   if s.mods.isCatchSymbol  =>
-      mods.isExceptionParam
+      mods.isExceptionParam && mods.isParam
     case Some(_: MethodSymbol)                           =>
       mods.isParam
     case _                                               =>
