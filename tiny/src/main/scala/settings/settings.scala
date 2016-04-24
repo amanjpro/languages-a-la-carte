@@ -2,6 +2,7 @@ package ch.usi.inf.l3.sana.tiny
 
 import scopt.OptionParser
 import java.util.logging.Level
+import java.io.File
 
 /* We preferred using object instead of package here,
    to make sure that nobody accidentally have access
@@ -62,9 +63,23 @@ object settings {
     /**
       * @group Compilation Options
       */
-    private[this] var files_ : Vector[String] = Vector()
-    def files: Vector[String] = this.files_
-    private[settings] def files_=(v: Vector[String]): Unit =
+    private[this] var files_ : List[String] = Nil
+    def files: List[String] = {
+      def allFiles(files: List[File], acc: List[String]): List[String] = {
+        files match {
+          case Nil                                => acc
+          case (x::xs)        if x.isDirectory    =>
+            val nestedFiles = allFiles(x.listFiles.toList, Nil)
+            allFiles(xs, acc ++ nestedFiles)
+          case (x::xs)                            =>
+            val thisFile    = x.getCanonicalPath
+            allFiles(xs, thisFile::acc)
+
+        }
+      }
+      allFiles(this.files_.map(new File(_)), Nil)
+    }
+    private[settings] def files_=(v: List[String]): Unit =
       this.files_ = v
 
     /**
@@ -114,7 +129,7 @@ object settings {
           config.destination = Some(dest)
         } text(s"Set the destination directory for the compiled classes")
         arg[String]("<file>...") required() unbounded() action { case (f, _) =>
-          config.files = config.files ++ Vector(f)
+          config.files = config.files ++ List(f)
         } text("Unbounded filenames or paths to compile")
         opt[Seq[String]]("classpath") abbr("cp") action { case (cp, _) =>
           config.classpath = config.classpath ++ cp
