@@ -483,7 +483,15 @@ trait TypeUseTyperComponent extends TyperComponent {
             tuse.toString, "a type", tuse.pos)
           tuse
       }
-    } else tuse
+    } else {
+      for {
+        sym <- tuse.symbol
+        tpe <- sym.tpe
+      } {
+        tuse.tpe = tpe
+      }
+      tuse
+    }
   }
 
 }
