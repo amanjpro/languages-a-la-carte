@@ -58,18 +58,33 @@ trait ProgramSymbolAssignerComponent extends SymbolAssignerComponent {
 @component
 trait CompilationUnitSymbolAssignerComponent extends SymbolAssignerComponent {
   (cunit: CompilationUnitApi) => {
-    val owner   = cunit.owner
+    // val owner   = cunit.owner
+    // val sym     = CompilationUnitSymbol(None, cunit.sourceName,
+    //                               cunit.sourcePath, owner)
+    // owner.foreach(owner => {
+    //   owner.declare(sym)
+    // })
+    // cunit.module.owner = sym
+    // cunit.symbol       = sym
+    // val pkg            = assign(cunit.module).asInstanceOf[PackageDefApi]
+    // sym.module         = pkg.symbol
+    // sym.owner.foreach(cunit.owner = _)
+    // TreeCopiers.copyCompilationUnit(cunit)(module = pkg)
+
     val sym     = CompilationUnitSymbol(None, cunit.sourceName,
-                                  cunit.sourcePath, owner)
+                                  cunit.sourcePath, None)
+    cunit.module.owner = sym
+    val pkg     = assign(cunit.module).asInstanceOf[PackageDefApi]
+    val owner   = pkg.symbol
+    sym.owner   = owner
+    sym.module       = Some(sym)
     owner.foreach(owner => {
+      cunit.owner = owner
       owner.declare(sym)
     })
-    cunit.module.owner = sym
     cunit.symbol       = sym
-    val pkg            = assign(cunit.module).asInstanceOf[PackageDefApi]
-    sym.module         = pkg.symbol
-    sym.owner.foreach(cunit.owner = _)
     TreeCopiers.copyCompilationUnit(cunit)(module = pkg)
+
   }
 }
 
@@ -79,7 +94,7 @@ trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
     val owner = pkg.owner
     val sym     = createSymbol(pkg.containingPackages,
       pkg.name, Some(programSymbol))
-    sym.owner.foreach(pkg.owner = _)
+    // sym.owner.foreach(pkg.owner = _)
     pkg.symbol = sym
     val memberOwner = owner match {
       case Some(cunit: CompilationUnitSymbol) =>
@@ -103,7 +118,7 @@ trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
         val s   = createSymbol(Nil, n, owner)
         createSymbol(ns, name, Some(s))
       case _                                                     =>
-        owner.flatMap(_.getDirectlyDefinedSymbol(name,
+        val res = owner.flatMap(_.getDirectlyDefinedSymbol(name,
             _.isInstanceOf[PackageSymbol])) match {
           case None               =>
             val sym = PackageSymbol(name, owner)
@@ -112,7 +127,7 @@ trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
           case Some(sym)          =>
             sym
         }
-
+        res
     }
   }
 
@@ -142,10 +157,8 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
 
   protected def createClassSymbol(clazz: ClassDefApi,
     owner: Option[Symbol]): ClassSymbol = owner match {
-      case Some(cunit: CompilationUnitSymbol)
-            if Some(clazz.name.asString) != clazz.sourceName              =>
-        ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
       case Some(cunit: CompilationUnitSymbol)                             =>
+            // if clazz.mods.isPublicAcc                                     =>
         val s = ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
         cunit.owner.foreach(_.declare(s))
         s
@@ -162,7 +175,7 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
     case _                                                      =>
       ()
   }
-  
+
   protected def addDefaultConstructor(clazz: ClassDefApi, sym: ClassSymbol ): TemplateApi = {
       val shouldCreateConstructor =
         !(clazz.body.members.exists(isConstructor(_))) &&
@@ -197,6 +210,8 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
 
   protected def isConstructor(tree: Tree): Boolean =
     TreeUtils.isConstructor(tree)
+  protected def enclosingPackage(sym: Option[Symbol]): Option[Symbol] =
+    SymbolUtils.enclosingPackage(sym)
 }
 
 
@@ -286,7 +301,7 @@ trait MethodDefSymbolAssignerComponent
     owner.foreach(sym => sym.declare(symbol))
     val tpt     = if(mthd.mods.isConstructor) {
       mthd.declaredClassNameForConstructor = useName(mthd.ret)
-      val tuse = TreeFactories.mkTypeUse(voidName, mthd.pos)
+      val tuse = TreeFactories.mkTypeUse(voidName, mthd.ret.pos)
       owner.foreach(tuse.owner = _)
       assign(tuse).asInstanceOf[UseTree]
     } else {
@@ -325,10 +340,11 @@ trait MethodDefSymbolAssignerComponent
       assign(mthd.body).asInstanceOf[Expr]
     }
     symbol.params = params.flatMap(_.symbol)
-    symbol.ret    = tpt.symbol
+    // symbol.ret    = tpt.symbol
     mthd.symbol = symbol
-    TreeCopiers.copyMethodDef(mthd)(ret = tpt,
+    val res = TreeCopiers.copyMethodDef(mthd)(ret = tpt,
       params = params, body = body)
+    res
   }
 
   protected def createMethodSymbol(mthd: MethodDefApi,
