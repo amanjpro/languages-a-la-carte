@@ -14,6 +14,7 @@ import tiny.types.{TypeUtils => _, _}
 import tiny.symbols.{TypeSymbol, TermSymbol, Symbol}
 import tiny.source.Position
 import tiny.names.Name
+import tiny.modifiers.Flags
 import tiny.errors.ErrorReporting.{error,warning}
 import calcj.typechecker.{TyperComponent, TypePromotions}
 import calcj.types._
@@ -605,6 +606,9 @@ trait ApplyTyperComponent extends TyperComponent {
     val fun    = {
       apply.fun match {
         case fun@Select(qual, f: IdentApi)   =>
+          if(isExplicitConstructorInvocation(apply)) {
+            f.isExplicitConstructorInvocation = true
+          }
           f.isMethodIdent = true
           f.argumentTypes = args.flatMap(_.tpe)
           typed(fun).asInstanceOf[SelectApi]
@@ -768,14 +772,15 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
 
 
 trait IdentNamer {
+
+
   def nameIdent(ident: IdentApi, isInTypeChecker: Boolean): IdentApi = {
     val id = TreeCopiers.copyIdent(ident)(name = ident.name)
     val tptMods = if(id.isQualified) {
       id.owner.map(_.mods).getOrElse(noflags)
     } else enclosingClass(id.owner).map(_.mods).getOrElse(noflags)
 
-    if(id.isMethodIdent && !(id.name == StdNames.CONSTRUCTOR_NAME &&
-              (tptMods.isAbstract || tptMods.isInterface))) {
+    if(id.isMethodIdent && isGoodCall(id, tptMods)) {
       val allCandidateMethods = (enclosingClass(id.owner),
             id.argumentTypes) match {
         case (Some(cs: ClassSymbol), Some(tpes)) =>
@@ -906,6 +911,14 @@ trait IdentNamer {
       }
       id
     }
+  }
+
+  protected def isGoodCall(id: IdentApi, mods: Flags): Boolean = {
+    if(id.name == StdNames.CONSTRUCTOR_NAME) {
+      if(mods.isAbstract || mods.isInterface) {
+        id.isExplicitConstructorInvocation
+      } else true
+    } else true
   }
 
   protected def isInStaticContext(symbol: Option[Symbol]): Boolean = {
