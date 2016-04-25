@@ -61,6 +61,10 @@ trait ErrorCodes extends tiny.errors.ErrorCodes {
       "Method already defined"
   }
 
+  case object PARAM_OWNED_BY_NON_METHOD extends ErrorCode {
+    val message: String =
+      "Parameter can only appear in method parameter contexts"
+  }
 
 }
 

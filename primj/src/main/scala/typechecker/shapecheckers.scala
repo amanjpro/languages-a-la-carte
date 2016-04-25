@@ -220,7 +220,7 @@ trait ValDefShapeCheckerComponent extends ShapeCheckerComponent {
 
     if(!sensibleParamFlag(valdef.mods, valdef.owner))
         // TODO: Better error message
-        error(UNEXPECTED_TREE,
+        error(PARAM_OWNED_BY_NON_METHOD,
           valdef.toString, "an expression", valdef.pos)
 
     // val enclMeth = SymbolUtils.enclosingMethod(valdef.symbol)

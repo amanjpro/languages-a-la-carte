@@ -123,10 +123,6 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
       "Field can only appear in class bodies"
   }
 
-  case object PARAM_OWNED_BY_NON_METHOD extends ErrorCode {
-    val message: String =
-      "Parameter can only appear in method parameter contexts"
-  }
 
   case object LOCAL_VARIABLE_OWNED_BY_NON_LOCAL extends ErrorCode {
     val message: String =

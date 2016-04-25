@@ -157,10 +157,10 @@ trait ValDefTyperComponent extends TyperComponent {
       res.owner.map(! _.isInstanceOf[TypeSymbol]).getOrElse(false)) {
       error(FIELD_OWNED_BY_NON_CLASS,
         valdef.toString, "A field", valdef.pos)
-    } else if(res.mods.isParam &&
-      res.owner.map(! _.isInstanceOf[MethodSymbol]).getOrElse(false)) {
-      error(PARAM_OWNED_BY_NON_METHOD,
-        valdef.toString, "A parameter", valdef.pos)
+    // } else if(res.mods.isParam &&
+    //   res.owner.map(! _.isInstanceOf[MethodSymbol]).getOrElse(false)) {
+    //   error(PARAM_OWNED_BY_NON_METHOD,
+    //     valdef.toString, "A parameter", valdef.pos)
     } else if(res.mods.isLocalVariable &&
       res.owner.map(sym => !(sym.isInstanceOf[ScopeSymbol] ||
             sym.isInstanceOf[MethodSymbol])).getOrElse(false)) {
