@@ -230,16 +230,17 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
 
   }
 
-  def isAccessible(symbol: Symbol, from: Symbol): Boolean = {
-    def areInTheSamePackages(sym1: Symbol, sym2: Symbol): Boolean = {
-      val r = for {
-        s1 <- enclosingPackage(Some(sym1))
-        s2 <- enclosingPackage(Some(sym2))
-      } yield s1 == s2
-      r.getOrElse(false)
-    }
+  def areInTheSamePackages(sym1: Symbol, sym2: Symbol): Boolean = {
+    val r = for {
+      s1 <- enclosingPackage(Some(sym1))
+      s2 <- enclosingPackage(Some(sym2))
+    } yield s1 == s2
+    r.getOrElse(false)
+  }
 
-    if(symbol.mods.isPublicAcc) true
+  def isAccessible(symbol: Symbol, from: Symbol): Boolean = {
+    if(symbol.isInstanceOf[PackageSymbol]) true
+    else if(symbol.mods.isPublicAcc) true
     else if(symbol.mods.isPrivateAcc) {
       val r = for {
         s1 <- enclosingClass(Some(symbol))
