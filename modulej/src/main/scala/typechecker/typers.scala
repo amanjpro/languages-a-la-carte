@@ -83,7 +83,12 @@ trait TypeUseTyperComponent
     val tuseCopy = if(!tuse.hasBeenNamed) {
       typeUseNamer.nameTypeUse(tuse)
     } else tuse
-    super.apply(tuseCopy)
+    tuseCopy match {
+      case tuse: TypeUseApi              =>
+        super.apply(tuseCopy)
+      case _                             =>
+        typed(tuseCopy)
+    }
   }
 
   override protected def nameTypeUse(tuse: TypeUseApi): UseTree =

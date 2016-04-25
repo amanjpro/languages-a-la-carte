@@ -248,21 +248,27 @@ trait SimpleUseNamer {
       z match {
         case None       if shallUseImports(use)        =>
           val importSymbol = y._1
+          val importURI    = y._2
           importSymbol.getSymbol(
             use.name, s => s.isInstanceOf[TypeSymbol]) match {
             case Some(sym)            =>
-              use.symbol = sym
-              sym.tpe.foreach(use.tpe = _)
-              val tuse = TreeFactories.mkTypeUse(
-                  use.name, use.pos, Some(sym), use.owner)
-              tuse.attributes = use.attributes
-              Some(tuse)
+              // use.symbol = sym
+              // sym.tpe.foreach(use.tpe = _)
+              val fullName = s"$importURI.${use.name}"
+              val newUse   = fromQualifiedString(fullName)
+              use.owner.foreach(owner =>
+                  newUse.foreach(tree => tree.owner = owner))
+              Some(family(newUse).asInstanceOf[UseTree])
+              // TreeFactories.mkTypeUse(
+              //     use.name, use.pos, Some(sym), use.owner)
+              // tuse.attributes = use.attributes
+              // Some(tuse)
             case _                    =>
-              val fname = s"${y._2}.${use.name}"
+              val fname = s"${importURI}.${use.name}"
               compiler.load(fname) match {
                 case Some(clazz)                 =>
                   val use = fromQualifiedString(fname)
-                  Some(family(use))
+                  Some(family(use).asInstanceOf[UseTree])
                 case None                        =>
                   z
               }
