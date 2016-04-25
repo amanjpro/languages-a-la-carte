@@ -201,14 +201,20 @@ trait SelectDefTyperComponent extends DefTyperComponent {
 @component
 trait TypeUseDefTyperComponent extends DefTyperComponent {
   (tuse: TypeUseApi) => {
-    tuse.owner.foreach(sym => {
-      sym.getSymbol(tuse.name, _.isInstanceOf[TypeSymbol]) match {
-        case Some(sym) =>
-          tuse.symbol = sym
-          sym.tpe.foreach(tuse.tpe = _)
-        case _         => ()
-      }
-    })
+    tuse.symbol.foreach { sym =>
+      // case None                      =>
+        // tuse.owner.foreach(sym => {
+        //   sym.getSymbol(tuse.name, _.isInstanceOf[TypeSymbol]) match {
+        //     case Some(sym) =>
+        //       tuse.symbol = sym
+        //       sym.tpe.foreach(tuse.tpe = _)
+        //     case _         =>
+        //       ()
+        //   }
+        // })
+      // case Some(sym)                 =>
+      sym.tpe.foreach(tuse.tpe = _)
+    }
     tuse
   }
 }
@@ -216,14 +222,19 @@ trait TypeUseDefTyperComponent extends DefTyperComponent {
 @component
 trait IdentDefTyperComponent extends DefTyperComponent {
   (id: IdentApi) => {
-    id.owner.foreach(sym => {
-      sym.getSymbol(id.name, _.isInstanceOf[TermSymbol]) match {
-        case Some(sym) =>
-          id.symbol = sym
-          sym.tpe.foreach(id.tpe = _)
-        case _         => ()
-      }
-    })
+    id.symbol.foreach { sym =>
+      // case None                      =>
+      //   id.owner.foreach(sym => {
+      //     sym.getSymbol(id.name, _.isInstanceOf[TermSymbol]) match {
+      //       case Some(sym) =>
+      //         id.symbol = sym
+      //         sym.tpe.foreach(id.tpe = _)
+      //       case _         => ()
+      //     }
+      //   })
+      // case Some(sym)                 =>
+      sym.tpe.foreach(id.tpe = _)
+    }
     id
   }
 }
