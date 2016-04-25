@@ -8,6 +8,7 @@ import sana.tiny.ast.{Tree, NoTree}
 import sana.ooj.OojNodes
 import sana.primj.namers.{MethodDefNamerComponent => _,
                           IdentNamerComponent => _,
+                          TypeUseNamerComponent => _,
                           ProgramNamerComponent => _, _}
 import sana.brokenj.namers._
 import sana.ooj.namers._
