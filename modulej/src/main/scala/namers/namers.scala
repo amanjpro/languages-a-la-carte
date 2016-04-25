@@ -14,13 +14,14 @@ import tiny.names.Name
 import primj.namers.NamerComponent
 import tiny.errors.ErrorReporting.{error,warning}
 import modulej.ast._
+import modulej.ast.TreeExtractors._
 import ooj.ast.{PackageDefApi, SelectApi, ClassDefApi}
 import modulej.symbols.{CompilationUnitSymbol, SymbolUtils}
 import tiny.symbols.{Symbol, TypeSymbol}
 import ooj.symbols.PackageSymbol
 import ooj.names.StdNames._
 import modulej.errors.ErrorCodes._
-import tiny.ast.{UseTree, SimpleUseTree, IdentApi, TypeUseApi}
+import tiny.ast.{UseTree, SimpleUseTree, IdentApi, TypeUseApi, Tree}
 import modulej.ast.Implicits._
 
 
@@ -123,7 +124,8 @@ trait TypeUseNamerComponent extends NamerComponent {
     val comp = this
     new TypeUseNamer {
       protected val compiler: CompilerInterface = comp.compiler
-      def family(use: UseTree): UseTree = comp.name(use).asInstanceOf[UseTree]
+      def family(use: UseTree): UseTree =
+        comp.name(use).asInstanceOf[UseTree]
     }
   }
   protected def attachQualifiedNameAttribute(use: UseTree): Unit =
@@ -144,7 +146,8 @@ trait IdentNamerComponent extends ooj.namers.IdentNamerComponent {
     val comp = this
     new IdentNamer {
       protected val compiler: CompilerInterface = comp.compiler
-      def family(use: UseTree): UseTree = comp.name(use).asInstanceOf[UseTree]
+      def family(use: UseTree): UseTree =
+        comp.name(use).asInstanceOf[UseTree]
     }
   }
 
@@ -233,7 +236,7 @@ trait SimpleUseNamer {
       clazz    <- compiler.load(fullName)
     } yield {
       // Can we find a class with this fully qualified name?
-      family(use).asInstanceOf[UseTree]
+      family(use)
     }
   }
 
@@ -251,10 +254,13 @@ trait SimpleUseNamer {
               // use.symbol = sym
               // sym.tpe.foreach(use.tpe = _)
               val fullName = s"$importURI.${use.name}"
-              val newUse   = fromQualifiedString(fullName)
-              use.owner.foreach(owner =>
-                  newUse.foreach(tree => tree.owner = owner))
-              Some(family(newUse).asInstanceOf[UseTree])
+              val newUse   = compiler.resolveNames(use.owner) {
+                fromQualifiedString(fullName)
+              }.asInstanceOf[UseTree]
+              // use.owner.foreach(owner =>
+                  // newUse.foreach(tree => tree.owner = owner))
+              // addIsQualified(newUse)
+              Some(family(newUse))
               // TreeFactories.mkTypeUse(
               //     use.name, use.pos, Some(sym), use.owner)
               // tuse.attributes = use.attributes
@@ -263,8 +269,10 @@ trait SimpleUseNamer {
               val fname = s"${importURI}.${use.name}"
               compiler.load(fname) match {
                 case Some(clazz)                 =>
-                  val use = fromQualifiedString(fname)
-                  Some(family(use).asInstanceOf[UseTree])
+                  val newUse = compiler.resolveNames(use.owner) {
+                    fromQualifiedString(fname)
+                  }.asInstanceOf[UseTree]
+                  Some(family(newUse))
                 case None                        =>
                   z
               }
@@ -274,6 +282,15 @@ trait SimpleUseNamer {
       }
     })
   }
+
+
+  // protected def addIsQualified(use: Tree): Unit = use match {
+  //   case Select(qual, tree)          =>
+  //     addIsQualified(qual)
+  //     tree.isQualified = true
+  //   case _                           =>
+  //     ()
+  // }
 
   protected def nameAsTermUse(use: UseTree): Option[UseTree] = {
     // id toString (using TreeUtils) and it should go
@@ -293,12 +310,13 @@ trait SimpleUseNamer {
   }
 
 
-  protected def enclosingCompilationUnit(sym: Option[Symbol]): Option[Symbol] =
+  protected def enclosingCompilationUnit(sym:
+      Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingCompilationUnit(sym)
   /**
     * Finalizes naming/typing this tree, by running the family method
-    * on this tree. If in namer it should call name, and if in typer it
-    * should call typed
+    * on this tree. If in namer then it should call name, and if in
+    * typer it should call typed
     */
   def family(use: UseTree): UseTree
 

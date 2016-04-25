@@ -104,6 +104,12 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
         symassigner.assign.join(
           namer.name.join(deftyper.typed.join(typer.typed)))(tree)
       }
+
+      override def resolveNames(owner: Option[Symbol])(tree: Tree): Tree = {
+        owner.foreach(tree.owner = _)
+        symassigner.assign.join(namer.name)(tree)
+      }
+
       def definesModule(module: String): Boolean = {
         loader.defines(module, false)
       }
