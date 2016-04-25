@@ -35,10 +35,6 @@ trait ClassDefNamerComponent extends ooj.namers.ClassDefNamerComponent {
     else super.addObjectParentIfNeeded(clazz)
   }
 
-
-  protected def enclosingPackage(sym: Option[Symbol]): Option[Symbol] =
-    SymbolUtils.enclosingPackage(sym)
-
 }
 
 @component

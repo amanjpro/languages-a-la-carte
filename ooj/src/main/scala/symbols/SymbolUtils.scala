@@ -18,9 +18,9 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
   def fullyQualifiedName(symbol: ClassSymbol): String =
     s"${packageName(symbol)}.${symbol.name}"
 
-  def packageName(symbol: ClassSymbol): String = symbol.owner match {
-    case Some(pkg: PackageSymbol) => pkg.qualifiedName
-    case _                        => "" // TODO: Update this when needed
+  def packageName(symbol: Symbol): String = symbol match {
+    case pkg: PackageSymbol => pkg.qualifiedName
+    case _                  => "" // TODO: Update this when needed
   }
 
   def enclosingCompilationUnit(symbol: Option[Symbol]): Option[Symbol] =

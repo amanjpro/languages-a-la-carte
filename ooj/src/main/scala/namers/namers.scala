@@ -87,7 +87,7 @@ trait ClassDefNamerComponent extends NamerComponent {
     })
     clazz.symbol match {
       case Some(csym: ClassSymbol) =>
-        val qname   = packageName(csym)
+        val qname   = packageName(Some(csym))
         val name    = csym.name
         val psyms   = parents.flatMap(_.symbol).toSet
         val tpe     = ClassType(qname, name, psyms)
@@ -132,8 +132,15 @@ trait ClassDefNamerComponent extends NamerComponent {
 
   }
 
-  protected def packageName(symbol: ClassSymbol): String =
-    SymbolUtils.packageName(symbol)
+  protected def packageName(symbol: Option[Symbol]): String = {
+    val res = enclosingPackage(symbol).map { sym =>
+      SymbolUtils.packageName(sym)
+    }
+    res.getOrElse("")
+  }
+
+  protected def enclosingPackage(sym: Option[Symbol]): Option[Symbol] =
+    SymbolUtils.enclosingPackage(sym)
 
   protected def javaPackageName: Name =
     StdNames.JAVA_PACKAGE_NAME
