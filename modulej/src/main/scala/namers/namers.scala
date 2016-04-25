@@ -102,15 +102,23 @@ trait TypeUseNamerComponent extends NamerComponent {
     attachQualifiedNameAttribute(tuse)
     tuse.hasBeenNamed = true
     val res = nameTypeUse(tuse)
+    val encl = tuse.isQualified match {
+      case true  => tuse.enclosing
+      case false => None
+    }
     res.symbol match {
-      case Some(sym)                    =>
+      case s@Some(sym: TypeSymbol)  if isAnAccessibleType(s, encl) =>
         res
-      case None                         =>
+      case _                                                       =>
         error(TYPE_NOT_FOUND,
           res.toString, "a type", res.pos)
         res
     }
   }
+
+  protected def isAnAccessibleType(sym: Option[Symbol],
+    encl: Option[Symbol]): Boolean =
+      SymbolUtils.isAnAccessibleType(sym, encl)
 
   protected def nameTypeUse(tuse: TypeUseApi): UseTree =
     identNamer.nameTypeUse(tuse)

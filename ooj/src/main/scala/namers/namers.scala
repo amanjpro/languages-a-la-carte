@@ -171,7 +171,35 @@ trait MethodDefNamerComponent extends
   }
 }
 
+@component
+trait TypeUseNamerComponent extends NamerComponent {
+  (tuse: TypeUseApi)          => {
+    tuse.hasBeenNamed = true
+    val symbol = tuse.owner.flatMap(_.getSymbol(tuse.name,
+      _.isInstanceOf[TypeSymbol]))
+    val encl = tuse.isQualified match {
+      case true  => tuse.enclosing
+      case false => None
+    }
+    symbol match {
+      case Some(sym: TypeSymbol)  if isAnAccessibleType(symbol, encl) =>
+        tuse.symbol = sym
+        sym.tpe.foreach(tuse.tpe = _)
+      case Some(_)                                                    =>
+        error(TYPE_NAME_EXPECTED,
+          tuse.toString, "a type", tuse.pos)
+      case _                                                          =>
+        error(TYPE_NOT_FOUND,
+          tuse.toString, "a type", tuse.pos)
+    }
+    tuse
+  }
 
+  protected def isAnAccessibleType(sym: Option[Symbol],
+    encl: Option[Symbol]): Boolean =
+      SymbolUtils.isAnAccessibleType(sym, encl)
+
+}
 // @component
 // trait ThisNamerComponent extends NamerComponent {
 //   (ths: ThisApi) => {
@@ -263,13 +291,24 @@ trait IdentNamer {
     // Can we see any (VariableSymbol)s with this name from the current scope?
     val temp = id.owner.flatMap(_.getSymbol(id.name,
       _.isInstanceOf[VariableSymbol]))
+    val encl = id.isQualified match {
+      case true  => id.enclosing
+      case false => None
+    }
     temp match {
       case None        =>
         // Can we see any (TypeSymbol)s with this name from the current scope?
         val temp = id.owner.flatMap(_.getSymbol(id.name,
           _.isInstanceOf[TypeSymbol]))
           temp match {
-            case None        =>
+            case s@Some(sym)     if isAnAccessibleType(s, encl) =>
+              id.symbol = sym
+              sym.tpe.foreach(id.tpe = _)
+              val tuse =
+                TreeFactories.mkTypeUse(id.name, id.pos, id.symbol, id.owner)
+              tuse.attributes = id.attributes
+              tuse
+            case _                                              =>
               val temp = id.owner.flatMap(_.getSymbol(id.name,
                 _.isInstanceOf[PackageSymbol]))
               temp match {
@@ -280,13 +319,6 @@ trait IdentNamer {
                   sym.tpe.foreach(id.tpe = _)
                   id
               }
-            case Some(sym)   =>
-              id.symbol = sym
-              sym.tpe.foreach(id.tpe = _)
-              val tuse =
-                TreeFactories.mkTypeUse(id.name, id.pos, id.symbol, id.owner)
-              tuse.attributes = id.attributes
-              tuse
           }
       case Some(sym)   =>
         id.symbol = sym
@@ -294,4 +326,10 @@ trait IdentNamer {
         id
     }
   }
+
+
+
+  protected def isAnAccessibleType(sym: Option[Symbol],
+    encl: Option[Symbol]): Boolean =
+    SymbolUtils.isAnAccessibleType(sym, encl)
 }

@@ -682,35 +682,45 @@ trait TypeUseTyperComponent
 trait TypeUseNamer {
   def nameTypeUse(tuse: TypeUseApi): UseTree = {
     val tuseCopy = TreeCopiers.copyTypeUse(tuse)(name = tuse.name)
+    val encl = tuseCopy.isQualified match {
+      case true  => tuseCopy.enclosing
+      case false => None
+    }
     tuseCopy.owner.foreach(sym => {
       sym.getSymbol(tuseCopy.name, _.isInstanceOf[TypeSymbol]) match {
-        case Some(sym) => tuseCopy.symbol = sym
-        case _         => ()
+        case s@Some(sym) if isAnAccessibleType(s, encl)   =>
+          tuseCopy.symbol = sym
+        case _                                            => ()
       }
     })
-    tuseCopy.symbol match {
-      case None          if tuseCopy.isQualified         =>
-        // INFO:
-        // If the class is private to the compilation unit, and
-        // we are in the compilation unit then ignore the qualified
-        // owner and search in the current compilation unit.
-        for {
-          opkg   <- SymbolUtils.enclosingPackage(tuseCopy.owner)
-          epkg   <- SymbolUtils.enclosingPackage(tuseCopy.enclosing)
-          encl   <-
-            SymbolUtils.enclosingCompilationUnit(tuseCopy.enclosing)
-              if opkg.defines(encl) &&  opkg == epkg
-          sym    <- encl.getSymbol(tuseCopy.name, _.isInstanceOf[TypeSymbol])
-          owner  <- sym.owner
-        } {
-          tuseCopy.symbol = sym
-          tuseCopy.owner  = owner
-        }
-      case s                                             =>
-        ()
-    }
+    // tuseCopy.symbol match {
+    //   case None          if tuseCopy.isQualified         =>
+    //     // INFO:
+    //     // If the class is private to the compilation unit, and
+    //     // we are in the compilation unit then ignore the qualified
+    //     // owner and search in the current compilation unit.
+    //     for {
+    //       opkg   <- SymbolUtils.enclosingPackage(tuseCopy.owner)
+    //       epkg   <- SymbolUtils.enclosingPackage(tuseCopy.enclosing)
+    //       encl   <-
+    //         SymbolUtils.enclosingCompilationUnit(tuseCopy.enclosing)
+    //           if opkg.defines(encl) &&  opkg == epkg
+    //       sym    <- encl.getSymbol(tuseCopy.name, _.isInstanceOf[TypeSymbol])
+    //       owner  <- sym.owner
+    //     } {
+    //       tuseCopy.symbol = sym
+    //       tuseCopy.owner  = owner
+    //     }
+    //   case s                                             =>
+    //     ()
+    // }
     tuseCopy
   }
+
+
+  protected def isAnAccessibleType(sym: Option[Symbol],
+    encl: Option[Symbol]): Boolean =
+      SymbolUtils.isAnAccessibleType(sym, encl)
 
 }
 
