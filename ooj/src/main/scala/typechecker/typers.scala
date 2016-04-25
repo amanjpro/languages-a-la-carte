@@ -858,47 +858,45 @@ trait IdentNamer {
 
       symbol match {
         case Some(sym)                        =>
-          enclosingNonLocal(id.owner).foreach { owner =>
-            if(id.isQualified) {
-              id.enclosing match {
-                case Some(from) if !isAccessible(sym, from) &&
-                                    isInTypeChecker           =>
-                  error(FIELD_NOT_ACCESSIBLE,
-                    id.toString, "an accessible name", id.pos)
-                case _                                        =>
-                  ()
-              }
-              if(sym.mods.isField && !sym.mods.isStatic &&
-                  id.shouldBeStatic) {
-                if(isInTypeChecker)
-                  error(INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK,
-                    id.toString, "a variable name", id.pos)
-              } else {
-                id.symbol = sym
-                id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
-              }
-            } else if(isInStaticContext(id.owner) && sym.mods.isField &&
-                  !sym.mods.isStatic) {
+          if(id.isQualified) {
+            id.enclosing match {
+              case Some(from) if !isAccessible(sym, from) &&
+                                  isInTypeChecker           =>
+                error(FIELD_NOT_ACCESSIBLE,
+                  id.toString, "an accessible name", id.pos)
+              case _                                        =>
+                ()
+            }
+            if(sym.mods.isField && !sym.mods.isStatic &&
+                id.shouldBeStatic) {
               if(isInTypeChecker)
                 error(INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK,
-                  id.toString, "a static name", id.pos)
+                  id.toString, "a variable name", id.pos)
             } else {
-              if(!id.isQualified) {
-                enclosingClass(id.owner) match {
-                  case Some(encl: ClassSymbol) if
-                                      !encl.directlyDefines(sym, _ => true) &&
-                                             sym.mods.isPrivateAcc           =>
-                    if(isInTypeChecker)
-                      error(FIELD_NOT_ACCESSIBLE,
-                        id.toString, "an accessible name", id.pos)
-                  case _                                                     =>
-                    id.symbol = sym
-                    id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
-                }
-              } else {
-                id.symbol = sym
-                id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
+              id.symbol = sym
+              id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
+            }
+          } else if(isInStaticContext(id.owner) && sym.mods.isField &&
+                !sym.mods.isStatic) {
+            if(isInTypeChecker)
+              error(INSTANCE_FIELD_IN_STATIC_CONTEXT_INVOK,
+                id.toString, "a static name", id.pos)
+          } else {
+            if(!id.isQualified) {
+              enclosingClass(id.owner) match {
+                case Some(encl: ClassSymbol) if
+                                    !encl.directlyDefines(sym, _ => true) &&
+                                           sym.mods.isPrivateAcc           =>
+                  if(isInTypeChecker)
+                    error(FIELD_NOT_ACCESSIBLE,
+                      id.toString, "an accessible name", id.pos)
+                case _                                                     =>
+                  id.symbol = sym
+                  id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
               }
+            } else {
+              id.symbol = sym
+              id.symbol.flatMap(_.tpe).foreach(id.tpe    = _)
             }
           }
         case _                                =>
@@ -944,7 +942,12 @@ trait IdentNamer {
 trait SelectTyperComponent extends TyperComponent {
   (select: SelectApi) => {
     val qual = typed(select.qual)
-    qual.symbol.foreach(select.tree.owner = _)
+    qual.symbol.foreach {
+      case vrble: VariableSymbol =>
+        vrble.typeSymbol.foreach(select.tree.owner = _)
+      case owner                 =>
+        select.tree.owner = owner
+    }
     if(isTypeUse(qual)) {
       select.tree.shouldBeStatic = true
     }
