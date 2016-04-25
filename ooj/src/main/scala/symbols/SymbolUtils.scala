@@ -63,6 +63,24 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
       false
   }
 
+  def isAnAccessibleType(sym: Option[Symbol],
+    encl: Option[Symbol]): Boolean = {
+      sym match {
+        case Some(_: ClassSymbol) if encl != None      =>
+          val answer = for {
+            enclPkg <- enclosingPackage(encl)
+            symPkg  <- enclosingPackage(sym)
+            symbol  <- sym
+          } yield {
+            symbol.mods.isPublicAcc || (enclPkg == symPkg)
+          }
+          answer.getOrElse(false)
+        case _                                         =>
+          true
+
+      }
+    }
+
   lazy val javaPackageSymbol: PackageSymbol =  {
     val name    = StdNames.JAVA_PACKAGE_NAME
     ProgramSymbol.getSymbol(name,
