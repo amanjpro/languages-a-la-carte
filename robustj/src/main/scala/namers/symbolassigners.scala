@@ -31,12 +31,12 @@ trait MethodDefSymbolAssignerComponent
       mthd.symbol.foreach(tc.owner = _)
       assign(tc).asInstanceOf[UseTree]
     }
-    val res2         = TreeFactories.mkMethodDef(mthd.mods,
-                                                  mthd.ret,
-                                                  mthd.name,
-                                                  mthd.params,
+    val res2         = TreeFactories.mkMethodDef(res1.mods,
+                                                  res1.ret,
+                                                  res1.name,
+                                                  res1.params,
                                                   throwsClause,
-                                                  mthd.body)
+                                                  res1.body)
     res2.attributes = res1.attributes
     res2
   }
