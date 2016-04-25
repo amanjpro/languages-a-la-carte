@@ -1,17 +1,13 @@
-package p1.p3.p3;
 
-public class B {
-}
+package p1.p3;
 
 
-private class A extends B {
+class A extends p1.p2.B { // fails
+  public A(int a) {}
   void m() {
-    new p1.p2.p3.A();
-    new p1.p2.p3.B(); // fails
-    new p1.p2.p3.D(); // fails
-    new p1.p2.p3.C(); // fails
-    new p1.p2.p3.E(); // fails
-    new B();
-    new p1.p3.p3.B();
+    new p1.p2.A();
+    new p1.p2.B(); // fails
+    new A(1);
+    new A(); // fails
   }
 }
