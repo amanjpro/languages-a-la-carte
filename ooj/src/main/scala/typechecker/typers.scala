@@ -502,7 +502,10 @@ trait MethodDefTyperComponent
 trait ThisTyperComponent extends TyperComponent {
   (ths: ThisApi)                 => {
     val enclClass = ths.enclosingClassSymbol
-    enclClass.foreach(ths.symbol = _)
+    enclClass.foreach { sym =>
+      ths.symbol = sym
+      sym.tpe.foreach(ths.tpe = _)
+    }
     val owner     = ths.owner
     enclClass match {
       case None                  =>
