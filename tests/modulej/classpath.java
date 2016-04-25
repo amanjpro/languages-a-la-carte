@@ -9,7 +9,7 @@ package java.util;
 
 // import java.lang.*;
 import java.io.File;
-import java.io.FileJ;  // fails
+import java.io.JFile;  // fails
 
 
 class A extends Object {
@@ -21,7 +21,7 @@ class A extends Object {
                                        3- The missing constructor of JFille
                                        4- The unresolved types information
                                      */
-  
+
 
   public String m(String a) {
     String s = "";
