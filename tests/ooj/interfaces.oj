@@ -9,6 +9,14 @@
 
 interface K {
   // K () {}   // fails
+  int m();
+}
+
+class Kimpl implements K {
+  java.lang.Object obj = new java.lang.Object();
+  int m() {
+    return 1;
+  }
 }
 
 interface A {
@@ -43,4 +51,15 @@ class Test implements A { // fails
   }
   abstract int m(); // fails
 }
+
+
+
+class D extends Kimpl {
+}
+
+
+class VV extends D {
+  boolean n() {
+    return obj.equals(null);
+  }}
 

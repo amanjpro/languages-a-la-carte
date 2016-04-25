@@ -308,6 +308,12 @@ trait MethodDefSymbolAssignerComponent
       owner.foreach(mthd.ret.owner = _)
       assign(mthd.ret).asInstanceOf[UseTree]
     }
+    val mods = owner match {
+      case Some(sym) if sym.mods.isInterface =>
+        PUBLIC_ACC | mthd.mods
+      case _                                 =>
+        mthd.mods
+    }
     val params  = mthd.params.map { param =>
       val p = if(!param.mods.isParam) {
         val mods = param.mods | PARAM
@@ -341,8 +347,9 @@ trait MethodDefSymbolAssignerComponent
     }
     symbol.params = params.flatMap(_.symbol)
     // symbol.ret    = tpt.symbol
+    symbol.mods = mods
     mthd.symbol = symbol
-    val res = TreeCopiers.copyMethodDef(mthd)(ret = tpt,
+    val res = TreeCopiers.copyMethodDef(mthd)(mods = mods, ret = tpt,
       params = params, body = body)
     res
   }
@@ -378,7 +385,7 @@ trait ValDefSymbolAssignerComponent
     val owner = valdef.owner
     owner match {
       case Some(sym) if sym.mods.isInterface =>
-        val mods = STATIC | FINAL | FIELD | valdef.mods
+        val mods = PUBLIC_ACC | STATIC | FINAL | FIELD | valdef.mods
         val nv   = TreeCopiers.copyValDef(valdef)(mods = mods)
         owner.foreach(nv.owner = _)
         super.apply(nv)
