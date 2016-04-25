@@ -473,16 +473,14 @@ trait TypeUseTyperComponent extends TyperComponent {
       symbol match {
         case Some(sym: TypeSymbol)                =>
           sym.tpe.foreach(tuse.tpe = _)
-          tuse
         case Some(_)                              =>
           error(TYPE_NAME_EXPECTED,
             tuse.toString, "a type", tuse.pos)
-          tuse
         case _                                    =>
           error(TYPE_NOT_FOUND,
             tuse.toString, "a type", tuse.pos)
-          tuse
       }
+      tuse
     } else {
       for {
         sym <- tuse.symbol
