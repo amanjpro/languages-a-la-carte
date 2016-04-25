@@ -124,7 +124,14 @@ trait ClassDefShapeCheckerComponent extends
       } else ()
     }
 
+    checkMods(clazz)
     check(clazz.body)
+  }
+
+  protected def checkMods(clazz: ClassDefApi): Unit = {
+    if(clazz.mods.isPrivateAcc || clazz.mods.isProtectedAcc) {
+      error(BAD_CLASS_MODIFIER, "", "", clazz.pos)
+    }
   }
 
   protected def isTypeUse(tree: UseTree): Boolean =
