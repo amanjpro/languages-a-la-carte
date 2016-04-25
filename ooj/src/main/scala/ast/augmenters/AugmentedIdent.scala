@@ -30,5 +30,15 @@ trait AugmentedIdent {
 
   def isConstructorIdent_=(flag: Boolean): Unit =
     tree.attributes = tree.attributes + ('isConstructorIdent -> flag)
+
+
+  def isExplicitConstructorInvocation: Boolean =
+    tree.attributes.get('isExplicitConstructorInvocation)
+      .map(_.asInstanceOf[Boolean]).getOrElse(false)
+
+  def isExplicitConstructorInvocation_=(flag: Boolean): Unit =
+    tree.attributes =
+      tree.attributes + ('isExplicitConstructorInvocation -> flag)
+
 }
 
