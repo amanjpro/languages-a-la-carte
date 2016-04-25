@@ -12,6 +12,7 @@ import sana.primj.namers.{MethodDefNamerComponent => _,
 import sana.brokenj.namers._
 import sana.ooj.namers.{CompilationUnitNamerComponent => _,
                         MethodDefNamerComponent => _,
+                        TypeUseNamerComponent => _,
                         SelectNamerComponent => _,
                         ClassDefNamerComponent => _,
                         IdentNamerComponent => _, _}
