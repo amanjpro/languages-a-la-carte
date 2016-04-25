@@ -21,6 +21,19 @@ trait CompilerInterface {
 
 
   /**
+    * Assigns symbols to the trees, uses symbol assigner.
+    *
+    * The default implementation calls typeCheck, make sure to adapt
+    * it to your needs.
+    *
+    * @param owner the contextual owner of this tree
+    * @param tree the tree to be named
+    */
+   def resolveNames(owner: Option[Symbol])(tree: Tree): Tree =
+     typeCheck(owner)(tree)
+
+
+  /**
     * Checks if the given classpath has a module.
     *
     * @param module the fully qualified name of the module
