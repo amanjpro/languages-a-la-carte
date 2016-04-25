@@ -26,18 +26,22 @@ import tiny.ast.{NoTree, UseTree}
 @component
 trait CompilationUnitSymbolAssignerComponent extends SymbolAssignerComponent {
   (cunit: CompilationUnitApi) => {
-    val owner   = cunit.owner
+    cunit.owner.foreach(cunit.module.owner = _)
+
     val sym     = CompilationUnitSymbol(Nil, None, cunit.sourceName,
-                                  cunit.sourcePath, owner)
+                                  cunit.sourcePath, None)
+    cunit.module.owner = sym
+    val pkg     = assign(cunit.module).asInstanceOf[PackageDefApi]
+    val owner   = pkg.symbol
+    sym.owner   = owner
     owner.foreach(owner => {
+      cunit.owner = owner
       owner.declare(sym)
     })
     cunit.symbol       = sym
-    cunit.module.owner = sym
+    sym.module       = Some(sym)
     cunit.imports.foreach(im => im.owner = sym)
     val imports        = cunit.imports.map(assign(_).asInstanceOf[ImportApi])
-    val pkg            = assign(cunit.module).asInstanceOf[PackageDefApi]
-    sym.module         = pkg.symbol
     TreeCopiers.copyCompilationUnit(cunit)(imports = imports,
       module = pkg)
   }
