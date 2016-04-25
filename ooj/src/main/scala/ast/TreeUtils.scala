@@ -12,6 +12,7 @@ import tiny.ast.{Tree, NoTree, TypeUseApi, UseTree, IdentApi}
 import calcj.ast._
 import calcj.types._
 import tiny.types.Type
+import ooj.names.StdNames.CONSTRUCTOR_NAME
 import ooj.types.TypeUtils
 import Implicits._
 import ooj.symbols.SymbolUtils
@@ -102,11 +103,13 @@ trait TreeUtils extends ast.TreeUtils {
 
 
   def isExplicitConstructorInvocation(tree: Tree): Boolean = tree match {
-    case Apply(Select(_: ThisApi, id: IdentApi), _)  if isConstructor(id)   =>
+    case Apply(Select(_: ThisApi, id: IdentApi), _)
+          if id.name == CONSTRUCTOR_NAME                   =>
       true
-    case Apply(Select(_: SuperApi, id: IdentApi), _) if isConstructor(id)   =>
+    case Apply(Select(_: SuperApi, id: IdentApi), _)
+          if id.name == CONSTRUCTOR_NAME                   =>
       true
-    case _                                                                  =>
+    case _                                                 =>
       false
   }
 
