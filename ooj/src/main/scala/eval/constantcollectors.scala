@@ -18,7 +18,7 @@ import ooj.ast.TreeExtractors._
 import ooj.modifiers.Ops._
 import ooj.symbols.SymbolUtils
 import brokenj.ast.{TreeCopiers => _, TreeUtils => _, _}
-import primj.ast.{TreeCopiers => _, MethodDefApi => _,
+import primj.ast.{TreeCopiers => _, MethodDefApi => PMethodDefApi,
                   ProgramApi => _, TreeUtils => _, _}
 import calcj.ast.{TreeCopiers => _, _}
 import tiny.ast.{TreeCopiers => _, _}
@@ -26,22 +26,20 @@ import tiny.ast.{TreeCopiers => _, _}
 
 
 trait ConstantCollectingComponent
-  extends TransformationComponent[(Tree, Env), (Tree, Env)] {
-  def collect: ((Tree, Env)) => (Tree, Env)
+  extends TransformationComponent[(Tree, Env), Env] {
+  def collect: ((Tree, Env)) => Env
 }
 
 
 @component(tree, env)
 trait ProgramConstantCollectingComponent extends ConstantCollectingComponent {
   (prg: ProgramApi)  => {
-    val (members, newEnv) = prg.members.foldLeft((Nil: List[Tree], env)){
+    val newEnv = prg.members.foldLeft(env){
       (z, member) =>
-        val e       = z._2
-        val members = z._1
-        val (res, env) = collect((member, e))
-        (members++List(res), env)
+        val env       = z
+        collect((member, env))
     }
-    (TreeCopiers.copyProgram(prg)(members = members), newEnv)
+    newEnv
   }
 }
 
@@ -49,9 +47,7 @@ trait ProgramConstantCollectingComponent extends ConstantCollectingComponent {
 trait CompilationUnitConstantCollectingComponent extends
     ConstantCollectingComponent {
   (cunit: CompilationUnitApi)  => {
-    val (module, newEnv) = collect((cunit.module, env))
-    (TreeCopiers.copyCompilationUnit(cunit)(module =
-        module.asInstanceOf[PackageDefApi]), newEnv)
+    collect((cunit.module, env))
   }
 }
 
@@ -59,15 +55,13 @@ trait CompilationUnitConstantCollectingComponent extends
 trait PackageDefConstantCollectingComponent
   extends ConstantCollectingComponent {
   (pkg: PackageDefApi)  => {
-    val (members, newEnv) = pkg.members.foldLeft((Nil: List[Tree], env)) {
+    val newEnv = pkg.members.foldLeft(env) {
       (z, member) =>
-        val e       = z._2
-        val members = z._1
-        val (res, env) = collect((member, e))
-        (members++List(res), env)
+        val env       = z
+        collect((member, env))
 
     }
-    (TreeCopiers.copyPackageDef(pkg)(members = members), newEnv)
+    newEnv
   }
 }
 
@@ -75,9 +69,7 @@ trait PackageDefConstantCollectingComponent
 trait ClassDefConstantCollectingComponent
   extends ConstantCollectingComponent {
   (clazz: ClassDefApi)  => {
-    val (body, newEnv) = collect((clazz.body, env))
-    (TreeCopiers.copyClassDef(clazz)(body = body.asInstanceOf[TemplateApi]),
-        newEnv)
+    collect((clazz.body, env))
   }
 }
 
@@ -85,14 +77,10 @@ trait ClassDefConstantCollectingComponent
 trait TemplateConstantCollectingComponent
   extends ConstantCollectingComponent {
   (template: TemplateApi)  => {
-    val (members, newEnv) = template.members.foldLeft((Nil: List[Tree], env)){
+    template.members.foldLeft(env){
     (z, member) =>
-      val e       = z._2
-      val members = z._1
-      val (res, env) = collect((member, e))
-      (members++List(res), env)
+      collect((member, z))
     }
-    (TreeCopiers.copyTemplate(template)(members = members), newEnv)
   }
 }
 
@@ -106,8 +94,8 @@ trait ValDefConstantCollectingComponent
       val newEnv2 = valdef.symbol.map { sym =>
         env.bind(sym, ExprValue(valdef.rhs))
       }.getOrElse(env)
-      (valdef, newEnv2)
-    } else (valdef, env)
+      newEnv2
+    } else env
   }
 
 }
@@ -117,13 +105,13 @@ trait ValDefConstantCollectingComponent
 @component(tree, env)
 trait MethodDefConstantCollectingComponent
   extends ConstantCollectingComponent {
-  (mthd: MethodDefApi) => (mthd, env)
+  (mthd: PMethodDefApi) => env
 }
 
 @component(tree, env)
 trait BlockConstantCollectingComponent
   extends ConstantCollectingComponent {
-  (block: BlockApi) => (block, env)
+  (block: BlockApi) => env
 }
 
 // @component(tree, env)

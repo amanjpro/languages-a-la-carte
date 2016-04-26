@@ -129,10 +129,10 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
     def compile: Tree => Unit = {
       (x: Tree) => {
         val constantFolder = (t: Tree) => {
-          val (tc, env) = ConstantCollectingFamily(compiler)
+          val env = ConstantCollectingFamily(compiler)
             .collect((t, Env.emptyEnv))
           val (tf, _)   = ConstantFoldingFamily(compiler)
-            .constantFold((tc, env))
+            .constantFold((t, env))
           tf
         }
         val labelChecker = (t: Tree) =>
