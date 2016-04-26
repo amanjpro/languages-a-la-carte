@@ -14,6 +14,5 @@ object Ops {
   implicit class FlagOps(mask: Flags)
       extends ppj.modifiers.Ops.FlagOps(mask) {
     val isNative:   Boolean            = mask.hasFlag(NATIVE)
-    val isTransient: Boolean           = mask.hasFlag(TRANSIENT)
   }
 }

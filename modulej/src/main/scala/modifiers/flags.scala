@@ -4,6 +4,5 @@ import ch.usi.inf.l3.sana.tiny.modifiers.Flag
 
 
 
-case object TRANSIENT extends Flag
 case object NATIVE extends Flag
 
