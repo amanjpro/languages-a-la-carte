@@ -7,8 +7,10 @@ import sana.primj
 import sana.brokenj
 import sana.ooj
 import brokenj.ast
-import primj.ast.{ValDefApi, BlockApi}
+import primj.ast.{ValDefApi, BlockApi, WhileApi, ForApi}
+import brokenj.ast.BreakApi
 import tiny.ast.{Tree, NoTree, TypeUseApi, UseTree, IdentApi}
+import ooj.ast.TreeExtractors._
 import calcj.ast._
 import calcj.types._
 import tiny.types.Type
@@ -113,7 +115,48 @@ trait TreeUtils extends ast.TreeUtils {
       false
   }
 
-
+  override def allPathsReturn(expr: Tree): Boolean = expr match {
+    case wile: WhileApi                      =>
+      wile.cond match {
+        case Literal(Constant(true))         =>
+          wile.body match {
+            case b: BlockApi                 =>
+              !b.stmts.exists {
+                case s: BreakApi             =>
+                  true
+                case s   if isBreakable(s)   =>
+                  !allPathsReturn(s)
+                case _                       =>
+                  false
+              }
+            case _                           =>
+              false
+          }
+        case _                               =>
+          allPathsReturn(wile.body)
+      }
+    case forloop: ForApi                     =>
+      forloop.cond match {
+        case Literal(Constant(true))         =>
+          forloop.body match {
+            case b: BlockApi                 =>
+              !b.stmts.exists {
+                case s: BreakApi             =>
+                  true
+                case s   if isBreakable(s)   =>
+                  !allPathsReturn(s)
+                case _                       =>
+                  false
+              }
+            case _                           =>
+              false
+          }
+        case _                               =>
+          allPathsReturn(forloop.body)
+      }
+    case _                                   =>
+      super.allPathsReturn(expr)
+  }
   /** Checks if this is an access to a field of the current
    *  instance
    */

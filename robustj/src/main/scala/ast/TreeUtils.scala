@@ -12,7 +12,12 @@ import sana.robustj
 
 
 import tiny.ast._
+import primj.ast.{MethodDefApi => _, _}
+import ooj.ast.{MethodDefApi => _, _}
+import brokenj.ast.BreakApi
+import calcj.ast.Constant
 import robustj.ast._
+import robustj.ast.TreeExtractors._
 
 
 trait TreeUtils extends arrooj.ast.TreeUtils {
@@ -20,6 +25,44 @@ trait TreeUtils extends arrooj.ast.TreeUtils {
 
 
   override def allPathsReturn(expr: Tree): Boolean = expr match {
+    case wile: WhileApi                      =>
+      wile.cond match {
+        case Literal(Constant(true))         =>
+          wile.body match {
+            case b: BlockApi                 =>
+              !b.stmts.exists {
+                case s: BreakApi             =>
+                  true
+                case s   if isBreakable(s)   =>
+                  !allPathsReturn(s)
+                case _                       =>
+                  false
+              }
+            case _                           =>
+              false
+          }
+        case _                               =>
+          allPathsReturn(wile.body)
+      }
+    case forloop: ForApi                     =>
+      forloop.cond match {
+        case Literal(Constant(true))         =>
+          forloop.body match {
+            case b: BlockApi                 =>
+              !b.stmts.exists {
+                case s: BreakApi             =>
+                  true
+                case s   if isBreakable(s)   =>
+                  !allPathsReturn(s)
+                case _                       =>
+                  false
+              }
+            case _                           =>
+              false
+          }
+        case _                               =>
+          allPathsReturn(forloop.body)
+      }
     case tri: TryApi                   =>
       val tf      = allPathsReturn(tri.tryClause)
       lazy val cf =
@@ -28,6 +71,8 @@ trait TreeUtils extends arrooj.ast.TreeUtils {
       tf && cf && ff
     case ctch: CatchApi                =>
       allPathsReturn(ctch.catchClause)
+    case thrw: ThrowApi                =>
+      true
     case _                             =>
       super.allPathsReturn(expr)
   }

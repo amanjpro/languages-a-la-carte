@@ -9,6 +9,7 @@ import tiny.ast._
 import primj.ast.Implicits._
 import calcj.ast._
 import primj.ast._
+import primj.ast.TreeExtractors._
 
 import calcj.ast.operators._
 import calcj.types._
@@ -95,9 +96,19 @@ trait TreeUtils extends calcj.ast.TreeUtils {
 
   def allPathsReturn(expr: Tree): Boolean = expr match {
     case wile: WhileApi                     =>
-      allPathsReturn(wile.body)
+      wile.cond match {
+        case Literal(Constant(true))        =>
+          true
+        case _                              =>
+          allPathsReturn(wile.body)
+      }
     case forloop: ForApi                    =>
-      allPathsReturn(forloop.body)
+      forloop.cond match {
+        case Literal(Constant(true))        =>
+          true
+        case _                              =>
+          allPathsReturn(forloop.body)
+      }
     case ifelse: IfApi                      =>
       allPathsReturn(ifelse.thenp) &&
       allPathsReturn(ifelse.elsep)
@@ -108,7 +119,7 @@ trait TreeUtils extends calcj.ast.TreeUtils {
       }
     case ret: ReturnApi                     =>
       true
-    case _                               =>
+    case _                                  =>
       false
   }
 
@@ -128,9 +139,9 @@ trait TreeUtils extends calcj.ast.TreeUtils {
 
 
   def isConstantLiteral(tree: Tree): Boolean = tree match {
-    case lit: Literal              =>
+    case lit: LiteralApi              =>
       true
-    case _                         =>
+    case _                            =>
       false
   }
 }
