@@ -399,7 +399,7 @@ trait MethodDefTyperComponent
         // Check if all paths eventually return
         val res     = if(rtpe =/= VoidType && !allPathsReturn(body)) {
           error(MISSING_RETURN_STATEMENT,
-            body.toString, body.toString, body.pos)
+            "", "", body.pos)
           mthd
         } else {
           TreeCopiers.copyMethodDef(mthd)(mods = mods, body = body,
