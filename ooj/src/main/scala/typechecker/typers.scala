@@ -644,12 +644,12 @@ trait ApplyTyperComponent extends TyperComponent {
       args.foreach { arg =>
         arg.bottomUp(())((z, y) => {
           y match {
-            case id: IdentApi  if pointsToField(id)  =>
+            case id: IdentApi  if pointsToNonStaticField(id)   =>
               if(definedByEnclosingClass(res, y.symbol)) {
                 error(REFERENCE_FIELD_BEFORE_SUPERTYPE,
                   "", "", y.pos)
               }
-            case _                                   =>
+            case _                                             =>
               ()
           }
         })
@@ -670,8 +670,9 @@ trait ApplyTyperComponent extends TyperComponent {
   protected def isExplicitConstructorInvocation(tree: Tree): Boolean =
     TreeUtils.isExplicitConstructorInvocation(tree)
 
-  protected def pointsToField(id: IdentApi): Boolean =
-    id.symbol.map(_.mods.isField).getOrElse(false)
+  protected def pointsToNonStaticField(id: IdentApi): Boolean =
+    id.symbol.map(sym => sym.mods.isField && !sym.mods.isStatic)
+      .getOrElse(false)
 }
 
 
