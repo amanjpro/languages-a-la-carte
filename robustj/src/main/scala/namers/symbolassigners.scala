@@ -14,6 +14,8 @@ import tiny.core.TransformationComponent
 import tiny.dsl._
 import tiny.ast.{TreeCopiers => _, TreeFactories => _, _}
 import arrooj.ast.Implicits._
+import ooj.ast.{MethodDefApi => OMethodDefApi}
+import primj.ast.{MethodDefApi => PMethodDefApi}
 import tiny.symbols._
 import robustj.modifiers._
 import robustj.ast._
@@ -25,21 +27,22 @@ import primj.ast.{ValDefApi, BlockApi}
 @component
 trait MethodDefSymbolAssignerComponent
     extends ooj.namers.MethodDefSymbolAssignerComponent {
-  (mthd: MethodDefApi) => {
-    val res1 = super.apply(mthd).asInstanceOf[ooj.ast.MethodDefApi]
-    val throwsClause = mthd.throwsClause.map { tc =>
-      mthd.symbol.foreach(tc.owner = _)
-      assign(tc).asInstanceOf[UseTree]
+  (mthd: PMethodDefApi) => {
+    mthd match {
+      case mthd: MethodDefApi  =>
+        val res1 = super.apply(mthd).asInstanceOf[ooj.ast.MethodDefApi]
+        val throwsClause = mthd.throwsClause.map { tc =>
+          mthd.symbol.foreach(tc.owner = _)
+          assign(tc).asInstanceOf[UseTree]
+        }
+        val res2         = TreeUpgraders.upgradeMethodDef(res1)
+        TreeCopiers.copyMethodDef(res2)(throwsClause = throwsClause)
+      case mthd: OMethodDefApi =>
+        val res    = TreeUpgraders.upgradeMethodDef(mthd)
+        assign(res)
     }
-    val res2         = TreeFactories.mkMethodDef(res1.mods,
-                                                  res1.ret,
-                                                  res1.name,
-                                                  res1.params,
-                                                  throwsClause,
-                                                  res1.body)
-    res2.attributes = res1.attributes
-    res2
   }
+
   override protected def createMethodSymbol(mthd: ooj.ast.MethodDefApi,
     owner: Option[Symbol]): primj.symbols.MethodSymbol =
     MethodSymbol(mthd.mods, mthd.name, None, Nil, Nil, None, owner)

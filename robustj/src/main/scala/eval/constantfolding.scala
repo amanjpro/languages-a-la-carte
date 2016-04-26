@@ -15,7 +15,7 @@ import tiny.dsl._
 import ooj.eval.ConstantFoldingComponent
 import robustj.ast._
 import tiny.ast.Expr
-import primj.ast.BlockApi
+import primj.ast.{BlockApi, MethodDefApi => PMethodDefApi}
 
 
 
@@ -24,9 +24,16 @@ import primj.ast.BlockApi
 @component(tree, env)
 trait MethodDefConstantFoldingComponent
   extends ConstantFoldingComponent {
-  (mthd: MethodDefApi) => {
-    val (body, newEnv) = constantFold((mthd.body, env))
-    (TreeCopiers.copyMethodDef(mthd)(body = body.asInstanceOf[Expr]), newEnv)
+  (mthd: PMethodDefApi) => {
+    mthd match {
+      case mthd: MethodDefApi                 =>
+        val (body, newEnv) = constantFold((mthd.body, env))
+        (TreeCopiers.copyMethodDef(mthd)(body = body.asInstanceOf[Expr]),
+          newEnv)
+      case mthd: PMethodDefApi               =>
+        val res = TreeUpgraders.upgradeMethodDef(mthd)
+        constantFold((res, env))
+    }
   }
 }
 

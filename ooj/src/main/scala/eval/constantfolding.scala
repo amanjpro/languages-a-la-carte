@@ -24,7 +24,7 @@ import ooj.symbols.{SymbolUtils, PackageSymbol}
 import ooj.types.TypeUtils
 import ooj.ast.Implicits._
 import brokenj.ast.{TreeCopiers => _, TreeUtils => _, _}
-import primj.ast.{TreeCopiers => _, MethodDefApi => _,
+import primj.ast.{TreeCopiers => _, MethodDefApi => PMethodDefApi,
                   ProgramApi => _, TreeUtils => _, _}
 import calcj.ast.{TreeCopiers => _, _}
 import tiny.ast.{TreeCopiers => _, _}
@@ -195,9 +195,15 @@ trait ValDefConstantFoldingComponent
 @component(tree, env)
 trait MethodDefConstantFoldingComponent
   extends ConstantFoldingComponent {
-  (mthd: MethodDefApi) => {
-    val (body, newEnv) = constantFold((mthd.body, env))
-    (TreeCopiers.copyMethodDef(mthd)(body = body.asInstanceOf[Expr]), newEnv)
+  (mthd: PMethodDefApi) => {
+    mthd match {
+      case mthd: MethodDefApi         =>
+        val (body, newEnv) = constantFold((mthd.body, env))
+        (TreeCopiers.copyMethodDef(mthd)(body = body.asInstanceOf[Expr]), newEnv)
+      case mtdh: PMethodDefApi        =>
+        val res = TreeUpgraders.upgradeMethodDef(mthd)
+        constantFold((res, env))
+    }
   }
 }
 

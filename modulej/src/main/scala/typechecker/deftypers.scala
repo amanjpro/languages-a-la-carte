@@ -10,7 +10,7 @@ import tiny.dsl._
 
 
 import modulej.ast._
-import ooj.ast.PackageDefApi
+import ooj.ast.{PackageDefApi, CompilationUnitApi => OCompilationUnitApi}
 import tiny.ast.UseTree
 import ooj.typechecker.DefTyperComponent
 
@@ -25,9 +25,15 @@ trait ImportDefTyperComponent extends DefTyperComponent {
 
 @component
 trait CompilationUnitDefTyperComponent extends DefTyperComponent {
-  (unit: CompilationUnitApi) => {
-    val pkg     = typed(unit.module).asInstanceOf[PackageDefApi]
-    val imports = unit.imports.map(typed(_).asInstanceOf[ImportApi])
-    TreeCopiers.copyCompilationUnit(unit)(imports = imports, module = pkg)
+  (unit: OCompilationUnitApi) => {
+    unit match {
+      case unit: CompilationUnitApi       =>
+        val pkg     = typed(unit.module).asInstanceOf[PackageDefApi]
+        val imports = unit.imports.map(typed(_).asInstanceOf[ImportApi])
+        TreeCopiers.copyCompilationUnit(unit)(imports = imports, module = pkg)
+      case unit: OCompilationUnitApi      =>
+        val res = TreeUpgraders.upgradeCompilationUnit(unit)
+        typed(res)
+    }
   }
 }

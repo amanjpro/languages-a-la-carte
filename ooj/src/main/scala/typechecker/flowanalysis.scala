@@ -11,7 +11,7 @@ import sana.tiny
 import ooj.ast._
 import brokenj.ast._
 import primj.ast.{ProgramApi => _,
-                  MethodDefApi => _,
+                  MethodDefApi => PMethodDefApi,
                   _}
 import tiny.ast._
 import calcj.ast._
@@ -218,7 +218,7 @@ trait TemplateFlowCorrectnessCheckerComponent extends
 @component(tree, env)
 trait MethodDefFlowCorrectnessCheckerComponent extends
   FlowCorrectnessCheckerComponent {
-  (mthd: MethodDefApi) => {
+  (mthd: PMethodDefApi) => {
     check((mthd.body, env))
   }
 }

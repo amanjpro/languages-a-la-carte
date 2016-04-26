@@ -18,10 +18,10 @@ import robustj.ast._
 import arrooj.ast.Implicits._
 import arrayj.ast.{TreeUtils => _, TreeCopiers => _, TreeFactories => _, _}
 import ooj.ast.{TreeUtils => _, TreeCopiers => _, TreeFactories => _,
-                MethodDefApi => _, _}
+                MethodDefApi => _, TreeUpgraders => _, _}
 import brokenj.ast.{TreeUtils => _, TreeCopiers => _, TreeFactories => _, _}
 import primj.ast.{TreeUtils => _, TreeCopiers => _, TreeFactories => _,
-                MethodDefApi => _, ProgramApi => _, _}
+                MethodDefApi => PMethodDefApi, ProgramApi => _, _}
 import calcj.ast.{TreeUtils => _, TreeCopiers => _, TreeFactories => _, _}
 import tiny.ast.{TreeCopiers => _, TreeFactories => _, _}
 
@@ -149,11 +149,17 @@ trait ExceptionHandlingCheckerComponent extends
 @component(tree, handledExceptions)
 trait MethodDefExceptionHandlingCheckerComponent
   extends ExceptionHandlingCheckerComponent {
-  (mthd: MethodDefApi) => {
-    val he1 = getHandledExceptions(mthd)
-    val he2 = check((mthd.body, he1 ++ handledExceptions))
-    val he3 = he2.drop(he1.length)
-    unify(he3, handledExceptions)
+  (mthd: PMethodDefApi) => {
+    mthd match {
+      case mthd: MethodDefApi       =>
+        val he1 = getHandledExceptions(mthd)
+        val he2 = check((mthd.body, he1 ++ handledExceptions))
+        val he3 = he2.drop(he1.length)
+        unify(he3, handledExceptions)
+      case mthd: PMethodDefApi            =>
+        val res = TreeUpgraders.upgradeMethodDef(mthd)
+        check((res, handledExceptions))
+    }
   }
 
 

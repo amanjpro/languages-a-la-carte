@@ -14,7 +14,8 @@ import tiny.dsl._
 
 import modulej.ast._
 import modulej.ast.Implicits._
-import ooj.ast.{PackageDefApi, SelectApi}
+import ooj.ast.{PackageDefApi, SelectApi,
+                CompilationUnitApi => OCompilationUnitApi}
 import tiny.ast.{IdentApi, TypeUseApi, UseTree, NoTree, Tree}
 import robustj.ast.{MethodDefApi}
 import tiny.errors.ErrorReporting.{error,warning}
@@ -43,10 +44,16 @@ import calcj.typechecker.TyperComponent
 
 @component
 trait CompilationUnitTyperComponent extends TyperComponent {
-  (unit: CompilationUnitApi) => {
-    val pkg     = typed(unit.module).asInstanceOf[PackageDefApi]
-    // val imports = unit.imports.map(typed(_).asInstanceOf[ImportApi])
-    TreeCopiers.copyCompilationUnit(unit)(module = pkg)
+  (unit: OCompilationUnitApi) => {
+    unit match {
+      case unit: CompilationUnitApi       =>
+        val pkg     = typed(unit.module).asInstanceOf[PackageDefApi]
+        // val imports = unit.imports.map(typed(_).asInstanceOf[ImportApi])
+        TreeCopiers.copyCompilationUnit(unit)(module = pkg)
+      case unit: OCompilationUnitApi      =>
+        val res = TreeUpgraders.upgradeCompilationUnit(unit)
+        typed(res)
+    }
   }
 }
 

@@ -10,6 +10,7 @@ import sana.calcj
 import tiny.core.CheckerComponent
 import tiny.dsl._
 import primj.ast.Implicits._
+import primj.ast.{MethodDefApi => PMethodDefApi}
 import tiny.names.Name
 import calcj.ast.operators.{Inc, Dec}
 import tiny.errors.ErrorReporting.{error,warning}
@@ -102,5 +103,5 @@ trait SuperLabelNameCheckerComponent extends LabelNameCheckerComponent {
 @component(tree, labelNames)
 trait MethodDefLabelNameCheckerComponent extends
     brokenj.typechecker.MethodDefLabelNameCheckerComponent {
-  (mthd: MethodDefApi)  => super.apply((mthd, labelNames))
+  (mthd: PMethodDefApi)  => super.apply((mthd, labelNames))
 }

@@ -16,7 +16,8 @@ import tiny.source.Position
 import calcj.ast._
 import calcj.ast.operators.{Inc, Dec}
 import tiny.errors.ErrorReporting.{error,warning}
-import primj.ast.{MethodDefApi => _, TreeUtils => _, ProgramApi => _, _}
+import primj.ast.{MethodDefApi => PMethodDefApi,
+                  TreeUtils => _, ProgramApi => _, _}
 import primj.typechecker.ShapeCheckerComponent
 import ooj.symbols._
 import ooj.modifiers.Ops._
@@ -35,7 +36,7 @@ trait ProgramShapeCheckerComponent extends ShapeCheckerComponent {
 @component
 trait MethodDefShapeCheckerComponent extends
     primj.typechecker.MethodDefShapeCheckerComponent {
-  (mthd: MethodDefApi) => {
+  (mthd: PMethodDefApi) => {
     if(isConstructor(mthd.symbol)) {
       mthd.body match {
         case Block(Nil)                    =>
@@ -81,14 +82,14 @@ trait MethodDefShapeCheckerComponent extends
     super.apply(mthd)
   }
 
-  protected def checkFirstStmtExplicitConstructor(id: IdentApi,
-    pos: Option[Position]): Unit = {
-    id.symbol.foreach { s =>
-      if(s.mods.isConstructor)
-        error(EXPLICIT_CONSTRUCTOR_INVOKATION_NOT_FIRST_STATEMENT,
-          "", "", pos)
-    }
-  }
+  // protected def checkFirstStmtExplicitConstructor(id: IdentApi,
+  //   pos: Option[Position]): Unit = {
+  //   id.symbol.foreach { s =>
+  //     if(s.mods.isConstructor)
+  //       error(EXPLICIT_CONSTRUCTOR_INVOKATION_NOT_FIRST_STATEMENT,
+  //         "", "", pos)
+  //   }
+  // }
   protected def checkExplicitConstructor(id: IdentApi,
     pos: Option[Position]): Unit = {
     id.symbol.foreach { s =>

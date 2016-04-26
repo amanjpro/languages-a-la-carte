@@ -15,8 +15,8 @@ import tiny.symbols._
 import tiny.source.Position
 import tiny.names.Name
 import calcj.ast.{TreeCopiers => _, TreeFactories => _, _}
-import primj.ast.{TreeCopiers => _, MethodDefApi => _, ProgramApi => _,
-                  TreeFactories => _, TreeUtils => _, _}
+import primj.ast.{TreeCopiers => _, MethodDefApi => PMethodDefApi,
+                  ProgramApi => _, TreeFactories => _, TreeUtils => _, _}
 import ooj.errors.ErrorCodes._
 import primj.symbols.{ProgramSymbol, MethodSymbol, VoidSymbol}
 import primj.modifiers._
@@ -149,7 +149,8 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
     val template = {
       val temp = addDefaultConstructor(clazz, sym)
       temp.owner        = sym
-      assign(temp).asInstanceOf[TemplateApi]
+      val res = assign(temp).asInstanceOf[TemplateApi]
+      res
     }
     TreeCopiers.copyClassDef(clazz)(parents = parents, body = template)
   }
@@ -191,12 +192,17 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
             if(clazz.mods.isPublicAcc)         CONSTRUCTOR | PUBLIC_ACC
             else                               CONSTRUCTOR | PACKAGE_ACC
           }
-          val spr           = TreeFactories.mkSuper(clazz.pos)
-          val id            = TreeFactories.mkIdent(constructorName, clazz.pos)
-          id.isConstructorIdent = true
-          val slct          = TreeFactories.mkSelect(spr, id, clazz.pos)
-          val app           = TreeFactories.mkApply(slct, Nil, clazz.pos)
-          val body          = TreeFactories.mkBlock(List(app), clazz.pos)
+          val body          = if(isObjectClass(sym)){
+            TreeFactories.mkBlock(Nil, clazz.pos)
+          } else {
+             val spr          = TreeFactories.mkSuper(clazz.pos)
+            val id            =
+              TreeFactories.mkIdent(constructorName, clazz.pos)
+            id.isConstructorIdent = true
+            val slct          = TreeFactories.mkSelect(spr, id, clazz.pos)
+            val app           = TreeFactories.mkApply(slct, Nil, clazz.pos)
+            TreeFactories.mkBlock(List(app), clazz.pos)
+          }
           val ret           = TreeFactories.mkTypeUse(clazz.name, clazz.pos)
           val const         = TreeFactories.mkMethodDef(mods, ret,
             constructorName, Nil, body, clazz.pos)
@@ -212,6 +218,13 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
     TreeUtils.isConstructor(tree)
   protected def enclosingPackage(sym: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingPackage(sym)
+
+  protected def langPackageSymbol: Symbol = SymbolUtils.langPackageSymbol
+
+  protected def isObjectClass(sym: Symbol): Boolean = {
+    sym.name == StdNames.OBJECT_TYPE_NAME &&
+        enclosingPackage(sym.owner) == Some(langPackageSymbol)
+  }
 }
 
 
@@ -295,63 +308,73 @@ trait SuperSymbolAssignerComponent extends SymbolAssignerComponent {
 @component
 trait MethodDefSymbolAssignerComponent
     extends SymbolAssignerComponent {
-  (mthd: MethodDefApi)          => {
-    val owner   = mthd.owner
-    val symbol  = createMethodSymbol(mthd, owner)
-    owner.foreach(sym => sym.declare(symbol))
-    val tpt     = if(mthd.mods.isConstructor) {
-      mthd.declaredClassNameForConstructor = useName(mthd.ret)
-      val tuse = TreeFactories.mkTypeUse(voidName, mthd.ret.pos)
-      owner.foreach(tuse.owner = _)
-      assign(tuse).asInstanceOf[UseTree]
-    } else {
-      owner.foreach(mthd.ret.owner = _)
-      assign(mthd.ret).asInstanceOf[UseTree]
-    }
-    val mods = owner match {
-      case Some(sym) if sym.mods.isInterface =>
-        PUBLIC_ACC | mthd.mods
-      case _                                 =>
-        mthd.mods
-    }
-    val params  = mthd.params.map { param =>
-      val p = if(!param.mods.isParam) {
-        val mods = param.mods | PARAM
-        TreeCopiers.copyValDef(param)(mods = mods)
-      } else param
-      p.owner = symbol
-      assign(p).asInstanceOf[ValDefApi]
-    }
-    val body    = if(mthd.mods.isConstructor) {
-      mthd.body match {
-        case Block(List(Apply(Select(_: ThisApi,
-                    Ident(`constructorName`)), _), _*)) |
-             Block(List(Apply(Select(_: SuperApi,
-                    Ident(`constructorName`)), _), _*))                     =>
+  (mthd: PMethodDefApi)          => {
+    mthd match {
+      case mthd: MethodDefApi                   =>
+        val owner   = mthd.owner
+        val symbol  = createMethodSymbol(mthd, owner)
+        owner.foreach(sym => sym.declare(symbol))
+        val tpt     = if(mthd.mods.isConstructor) {
+          mthd.declaredClassNameForConstructor = useName(mthd.ret)
+          val tuse = TreeFactories.mkTypeUse(voidName, mthd.ret.pos)
+          owner.foreach(tuse.owner = _)
+          assign(tuse).asInstanceOf[UseTree]
+        } else {
+          owner.foreach(mthd.ret.owner = _)
+          assign(mthd.ret).asInstanceOf[UseTree]
+        }
+        val mods = owner match {
+          case Some(sym) if sym.mods.isInterface =>
+            PUBLIC_ACC | mthd.mods
+          case _                                 =>
+            mthd.mods
+        }
+        val params  = mthd.params.map { param =>
+          val p = if(!param.mods.isParam) {
+            val mods = param.mods | PARAM
+            TreeCopiers.copyValDef(param)(mods = mods)
+          } else param
+          p.owner = symbol
+          assign(p).asInstanceOf[ValDefApi]
+        }
+        val body    = if(mthd.mods.isConstructor) {
+          mthd.body match {
+            case Block(List(Apply(Select(_: ThisApi,
+                        Ident(`constructorName`)), _), _*)) |
+                 Block(List(Apply(Select(_: SuperApi,
+                        Ident(`constructorName`)), _), _*))               =>
+              mthd.body.owner = symbol
+              assign(mthd.body).asInstanceOf[Expr]
+            case body: BlockApi           if !isObjectClass(mthd.owner)   =>
+              val newBody = TreeCopiers.copyBlock(body)(
+                stmts = constructorCall(body.pos)::body.stmts)
+              newBody.owner = symbol
+              assign(newBody).asInstanceOf[Expr]
+            case expr                     if !isObjectClass(mthd.owner)   =>
+              val newBody = TreeFactories.mkBlock(
+                List(constructorCall(expr.pos), expr), expr.pos)
+              newBody.owner = symbol
+              assign(newBody).asInstanceOf[Expr]
+            case expr                                                     =>
+              val newBody = TreeFactories.mkBlock(
+                List(expr), expr.pos)
+              newBody.owner = symbol
+              assign(newBody).asInstanceOf[Expr]
+          }
+        } else {
           mthd.body.owner = symbol
           assign(mthd.body).asInstanceOf[Expr]
-        case body: BlockApi                                                 =>
-          val newBody = TreeCopiers.copyBlock(body)(
-            stmts = constructorCall(body.pos)::body.stmts)
-          newBody.owner = symbol
-          assign(newBody).asInstanceOf[Expr]
-        case expr                                                           =>
-          val newBody = TreeFactories.mkBlock(
-            List(constructorCall(expr.pos), expr), expr.pos)
-          newBody.owner = symbol
-          assign(newBody).asInstanceOf[Expr]
-      }
-    } else {
-      mthd.body.owner = symbol
-      assign(mthd.body).asInstanceOf[Expr]
+        }
+        symbol.params = params.flatMap(_.symbol)
+        // symbol.ret    = tpt.symbol
+        symbol.mods = mods
+        mthd.symbol = symbol
+        TreeCopiers.copyMethodDef(mthd)(mods = mods, ret = tpt,
+          params = params, body = body)
+      case mthd: PMethodDefApi                   =>
+        val res = TreeUpgraders.upgradeMethodDef(mthd)
+        assign(res)
     }
-    symbol.params = params.flatMap(_.symbol)
-    // symbol.ret    = tpt.symbol
-    symbol.mods = mods
-    mthd.symbol = symbol
-    val res = TreeCopiers.copyMethodDef(mthd)(mods = mods, ret = tpt,
-      params = params, body = body)
-    res
   }
 
   protected def createMethodSymbol(mthd: MethodDefApi,
@@ -367,6 +390,13 @@ trait MethodDefSymbolAssignerComponent
           id, pos), Nil, pos)
   }
 
+
+  protected def isObjectClass(owner: Option[Symbol]): Boolean = {
+    val res = owner.map(sym => sym.name == StdNames.OBJECT_TYPE_NAME &&
+              enclosingPackage(sym.owner) == Some(langPackageSymbol) )
+    res.getOrElse(false)
+  }
+
   protected def useName(use: UseTree): Name = use match {
     case id: IdentApi      => id.name
     case tuse: TypeUseApi  => tuse.name
@@ -375,6 +405,9 @@ trait MethodDefSymbolAssignerComponent
 
   protected def voidName: Name              = StdNames.VOID_TYPE_NAME
   protected val constructorName: Name       = StdNames.CONSTRUCTOR_NAME
+  protected val langPackageSymbol: Symbol   = SymbolUtils.langPackageSymbol
+  protected def enclosingPackage(sym: Option[Symbol]): Option[Symbol] =
+    SymbolUtils.enclosingPackage(sym)
 }
 
 

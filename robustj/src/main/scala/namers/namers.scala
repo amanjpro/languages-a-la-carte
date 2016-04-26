@@ -12,21 +12,26 @@ import sana.robustj
 
 import tiny.core.TransformationComponent
 import tiny.dsl._
-import robustj.ast.{TreeFactories, MethodDefApi}
+import robustj.ast.{TreeFactories, MethodDefApi, TreeCopiers, TreeUpgraders}
+import primj.ast.{MethodDefApi => PMethodDefApi}
 import tiny.ast.UseTree
 
 @component
 trait MethodDefNamerComponent extends
     ooj.namers.MethodDefNamerComponent {
-  (mthd: MethodDefApi) => {
-    val res1 = super.apply(mthd).asInstanceOf[ooj.ast.MethodDefApi]
-    val throwsClause = mthd.throwsClause.map { tc =>
-      name(tc).asInstanceOf[UseTree]
+  (mthd: PMethodDefApi) => {
+    mthd match {
+      case mthd: MethodDefApi                  =>
+        val res1 = super.apply(mthd).asInstanceOf[PMethodDefApi]
+        val throwsClause = mthd.throwsClause.map { tc =>
+          name(tc).asInstanceOf[UseTree]
+        }
+        // INFO: a bit of hack, but works
+        val res2 = TreeUpgraders.upgradeMethodDef(res1)
+        TreeCopiers.copyMethodDef(res2)(throwsClause = throwsClause)
+      case mthd: PMethodDefApi                  =>
+        val res = TreeUpgraders.upgradeMethodDef(mthd)
+        name(res)
     }
-    // INFO: a bit of hack, but works
-    val res2 = TreeFactories.mkMethodDef(res1.mods, res1.ret, res1.name,
-      res1.params, throwsClause, res1.body)
-    res2.attributes = res1.attributes
-    res2
   }
 }

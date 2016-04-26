@@ -18,32 +18,40 @@ import tiny.names.Name
 import modulej.ast.Implicits._
 import modulej.modifiers.Ops._
 import modulej.ast._
-import ooj.ast.{PackageDefApi, ClassDefApi}
+import ooj.ast.{PackageDefApi, ClassDefApi,
+                CompilationUnitApi => OCompilationUnitApi}
 import robustj.names.StdNames._
 import modulej.symbols.{CompilationUnitSymbol, SymbolUtils}
 import tiny.ast.{NoTree, UseTree}
 
 @component
 trait CompilationUnitSymbolAssignerComponent extends SymbolAssignerComponent {
-  (cunit: CompilationUnitApi) => {
-    cunit.owner.foreach(cunit.module.owner = _)
+  (cunit: OCompilationUnitApi) => {
+    cunit match {
+      case cunit: CompilationUnitApi       =>
+        cunit.owner.foreach(cunit.module.owner = _)
 
-    val sym     = CompilationUnitSymbol(Nil, None, cunit.sourceName,
-                                  cunit.sourcePath, None)
-    cunit.module.owner = sym
-    val pkg     = assign(cunit.module).asInstanceOf[PackageDefApi]
-    val owner   = pkg.symbol
-    sym.owner   = owner
-    owner.foreach(owner => {
-      cunit.owner = owner
-      owner.declare(sym)
-    })
-    cunit.symbol       = sym
-    sym.module       = Some(sym)
-    cunit.imports.foreach(im => im.owner = sym)
-    val imports        = cunit.imports.map(assign(_).asInstanceOf[ImportApi])
-    TreeCopiers.copyCompilationUnit(cunit)(imports = imports,
-      module = pkg)
+        val sym     = CompilationUnitSymbol(Nil, None, cunit.sourceName,
+                                      cunit.sourcePath, None)
+        cunit.module.owner = sym
+        val pkg     = assign(cunit.module).asInstanceOf[PackageDefApi]
+        val owner   = pkg.symbol
+        sym.owner   = owner
+        owner.foreach(owner => {
+          cunit.owner = owner
+          owner.declare(sym)
+        })
+        cunit.symbol       = sym
+        sym.module       = Some(sym)
+        cunit.imports.foreach(im => im.owner = sym)
+        val imports        =
+          cunit.imports.map(assign(_).asInstanceOf[ImportApi])
+        TreeCopiers.copyCompilationUnit(cunit)(imports = imports,
+          module = pkg)
+      case cunit: OCompilationUnitApi      =>
+        val res = TreeUpgraders.upgradeCompilationUnit(cunit)
+        assign(res)
+    }
   }
 
   protected def rootSymbol: Option[Symbol] =

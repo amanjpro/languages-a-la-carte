@@ -12,7 +12,7 @@ import tiny.dsl._
 
 import modulej.ast._
 import modulej.ast.Implicits._
-import ooj.ast.PackageDefApi
+import ooj.ast.{PackageDefApi, CompilationUnitApi => OCompilationUnitApi}
 import tiny.ast.{UseTree, IdentApi, TypeUseApi}
 import ooj.eval.ConstantFoldingComponent
 
@@ -22,10 +22,16 @@ import ooj.eval.ConstantFoldingComponent
 @component(tree, env)
 trait CompilationUnitConstantFoldingComponent extends
     ConstantFoldingComponent {
-  (cunit: CompilationUnitApi)  => {
-    val (module, newEnv) = constantFold((cunit.module, env))
-    (TreeCopiers.copyCompilationUnit(cunit)(module =
-        module.asInstanceOf[PackageDefApi]), newEnv)
+  (cunit: OCompilationUnitApi)  => {
+    cunit match {
+      case cunit: CompilationUnitApi     =>
+        val (module, newEnv) = constantFold((cunit.module, env))
+        (TreeCopiers.copyCompilationUnit(cunit)(module =
+            module.asInstanceOf[PackageDefApi]), newEnv)
+      case cunit: OCompilationUnitApi    =>
+        val res = TreeUpgraders.upgradeCompilationUnit(cunit)
+        constantFold((res, env))
+    }
   }
 }
 

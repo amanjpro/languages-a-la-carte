@@ -23,7 +23,7 @@ import calcj.types._
 import primj.errors.ErrorCodes._
 import primj.types._
 import primj.symbols.{MethodSymbol, VariableSymbol}
-import primj.ast.{TreeCopiers => _, MethodDefApi => _,
+import primj.ast.{TreeCopiers => _, MethodDefApi => PMethodDefApi,
                   ProgramApi => _, TreeUtils => _, _}
 import primj.modifiers.Ops._
 import ooj.ast.Implicits._
@@ -125,23 +125,29 @@ trait ClassDefDefTyperComponent extends DefTyperComponent {
 
 @component
 trait MethodDefDefTyperComponent extends DefTyperComponent {
-  (mthd: MethodDefApi)          => {
-    val tpt     = typed(mthd.ret).asInstanceOf[UseTree]
-    val params  = mthd.params.map(typed(_).asInstanceOf[ValDefApi])
-    val tparams = params.map(_.tpe.getOrElse(ErrorType))
-    val rtpe    = tpt.tpe.getOrElse(ErrorType)
-    val tpe = MethodType(rtpe, tparams)
-    mthd.tpe = tpe
-    mthd.symbol.foreach( sym => {
-      sym match {
-        case m: MethodSymbol    =>
-          m.ret = tpt.symbol
-        case _                  =>
-          ()
-      }
-      sym.tpe = Some(tpe)
-    })
-    TreeCopiers.copyMethodDef(mthd)(ret = tpt, params = params)
+  (mthd: PMethodDefApi)          => {
+    mthd match {
+      case mthd: MethodDefApi          =>
+        val tpt     = typed(mthd.ret).asInstanceOf[UseTree]
+        val params  = mthd.params.map(typed(_).asInstanceOf[ValDefApi])
+        val tparams = params.map(_.tpe.getOrElse(ErrorType))
+        val rtpe    = tpt.tpe.getOrElse(ErrorType)
+        val tpe = MethodType(rtpe, tparams)
+        mthd.tpe = tpe
+        mthd.symbol.foreach( sym => {
+          sym match {
+            case m: MethodSymbol    =>
+              m.ret = tpt.symbol
+            case _                  =>
+              ()
+          }
+          sym.tpe = Some(tpe)
+        })
+        TreeCopiers.copyMethodDef(mthd)(ret = tpt, params = params)
+      case mthd: PMethodDefApi          =>
+        val res = TreeUpgraders.upgradeMethodDef(mthd)
+        typed(res)
+    }
   }
 }
 

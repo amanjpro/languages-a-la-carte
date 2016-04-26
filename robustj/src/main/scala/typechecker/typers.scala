@@ -19,6 +19,7 @@ import tiny.errors.ErrorReporting.{error,warning}
 import primj.ast.{ValDefApi, BlockApi}
 import tiny.types.Type
 import robustj.ast._
+import primj.ast.{MethodDefApi => PMethodDefApi}
 import robustj.errors.ErrorCodes._
 import robustj.types.TypeUtils
 import robustj.modifiers.Ops._
@@ -87,20 +88,19 @@ trait CatchTyperComponent extends TyperComponent {
 trait MethodDefTyperComponent
   extends ooj.typechecker.MethodDefTyperComponent {
 
-  (mthd: MethodDefApi) => {
-    val throwsClause =
-      mthd.throwsClause.map(id => typed(id).asInstanceOf[UseTree])
-    val res1         =
-      super.apply(mthd).asInstanceOf[ooj.ast.MethodDefApi]
-    // INFO: a bit of hack, but works
-    val res2         = TreeFactories.mkMethodDef(res1.mods,
-                                                  res1.ret,
-                                                  res1.name,
-                                                  res1.params,
-                                                  throwsClause,
-                                                  res1.body)
-    res2.attributes = res1.attributes
-    res2
+  (mthd: PMethodDefApi) => {
+    mthd match {
+      case mthd: MethodDefApi                =>
+        val throwsClause =
+          mthd.throwsClause.map(id => typed(id).asInstanceOf[UseTree])
+        val res1         =
+          super.apply(mthd).asInstanceOf[PMethodDefApi]
+        val res2 = TreeUpgraders.upgradeMethodDef(res1)
+        TreeCopiers.copyMethodDef(res2)(throwsClause = throwsClause)
+      case mthd: PMethodDefApi               =>
+        val res = TreeUpgraders.upgradeMethodDef(mthd)
+        typed(res)
+    }
   }
 
   override def allPathsReturn(expr: Tree): Boolean = {

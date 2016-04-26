@@ -20,7 +20,7 @@ import calcj.typechecker.{TyperComponent, TypePromotions}
 import calcj.types._
 import calcj.ast.operators.{Add, Eq, Neq, BOp}
 import calcj.ast.BinaryApi
-import primj.ast.{ApplyApi, ValDefApi}
+import primj.ast.{ApplyApi, ValDefApi, MethodDefApi => PMethodDefApi}
 import primj.symbols.{ProgramSymbol, MethodSymbol,
                       VariableSymbol, ScopeSymbol}
 import primj.types.{TypeUtils => _, _}
@@ -373,109 +373,115 @@ trait TemplateTyperComponent extends TyperComponent {
 @component
 trait MethodDefTyperComponent
   extends primj.typechecker.MethodDefTyperComponent {
-  (mthd: MethodDefApi)          => {
-    val params  = mthd.params.map { param =>
-      typed(param).asInstanceOf[ValDefApi]
-    }
-    val body    = typed(mthd.body).asInstanceOf[Expr]
-    val rtpe    = mthd.ret.tpe.getOrElse(ErrorType)
-    val btpe    = body.tpe.getOrElse(ErrorType)
-    val mods   = {
-      (mthd.owner, mthd.symbol) match {
-        case (Some(cs: ClassSymbol), Some(s)) if cs.overrides(s)=>
-          s.mods = s.mods | OVERRIDE
-          mthd.mods | OVERRIDE
-        case _                                                     =>
-          mthd.mods
-      }
-    }
-    // if(!(btpe <:< rtpe) && rtpe =/= VoidType) {
-    //   error(TYPE_MISMATCH,
-    //       rtpe.toString, btpe.toString, body.pos, mthd)
-    //   mthd
-    // } else {
-    // Check if all paths eventually return
-    val res     = if(rtpe =/= VoidType && !allPathsReturn(body)) {
-      error(MISSING_RETURN_STATEMENT,
-        body.toString, body.toString, body.pos)
-      mthd
-    } else {
-      TreeCopiers.copyMethodDef(mthd)(mods = mods, body = body,
-        params = params)
-    }
+  (mthd: PMethodDefApi)          => {
+    mthd match {
+      case mthd: MethodDefApi                   =>
+        val params  = mthd.params.map { param =>
+          typed(param).asInstanceOf[ValDefApi]
+        }
+        val body    = typed(mthd.body).asInstanceOf[Expr]
+        val rtpe    = mthd.ret.tpe.getOrElse(ErrorType)
+        val btpe    = body.tpe.getOrElse(ErrorType)
+        val mods   = {
+          (mthd.owner, mthd.symbol) match {
+            case (Some(cs: ClassSymbol), Some(s)) if cs.overrides(s)=>
+              s.mods = s.mods | OVERRIDE
+              mthd.mods | OVERRIDE
+            case _                                                     =>
+              mthd.mods
+          }
+        }
+        // if(!(btpe <:< rtpe) && rtpe =/= VoidType) {
+        //   error(TYPE_MISMATCH,
+        //       rtpe.toString, btpe.toString, body.pos, mthd)
+        //   mthd
+        // } else {
+        // Check if all paths eventually return
+        val res     = if(rtpe =/= VoidType && !allPathsReturn(body)) {
+          error(MISSING_RETURN_STATEMENT,
+            body.toString, body.toString, body.pos)
+          mthd
+        } else {
+          TreeCopiers.copyMethodDef(mthd)(mods = mods, body = body,
+            params = params)
+        }
 
 
 
-    if(mods.isFinal && mods.isAbstract)
-      error(ABSTRACT_FINAL,
-          "", "", mthd.pos)
+        if(mods.isFinal && mods.isAbstract)
+          error(ABSTRACT_FINAL,
+              "", "", mthd.pos)
 
-    mthd.owner match {
-      case Some(cs: ClassSymbol)    =>
-        val s = cs.getInheritedSymbol(mthd.name,
-          s => {
-            (s.tpe, mthd.tpe) match {
-              case ((Some(ms: MethodType), Some(mt: MethodType))) =>
-                ms.params == mt.params &&
-                  s.mods.isFinal &&
-                    mods.isOverride
-              case _                                              =>
-                false
+        mthd.owner match {
+          case Some(cs: ClassSymbol)    =>
+            val s = cs.getInheritedSymbol(mthd.name,
+              s => {
+                (s.tpe, mthd.tpe) match {
+                  case ((Some(ms: MethodType), Some(mt: MethodType))) =>
+                    ms.params == mt.params &&
+                      s.mods.isFinal &&
+                        mods.isOverride
+                  case _                                              =>
+                    false
 
-            }
-          })
-        s.foreach( s => {
-          if(mods.isOverride)
-            error(OVERRIDING_FINAL_METHOD,
-                "", "", mthd.pos)
+                }
+              })
+            s.foreach( s => {
+              if(mods.isOverride)
+                error(OVERRIDING_FINAL_METHOD,
+                    "", "", mthd.pos)
+            })
+          case _                        =>
+            ()
+        }
+
+        if(mthd.mods.isAbstract && ! isConstructor(mthd.symbol) &&
+            mthd.body != NoTree) {
+          error(ABSTRACT_METHOD_CANNOT_HAVE_BODY,
+              mthd.toString, "No body", mthd.pos)
+        }
+
+        if (mthd.mods.isAbstract && isConstructor(mthd.symbol)) {
+          error(CONSTRUCTOR_CANNOT_BE_ABSTRACT,
+              mthd.toString, "A concrete constructor", mthd.pos)
+        }
+
+
+        mthd.declaredClassNameForConstructor.foreach( nme => {
+          val cnme = enclosingClass(mthd.symbol).map(_.name)
+          if(cnme != Some(nme)) {
+            error(CONSTRUCTOR_SHOULD_HAVE_THE_SAME_TYPE_AS_CONTAINING_CLASS,
+              nme.asString,
+              cnme.map(_.asString).getOrElse(StdNames.noname.asString),
+              mthd.ret.pos)
+          }
         })
-      case _                        =>
-        ()
+
+
+        mthd.owner match {
+          case Some(sym) if mthd.mods.isInterface &&
+                            isConstructor(mthd.symbol)                       =>
+            error(CONSTRUCTOR_IN_INTERFACE,
+                mthd.toString, "No constructor", mthd.pos)
+          case Some(sym) if mthd.mods.isInterface =>
+            error(NON_ABSTRACT_METHOD_IN_INTERFACE,
+                mthd.toString, "An abstract method", mthd.pos)
+          case Some(sym) if !(sym.mods.isInterface ||
+                              sym.mods.isAbstract) &&
+                              mthd.mods.isAbstract                           =>
+            error(ABSTRACT_METHOD_IN_CONCRETE_CLASS,
+                mthd.toString, "An abstract method", mthd.pos)
+          case _                                                             =>
+            ()
+        }
+
+        res
+
+        // }
+      case mthd: PMethodDefApi                  =>
+        val res = TreeUpgraders.upgradeMethodDef(mthd)
+        typed(res)
     }
-
-    if(mthd.mods.isAbstract && ! isConstructor(mthd.symbol) &&
-        mthd.body != NoTree) {
-      error(ABSTRACT_METHOD_CANNOT_HAVE_BODY,
-          mthd.toString, "No body", mthd.pos)
-    }
-
-    if (mthd.mods.isAbstract && isConstructor(mthd.symbol)) {
-      error(CONSTRUCTOR_CANNOT_BE_ABSTRACT,
-          mthd.toString, "A concrete constructor", mthd.pos)
-    }
-
-
-    mthd.declaredClassNameForConstructor.foreach( nme => {
-      val cnme = enclosingClass(mthd.symbol).map(_.name)
-      if(cnme != Some(nme)) {
-        error(CONSTRUCTOR_SHOULD_HAVE_THE_SAME_TYPE_AS_CONTAINING_CLASS,
-          nme.asString,
-          cnme.map(_.asString).getOrElse(StdNames.noname.asString),
-          mthd.ret.pos)
-      }
-    })
-
-
-    mthd.owner match {
-      case Some(sym) if mthd.mods.isInterface &&
-                        isConstructor(mthd.symbol)                       =>
-        error(CONSTRUCTOR_IN_INTERFACE,
-            mthd.toString, "No constructor", mthd.pos)
-      case Some(sym) if mthd.mods.isInterface =>
-        error(NON_ABSTRACT_METHOD_IN_INTERFACE,
-            mthd.toString, "An abstract method", mthd.pos)
-      case Some(sym) if !(sym.mods.isInterface ||
-                          sym.mods.isAbstract) &&
-                          mthd.mods.isAbstract                           =>
-        error(ABSTRACT_METHOD_IN_CONCRETE_CLASS,
-            mthd.toString, "An abstract method", mthd.pos)
-      case _                                                             =>
-        ()
-    }
-
-    res
-
-    // }
   }
 
   override def allPathsReturn(expr: Tree): Boolean = {

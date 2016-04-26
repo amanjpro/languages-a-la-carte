@@ -18,7 +18,7 @@ import calcj.ast.operators.{Inc, Dec}
 import primj.namers.NamerComponent
 import primj.symbols.{SymbolUtils => _, _}
 import primj.errors.ErrorCodes._
-import primj.ast.{ApplyApi, BlockApi}
+import primj.ast.{ApplyApi, BlockApi, MethodDefApi => PMethodDefApi}
 import ooj.ast._
 import ooj.ast.TreeExtractors._
 import ooj.types.ClassType
@@ -168,13 +168,17 @@ trait TemplateNamerComponent extends NamerComponent {
 @component
 trait MethodDefNamerComponent extends
     primj.namers.MethodDefNamerComponent {
-  (mthd: MethodDefApi) => {
-    val res  = super.apply(mthd).asInstanceOf[primj.ast.MethodDefApi]
-    // INFO: a bit of hack, but works
-    val res2 = TreeFactories.mkMethodDef(mthd.mods, res.ret, res.name,
-      res.params, res.body)
-    res2.attributes = res.attributes
-    res2
+  (mthd: PMethodDefApi) => {
+    mthd match {
+      case mthd: MethodDefApi           =>
+        val res  = super.apply(mthd).asInstanceOf[PMethodDefApi]
+        // INFO: a bit of hack, but works
+        val res1 = TreeUpgraders.upgradeMethodDef(res)
+        TreeCopiers.copyMethodDef(res1)(mods = mthd.mods)
+      case mthd: PMethodDefApi          =>
+        val res = TreeUpgraders.upgradeMethodDef(mthd)
+        name(res)
+    }
   }
 }
 

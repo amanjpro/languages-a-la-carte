@@ -15,7 +15,8 @@ import primj.namers.NamerComponent
 import tiny.errors.ErrorReporting.{error,warning}
 import modulej.ast._
 import modulej.ast.TreeExtractors._
-import ooj.ast.{PackageDefApi, SelectApi, ClassDefApi}
+import ooj.ast.{PackageDefApi, SelectApi, ClassDefApi,
+                CompilationUnitApi => OCompilationUnitApi}
 import modulej.symbols.{CompilationUnitSymbol, SymbolUtils}
 import tiny.symbols.{Symbol, TypeSymbol}
 import ooj.symbols.PackageSymbol
@@ -40,40 +41,46 @@ trait ClassDefNamerComponent extends ooj.namers.ClassDefNamerComponent {
 
 @component
 trait CompilationUnitNamerComponent extends NamerComponent {
-  (unit: CompilationUnitApi) => {
-    val imports = unit.imports.map { imp =>
-      name(imp).asInstanceOf[ImportApi]
-    }
-    imports.flatMap(_.qual.symbol).foreach { sym =>
-      unit.symbol.foreach(_.declare(sym))
-    }
-    val imports2 =
-      imports.exists(_.qual.symbol == Some(langPackageSymbol)) match {
-        case false              =>
-          val java  = TreeFactories.mkIdent(JAVA_PACKAGE_NAME,
-            owner = unit.owner)
-          val lang  = TreeFactories.mkIdent(LANG_PACKAGE_NAME,
-            owner = unit.owner)
-          val jlang = TreeFactories.mkSelect(java, lang, owner = unit.owner)
-          val imprt =
-            name(TreeFactories.mkImport(jlang, true,
-              owner = unit.symbol)).asInstanceOf[ImportApi]
-          imprt::imports
-        case true               =>
-          imports
-      }
+  (unit: OCompilationUnitApi) => {
+    unit match {
+      case unit: CompilationUnitApi             =>
+        val imports = unit.imports.map { imp =>
+          name(imp).asInstanceOf[ImportApi]
+        }
+        imports.flatMap(_.qual.symbol).foreach { sym =>
+          unit.symbol.foreach(_.declare(sym))
+        }
+        val imports2 =
+          imports.exists(_.qual.symbol == Some(langPackageSymbol)) match {
+            case false              =>
+              val java  = TreeFactories.mkIdent(JAVA_PACKAGE_NAME,
+                owner = unit.owner)
+              val lang  = TreeFactories.mkIdent(LANG_PACKAGE_NAME,
+                owner = unit.owner)
+              val jlang = TreeFactories.mkSelect(java, lang, owner = unit.owner)
+              val imprt =
+                name(TreeFactories.mkImport(jlang, true,
+                  owner = unit.symbol)).asInstanceOf[ImportApi]
+              imprt::imports
+            case true               =>
+              imports
+          }
 
-    val importURIs     = imports2.flatMap(im => {
-      im.qual.symbol.map(sym => (sym, toQualifiedString(im.qual)))
-    })
+        val importURIs     = imports2.flatMap(im => {
+          im.qual.symbol.map(sym => (sym, toQualifiedString(im.qual)))
+        })
 
-    unit.symbol.foreach {
-      case sym: CompilationUnitSymbol =>
-        sym.importURIs = importURIs
-      case _                          =>
+        unit.symbol.foreach {
+          case sym: CompilationUnitSymbol =>
+            sym.importURIs = importURIs
+          case _                          =>
+        }
+        val pkg     = name(unit.module).asInstanceOf[PackageDefApi]
+        TreeCopiers.copyCompilationUnit(unit)(imports = imports2, module = pkg)
+      case unit: OCompilationUnitApi            =>
+        val res = TreeUpgraders.upgradeCompilationUnit(unit)
+        name(res)
     }
-    val pkg     = name(unit.module).asInstanceOf[PackageDefApi]
-    TreeCopiers.copyCompilationUnit(unit)(imports = imports2, module = pkg)
   }
 
   protected def toQualifiedString(use: UseTree): String =
