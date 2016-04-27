@@ -589,6 +589,11 @@ trait BinaryConstantFoldingComponent
                 l2.tpe.isInstanceOf[IntegralType]) {
               val cnst = if(l1.tpe <:< BooleanType &&
                  l2.tpe <:< BooleanType) {
+                BooleanConstant(
+                  bitwiseBoolean(l1.value.asInstanceOf[Boolean],
+                             l2.value.asInstanceOf[Boolean]))
+              } else if(l1.tpe <:< IntType &&
+                 l2.tpe <:< IntType) {
                 IntConstant(
                   bitwiseInt(toInt(l1.value),
                              toInt(l2.value)))
