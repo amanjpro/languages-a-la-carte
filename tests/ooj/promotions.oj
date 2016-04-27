@@ -11,7 +11,7 @@ public class promotions {
   final double dd  = k;
   static final int ONE = 1;
   static final int TWO = 2;
-  void m() {
+  void b() {
     int THREE = ONE | TWO;
   }
   short m() {

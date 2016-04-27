@@ -61,5 +61,23 @@ class D extends Kimpl {
 class VV extends D {
   boolean n() {
     return obj.equals(null);
-  }}
+  }
+}
+
+
+
+interface ATest {
+  void b();
+}
+
+
+abstract class BTest implements ATest {
+  void b() {}
+  void a();
+}
+
+class CTest extends BTest {
+  void a() {}
+}
+
 

@@ -160,7 +160,11 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
 
   def allAbstractMembers(symbol: Option[Symbol]): List[Symbol] = symbol match {
     case Some(cs: ClassSymbol)          =>
-      cs.declarations.filter(_.mods.isAbstract)
+      val decls = cs.declarations.filter(_.isInstanceOf[MethodSymbol])
+      val (abstracts, concretes) = decls.partition(_.mods.isAbstract)
+      for {
+        abs <- abstracts if !concretes.exists(s => s.tpe == abs.tpe && s.name == abs.name)
+      } yield abs
     case _                              =>
       Nil
   }

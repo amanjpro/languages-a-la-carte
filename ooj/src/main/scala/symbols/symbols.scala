@@ -118,8 +118,12 @@ trait ClassSymbol extends TypeSymbol {
 
   override def declarations: List[Symbol] = {
     val parentDecls =
-      parents.flatMap(_.declarations).filter(sym =>
-          !(decls.contains(sym) || !canBeInheritedStrict(sym)))
+      parents.flatMap(_.declarations).filter { sym =>
+        val overridden  = decls.exists(s => s.tpe == sym.tpe &&
+                                           s.name == sym.name)
+        val inheritable = canBeInheritedStrict(sym)
+        !overridden && inheritable
+      }
     decls ++ parentDecls
   }
 

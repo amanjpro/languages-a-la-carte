@@ -190,7 +190,7 @@ trait ClassDefTyperComponent extends TyperComponent {
         .map((parent) => typed(parent).asInstanceOf[UseTree])
     val body    = typed(clazz.body).asInstanceOf[TemplateApi]
     if(!(clazz.mods.isInterface || clazz.mods.isAbstract)) {
-      SymbolUtils.allAbstractMembers(clazz.symbol) match {
+      allAbstractMembers(clazz.symbol) match {
         case Nil                           =>
           ()
         case members                       =>
@@ -225,6 +225,9 @@ trait ClassDefTyperComponent extends TyperComponent {
 
     TreeCopiers.copyClassDef(clazz)(body = body, parents = parents)
   }
+
+  def allAbstractMembers(symbol: Option[Symbol]): List[Symbol] =
+    SymbolUtils.allAbstractMembers(symbol)
 
   def reportDuplicateMethods(methodsToSee: List[MethodDefApi]): Unit = {
     methodsToSee match {
