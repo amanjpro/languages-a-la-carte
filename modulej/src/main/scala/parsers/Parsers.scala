@@ -1077,12 +1077,20 @@ class Parser extends parsers.Parser {
           List(visit(ctx.caseLabel.constantExpression).asInstanceOf[Expr])
         } else Nil
       }
-      val body  = ctx.blockStatement match {
-        case null                                => NoTree
-        case stmts                               =>
-          val body = stmts.asScala.toList.map(visit(_))
-          TreeFactories.mkBlock(body, pos(ctx))
+      val stmts  = ctx.blockStatement match {
+        case null                           => Nil
+        case list                           =>
+          list.asScala.toList.flatMap { (x) =>
+            if(x.localVariableDeclarationStatement != null) {
+              val ctx = x.localVariableDeclarationStatement
+                         .localVariableDeclaration
+              localVariableDeclaration(ctx)
+            } else {
+              List(visit(x.statement))
+            }
+          }
       }
+      val body = TreeFactories.mkBlock(stmts, pos(ctx))
       TreeFactories.mkCase(guards, body, pos(ctx))
     }
 
