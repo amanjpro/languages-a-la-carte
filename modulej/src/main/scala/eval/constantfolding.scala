@@ -5,6 +5,7 @@ import ch.usi.inf.l3.sana
 import sana.ooj
 import sana.modulej
 import sana.tiny
+import sana.primj
 
 import tiny.core.{TransformationComponent, CompilerInterface}
 import tiny.dsl._
@@ -12,8 +13,10 @@ import tiny.dsl._
 
 import modulej.ast._
 import modulej.ast.Implicits._
+import modulej.modifiers.Ops._
 import ooj.ast.{PackageDefApi, CompilationUnitApi => OCompilationUnitApi}
-import tiny.ast.{UseTree, IdentApi, TypeUseApi}
+import tiny.ast.{UseTree, IdentApi, TypeUseApi, NoTree}
+import primj.ast.ValDefApi
 import ooj.eval.ConstantFoldingComponent
 
 
@@ -26,6 +29,18 @@ trait CompilationUnitConstantFoldingComponent extends
     cunit match {
       case cunit: CompilationUnitApi     =>
         val (module, newEnv) = constantFold((cunit.module, env))
+        module.bottomUp(())((_, y) => y match {
+          case v: ValDefApi    if v.mods.isFinal && !v.mods.isField &&
+                                 v.rhs != NoTree    =>
+            for {
+              s <- v.symbol
+              o <- s.owner
+            } {
+              o.delete(s)
+            }
+          case _                                    =>
+            ()
+        })
         (TreeCopiers.copyCompilationUnit(cunit)(module =
             module.asInstanceOf[PackageDefApi]), newEnv)
       case cunit: OCompilationUnitApi    =>
@@ -33,6 +48,12 @@ trait CompilationUnitConstantFoldingComponent extends
         constantFold((res, env))
     }
   }
+}
+
+@component(tree, env)
+trait ImportConstantFoldingComponent extends
+  ConstantFoldingComponent {
+  (imprt: ImportApi) => ((imprt, env))
 }
 
 @component(tree, env)
