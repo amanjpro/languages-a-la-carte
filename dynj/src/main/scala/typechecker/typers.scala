@@ -47,6 +47,7 @@ trait CastTyperComponent extends TyperComponent {
   (cast: CastApi)           => {
     val tpt  = typed(cast.tpt).asInstanceOf[UseTree]
     val expr = typed(cast.expr).asInstanceOf[Expr]
+    tpt.symbol.foreach(cast.symbol = _)
     val res: Option[Tree]  = for {
       ttpe <- tpt.tpe
       etpe <- expr.tpe

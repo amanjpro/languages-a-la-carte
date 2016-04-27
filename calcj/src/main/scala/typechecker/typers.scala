@@ -229,13 +229,13 @@ trait UnaryTyperComponent extends TyperComponent {
 
 @component
 trait CastTyperComponent extends TyperComponent {
-
   (cast: CastApi)           => {
     val tpt  = typed(cast.tpt)
     val expr = typed(cast.expr)
     (tpt, expr) match {
       case (tpt: UseTree, expr: Expr)   =>
         tpt.tpe.foreach(cast.tpe = _)
+        tpt.symbol.foreach(cast.symbol = _)
         TreeCopiers.copyCast(cast)(tpt = tpt, expr = expr)
       case _                            =>
         // errors are already reported
