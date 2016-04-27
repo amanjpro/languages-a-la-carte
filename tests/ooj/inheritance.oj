@@ -1,9 +1,4 @@
-// fails
-// NAME_NOT_FOUND
-// NAME_NOT_FOUND
-// NAME_NOT_FOUND
-// NAME_NOT_FOUND
-// NAME_NOT_FOUND
+// passes
 
 package test;
 
