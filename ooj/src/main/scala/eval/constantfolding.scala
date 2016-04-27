@@ -21,6 +21,7 @@ import calcj.ast.operators._
 import calcj.types._
 import calcj.typechecker.TypePromotions
 import ooj.symbols.{SymbolUtils, PackageSymbol}
+import primj.symbols.VariableSymbol
 import ooj.types.TypeUtils
 import ooj.ast.Implicits._
 import brokenj.ast.{TreeCopiers => _, TreeUtils => _, _}
@@ -48,7 +49,16 @@ trait ProgramConstantFoldingComponent extends ConstantFoldingComponent {
 
     }
     val res = TreeCopiers.copyProgram(prg)(members = members)
-    res.bottomUp(())((_, y) => y match {
+    (res, newEnv)
+  }
+}
+
+@component(tree, env)
+trait CompilationUnitConstantFoldingComponent extends
+    ConstantFoldingComponent {
+  (cunit: CompilationUnitApi)  => {
+    val (module, newEnv) = constantFold((cunit.module, env))
+    module.bottomUp(())((_, y) => y match {
       case v: ValDefApi    if v.mods.isFinal && !v.mods.isField &&
                              v.rhs != NoTree    =>
         for {
@@ -60,15 +70,6 @@ trait ProgramConstantFoldingComponent extends ConstantFoldingComponent {
       case _                                    =>
         ()
     })
-    (res, newEnv)
-  }
-}
-
-@component(tree, env)
-trait CompilationUnitConstantFoldingComponent extends
-    ConstantFoldingComponent {
-  (cunit: CompilationUnitApi)  => {
-    val (module, newEnv) = constantFold((cunit.module, env))
     (TreeCopiers.copyCompilationUnit(cunit)(module =
         module.asInstanceOf[PackageDefApi]), newEnv)
   }
