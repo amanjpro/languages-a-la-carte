@@ -72,13 +72,14 @@ trait VariableSymbol extends TermSymbol {
     case that: VariableSymbol =>
       this.mods == that.mods &&
         this.name == that.name &&
+        this.owner == that.owner &&
         this.typeSymbol == that.typeSymbol
     case _                    =>
       false
   }
   override def toString(): String = s"Variable symbol $name"
   override def hashCode(): Int = name.hashCode * 43 +
-    typeSymbol.hashCode * mods.hashCode
+    typeSymbol.hashCode * mods.hashCode + 47 * owner.hashCode
 }
 
 object MethodSymbol {
