@@ -16,7 +16,7 @@ trait PrimjTyperFamilyApi extends
   TransformationFamily[Tree, Tree] {
   self =>
 
-  override def default: Tree = NoTree
+  override def default = { case s: Tree => s }
 
   def components: List[PartialFunction[Tree, Tree]] =
     generateComponents[Tree, Tree](PrimjNodes.nodes,

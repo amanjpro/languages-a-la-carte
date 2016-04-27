@@ -21,7 +21,7 @@ trait SymbolAssignerFamilyApi
   extends TransformationFamily[Tree, Tree] {
   self =>
 
-  override def default: Tree = NoTree
+  override def default = { case s => s }
 
   def components: List[PartialFunction[Tree, Tree]] =
     generateComponents[Tree, Tree](OojNodes.nodes,

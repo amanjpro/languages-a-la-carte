@@ -18,7 +18,7 @@ import sana.ooj.typechecker._
 trait LabelNameCheckerFamilyApi extends CheckerFamily[(Tree, List[LabelApi])] {
   self =>
 
-  override def default: Unit = ()
+  override def default = { case s => () }
 
   def components: List[PartialFunction[(Tree, List[LabelApi]), Unit]] =
     generateComponents[(Tree, List[LabelApi]), Unit](

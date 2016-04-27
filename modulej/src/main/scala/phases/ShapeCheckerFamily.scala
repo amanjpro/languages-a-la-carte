@@ -59,7 +59,7 @@ import sana.modulej.typechecker._
 trait ShapeCheckerFamilyApi extends CheckerFamily[Tree] {
   self =>
 
-  override def default: Unit = ()
+  override def default = { case s => () }
 
   def components: List[PartialFunction[Tree, Unit]] =
     generateComponents[Tree, Unit](Nodes.nodes,

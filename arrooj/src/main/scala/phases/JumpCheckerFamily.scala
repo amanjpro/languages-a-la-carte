@@ -18,7 +18,7 @@ import sana.arrayj.typechecker._
 trait JumpCheckerFamilyApi extends CheckerFamily[(Tree, List[Tree])] {
   self =>
 
-  override def default: Unit = ()
+  override def default = { case s => () }
 
   def components: List[PartialFunction[(Tree, List[Tree]), Unit]] =
     generateComponents[(Tree, List[Tree]), Unit](

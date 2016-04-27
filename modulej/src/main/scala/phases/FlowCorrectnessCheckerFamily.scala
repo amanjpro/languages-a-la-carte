@@ -19,7 +19,7 @@ trait FlowCorrectnessCheckerFamilyApi extends
   TransformationFamily[(Tree, FlowEnv), CompletenessStatus] {
   self =>
 
-  override def default: CompletenessStatus = N
+  override def default = { case s => N }
 
   def components:
     List[PartialFunction[(Tree, FlowEnv), CompletenessStatus]] =

@@ -15,7 +15,7 @@ trait ConstantCollectingFamilyApi
   extends TransformationFamily[(Tree, Env), Env] {
   self =>
 
-  override def default: Env = Env.emptyEnv
+  override def default = { case s: ((Tree, Env)) => s._2 }
 
   def components: List[PartialFunction[(Tree, Env), Env]] =
     generateComponents[(Tree, Env), Env](

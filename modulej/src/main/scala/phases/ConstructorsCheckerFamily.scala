@@ -15,7 +15,7 @@ trait ConstructorsCheckerFamilyApi
   extends CheckerFamily[(Tree, ConstructorCheckerEnv)] {
   self =>
 
-  override def default: Unit = ()
+  override def default = { case s => () }
 
   def components: List[PartialFunction[(Tree, ConstructorCheckerEnv), Unit]] =
     generateComponents[(Tree, ConstructorCheckerEnv), Unit](

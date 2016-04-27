@@ -13,7 +13,7 @@ import sana.ooj.typechecker._
 trait ForwardRefCheckerFamilyApi extends CheckerFamily[(Tree, List[Symbol])] {
   self =>
 
-  override def default: Unit = ()
+  override def default = { case s => () }
 
   def components: List[PartialFunction[(Tree, List[Symbol]), Unit]] =
     generateComponents[(Tree, List[Symbol]), Unit](

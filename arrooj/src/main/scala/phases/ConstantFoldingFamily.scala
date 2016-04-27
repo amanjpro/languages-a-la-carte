@@ -16,7 +16,7 @@ trait ConstantFoldingFamilyApi
   extends TransformationFamily[(Tree, Env), (Tree, Env)] {
   self =>
 
-  override def default: (Tree, Env) = (NoTree, Env.emptyEnv)
+  override def default = { case s: ((Tree, Env)) => s }
 
   def components: List[PartialFunction[(Tree, Env), (Tree, Env)]] =
     generateComponents[(Tree, Env), (Tree, Env)](Nodes.nodes,

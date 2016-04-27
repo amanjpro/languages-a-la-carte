@@ -14,7 +14,7 @@ import sana.arrooj.typechecker._
 trait DefTyperFamilyApi extends TransformationFamily[Tree, Tree] {
   self =>
 
-  override def default: Tree = NoTree
+  override def default = { case s => s }
 
   def components: List[PartialFunction[Tree, Tree]] =
     generateComponents[Tree, Tree](

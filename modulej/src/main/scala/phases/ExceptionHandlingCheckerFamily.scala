@@ -20,7 +20,7 @@ trait ExceptionHandlingCheckerFamilyApi extends
                                         List[HandledException]] {
   self =>
 
-  override def default: List[HandledException] = Nil
+  override def default = { case s => s._2 }
 
   def components:
     List[PartialFunction[(Tree, List[HandledException]),
