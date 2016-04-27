@@ -19,6 +19,7 @@ import tiny.source.Position
 import tiny.errors.ErrorReporting.{error,warning}
 import calcj.typechecker.{TyperComponent, TypePromotions}
 import calcj.types._
+import calcj.ast.LiteralApi
 import primj.symbols._
 import primj.types._
 import primj.modifiers.Ops._
@@ -119,7 +120,8 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
     val elements = setComponentTypesIfNeeded(init)
     val res      = TreeCopiers.copyArrayInitizalizer(init)(elements = elements)
     checkArrayInitializerType(res)
-    res
+    val elements2 = narrawDownElemsIfNeeded(elements, init.componentType)
+    TreeCopiers.copyArrayInitizalizer(res)(elements = elements2)
   }
 
   protected def toArrayType(tpe: Type): Type =
@@ -140,15 +142,36 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
       typed(elem).asInstanceOf[Expr]
     }
 
+  protected def narrawDownElemsIfNeeded(elements: List[Expr],
+      ctpe: Option[() =>Type]): List[Expr] = {
+    ctpe match {
+      case Some(bt)      =>
+        val ctpe = bt()
+            if(ctpe =:= IntType) {
+          for {
+            elem <- elements
+          } yield {
+            elem match {
+              case lit: LiteralApi        => narrowDown(lit, ctpe)
+              case e                      => e
+            }
+          }
+        } else elements
+      case _             =>
+        elements
+    }
+  }
   protected def checkArrayInitializerType(init: ArrayInitializerApi): Unit = {
     val hasErrors = init.elements.foldLeft(false)((z, y) => {
       val r = for {
         etpe <- y.tpe
         ctpe <- init.componentType
       } yield {
-        if(etpe <:< ctpe()) z
+        val ctpe2 = ctpe()
+        if(etpe <:< ctpe2) z
+        else if(isNarrawableTo(y, ctpe2)) z
         else {
-          error(TYPE_MISMATCH, ctpe().toString, etpe.toString, y.pos)
+          error(TYPE_MISMATCH, ctpe.toString, etpe.toString, y.pos)
           true
         }
       }
@@ -156,6 +179,14 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
     })
     init.componentType.foreach(tpe => init.tpe = toArrayType(tpe()))
   }
+
+
+  protected def isNarrawableTo(expr: Tree, tpe: Type): Boolean =
+    TypePromotions.isNarrawableTo(expr, tpe)
+
+  // TODO: I need to do this
+  protected def narrowDown(lit: LiteralApi, tpe: Type): LiteralApi =
+    TreeUtils.narrowDown(lit, tpe)
 }
 
 
