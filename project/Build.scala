@@ -65,6 +65,7 @@ object SharedSettings {
     libraryDependencies ++=
       List("org.scalatest" % "scalatest_2.11" % "2.2.4" % "test",
             "org.ow2.asm" % "asm-all" % "5.0.3",
+            "org.apache.commons" % "commons-lang3" % "3.0",
             "com.github.scopt" %% "scopt" % "3.3.0"),
 
     libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _),

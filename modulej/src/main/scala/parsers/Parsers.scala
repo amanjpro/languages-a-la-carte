@@ -55,6 +55,7 @@ import org.antlr.v4.runtime.{ParserRuleContext, Token}
 import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.tree.{AbstractParseTreeVisitor, TerminalNode}
 
+import org.apache.commons.lang3.StringEscapeUtils
 
 import scala.collection.JavaConverters._
 
@@ -340,7 +341,11 @@ class Parser extends parsers.Parser {
 
 
     override def visitCharLit(ctx: Java1Parser.CharLitContext): Tree = {
-      TreeFactories.mkLiteral(CharConstant(ctx.getText.head), pos(ctx))
+      val str  = ctx.getText
+      val size = str.length
+      val char = StringEscapeUtils.unescapeJava(str.substring(1, size -1))
+      val ch = char.toCharArray.apply(0)
+      TreeFactories.mkLiteral(CharConstant(ch), pos(ctx))
     }
 
     override def visitDoubleLit(ctx: Java1Parser.DoubleLitContext): Tree = {
