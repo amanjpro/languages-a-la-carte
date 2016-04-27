@@ -403,19 +403,19 @@ trait BinaryConstantFoldingComponent
                 val res = TreeCopiers.copyLiteral(lit)(
                   constant = LongConstant(
                     bop2BinaryLong(bin.op)(
-                    toInt(l1.value), toInt(l2.value))))
+                    toLong(l1.value), toLong(l2.value))))
                 (res, env2)
               } else if(l1.tpe <:< FloatType && l2.tpe <:< FloatType) {
                 val res = TreeCopiers.copyLiteral(lit)(
                   constant = FloatConstant (
                     bop2BinaryFloat(bin.op)(
-                    toInt(l1.value), toInt(l2.value))))
+                    toFloat(l1.value), toFloat(l2.value))))
                 (res, env2)
               } else if(l1.tpe <:< DoubleType || l2.tpe <:< DoubleType) {
                 val res = TreeCopiers.copyLiteral(lit)(
                   constant = DoubleConstant (
                     bop2BinaryDouble(bin.op)(
-                    toInt(l1.value), toInt(l2.value))))
+                    toDouble(l1.value), toDouble(l2.value))))
                 (res, env2)
               } else (bin, env2)
             } else {
@@ -1019,5 +1019,3 @@ trait BreakConstantFoldingComponent
   extends ConstantFoldingComponent {
   (brk: BreakApi) => ((brk, env))
 }
-
-
