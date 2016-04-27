@@ -230,19 +230,24 @@ trait SelectConstantFoldingComponent
     val select = TreeCopiers.copySelect(slct)()
     val (qual, _) = constantFold((select.qual, env))
     qual.symbol.foreach(select.tree.owner = _)
-    val tree = if(isTypeSymbol(qual.symbol) ||
-                       isPackageSymbol(qual.symbol)) {
-                      val (t, _) = constantFold((select.tree, env))
-                      t
-                    } else select.tree
+    val tree = if(isTypeSymbol(qual.symbol) || isPackageSymbol(qual.symbol)) {
+                 if(isTypeSymbol(qual.symbol)) {
+                   select.tree match {
+                     case tree: SimpleUseTree =>
+                        select.tree.shouldBeStatic = true
+                     case _                   =>
+                   }
+                 }
+                 qual.symbol.foreach {
+                   case vrble: VariableSymbol =>
+                     vrble.typeSymbol.foreach(select.tree.owner = _)
+                   case owner                 =>
+                     select.tree.owner = owner
+                 }
+                 val (t, _) = constantFold((select.tree, env))
+                 t
+               } else select.tree
 
-    if(isTypeSymbol(qual.symbol)) {
-      tree match {
-        case tree: SimpleUseTree =>
-          tree.shouldBeStatic = true
-        case _                   =>
-      }
-    }
     if(isTypeSymbol(qual.symbol) &&
         isConstantLiteral(tree)) {
       (tree, env)
@@ -330,7 +335,7 @@ trait IdentConstantFoldingComponent
               (clit, env)
             case None if sym.isInstanceOf[PackageSymbol]  =>
               (id, env)
-            case _                     =>
+            case _                                        =>
               (ident, env)
           }
         }.getOrElse((ident, env))
