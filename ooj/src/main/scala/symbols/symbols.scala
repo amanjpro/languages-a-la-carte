@@ -145,7 +145,7 @@ trait ClassSymbol extends TypeSymbol {
     }
     val fromParents   =
       newParents.flatMap(_.getAllSymbols(name, p)).filter { sym =>
-        canBeInherited(sym)
+        !sym.mods.isConstructor
       }
     val fromThis      = decls.filter(sym => sym.name == name && p(sym))
     val updatedParent = fromParents.filter(sp =>
@@ -176,7 +176,7 @@ trait ClassSymbol extends TypeSymbol {
               p: Symbol => Boolean): Boolean = {
       val inThis          = decls.exists(s => s == symbol && p(s))
       lazy val inParents  = parents.foldLeft(false)((z, y) => y.defines(symbol,
-                    s => p(s) && canBeInheritedStrict(s)) || z)
+                    s => p(s) && canBeAccessedFrom(s)) || z)
       lazy val inOwner    = owner.map { sym =>
         sym.defines(symbol, p)
       }.getOrElse(false)
@@ -196,7 +196,7 @@ trait ClassSymbol extends TypeSymbol {
         val sym = parents.foldLeft(None:Option[Symbol])((z, y) => {
           z match {
             case None        =>
-              y.getSymbol(name, s => (p(s) && canBeInherited(s)))
+              y.getSymbol(name, s => (p(s) && !s.mods.isConstructor))
             case _           =>
               z
           }
@@ -212,6 +212,9 @@ trait ClassSymbol extends TypeSymbol {
       case _    => thisSym
     }
   }
+
+  protected def canBeAccessedFrom(sym: Symbol): Boolean =
+    !(sym.mods.isConstructor || sym.mods.isPrivateAcc)
 
   protected def canBeInherited(sym: Symbol): Boolean =
     !(sym.mods.isConstructor || sym.mods.isStatic)
