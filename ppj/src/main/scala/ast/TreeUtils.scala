@@ -30,55 +30,13 @@ trait TreeUtils extends robustj.ast.TreeUtils {
   }
 
 
-  override def allPathsReturn(expr: Tree): Boolean = expr match {
-    case wile: WhileApi                      =>
-      wile.cond match {
-        case Literal(Constant(true))         =>
-          wile.body match {
-            case b: BlockApi                 =>
-              !b.stmts.exists {
-                case s: BreakApi             =>
-                  true
-                case s   if isBreakable(s)   =>
-                  !allPathsReturn(s)
-                case _                       =>
-                  false
-              }
-            case _                           =>
-              false
-          }
-        case _                               =>
-          allPathsReturn(wile.body)
-      }
-    case forloop: ForApi                     =>
-      forloop.cond match {
-        case Literal(Constant(true))         =>
-          forloop.body match {
-            case b: BlockApi                 =>
-              !b.stmts.exists {
-                case s: BreakApi             =>
-                  true
-                case s   if isBreakable(s)   =>
-                  !allPathsReturn(s)
-                case _                       =>
-                  false
-              }
-            case _                           =>
-              false
-          }
-        case _                               =>
-          allPathsReturn(forloop.body)
-      }
-    case tri: TryApi                   =>
-      val tf      = allPathsReturn(tri.tryClause)
-      lazy val cf =
-        tri.catches.foldLeft(true)((z, y) => z && allPathsReturn(y))
-      lazy val ff = tri.finallyClause.map(allPathsReturn(_)).getOrElse(true)
-      tf && cf && ff
-    case ctch: CatchApi                =>
-      allPathsReturn(ctch.catchClause)
-    case s: SynchronizedApi => allPathsReturn(s.block)
-    case _                  => super.allPathsReturn(expr)
+  override def allPathsReturn(expr: Tree): Boolean =
+    allPathsReturnAux(expr, allPathsReturn)
+
+  override protected def allPathsReturnAux(expr: Tree,
+        recurse: Tree => Boolean): Boolean = expr match {
+    case s: SynchronizedApi => recurse(s.block)
+    case _                  => super.allPathsReturnAux(expr, recurse)
   }
 
   override def isSimpleExpression(tree: Tree): Boolean = tree match {

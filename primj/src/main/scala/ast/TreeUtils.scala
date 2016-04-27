@@ -93,29 +93,33 @@ trait TreeUtils extends calcj.ast.TreeUtils {
     case _                                              => false
   }
 
+  def allPathsReturn(expr: Tree): Boolean =
+    allPathsReturnAux(expr, allPathsReturn)
 
-  def allPathsReturn(expr: Tree): Boolean = expr match {
+
+  protected def allPathsReturnAux(expr: Tree,
+          recurse: Tree => Boolean): Boolean = expr match {
     case wile: WhileApi                     =>
       wile.cond match {
         case Literal(Constant(true))        =>
           true
         case _                              =>
-          allPathsReturn(wile.body)
+          recurse(wile.body)
       }
     case forloop: ForApi                    =>
       forloop.cond match {
         case Literal(Constant(true))        =>
           true
         case _                              =>
-          allPathsReturn(forloop.body)
+          recurse(forloop.body)
       }
     case ifelse: IfApi                      =>
-      allPathsReturn(ifelse.thenp) &&
-      allPathsReturn(ifelse.elsep)
+      recurse(ifelse.thenp) &&
+      recurse(ifelse.elsep)
     case block: BlockApi                    =>
       block.stmts match {
         case Nil         => false
-        case stmts       => allPathsReturn(stmts.last)
+        case stmts       => recurse(stmts.last)
       }
     case ret: ReturnApi                     =>
       true

@@ -115,7 +115,11 @@ trait TreeUtils extends ast.TreeUtils {
       false
   }
 
-  override def allPathsReturn(expr: Tree): Boolean = expr match {
+  override def allPathsReturn(expr: Tree): Boolean =
+    allPathsReturnAux(expr, allPathsReturn)
+
+  override protected def allPathsReturnAux(expr: Tree,
+          recurse: Tree => Boolean): Boolean = expr match {
     case wile: WhileApi                      =>
       wile.cond match {
         case Literal(Constant(true))         =>
@@ -125,7 +129,7 @@ trait TreeUtils extends ast.TreeUtils {
                 case s: BreakApi             =>
                   true
                 case s   if isBreakable(s)   =>
-                  !allPathsReturn(s)
+                  !recurse(s)
                 case _                       =>
                   false
               }
@@ -133,7 +137,7 @@ trait TreeUtils extends ast.TreeUtils {
               false
           }
         case _                               =>
-          allPathsReturn(wile.body)
+          recurse(wile.body)
       }
     case forloop: ForApi                     =>
       forloop.cond match {
@@ -144,7 +148,7 @@ trait TreeUtils extends ast.TreeUtils {
                 case s: BreakApi             =>
                   true
                 case s   if isBreakable(s)   =>
-                  !allPathsReturn(s)
+                  !recurse(s)
                 case _                       =>
                   false
               }
@@ -152,10 +156,10 @@ trait TreeUtils extends ast.TreeUtils {
               false
           }
         case _                               =>
-          allPathsReturn(forloop.body)
+          recurse(forloop.body)
       }
     case _                                   =>
-      super.allPathsReturn(expr)
+      super.allPathsReturnAux(expr, recurse)
   }
   /** Checks if this is an access to a field of the current
    *  instance
