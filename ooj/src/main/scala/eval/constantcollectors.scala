@@ -34,12 +34,10 @@ trait ConstantCollectingComponent
 @component(tree, env)
 trait ProgramConstantCollectingComponent extends ConstantCollectingComponent {
   (prg: ProgramApi)  => {
-    val newEnv = prg.members.foldLeft(env){
+    prg.members.foldLeft(env){
       (z, member) =>
-        val env       = z
-        collect((member, env))
+        collect((member, z))
     }
-    newEnv
   }
 }
 
@@ -55,13 +53,11 @@ trait CompilationUnitConstantCollectingComponent extends
 trait PackageDefConstantCollectingComponent
   extends ConstantCollectingComponent {
   (pkg: PackageDefApi)  => {
-    val newEnv = pkg.members.foldLeft(env) {
+    pkg.members.foldLeft(env) {
       (z, member) =>
-        val env       = z
-        collect((member, env))
+        collect((member, z))
 
     }
-    newEnv
   }
 }
 
