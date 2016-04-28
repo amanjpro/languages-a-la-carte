@@ -262,7 +262,7 @@ trait SimpleUseNamer {
               // sym.tpe.foreach(use.tpe = _)
               val fullName = s"$importURI.${use.name}"
               val newUse   = compiler.resolveNames(use.owner) {
-                fromQualifiedString(fullName)
+                fromQualifiedString(fullName, use)
               }.asInstanceOf[UseTree]
               // use.owner.foreach(owner =>
                   // newUse.foreach(tree => tree.owner = owner))
@@ -277,7 +277,7 @@ trait SimpleUseNamer {
               compiler.load(fname) match {
                 case Some(clazz)                 =>
                   val newUse = compiler.resolveNames(use.owner) {
-                    fromQualifiedString(fname)
+                    fromQualifiedString(fname, use)
                   }.asInstanceOf[UseTree]
                   Some(family(newUse))
                 case None                        =>
@@ -334,8 +334,18 @@ trait SimpleUseNamer {
   protected def toQualifiedString(use: UseTree): String =
     TreeUtils.toQualifiedString(use)
 
-  protected def fromQualifiedString(name: String): UseTree =
-    TreeUtils.fromQualifiedString(name)
+  protected def fromQualifiedString(name: String,
+        use: SimpleUseTree): UseTree =
+    TreeUtils.fromQualifiedString(name) match {
+      case s@Select(_, tree)              =>
+        val res = TreeFactories.mkTypeUse(tree.name)
+        s.pos.foreach(use.pos = _)
+        res.attributes = use.attributes
+        res.hasBeenNamed = false
+        TreeCopiers.copySelect(s)(tree = res)
+      case tree                           =>
+        tree
+    }
 
   protected def toPackage(names: List[String]): PackageDefApi =
     TreeUtils.toPackage(names)
