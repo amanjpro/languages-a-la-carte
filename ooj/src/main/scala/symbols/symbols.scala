@@ -117,13 +117,20 @@ trait ClassSymbol extends TypeSymbol {
 
 
   override def declarations: List[Symbol] = {
-    val parentDecls =
-      parents.flatMap(_.declarations).filter { sym =>
+    val parentDecls = {
+      val res = parents.flatMap(_.declarations).filter { sym =>
         val overridden  = decls.exists(s => s.tpe == sym.tpe &&
                                            s.name == sym.name)
         val inheritable = canBeInheritedStrict(sym)
         !overridden && inheritable
       }
+      res.foldLeft(Nil: List[Symbol])((z, y) => {
+        if(z.exists(s => y == s && y.owner == s.owner))
+          z
+        else y::z
+      })
+    }
+
     decls ++ parentDecls
   }
 
@@ -143,10 +150,16 @@ trait ClassSymbol extends TypeSymbol {
             classes ++ interfaces
       }
     }
-    val fromParents   =
-      newParents.flatMap(_.getAllSymbols(name, p)).filter { sym =>
+    val fromParents   = {
+      val res = newParents.flatMap(_.getAllSymbols(name, p)).filter { sym =>
         !sym.mods.isConstructor
       }
+      res.foldLeft(Nil: List[Symbol])((z, y) => {
+        if(z.exists(s => y == s && y.owner == s.owner))
+          z
+        else y::z
+      })
+    }
     val fromThis      = decls.filter(sym => sym.name == name && p(sym))
     val updatedParent = fromParents.filter(sp =>
       !fromThis.exists(st => {
