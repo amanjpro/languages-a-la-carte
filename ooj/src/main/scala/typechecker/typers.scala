@@ -644,6 +644,9 @@ trait ApplyTyperComponent extends TyperComponent {
                 error(REFERENCE_FIELD_BEFORE_SUPERTYPE,
                   "", "", y.pos)
               }
+            case _: ThisApi  | _: SuperApi                     =>
+              error(REFERENCE_FIELD_BEFORE_SUPERTYPE,
+                "", "", y.pos)
             case _                                             =>
               ()
           }
@@ -659,14 +662,17 @@ trait ApplyTyperComponent extends TyperComponent {
       encl <- SymbolUtils.enclosingClass(t.owner)
       s    <- sym
     } yield encl.defines(s)
-    r.getOrElse(false)
+    r.getOrElse{
+      false
+    }
   }
 
   protected def isExplicitConstructorInvocation(tree: Tree): Boolean =
     TreeUtils.isExplicitConstructorInvocation(tree)
 
   protected def pointsToNonStaticField(id: IdentApi): Boolean =
-    id.symbol.map(sym => sym.mods.isField && !sym.mods.isStatic)
+    ! id.isQualified && id.symbol.map(
+      sym => sym.mods.isField && !sym.mods.isStatic)
       .getOrElse(false)
 }
 
