@@ -105,7 +105,7 @@ trait ErrorCodes extends brokenj.errors.ErrorCodes {
 
   case object EXTENDING_AN_INTERFACE extends ErrorCode {
     val message: String =
-      "Classes may not be implemented, but extended"
+      "Interfaces may not be extended, but implemented"
   }
 
   case object CLASS_SHOULD_EXTEND_EXACTlY_ONE_CLASS extends ErrorCode {
