@@ -193,15 +193,36 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
 @component
 trait ValDefTyperComponent extends primj.typechecker.ValDefTyperComponent {
   (valdef: ValDefApi)          => {
-    val res = valdef.rhs match {
+    if(!valdef.mods.isField) {
+      checkDoubleDef(valdef.owner, valdef.name, valdef.pos)
+      valdef.owner.foreach(sym => {
+        valdef.symbol.foreach(sym.declare(_))
+      })
+    }
+    val tpt    = typed(valdef.tpt).asInstanceOf[UseTree]
+    valdef.symbol.foreach(sym => {
+      sym.tpe.foreach(valdef.tpe = _)
+      sym match {
+        case vs: VariableSymbol    =>
+          vs.typeSymbol = tpt.symbol
+        case _                     =>
+          ()
+      }
+    })
+    valdef.rhs match {
       case rhs: ArrayInitializerApi =>
-        getComponentType(valdef.symbol).foreach { bt =>
+        getComponentType(tpt.symbol).foreach { bt =>
           rhs.componentType = bt
         }
       case _                       =>
         ()
     }
-    super.apply(valdef)
+    val rhs    = typed(valdef.rhs).asInstanceOf[Expr]
+    val ttpe   = tpt.tpe.getOrElse(ErrorType)
+    valdef.tpe = ttpe
+    val res = TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
+    checkValDef(res)
+    res
   }
 
   protected def getComponentType(

@@ -11,7 +11,7 @@ import sana.tiny
 import sana.calcj
 
 import tiny.dsl._
-import tiny.ast.{UseTree, Expr, Tree}
+import tiny.ast.{UseTree, Expr, Tree, NoTree}
 import tiny.types.Type
 import tiny.symbols.Symbol
 import tiny.errors.ErrorReporting.{error, warning}
@@ -19,6 +19,7 @@ import calcj.typechecker.TyperComponent
 import arrayj.ast.{TreeUtils => _,
                    TreeCopiers => _, _}
 import arrooj.ast._
+import ooj.modifiers.Ops._
 import primj.ast.ValDefApi
 import arrooj.ast.Implicits._
 import arrooj.symbols.{ArraySymbol, SymbolUtils}
@@ -89,19 +90,28 @@ trait ArrayInitializerTyperComponent
 
 @component
 trait ValDefTyperComponent extends ooj.typechecker.ValDefTyperComponent {
-  (valdef: ValDefApi)          => {
-    val res = valdef.rhs match {
-      case rhs: ArrayInitializerApi =>
-        getComponentType(valdef.symbol).foreach { bt =>
-          rhs.componentType = bt
-        }
-      case _                       =>
-        ()
+
+  protected override def typeRhs(valdef: ValDefApi): Expr = {
+    if(valdef.mods.isField &&
+                    (valdef.mods.isStatic || !valdef.mods.isFinal) &&
+                    valdef.rhs == NoTree) {
+      if(valdef.mods.isFinal)
+        valdef.hasDefaultInit = true
+      val dflt = getDefaultFieldValue(valdef.tpt.tpe)
+      valdef.owner.foreach(dflt.owner = _)
+      typed(dflt).asInstanceOf[Expr]
+    } else {
+      val rhs = valdef.rhs match {
+        case rhs: ArrayInitializerApi =>
+          getComponentType(valdef.symbol).foreach { bt =>
+            rhs.componentType = bt
+          }
+        case _                       =>
+          ()
+      }
+      typed(valdef.rhs).asInstanceOf[Expr]
     }
-    super.apply(valdef)
   }
-
-
   protected def getComponentType(
       symbol: Option[Symbol]): Option[() => Type] =
     symbol.flatMap(_.tpe.flatMap {
