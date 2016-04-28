@@ -99,22 +99,22 @@ trait ValDefTyperComponent extends TyperComponent {
           ()
       }
     })
-    val rhs    = if(valdef.mods.isField &&
-                    (valdef.mods.isStatic || !valdef.mods.isFinal) &&
-                    valdef.rhs == NoTree) {
-      if(valdef.mods.isFinal)
-        valdef.hasDefaultInit = true
-      val dflt = getDefaultFieldValue(tpt.tpe)
-      valdef.owner.foreach(dflt.owner = _)
-      typed(dflt).asInstanceOf[Expr]
-    } else typed(valdef.rhs).asInstanceOf[Expr]
-    val rtpe   = rhs.tpe.getOrElse(ErrorType)
+    val rhs    = typeRhs(valdef)
     val ttpe   = tpt.tpe.getOrElse(ErrorType)
     valdef.tpe = ttpe
-    val res = if(ttpe =:= VoidType) {
+    val res = TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
+    checkValDef(res)
+    res
+  }
+
+  protected def checkValDef(valdef: ValDefApi): Unit = {
+    val rhs    = valdef.rhs
+    val tpt    = valdef.tpt
+    val rtpe   = rhs.tpe.getOrElse(ErrorType)
+    val ttpe   = tpt.tpe.getOrElse(ErrorType)
+    if(ttpe =:= VoidType) {
       error(VOID_VARIABLE_TYPE,
           ttpe.toString, ttpe.toString, rhs.pos)
-      valdef
     // } else if(valdef.mods.isFinal && !valdef.mods.isParam &&
     //           rhs == NoTree) {
     //   error(UNINITIALIZED_FINAL_VARIABLE,
@@ -124,27 +124,26 @@ trait ValDefTyperComponent extends TyperComponent {
         case false if rhs != NoTree        =>
           error(TYPE_MISMATCH,
             rtpe.toString, ttpe.toString, rhs.pos)
-          valdef
         case _                             =>
-          TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
+          ()
       }
 
 
-    res.symbol.foreach(sym => {
+    valdef.symbol.foreach(sym => {
       sym match {
         case vs: VariableSymbol    =>
-          vs.typeSymbol = res.tpt.symbol
+          vs.typeSymbol = valdef.tpt.symbol
         case _                     =>
           ()
       }
     })
 
-    res.owner match {
+    valdef.owner match {
       case Some(csym: ClassSymbol) if csym.mods.isInterface       =>
-        if(!res.mods.isStatic)
+        if(!valdef.mods.isStatic)
           error(NON_STATIC_FIELD_IN_INTERFACE,
               valdef.toString, "A static final field", valdef.pos)
-        if(!res.mods.isFinal)
+        if(!valdef.mods.isFinal)
           error(NON_FINAL_FIELD_IN_INTERFACE,
               valdef.toString, "A static final field", valdef.pos)
       case _                                                      =>
@@ -154,22 +153,28 @@ trait ValDefTyperComponent extends TyperComponent {
 
 
 
-    if(res.mods.isField &&
-      res.owner.map(! _.isInstanceOf[TypeSymbol]).getOrElse(false)) {
+    if(valdef.mods.isField &&
+      valdef.owner.map(! _.isInstanceOf[TypeSymbol]).getOrElse(false)) {
       error(FIELD_OWNED_BY_NON_CLASS,
         valdef.toString, "A field", valdef.pos)
-    // } else if(res.mods.isParam &&
-    //   res.owner.map(! _.isInstanceOf[MethodSymbol]).getOrElse(false)) {
-    //   error(PARAM_OWNED_BY_NON_METHOD,
-    //     valdef.toString, "A parameter", valdef.pos)
-    } else if(res.mods.isLocalVariable &&
-      res.owner.map(sym => !(sym.isInstanceOf[ScopeSymbol] ||
+    } else if(valdef.mods.isLocalVariable &&
+      valdef.owner.map(sym => !(sym.isInstanceOf[ScopeSymbol] ||
             sym.isInstanceOf[MethodSymbol])).getOrElse(false)) {
       error(LOCAL_VARIABLE_OWNED_BY_NON_LOCAL,
         valdef.toString, "A local variable", valdef.pos)
     }
+  }
 
-    res
+  protected def typeRhs(valdef: ValDefApi): Expr = {
+    if(valdef.mods.isField &&
+                    (valdef.mods.isStatic || !valdef.mods.isFinal) &&
+                    valdef.rhs == NoTree) {
+      if(valdef.mods.isFinal)
+        valdef.hasDefaultInit = true
+      val dflt = getDefaultFieldValue(valdef.tpt.tpe)
+      valdef.owner.foreach(dflt.owner = _)
+      typed(dflt).asInstanceOf[Expr]
+    } else typed(valdef.rhs).asInstanceOf[Expr]
   }
 
   protected def getDefaultFieldValue(tpe: Option[Type]): Tree =

@@ -350,25 +350,30 @@ trait ValDefTyperComponent extends TyperComponent {
       }
     })
     val rhs    = typed(valdef.rhs).asInstanceOf[Expr]
-    val rtpe   = rhs.tpe.getOrElse(ErrorType)
     val ttpe   = tpt.tpe.getOrElse(ErrorType)
     valdef.tpe = ttpe
+    val res = TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
+    checkValDef(res)
+    res
+  }
+
+
+  protected def checkValDef(valdef: ValDefApi): Unit = {
+    val rtpe   = valdef.rhs.tpe.getOrElse(ErrorType)
+    val ttpe   = valdef.tpt.tpe.getOrElse(ErrorType)
     if(ttpe =:= VoidType) {
       error(VOID_VARIABLE_TYPE,
-          ttpe.toString, ttpe.toString, rhs.pos)
-      valdef
+          ttpe.toString, ttpe.toString, valdef.rhs.pos)
     } else if(valdef.mods.isFinal && !valdef.mods.isParam &&
-              rhs == NoTree) {
+              valdef.rhs == NoTree) {
       error(UNINITIALIZED_FINAL_VARIABLE,
           valdef.toString, "", valdef.pos)
-      valdef
-    } else (TypeUtils.isAssignable(rhs, rtpe, ttpe)) match {
-        case false if rhs != NoTree        =>
+    } else (TypeUtils.isAssignable(valdef.rhs, rtpe, ttpe)) match {
+        case false if valdef.rhs != NoTree        =>
           error(TYPE_MISMATCH,
-            rtpe.toString, ttpe.toString, rhs.pos)
-          valdef
-        case _                             =>
-          TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
+            rtpe.toString, ttpe.toString, valdef.rhs.pos)
+        case _                                    =>
+          ()
       }
   }
 
