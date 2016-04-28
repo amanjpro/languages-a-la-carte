@@ -261,7 +261,7 @@ trait ClassDefTyperComponent extends TyperComponent {
   protected def checkParents(parents: List[UseTree],
       clazz: ClassDefApi): Unit = {
     parents.foreach( p => {
-      if(! (isInExtendsClause(p) || isInImplementsClause(p)))
+      if(! (isInExtendsClause(p) || isInImplementsClause(p))) {
         p match {
           case tuse: TypeUseApi            =>
             tuse.isInExtendsClause = true
@@ -270,54 +270,41 @@ trait ClassDefTyperComponent extends TyperComponent {
           case _                           =>
             ()
         }
+      }
     })
     parents.filter(isInExtendsClause(_)) match {
-      case List(x) if !clazz.mods.isInterface   =>
-        isInterface(x.symbol) match {
-          case true                    =>
-            error(EXTENDING_AN_INTERFACE,
-              x.name.asString, "A class type",
-              x.pos)
-          case _                       =>
-            // pass
-            ()
-        }
-      case List(x) if isObject(x.symbol)        =>
-        // pass
+      case List(x) if !isInterface(x.symbol)     =>
         ()
-      case List(x, y) if !clazz.mods.isInterface =>
-        if(isObject(x.symbol) && ! isInterface(y.symbol)) {
-          // pass
+      case List(x, y) if isObject(x.symbol)      =>
+        if(isInterface(y.symbol))
+          error(EXTENDING_AN_INTERFACE,
+            y.name.asString, "A class type",
+            y.pos)
+        else
           ()
-        } else if(isObject(y.symbol) && ! isInterface(x.symbol)) {
-          // pass
-          ()
-        } else if (isObject(x.symbol)) {
+      case List(x, y) if isObject(y.symbol)      =>
+        if(isInterface(x.symbol))
           error(EXTENDING_AN_INTERFACE,
             x.name.asString, "A class type",
             x.pos)
-        } else if (isObject(y.symbol)) {
-          error(EXTENDING_AN_INTERFACE,
-            y.name.asString, "A class type",
-            y.pos)
-        } else {
-          error(CLASS_SHOULD_EXTEND_EXACTlY_ONE_CLASS,
-            y.name.asString, "A class type",
-            y.pos)
-        }
-      case Nil  if !clazz.mods.isInterface &&
-                !isObject(clazz.symbol)          =>
-        error(CLASS_SHOULD_EXTEND_EXACTlY_ONE_CLASS,
-          clazz.name.asString, "A class type",
-          clazz.pos)
-      case _    if !clazz.mods.isInterface       =>
+        else
+          ()
+      case List(x, y)                            =>
+        error(EXTENDING_AN_INTERFACE,
+          x.name.asString, "A class type",
+          x.pos)
+      case List(x) if isInterface(x.symbol)      =>
+        error(EXTENDING_AN_INTERFACE,
+          x.name.asString, "A class type",
+          x.pos)
+      case Nil     if !isObject(clazz.symbol)    =>
         error(CLASS_SHOULD_EXTEND_EXACTlY_ONE_CLASS,
           clazz.name.asString, "A class type",
           clazz.pos)
       case Nil                                   =>
         // pass
         ()
-      case _                                     =>
+      case l                                     =>
         error(CLASS_SHOULD_EXTEND_EXACTlY_ONE_CLASS,
           clazz.name.asString, "A class type",
           clazz.pos)
