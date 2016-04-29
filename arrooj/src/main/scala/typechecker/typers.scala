@@ -111,7 +111,7 @@ trait ValDefTyperComponent extends ooj.typechecker.ValDefTyperComponent {
       valdef.owner.foreach(dflt.owner = _)
       typed(dflt).asInstanceOf[Expr]
     } else {
-      val rhs = valdef.rhs match {
+      valdef.rhs match {
         case rhs: ArrayInitializerApi =>
           getComponentType(valdef.symbol).foreach { bt =>
             rhs.componentType = bt
