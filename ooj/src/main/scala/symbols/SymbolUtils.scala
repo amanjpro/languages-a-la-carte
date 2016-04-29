@@ -162,9 +162,20 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
     case Some(cs: ClassSymbol)          =>
       val decls = cs.declarations.filter(_.isInstanceOf[MethodSymbol])
       val (abstracts, concretes) = decls.partition(_.mods.isAbstract)
-      for {
-        abs <- abstracts if !concretes.exists(s => s.tpe == abs.tpe && s.name == abs.name)
+      val res = for {
+        abs <- abstracts if !concretes.exists { s =>
+          (s.tpe, abs.tpe) match {
+            case (Some(stpe), Some(atpe))          =>
+              stpe =:= atpe && s.name == abs.name
+            case _                                 =>
+              false
+          }
+        }
       } yield abs
+      if(res != Nil) {
+        println(decls)
+      }
+      res
     case _                              =>
       Nil
   }
