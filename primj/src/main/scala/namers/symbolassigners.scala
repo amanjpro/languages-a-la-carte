@@ -118,11 +118,11 @@ trait ValDefSymbolAssignerComponent extends SymbolAssignerComponent {
     val owner   = valdef.owner
     owner.foreach { o =>
       valdef.tpt.owner = o
-      valdef.rhs.owner = o
     }
     val tpt     = assign(valdef.tpt).asInstanceOf[UseTree]
     val symbol  = VariableSymbol(valdef.mods, valdef.name,
       tpt.symbol, owner)
+    valdef.rhs.owner = symbol
     val rhs     = assign(valdef.rhs).asInstanceOf[Expr]
     checkDoubleDef(owner, valdef.name, valdef.pos)
     if(valdef.mods.isField) {

@@ -61,10 +61,10 @@ trait VariableSymbol extends TermSymbol {
   override def delete(symbol: Symbol): Unit = ???
   override def defines(symbol: Symbol,
     p: Symbol => Boolean): Boolean =
-    typeSymbol.map(_.defines(symbol, p)).getOrElse(false)
+    owner.map(_.defines(symbol, p)).getOrElse(false)
   override def getSymbol(name: Name,
     p: Symbol => Boolean): Option[Symbol] = {
-    typeSymbol.flatMap(_.getSymbol(name, p))
+    owner.flatMap(_.getSymbol(name, p))
   }
 
   override def equals(other: Any): Boolean = other match {
