@@ -106,25 +106,26 @@ trait ExceptionUtils {
 
 
   def unify(fst: List[HandledException],
-    snd: List[HandledException]): List[HandledException] = for {
-    f <- fst
-    s <- snd
-  } yield {
-    if(f == s && (f.state == UsedCaught || s.state == UsedCaught)) {
-      f.copy(state = UsedCaught)
-    } else f
+    snd: List[HandledException]): List[HandledException] = {
+      for {
+        f <- fst
+      } yield {
+        if(snd.exists(s =>
+            (f == s && (f.state == UsedCaught || s.state == UsedCaught)))) {
+          f.copy(state = UsedCaught)
+        } else f
+      }
   }
 
   def unify(fst: List[HandledException],
     snd: List[HandledException],
     thrd: List[HandledException]): List[HandledException] = for {
     f <- fst
-    s <- snd
-    t <- thrd
   } yield {
-    if(f == s && f == t &&
-        (f.state == UsedCaught || s.state == UsedCaught ||
-            t.state == UsedCaught)) {
+    if(snd.exists(s =>
+        (f == s && (f.state == UsedCaught || s.state == UsedCaught))) ||
+        thrd.exists(s =>
+        (f == s && (f.state == UsedCaught || s.state == UsedCaught)))) {
       f.copy(state = UsedCaught)
     } else f
   }
