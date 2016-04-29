@@ -50,7 +50,7 @@ class FlowEnv {
 
 
   def isDefinitelyAssigned(sym: Symbol): Boolean = {
-    trueCaseSymbols.contains(sym) || falseCaseSymbols.contains(sym)
+    trueCaseSymbols.exists(_ == sym) || falseCaseSymbols.exists(_ == sym)
   }
 
   def batchAdd(env: FlowEnv,
