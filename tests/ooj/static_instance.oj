@@ -1,0 +1,12 @@
+// passes
+
+
+class Test {
+
+  public static final Test t1 = init(new Test(), 1);
+
+  private static Test init(Test t, int n) {
+    return null;
+  }
+}
+
