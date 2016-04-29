@@ -21,7 +21,10 @@ import arrayj.ast.{TreeUtils => _,
 import arrooj.ast._
 import ooj.modifiers.Ops._
 import primj.ast.ValDefApi
+import primj.symbols.VariableSymbol
+import ooj.ast.SelectApi
 import arrooj.ast.Implicits._
+import arrooj.ast.TreeExtractors._
 import arrooj.symbols.{ArraySymbol, SymbolUtils}
 import arrooj.types.{ArrayType, TypeUtils}
 import arrooj.errors.ErrorCodes._
@@ -38,9 +41,16 @@ trait ArrayAccessTyperComponent
         error(NON_ARRAY_ELEMENT_ACCESS, "", "", access.pos)
     }
     access.array.symbol.foreach {
-      case sym: ArraySymbol =>
+      case sym: ArraySymbol  =>
         access.symbol = sym.componentSymbol
-      case _                =>
+      case v: VariableSymbol =>
+        v.typeSymbol.foreach {
+          case sym: ArraySymbol  =>
+            access.symbol = sym.componentSymbol
+          case s                 =>
+            ()
+        }
+      case s                 =>
         ()
     }
   }
