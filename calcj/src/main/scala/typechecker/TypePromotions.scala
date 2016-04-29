@@ -39,9 +39,9 @@ trait TypePromotions {
         case Some(sym) =>
           val tuse = mkTypeUse(sym.name,
                             pos, Some(sym),
-                            sym.owner)
+                            e.owner)
           sym.tpe.foreach(tuse.tpe = _)
-          mkCast(tuse, e)
+          mkCast(tuse, e, pos = pos)
         case _         =>
           e
       }

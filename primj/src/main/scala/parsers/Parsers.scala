@@ -15,6 +15,7 @@ import calcj.ast.{TreeCopiers => _, _}
 import calcj.ast.operators._
 import primj.ast._
 import primj.ast.TreeFactories._
+import primj.ast.Implicits._
 import primj.antlr._
 import primj.modifiers._
 import primj.modifiers.Ops._
@@ -132,6 +133,7 @@ class Parser extends parsers.Parser {
           mkAssign(id, e2, pos(ctx))
         case Some(op) =>
           val rhs = mkBinary(id, op, e2, pos(ctx))
+          rhs.isCompoundBinary = true
           mkAssign(id, rhs, pos(ctx))
       }
     }

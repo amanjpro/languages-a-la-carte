@@ -6,8 +6,9 @@ import sana.calcj
 
 import tiny.dsl._
 import tiny.core.{TransformationComponent, TransformationFamily}
-import tiny.ast.{TreeCopiers => _, _}
-import sana.tiny.ast.Implicits._
+import tiny.ast.{TreeCopiers => _, TreeFactories => _, _}
+import sana.calcj.ast.Implicits._
+import sana.calcj.symbols.SymbolUtils
 import tiny.types._
 import tiny.symbols.Symbol
 import tiny.errors.ErrorCodes._
@@ -41,7 +42,22 @@ trait BinaryTyperComponent extends TyperComponent {
               typed(castIfNeeded(e2, e2tpe, e2.tpe.get)).asInstanceOf[Expr]
             val res = TreeCopiers.copyBinary(bin)(lhs = expr1, rhs = expr2)
             res.tpe = rtpe
-            res
+            e1.tpe match {
+              case Some(tpe)   if tpe.isInstanceOf[PrimitiveType] &&
+                                  bin.isCompoundBinary                =>
+                SymbolUtils.getSymbol(tpe) match {
+                  case Some(symbol)           =>
+                    val tuse = TreeFactories.mkTypeUse(symbol.name,
+                      expr1.pos, Some(symbol), bin.owner)
+                    res.isCompoundBinary = false
+                    res.isTypedCompoundBinary = true
+                    typed(TreeFactories.mkCast(tuse, res, pos = expr1.pos))
+                  case _                      =>
+                    res
+                }
+              case _                                                  =>
+                res
+            }
           case _                                    =>
             // errors are already reported
             bin

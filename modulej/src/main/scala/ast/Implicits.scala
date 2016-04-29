@@ -4,6 +4,8 @@ import ch.usi.inf.l3.sana.tiny.ast.augmenters._
 import ch.usi.inf.l3.sana.primj.ast.augmenters.{AugmentedSimpleUseTree => _,
   _}
 import ch.usi.inf.l3.sana.ooj.ast.augmenters._
+import ch.usi.inf.l3.sana.calcj.ast.BinaryApi
+import ch.usi.inf.l3.sana.calcj.ast.augmenters._
 import ch.usi.inf.l3.sana.arrayj.ast.augmenters._
 import ch.usi.inf.l3.sana.modulej.ast.augmenters._
 import ch.usi.inf.l3.sana.tiny.ast.{Tree, SimpleUseTree, IdentApi, TypeUseApi,
@@ -17,6 +19,7 @@ object Implicits {
   implicit class AugmentedArrayInitializerImpl(val tree: ArrayInitializerApi)
     extends AugmentedArrayInitializer
 
+  implicit class AugmentedBinaryImpl(val tree: BinaryApi) extends AugmentedBinary
   implicit class AugmentedTreeImpl(val tree: Tree) extends AugmentedTree
   implicit class AugmentedThisImpl(val tree: ThisApi) extends AugmentedThis
   implicit class AugmentedSuperImpl(val tree: SuperApi) extends AugmentedSuper

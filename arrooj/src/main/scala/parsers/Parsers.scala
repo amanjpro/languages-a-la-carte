@@ -193,7 +193,7 @@ class Parser extends parsers.Parser {
     }
 
     def createBinary[T <: ParserRuleContext](es: java.util.List[T],
-      trm: String, ctx: ParserRuleContext): Expr = {
+      trm: String, ctx: ParserRuleContext): BinaryApi = {
       val e1 = visitChildren(es.get(0)).asInstanceOf[Expr]
       val e2 = visitChildren(es.get(1)).asInstanceOf[Expr]
       createBinary(e1, e2, trm, ctx)
@@ -201,7 +201,7 @@ class Parser extends parsers.Parser {
     }
 
     def createBinary(e1: Expr, e2: Expr,
-      trm: String, ctx: ParserRuleContext): Expr = {
+      trm: String, ctx: ParserRuleContext): BinaryApi = {
         val op = trm match {
           case "*"     => Mul
           case "/"     => Div
@@ -1550,6 +1550,7 @@ class Parser extends parsers.Parser {
         case op                          =>
           val op2      = op.take(op.length - 1)
           val expr     = createBinary(lhs, rhs, op2, ctx)
+          expr.isCompoundBinary = true
           TreeFactories.mkAssign(lhs, expr, pos(ctx))
       }
     }
