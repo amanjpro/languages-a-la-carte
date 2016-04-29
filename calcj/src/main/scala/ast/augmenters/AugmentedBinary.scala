@@ -9,6 +9,14 @@ trait AugmentedBinary {
 
   def tree: BinaryApi
 
+  def isTypedBinary: Boolean =
+    tree.attributes.get('isTypedBinary)
+      .map(_.asInstanceOf[Boolean])
+      .getOrElse(false)
+
+  def isTypedBinary_=(flag: Boolean): Unit =
+    tree.attributes = tree.attributes + ('isTypedBinary -> flag)
+
   def isCompoundBinary: Boolean =
     tree.attributes.get('isCompoundBinary)
       .map(_.asInstanceOf[Boolean])

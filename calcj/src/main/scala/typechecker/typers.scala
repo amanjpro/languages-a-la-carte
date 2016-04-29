@@ -29,43 +29,49 @@ trait TyperComponent extends
 trait BinaryTyperComponent extends TyperComponent {
 
   (bin: BinaryApi)           => {
-    val e1 = typed(bin.lhs)
-    val e2 = typed(bin.rhs)
-    (e1, e2) match {
-      case (e1: Expr, e2: Expr)       if e1.tpe != None && e2.tpe != None =>
-        val btpe = binaryTyper(e1.tpe.get, e2.tpe.get, bin)
-        btpe match {
-          case Some((e1tpe, e2tpe, rtpe))           =>
-            val expr1 =
-              typed(castIfNeeded(e1, e1tpe, e1.tpe.get)).asInstanceOf[Expr]
-            val expr2 =
-              typed(castIfNeeded(e2, e2tpe, e2.tpe.get)).asInstanceOf[Expr]
-            val res = TreeCopiers.copyBinary(bin)(lhs = expr1, rhs = expr2)
-            res.tpe = rtpe
-            e1.tpe match {
-              case Some(tpe)   if tpe.isInstanceOf[PrimitiveType] &&
-                                  bin.isCompoundBinary                =>
-                SymbolUtils.getSymbol(tpe) match {
-                  case Some(symbol)           =>
-                    val tuse = TreeFactories.mkTypeUse(symbol.name,
-                      expr1.pos, Some(symbol), bin.owner)
-                    res.isCompoundBinary = false
-                    res.isTypedCompoundBinary = true
-                    typed(TreeFactories.mkCast(tuse, res, pos = expr1.pos))
-                  case _                      =>
-                    res
-                }
-              case _                                                  =>
-                res
-            }
-          case _                                    =>
-            // errors are already reported
-            bin
-        }
-      case _                                                              =>
-        // errors are already reported
-        bin
-    }
+    if(!bin.isTypedBinary) {
+      val e1 = typed(bin.lhs)
+      val e2 = typed(bin.rhs)
+      (e1, e2) match {
+        case (e1: Expr, e2: Expr)       if e1.tpe != None && e2.tpe != None =>
+          val btpe = binaryTyper(e1.tpe.get, e2.tpe.get, bin)
+          btpe match {
+            case Some((e1tpe, e2tpe, rtpe))           =>
+              val expr1 =
+                compiler.typeCheck(bin.owner)(
+                  castIfNeeded(e1, e1tpe, e1.tpe.get)).asInstanceOf[Expr]
+              val expr2 =
+                compiler.typeCheck(bin.owner)(
+                  castIfNeeded(e2, e2tpe, e2.tpe.get)).asInstanceOf[Expr]
+              val res = TreeCopiers.copyBinary(bin)(lhs = expr1, rhs = expr2)
+              res.tpe = rtpe
+              e1.tpe match {
+                case Some(tpe)   if tpe.isInstanceOf[PrimitiveType] &&
+                                    bin.isCompoundBinary                =>
+                  SymbolUtils.getSymbol(tpe) match {
+                    case Some(symbol)           =>
+                      val tuse = TreeFactories.mkTypeUse(symbol.name,
+                        expr1.pos, Some(symbol), bin.owner)
+                      res.isCompoundBinary = false
+                      res.isTypedCompoundBinary = true
+                      res.isTypedBinary = true
+                      compiler.typeCheck(bin.owner)(
+                        TreeFactories.mkCast(tuse, res, pos = expr1.pos))
+                    case _                      =>
+                      res
+                  }
+                case _                                                  =>
+                  res
+              }
+            case _                                    =>
+              // errors are already reported
+              bin
+          }
+        case _                                                              =>
+          // errors are already reported
+          bin
+      }
+    } else bin
   }
 
   protected def castIfNeeded(e: Expr, t1: Type, t2: Type): Expr = {
