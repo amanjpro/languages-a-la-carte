@@ -17,6 +17,7 @@ import sana.primj.typechecker.{MethodDefTyperComponent => _,
                                IdentTyperComponent => _, _}
 import sana.calcj.typechecker.{UnaryTyperComponent => _,
                                BinaryTyperComponent => _,
+                               LiteralTyperComponent => _,
                                _}
 import sana.brokenj.typechecker._
 import sana.ooj.typechecker.{SelectTyperComponent => _,

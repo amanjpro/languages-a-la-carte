@@ -19,7 +19,7 @@ import tiny.errors.ErrorReporting.{error,warning}
 import calcj.typechecker.{TyperComponent, TypePromotions}
 import calcj.types._
 import calcj.ast.operators.{Add, Eq, Neq, BOp}
-import calcj.ast.BinaryApi
+import calcj.ast.{BinaryApi, LiteralApi}
 import primj.ast.{ApplyApi, ValDefApi, MethodDefApi => PMethodDefApi}
 import primj.symbols.{ProgramSymbol, MethodSymbol,
                       VariableSymbol, ScopeSymbol}
@@ -1101,4 +1101,19 @@ trait TernaryTyperComponent extends
 
   override protected def unifyTernaryBranches(lhs: Expr,
       rhs: Expr): Option[Type] = TypeUtils.unifyTernaryBranches(lhs, rhs)
+}
+
+
+@component
+trait LiteralTyperComponent extends TyperComponent {
+  (lit: LiteralApi)     => {
+    lit.tpe    = lit.constant.tpe
+    getSymbol(lit.constant.tpe).foreach {
+      lit.symbol = _
+    }
+    lit
+  }
+
+  protected def getSymbol(t: Type): Option[Symbol] =
+    SymbolUtils.getSymbol(t)
 }

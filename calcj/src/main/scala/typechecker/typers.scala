@@ -13,6 +13,7 @@ import tiny.symbols.Symbol
 import tiny.errors.ErrorCodes._
 import tiny.errors.ErrorReporting.{error,warning}
 import calcj.ast._
+import calcj.symbols._
 import calcj.ast.operators._
 import calcj.types._
 
@@ -248,7 +249,13 @@ trait CastTyperComponent extends TyperComponent {
 @component
 trait LiteralTyperComponent extends TyperComponent {
   (lit: LiteralApi)     => {
-    lit.tpe = lit.constant.tpe
+    lit.tpe    = lit.constant.tpe
+    getSymbol(lit.constant.tpe).foreach {
+      lit.symbol = _
+    }
     lit
   }
+
+  protected def getSymbol(t: Type): Option[Symbol] =
+    SymbolUtils.getSymbol(t)
 }
