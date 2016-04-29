@@ -3,6 +3,7 @@ package ch.usi.inf.l3.sana.modulej.typechecker
 import ch.usi.inf.l3.sana
 import sana.modulej
 import sana.ooj
+import sana.arrooj
 import sana.calcj
 import sana.tiny
 import sana.ppj
@@ -115,7 +116,7 @@ trait TypeUseTyperComponent
 
 
 @component
-trait SelectTyperComponent extends ooj.typechecker.SelectTyperComponent {
+trait SelectTyperComponent extends arrooj.typechecker.SelectTyperComponent {
   (slct: SelectApi) => {
     attachQualifiedNameAttribute(slct)
     super.apply(slct)
