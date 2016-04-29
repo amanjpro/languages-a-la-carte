@@ -206,6 +206,13 @@ trait TreeUtils extends ast.TreeUtils {
     case _                 =>
       TreeFactories.mkLiteral(NullConstant)
   }
+
+  override def isVariable(tree: Tree): Boolean = tree match {
+    case Select(_, t)                =>
+      isVariable(t)
+    case _                           =>
+      super.isVariable(tree)
+  }
 }
 
 object TreeUtils extends TreeUtils

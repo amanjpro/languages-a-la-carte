@@ -31,8 +31,10 @@ trait TreeUtils extends OTreeUtils {
   def isArrayTypeUse(e: Tree): Boolean =
     ATreeUtils.isArrayTypeUse(e)
 
-  def isArrayAccessOrVariableAccess(tree: Tree): Boolean =
-    ATreeUtils.isArrayAccessOrVariableAccess(tree)
+  def isArrayAccessOrVariableAccess(tree: Tree): Boolean = tree match {
+    case ArrayAccess(array, _)        => isArrayAccessOrVariableAccess(array)
+    case tree                         => isVariable(tree)
+  }
 }
 
 object TreeUtils extends TreeUtils

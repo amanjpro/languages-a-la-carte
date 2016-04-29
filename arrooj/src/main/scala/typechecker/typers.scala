@@ -154,4 +154,10 @@ trait AssignTyperComponent extends ooj.typechecker.AssignTyperComponent {
       error(ASSIGNING_NOT_TO_VARIABLE,
         lhs.toString, lhs.toString, lhs.pos)
   }
+  override protected def checkFinalReassigning(lhs: Tree): Unit = {
+    lhs match {
+      case _: ArrayAccessApi               => ()
+      case _                               => super.checkFinalReassigning(lhs)
+    }
+  }
 }
