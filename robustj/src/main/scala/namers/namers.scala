@@ -12,6 +12,8 @@ import sana.robustj
 
 import tiny.core.TransformationComponent
 import tiny.dsl._
+import tiny.ast.Implicits._
+import robustj.symbols.MethodSymbol
 import robustj.ast.{TreeFactories, MethodDefApi, TreeCopiers, TreeUpgraders}
 import primj.ast.{MethodDefApi => PMethodDefApi}
 import tiny.ast.UseTree
@@ -25,6 +27,12 @@ trait MethodDefNamerComponent extends
         val res1 = super.apply(mthd).asInstanceOf[PMethodDefApi]
         val throwsClause = mthd.throwsClause.map { tc =>
           name(tc).asInstanceOf[UseTree]
+        }
+        res1.symbol.foreach {
+          case mthd: MethodSymbol     =>
+            mthd.throwsSymbols = throwsClause.flatMap(_.symbol)
+          case _                      =>
+            ()
         }
         // INFO: a bit of hack, but works
         val res2 = TreeUpgraders.upgradeMethodDef(res1)
