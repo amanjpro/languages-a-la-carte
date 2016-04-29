@@ -966,21 +966,25 @@ trait IdentNamer {
 trait SelectTyperComponent extends TyperComponent {
   (select: SelectApi) => {
     val qual = typed(select.qual)
-    qual.symbol.foreach {
-      case vrble: VariableSymbol =>
-        vrble.typeSymbol.foreach(select.tree.owner = _)
-      case owner                 =>
-        select.tree.owner = owner
-    }
     if(isTypeUse(qual)) {
       select.tree.shouldBeStatic = true
     }
+    setOwner(qual, select)
     val tree = typed(select.tree).asInstanceOf[SimpleUseTree]
     tree.tpe.foreach(select.tpe = _)
     tree.symbol.foreach(select.symbol = _)
     TreeCopiers.copySelect(select)(qual, tree)
   }
 
+
+  protected def setOwner(qual: Tree, select: SelectApi): Unit = {
+    qual.symbol.foreach {
+      case vrble: VariableSymbol =>
+        vrble.typeSymbol.foreach(select.tree.owner = _)
+      case owner                 =>
+        select.tree.owner = owner
+    }
+  }
 
   protected def isTypeUse(tree: Tree): Boolean = tree match {
     case t: UseTree => TreeUtils.isTypeUse(t)
