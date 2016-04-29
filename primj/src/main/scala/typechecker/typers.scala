@@ -267,42 +267,44 @@ trait ReturnTyperComponent extends TyperComponent {
       .map(e => typed(e).asInstanceOf[Expr]).getOrElse(NoTree)
     val tpe   = expr.tpe
     tpe.foreach(ret.tpe = _)
+    val res   = TreeCopiers.copyReturn(ret)(
+      expr = if(expr == NoTree) None else Some(expr))
     SymbolUtils.enclosingMethod(ret.owner) match {
       case Some(mthd) =>
         mthd.tpe match {
           case Some(MethodType(VoidType, _))  if expr == NoTree         =>
-            ret
+            res
           case Some(MethodType(VoidType, _))                            =>
             error(NON_VOID_RETURN,
               ret.tpe.map(_.toString).getOrElse(""),
               VoidType.toString, ret.pos)
-            ret
+            res
           case Some(MethodType(t, _)) if expr == None                   =>
             error(VOID_RETURN,
               ret.tpe.map(_.toString).getOrElse(""),
               t.toString, ret.pos)
-            ret
+            res
           case Some(MethodType(rtpe, _))                                =>
             val ok = expr.tpe.map(etpe =>
                 TypeUtils.isAssignable(expr, etpe, rtpe))
             ok match {
               case Some(true)          =>
-                ret
+                res
               case l                   =>
                 error(TYPE_MISMATCH,
                   expr.tpe.map(_.toString).getOrElse("<error>"),
                   rtpe.toString, ret.pos)
-                ret
+                res
             }
           case t                                                        =>
             error(TYPE_MISMATCH,
               tpe.toString, t.map(_.toString).getOrElse("A method type"),
               ret.pos)
-            ret
+            res
         }
       case _          =>
         // error should be reported by shape checker
-        ret
+        res
     }
   }
 
