@@ -276,6 +276,13 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
 
   def isTermSymbol(symbol: Option[Symbol]): Boolean =
     symbol.map(_.isInstanceOf[TermSymbol]).getOrElse(false)
+
+  override def getSymbol(t: Type): Option[Symbol] = t match {
+    case tpe        if tpe =:= TypeUtils.stringClassType         =>
+      Some(stringClassSymbol)
+    case _                                                       =>
+      super.getSymbol(t)
+  }
 }
 
 object SymbolUtils extends SymbolUtils
