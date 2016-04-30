@@ -51,7 +51,7 @@ trait BinaryTyperComponent extends TyperComponent {
                   SymbolUtils.getSymbol(tpe) match {
                     case Some(symbol)           =>
                       val tuse = TreeFactories.mkTypeUse(symbol.name,
-                        expr1.pos, Some(symbol), bin.owner)
+                        expr1.pos)
                       res.isCompoundBinary = false
                       res.isTypedCompoundBinary = true
                       res.isTypedBinary = true

@@ -37,10 +37,7 @@ trait TypePromotions {
       val pos = e.pos
       getSymbol(t1) match {
         case Some(sym) =>
-          val tuse = mkTypeUse(sym.name,
-                            pos, Some(sym),
-                            e.owner)
-          sym.tpe.foreach(tuse.tpe = _)
+          val tuse = mkTypeUse(sym.name, pos)
           mkCast(tuse, e, pos = pos)
         case _         =>
           e
