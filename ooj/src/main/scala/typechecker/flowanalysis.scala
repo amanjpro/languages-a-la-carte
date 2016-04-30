@@ -73,6 +73,10 @@ class FlowEnv {
     batchAdd(temp, FalseCase)
   }
 
+  def union(env: FlowEnv): Unit = {
+    trueCaseSymbols  = this.trueCaseSymbols.union(env.trueCaseSymbols)
+    falseCaseSymbols = this.falseCaseSymbols.union(env.falseCaseSymbols)
+  }
   def unify(env: FlowEnv): Unit = {
     trueCaseSymbols  = this.trueCaseSymbols.intersect(env.trueCaseSymbols)
     falseCaseSymbols = this.falseCaseSymbols.intersect(env.falseCaseSymbols)
@@ -294,16 +298,14 @@ trait TernaryFlowCorrectnessCheckerComponent extends
     val tenv = env.duplicate
     tenv.mask(FalseCase)
     tenv.unionTracks
-
-    val eenv = env.duplicate
-    eenv.unionTracks
-    eenv.mask(TrueCase)
-
-
     check((tern.thenp, tenv))
-    check((tern.elsep, eenv))
 
-    env.mergeIn(tenv, eenv)
+    val fenv = env.duplicate
+    fenv.mask(TrueCase)
+    fenv.unionTracks
+    check((tern.elsep, fenv))
+
+    env.mergeIn(tenv, fenv)
     N
   }
 }
