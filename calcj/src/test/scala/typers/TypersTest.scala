@@ -28,8 +28,23 @@ class TyperTest extends FlatSpec with Matchers {
   trait TyperFamily extends TransformationFamily[Tree, Tree] {
     self =>
 
-    override def default: Tree = NoTree
-    def compiler: CompilerInterface = ???
+    override def default = {case (s) => s }
+    def compiler: CompilerInterface = new CompilerInterface {
+      def typeCheck(owner: Option[Symbol])(tree: Tree): Tree = {
+        typed(tree)
+      }
+      override def resolveNames(owner: Option[Symbol])(tree: Tree): Tree =
+        tree
+
+      def definesModule(module: String): Boolean =
+        ???
+
+      def parse(source: String): Tree   = ???
+
+      def load(fname: String): Option[Tree]   = ???
+
+      def unparse(tree: Tree): String   = ???
+    }
 
     def components: List[PartialFunction[Tree, Tree]] =
       generateComponents[Tree, Tree](langs,
