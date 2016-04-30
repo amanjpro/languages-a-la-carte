@@ -146,7 +146,6 @@ object ComplexLangs {
 trait TypeCheckerFamily extends TransformationFamily[Expr, Expr] {
   self =>
 
-  override def default: Expr = NoExpr
   def compiler: CompilerInterface = ???
 
   def components: List[PartialFunction[Expr, Expr]] =
@@ -175,7 +174,6 @@ object PrettyPrinterFamily extends PrettyPrinterFamily
 trait TestCheckerFamily extends CheckerFamily[Expr] {
   self =>
 
-  override def default: Unit = println("Tree not supported")
   def compiler: CompilerInterface = ???
 
   def components: List[PartialFunction[Expr, Unit]] =

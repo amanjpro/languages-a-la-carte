@@ -201,7 +201,6 @@ trait MulTestCheckerComponent extends TestCheckerComponent {
 trait TypeCheckerFamily extends TransformationFamily[Expr, Expr] {
   self =>
 
-  override def default: Expr = NoExpr
 
   def components: List[PartialFunction[Expr, Expr]] =
     List(new IntLitTypeCheckerComponent {
@@ -252,7 +251,6 @@ object PrettyPrinterFamily extends PrettyPrinterFamily
 trait TestCheckerFamily extends CheckerFamily[Expr] {
   self =>
 
-  override def default: Unit = println("Tree not supported")
 
   def components: List[PartialFunction[Expr, Unit]] =
     List(new IntLitTestChecerComponent {
