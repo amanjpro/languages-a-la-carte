@@ -98,6 +98,12 @@ trait ExceptionUtils {
       case (h::hs) if t <:< h.tpe          =>
         if(h.state == ThrownClause) Some(he)
         else Some(HandledException(h.tpe, h.pos, UsedCaught)::hs)
+      case (h::hs) if t >:> h.tpe          =>
+        if(h.state == ThrownClause)
+          updateFirstOccurance(t, hs).map(h::_)
+        else
+          updateFirstOccurance(t, hs)
+            .map(HandledException(h.tpe, h.pos, UsedCaught)::_)
       case (h::hs)                         =>
         updateFirstOccurance(t, hs).map(h::_)
       case Nil                             =>
@@ -201,8 +207,9 @@ trait ThrowExceptionHandlingCheckerComponent
 trait ApplyExceptionHandlingCheckerComponent
   extends ExceptionHandlingCheckerComponent {
   (apply: ApplyApi) => {
-    val he = checkThrownExceptions(apply, handledExceptions)
-    apply.args.foldLeft(he) { (z, y) =>
+    val he = check((apply.fun, handledExceptions))
+    val he1 = checkThrownExceptions(apply, he)
+    apply.args.foldLeft(he1) { (z, y) =>
       check((y, z))
     }
   }
