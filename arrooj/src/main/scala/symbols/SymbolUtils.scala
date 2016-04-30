@@ -11,7 +11,7 @@ import sana.primj.modifiers._
 
 trait SymbolUtils extends sana.ooj.symbols.SymbolUtils {
   lazy val arrayLengthSymbol: Symbol = {
-    val mods   = PUBLIC_ACC | FINAL
+    val mods   = PUBLIC_ACC | FINAL | FIELD
     val name   = Name("length")
     val tpt    = getSymbol(IntType)
     VariableSymbol(mods, name, tpt, None)
