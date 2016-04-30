@@ -14,7 +14,8 @@ import sana.tiny
 
 import tiny.dsl._
 import tiny.core._
-import ooj.typechecker.{N, CompletenessStatus, FlowCorrectnessCheckerComponent}
+import ooj.typechecker.{N, B, CompletenessStatus,
+                        FlowCorrectnessCheckerComponent}
 import robustj.ast._
 
 
@@ -31,6 +32,7 @@ trait ThrowFlowCorrectnessCheckerComponent
   extends FlowCorrectnessCheckerComponent {
   (thrw: ThrowApi) => {
     check((thrw.expr, env))
+    B
   }
 }
 
@@ -48,15 +50,25 @@ trait CatchFlowCorrectnessCheckerComponent
 trait TryFlowCorrectnessCheckerComponent
   extends FlowCorrectnessCheckerComponent {
   (tri: TryApi) => {
-    val benv   = env.duplicate
-    val tr     =check((tri.tryClause, benv))
     val cenvs  = tri.catches.map(_ => env.duplicate)
+    val tr     =check((tri.tryClause, env))
     val z: CompletenessStatus = N
-    val cr     = tri.catches.zip(cenvs).foldLeft(z){ (z, y) =>
-      z.unify(check((y._1, y._2)))
+    val cr     = tri.catches.zip(cenvs) match {
+      case (c::cs)        =>
+        val z = check((c._1, c._2))
+        cs.foldLeft(z)((z, y) => z.unify(check((y._1, y._2))))
+      case _              =>
+        N
     }
-    cenvs.foreach(benv.unify(_))
-    val fr     = tri.finallyClause.map(p => check((p, benv))).getOrElse(N)
-    tr.unify(cr.unify(fr))
+    if(cr == N) {
+      cenvs.foreach(env.unify(_))
+    }
+    val res = tri.finallyClause.map(p => check((p, env)))
+    res match {
+      case Some(fr)            =>
+        tr.unify(cr.unify(fr))
+      case _                   =>
+        tr.unify(cr)
+    }
   }
 }
