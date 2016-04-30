@@ -742,16 +742,14 @@ trait TypeUseNamer {
 @component
 trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
   (ident: IdentApi) => {
-    if(!ident.hasBeenNamed) {
-      val id = nameIdent(ident)
-      id match {
-        case id: IdentApi                        =>
-          val r = typeAndNameIdent(id)
-          r
-        case other                               =>
-          typed(other)
-      }
-    } else ident
+    val id = nameIdent(ident)
+    id match {
+      case id: IdentApi                        =>
+        val r = typeAndNameIdent(id)
+        r
+      case other                               =>
+        typed(other)
+    }
   }
 
   protected def nameIdent(id: IdentApi): UseTree =

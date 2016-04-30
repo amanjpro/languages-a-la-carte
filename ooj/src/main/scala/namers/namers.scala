@@ -273,7 +273,7 @@ trait BlockNamerComponent extends NamerComponent {
 trait IdentNamerComponent extends NamerComponent {
 
   (id: IdentApi)       => {
-    id.hasBeenNamed = true
+    // id.hasBeenNamed = true
     val res = nameIdent(id)
     res.symbol match {
       case Some(s)       =>
