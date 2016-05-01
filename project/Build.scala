@@ -126,7 +126,7 @@ object build extends Build {
   lazy val robustj     = project("robustj", Seq(arrooj))
   lazy val dynj        = project("dynj", Seq(robustj))
   lazy val ppj         = project("ppj", Seq(dynj))
-  lazy val modulej     = project("modulej", Seq(ppj))
+  lazy val modulej     = project("modulej", Seq(ppj)) // this implements java 1.0
 
 
 
@@ -134,4 +134,7 @@ object build extends Build {
 
   // Consistency language example
   lazy val dcct        = project("dcct", Seq(ooj), Seq(antlrSetting("dcct")))
+
+  // Oberon-0
+  lazy val oberon_     = project("oberon_0", Seq(ooj,arrayj), Seq(antlrSetting("oberon_0")))
 }
