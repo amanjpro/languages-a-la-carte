@@ -4,7 +4,7 @@ import ch.usi.inf.l3.sana
 import sana.tiny
 import sana.calcj
 import sana.primj
-import sana.arrayj
+import sana.arrooj
 
 import tiny.ast.{Tree, DefTree, TypeTree, TermTree, UseTree}
 import tiny.ast.Implicits._
@@ -14,7 +14,7 @@ import tiny.symbols.Symbol
 import tiny.source.Position
 
 
-trait TreeFactories extends arrayj.ast.TreeFactories {
+trait TreeFactories extends arrooj.ast.TreeFactories {
 
   def mkModuleDef(name: Name, declarations: List[DefTree],
     block: Option[BlockApi], pos: Option[Position] = None,

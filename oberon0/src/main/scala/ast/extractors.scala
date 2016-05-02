@@ -4,7 +4,7 @@ import ch.usi.inf.l3.sana
 import sana.tiny
 import sana.calcj
 import sana.primj
-import sana.arrayj
+import sana.arrooj
 
 import tiny.ast.{Tree, DefTree, TypeTree, TermTree, UseTree}
 import tiny.ast.Implicits._
@@ -13,7 +13,7 @@ import tiny.names.Name
 
 
 
-trait TreeExtractors extends arrayj.ast.TreeExtractors {
+trait TreeExtractors extends arrooj.ast.TreeExtractors {
 
   trait ModuleDefExtractor {
     def unappy(tree: ModuleDefApi): Option[(Name, List[DefTree], Option[BlockApi])] =
@@ -32,32 +32,45 @@ trait TreeExtractors extends arrayj.ast.TreeExtractors {
 }
 
 object TreeExtractors extends TreeExtractors {
-  val TypeUse   = new TypeUseExtractor {}
-  val Ident     = new IdentExtractor {}
+  val TypeUse          = new TypeUseExtractor {}
+  val Ident            = new IdentExtractor {}
 
-  val Cast      = new CastExtractor {}
-  val Literal   = new LiteralExtractor {}
-  val Binary    = new BinaryExtractor {}
-  val Unary     = new UnaryExtractor {}
-
-
-  val Program   = new ProgramExtractor {}
-  val Assign    = new AssignExtractor {}
-  val If        = new IfExtractor {}
-  val While     = new WhileExtractor {}
-  val For       = new ForExtractor {}
-  val Ternary   = new TernaryExtractor {}
-  val Apply     = new ApplyExtractor {}
-  val Return    = new ReturnExtractor {}
-  val MethodDef = new MethodDefExtractor {}
-  val ValDef    = new ValDefExtractor {}
+  val Cast             = new CastExtractor {}
+  val Literal          = new LiteralExtractor {}
+  val Binary           = new BinaryExtractor {}
+  val Unary            = new UnaryExtractor {}
 
 
-  val Label     = new LabelExtractor {}
-  val Break     = new BreakExtractor {}
-  val Continue  = new ContinueExtractor {}
-  val Case      = new CaseExtractor {}
-  val Switch    = new SwitchExtractor {}
+  val Block            = new BlockExtractor {}
+  val Assign           = new AssignExtractor {}
+  val If               = new IfExtractor {}
+  val While            = new WhileExtractor {}
+  val For              = new ForExtractor {}
+  val Ternary          = new TernaryExtractor {}
+  val Apply            = new ApplyExtractor {}
+  val Return           = new ReturnExtractor {}
+  val ValDef           = new ValDefExtractor {}
+
+
+  val Label            = new LabelExtractor {}
+  val Break            = new BreakExtractor {}
+  val Continue         = new ContinueExtractor {}
+  val Case             = new CaseExtractor {}
+  val Switch           = new SwitchExtractor {}
+
+  val ArrayInitializer = new ArrayInitializerExtractor {}
+  val ArrayAccess      = new ArrayAccessExtractor {}
+  val ArrayTypeUse     = new ArrayTypeUseExtractor {}
+  val ArrayCreation    = new ArrayCreationExtractor {}
+
+  val CompilationUnit = new CompilationUnitExtractor {}
+  val PackageDef      = new PackageDefExtractor {}
+  val ClassDef        = new ClassDefExtractor {}
+  val Template        = new TemplateExtractor {}
+  val New             = new NewExtractor {}
+  val Select          = new SelectExtractor {}
+  val MethodDef       = new MethodDefExtractor {}
+
 
 
   val ModuleDef = new ModuleDefExtractor {}
