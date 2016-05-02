@@ -19,7 +19,7 @@ trait TreeCopiers extends arrayj.ast.TreeCopiers {
   def copyModuleDef(template: ModuleDefApi)(name: Name = template.name,
     declarations: List[DefTree] = template.declarations,
     block: Option[BlockApi] = template.block): ModuleDefApi = {
-    val res = new ModuleDef(name, declarations, block)
+    val res = TreeFactories.mkModuleDef(name, declarations, block)
     copyProperties(template, res)
     res
   }
@@ -28,7 +28,7 @@ trait TreeCopiers extends arrayj.ast.TreeCopiers {
   def copyTypeDef(template: TypeDefApi)(name: Name = template.name,
     tpt: UseTree = template.tpt): TypeDefApi = {
 
-    val res = new TypeDef(name, tpt)
+    val res = TreeFactories.mkTypeDef(name, tpt)
     copyProperties(template, res)
     res
   }
