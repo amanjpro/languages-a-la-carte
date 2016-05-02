@@ -117,8 +117,8 @@ declarations
   ;
 
 module
-  : 'MODULE'
-  | Identifier ';' declarations ('BEGIN' statementSequence)? 'END' Identifier '.'
+  : 'MODULE' Identifier ';' declarations ('BEGIN' statementSequence)?
+    'END' Identifier '.'
   ;
 
 
