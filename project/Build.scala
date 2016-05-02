@@ -136,5 +136,5 @@ object build extends Build {
   lazy val dcct        = project("dcct", Seq(ooj), Seq(antlrSetting("dcct")))
 
   // Oberon-0
-  lazy val oberon_     = project("oberon_0", Seq(ooj,arrayj), Seq(antlrSetting("oberon_0")))
+  lazy val oberon_0    = project("oberon_0", Seq(ooj,arrayj), Seq(antlrSetting("oberon_0")))
 }
