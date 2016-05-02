@@ -1,6 +1,6 @@
 
 
-grammar Oberon_0;
+grammar Oberon0;
 
 
 // PARSER
