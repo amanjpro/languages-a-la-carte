@@ -110,7 +110,7 @@ object build extends Build {
       // site.settings ++ ghpages.settings: _*) ++ settings ),
     aggregate = Seq(testLang, tiny, calcj, primj,
                    brokenj, ooj, dcct, arrayj, arrooj, robustj, dynj,
-                   ppj, modulej)
+                   ppj, modulej, oberon0)
       // arrayj)
   ) settings (unidocSettings: _*)
 
