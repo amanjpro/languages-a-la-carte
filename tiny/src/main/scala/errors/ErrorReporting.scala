@@ -40,7 +40,7 @@ object ErrorReporting {
       |$msg
       |${" " * 2}$found
       |${" " * 2}$required
-      |${" " * col}${line.trim}
+      |${"     "}${line}
       |$caret""".stripMargin
   }
 
