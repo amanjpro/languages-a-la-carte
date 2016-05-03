@@ -681,10 +681,23 @@ trait ApplyTyperComponent extends TyperComponent {
 trait TypeUseTyperComponent
   extends primj.typechecker.TypeUseTyperComponent {
   (tuse: TypeUseApi) => {
-    val tuseCopy = if(!tuse.hasBeenNamed) {
-      nameTypeUse(tuse)
-    } else tuse
-    super.apply(tuseCopy)
+    if(!tuse.hasBeenNamed) {
+      val tuseCopy = nameTypeUse(tuse)
+      tuseCopy.symbol match {
+        case Some(sym: TypeSymbol)                =>
+          sym.tpe.foreach(tuseCopy.tpe = _)
+        case Some(_)                              =>
+          error(TYPE_NAME_EXPECTED,
+            tuse.toString, "a type", tuse.pos)
+        case _                                    =>
+          error(TYPE_NOT_FOUND,
+            tuse.toString, "a type", tuse.pos)
+      }
+      tuseCopy
+    } else {
+      tuse.symbol.foreach(_.tpe.foreach(tuse.tpe = _))
+      tuse
+    }
   }
 
   protected def nameTypeUse(tuse: TypeUseApi): UseTree =
@@ -701,13 +714,22 @@ trait TypeUseNamer {
       case true  => tuseCopy.enclosing
       case false => None
     }
-    tuseCopy.owner.foreach(sym => {
-      sym.getSymbol(tuseCopy.name, _.isInstanceOf[TypeSymbol]) match {
-        case s@Some(sym) if isAnAccessibleType(s, encl)   =>
-          tuseCopy.symbol = sym
-        case _                                            => ()
+    val symbol = tuseCopy.owner.flatMap { owner            =>
+      val p = (s: Symbol) => s.isInstanceOf[TypeSymbol]
+      owner match {
+        case csym: ClassSymbol if tuseCopy.isQualified     =>
+          csym.getSymbol(tuseCopy.name, { s =>
+            p(s) && csym.definesDirectlyOrInherits(s, p)
+          })
+        case sym                                           =>
+          sym.getSymbol(tuseCopy.name, p)
       }
-    })
+    }
+    symbol match {
+      case s@Some(sym) if isAnAccessibleType(s, encl)   =>
+        tuseCopy.symbol = sym
+      case _                                            => ()
+    }
     // tuseCopy.symbol match {
     //   case None          if tuseCopy.isQualified         =>
     //     // INFO:
@@ -856,8 +878,17 @@ trait IdentNamer {
           id.toString, "a concrete class", id.pos)
       id
     } else {
-      val symbol = id.owner.flatMap(
-        _.getSymbol(id.name, _.isInstanceOf[TermSymbol]))
+      val symbol = id.owner.flatMap { owner =>
+        owner match {
+          case csym: ClassSymbol if id.isQualified     =>
+            csym.getSymbol(id.name, { s =>
+              val p = (s: Symbol) => s.isInstanceOf[VariableSymbol]
+              p(s) && csym.definesDirectlyOrInherits(s, p)
+            })
+          case sym                                     =>
+            sym.getSymbol(id.name, _.isInstanceOf[TermSymbol])
+        }
+      }
 
       //       s => {
       //         enclosingClass(id.owner) match {

@@ -1,0 +1,17 @@
+// fails
+// TYPE_NOT_FOUND
+// NAME_NOT_FOUND
+// TYPE_MISMATCH
+
+
+class A {
+  B m() {
+    A a = new A();
+    return new a.B(); // NAME_NOT_FOUND
+  }
+}
+
+
+class B {
+}
+

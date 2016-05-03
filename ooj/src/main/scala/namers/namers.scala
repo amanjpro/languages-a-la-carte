@@ -186,8 +186,17 @@ trait MethodDefNamerComponent extends
 trait TypeUseNamerComponent extends NamerComponent {
   (tuse: TypeUseApi)          => {
     tuse.hasBeenNamed = true
-    val symbol = tuse.owner.flatMap(_.getSymbol(tuse.name,
-      _.isInstanceOf[TypeSymbol]))
+    val symbol = tuse.owner.flatMap { owner            =>
+      val p = (s: Symbol) => s.isInstanceOf[TypeSymbol]
+      owner match {
+        case csym: ClassSymbol if tuse.isQualified     =>
+          csym.getSymbol(tuse.name, { s =>
+            p(s) && csym.definesDirectlyOrInherits(s, p)
+          })
+        case sym                                       =>
+          sym.getSymbol(tuse.name, p)
+      }
+    }
     val encl = tuse.isQualified match {
       case true  => tuse.enclosing
       case false => None
@@ -300,8 +309,17 @@ trait IdentNamer {
     val id = TreeCopiers.copyIdent(original)(name = original.name)
     // At the beginning: we treat all (Ident)s as ambiguous names.
     // Can we see any (VariableSymbol)s with this name from the current scope?
-    val temp = id.owner.flatMap(_.getSymbol(id.name,
-      _.isInstanceOf[VariableSymbol]))
+    val temp = id.owner.flatMap { owner        =>
+      val p = (s: Symbol) => s.isInstanceOf[VariableSymbol]
+      owner match {
+        case csym: ClassSymbol if id.isQualified       =>
+          csym.getSymbol(id.name, { s =>
+            p(s) && csym.definesDirectlyOrInherits(s, p)
+          })
+        case sym                                       =>
+          sym.getSymbol(id.name, p)
+      }
+    }
     val encl = id.isQualified match {
       case true  => id.enclosing
       case false => None
@@ -309,28 +327,37 @@ trait IdentNamer {
     temp match {
       case None        =>
         // Can we see any (TypeSymbol)s with this name from the current scope?
-        val temp = id.owner.flatMap(_.getSymbol(id.name,
-          _.isInstanceOf[TypeSymbol]))
-          temp match {
-            case s@Some(sym)     if isAnAccessibleType(s, encl) =>
-              id.symbol = sym
-              sym.tpe.foreach(id.tpe = _)
-              val tuse =
-                TreeFactories.mkTypeUse(id.name, id.pos, id.symbol, id.owner)
-              tuse.attributes = id.attributes
-              tuse
-            case _                                              =>
-              val temp = id.owner.flatMap(_.getSymbol(id.name,
-                _.isInstanceOf[PackageSymbol]))
-              temp match {
-                case None      =>
-                  id
-                case Some(sym) =>
-                  id.symbol = sym
-                  sym.tpe.foreach(id.tpe = _)
-                  id
-              }
+        val temp = id.owner.flatMap { owner        =>
+          val p = (s: Symbol) => s.isInstanceOf[TypeSymbol]
+          owner match {
+            case csym: ClassSymbol if id.isQualified       =>
+              csym.getSymbol(id.name, { s =>
+                p(s) && csym.definesDirectlyOrInherits(s, p)
+              })
+            case sym                                       =>
+              sym.getSymbol(id.name, p)
           }
+        }
+        temp match {
+          case s@Some(sym)     if isAnAccessibleType(s, encl) =>
+            id.symbol = sym
+            sym.tpe.foreach(id.tpe = _)
+            val tuse =
+              TreeFactories.mkTypeUse(id.name, id.pos, id.symbol, id.owner)
+            tuse.attributes = id.attributes
+            tuse
+          case _                                              =>
+            val temp = id.owner.flatMap(_.getSymbol(id.name,
+              _.isInstanceOf[PackageSymbol]))
+            temp match {
+              case None      =>
+                id
+              case Some(sym) =>
+                id.symbol = sym
+                sym.tpe.foreach(id.tpe = _)
+                id
+            }
+        }
       case Some(sym)   =>
         id.symbol = sym
         sym.tpe.foreach(id.tpe = _)

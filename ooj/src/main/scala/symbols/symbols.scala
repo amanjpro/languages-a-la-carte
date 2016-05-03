@@ -184,6 +184,18 @@ trait ClassSymbol extends TypeSymbol {
   }
 
   // Override this method to look for definitions in the parents too.
+  // First local defs, then parent defs, but never defs in enclosing symbol
+  def definesDirectlyOrInherits(symbol: Symbol,
+              p: Symbol => Boolean): Boolean = {
+      lazy val thisSym         = this == symbol && p(this)
+      lazy val inThis          = decls.exists(s => s == symbol && p(s))
+      lazy val inParents       =
+        parents.foldLeft(false)((z, y) => y.definesDirectlyOrInherits(symbol,
+                    s => p(s) && !s.mods.isConstructor) || z)
+      thisSym || inThis || inParents
+  }
+
+  // Override this method to look for definitions in the parents too.
   // First local defs, then parent defs then defs in enclosing symbol
   override def defines(symbol: Symbol,
               p: Symbol => Boolean): Boolean = {
