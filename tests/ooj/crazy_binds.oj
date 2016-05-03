@@ -2,12 +2,17 @@
 // TYPE_NOT_FOUND
 // NAME_NOT_FOUND
 // TYPE_MISMATCH
+// TYPE_NOT_FOUND
+// NAME_NOT_FOUND
+// TYPE_MISMATCH
 
 
 class A {
+  A a = new A();
+  B b = new a.B();
   B m() {
     A a = new A();
-    return new a.B(); // NAME_NOT_FOUND
+    return new a.B();
   }
 }
 
