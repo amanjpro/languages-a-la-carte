@@ -3,6 +3,7 @@ package ch.usi.inf.l3.sana.oberon0.symbols
 import ch.usi.inf.l3.sana
 import sana.tiny
 import sana.ooj
+import sana.calcj
 
 
 import tiny.names.Name
@@ -12,6 +13,17 @@ import tiny.types.Type
 import tiny.symbols.{Symbol, TermSymbol, TypeSymbol}
 import ooj.symbols.PackageSymbol
 
+trait IntSymbol extends calcj.symbols.IntSymbol {
+  override def name: Name = Name("INTEGER")
+}
+
+case object IntSymbol extends IntSymbol
+
+trait BooleanSymbol extends calcj.symbols.BooleanSymbol {
+  override def name: Name = Name("BOOLEAN")
+}
+
+case object BooleanSymbol extends BooleanSymbol
 
 
 object ModuleSymbol {
