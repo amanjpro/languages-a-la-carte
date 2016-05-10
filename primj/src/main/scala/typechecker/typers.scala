@@ -342,6 +342,17 @@ trait ValDefTyperComponent extends TyperComponent {
       })
     }
     val tpt    = typed(valdef.tpt).asInstanceOf[UseTree]
+    setTypeSymbol(valdef, tpt)
+    val rhs    = typed(valdef.rhs).asInstanceOf[Expr]
+    val ttpe   = tpt.tpe.getOrElse(ErrorType)
+    valdef.tpe = ttpe
+    val res = TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
+    checkValDef(res)
+    res
+  }
+
+
+  protected def setTypeSymbol(valdef: ValDefApi, tpt: UseTree): Unit = {
     valdef.symbol.foreach(sym => {
       sym.tpe.foreach(valdef.tpe = _)
       sym match {
@@ -351,12 +362,6 @@ trait ValDefTyperComponent extends TyperComponent {
           ()
       }
     })
-    val rhs    = typed(valdef.rhs).asInstanceOf[Expr]
-    val ttpe   = tpt.tpe.getOrElse(ErrorType)
-    valdef.tpe = ttpe
-    val res = TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
-    checkValDef(res)
-    res
   }
 
 
