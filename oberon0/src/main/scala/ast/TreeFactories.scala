@@ -4,17 +4,23 @@ import ch.usi.inf.l3.sana
 import sana.tiny
 import sana.calcj
 import sana.primj
-import sana.arrooj
+import sana.arrayj
+import sana.ooj
 
-import tiny.ast.{Tree, DefTree, TypeTree, TermTree, UseTree}
+import tiny.ast._
 import tiny.ast.Implicits._
+import tiny.types.Type
+import tiny.modifiers.Ops.noflags
 import primj.ast.{BlockApi}
 import tiny.names.Name
+import tiny.names.StdNames._
 import tiny.symbols.Symbol
 import tiny.source.Position
+import arrayj.ast.{TreeFactories => ATreeFactories, _}
+import ooj.ast.{TreeFactories => OTreeFactories, _}
 
 
-trait TreeFactories extends arrooj.ast.TreeFactories {
+trait TreeFactories extends primj.ast.TreeFactories {
 
   def mkModuleDef(name: Name, declarations: List[DefTree],
     block: Option[BlockApi], pos: Option[Position] = None,
@@ -29,7 +35,7 @@ trait TreeFactories extends arrooj.ast.TreeFactories {
   }
 
 
-  def mkTypeDef(name: Name, tpt: UseTree,
+  def mkTypeDef(name: Name, tpt: Tree,
     pos: Option[Position] = None, symbol: Option[Symbol] = None,
     owner: Option[Symbol] = None): TypeDefApi = {
 
@@ -42,6 +48,50 @@ trait TreeFactories extends arrooj.ast.TreeFactories {
     owner.foreach(res.owner = _)
     res
   }
+
+
+  def mkArrayTypeUse(tpt: UseTree,
+    size: Expr,
+    pos: Option[Position] = None,
+    symbol: Option[Symbol] = None,
+    owner: Option[Symbol] = None,
+    tpe: Option[Type] = None): ArrayTypeUseApi = {
+    val res = new ArrayTypeUse(tpt, size)
+    pos.foreach(res.pos = _)
+    symbol.foreach(res.symbol = _)
+    owner.foreach(res.owner = _)
+    tpe.foreach(res.tpe = _)
+    res
+  }
+
+
+
+
+
+  def mkRecordDef(body: TemplateApi,
+      pos: Option[Position] = None,
+      symbol: Option[Symbol] = None,
+      tpe: Option[Type] = None): ClassDefApi =
+    OTreeFactories.mkClassDef(noflags, noname, Nil, body, pos, symbol, tpe)
+
+  def mkTemplate(members: List[Tree],
+    pos: Option[Position] = None,
+    owner: Option[Symbol] = None): TemplateApi =
+    OTreeFactories.mkTemplate(members, pos, owner)
+
+  def mkSelect(qual: Tree, tree: SimpleUseTree,
+    pos: Option[Position] = None,
+    symbol: Option[Symbol] = None,
+    owner: Option[Symbol] = None): SelectApi =
+    OTreeFactories.mkSelect(qual, tree, pos, symbol, owner)
+
+  def mkArrayAccess(array: Expr, index: Expr,
+    pos: Option[Position] = None,
+    symbol: Option[Symbol] = None,
+    owner: Option[Symbol] = None,
+    tpe: Option[Type] = None): ArrayAccessApi =
+    ATreeFactories.mkArrayAccess(array, index, pos, symbol, owner, tpe)
+
 }
 
 object TreeFactories extends TreeFactories
