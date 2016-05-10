@@ -2,6 +2,8 @@
 
 
 MODULE Sample;
+  TYPE T = RECORD b: BOOLEAN; a: INTEGER END;
+  VAR p: T;
 
   PROCEDURE Multiply; VAR x, y, z: INTEGER;
 
@@ -37,4 +39,20 @@ MODULE Sample;
     Write(i); Write(j); Write(a[j]); WriteLn
   END BinSearch;
 
+  PROCEDURE Out(param: INTEGER);
+  BEGIN
+    Write(param);
+  END Out;
+
+  PROCEDURE Out2(rec: RECORD a: INTEGER; b: BOOLEAN END);
+  BEGIN
+    Write(rec.a);
+    Write(rec.b);
+  END Out2;
+
+BEGIN
+  Out(2);
+  p.a := 2;
+  p.b := FALSE;
+  Out2(p);
 END Sample.
