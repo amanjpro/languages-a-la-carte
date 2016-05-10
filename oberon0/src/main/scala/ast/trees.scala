@@ -6,7 +6,7 @@ import sana.calcj
 import sana.primj
 import sana.arrayj
 
-import tiny.ast.{Tree, DefTree, TypeTree, TermTree, UseTree}
+import tiny.ast.{Tree, DefTree, TypeTree, TermTree, UseTree, Expr}
 import primj.ast.{BlockApi}
 import tiny.names.Name
 
@@ -25,10 +25,19 @@ trait ModuleDefApi extends TermTree {
   }
 }
 
+trait ArrayTypeUseApi extends arrayj.ast.ArrayTypeUseApi {
+  def size: Expr
+
+  override def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
+    val r1 = f(z, tpt)
+    val r2 = f(z, size)
+    f(r2, this)
+  }
+}
 
 trait TypeDefApi extends TypeTree {
   def name: Name
-  def tpt: UseTree
+  def tpt: Tree
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
     val r1 = f(z, tpt)
@@ -46,6 +55,12 @@ private[this] class ModuleDef(val name: Name,
 }
 
 private[this] class TypeDef(val name: Name,
-  val tpt: UseTree) extends TypeDefApi {
+  val tpt: Tree) extends TypeDefApi {
   override def toString: String = s"TypeDef($name, $tpt)"
+}
+
+
+protected[ast] class ArrayTypeUse(val tpt: UseTree,
+    val size: Expr) extends ArrayTypeUseApi {
+  override def toString: String = s"ArrayTypeUse($tpt, $size)"
 }
