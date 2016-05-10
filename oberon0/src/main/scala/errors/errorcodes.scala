@@ -15,6 +15,10 @@ trait ErrorCodes extends arrooj.errors.ErrorCodes {
     def message: String =
       "Type already defined"
   }
+
+  object NAME_MISMATCH extends ErrorCode {
+    def message: String = "Names do not match"
+  }
 }
 
 object ErrorCodes extends ErrorCodes
