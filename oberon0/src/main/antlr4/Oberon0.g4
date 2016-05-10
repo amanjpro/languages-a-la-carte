@@ -8,7 +8,7 @@ grammar Oberon0;
 
 
 selector
-  : ('.' Identifier | '[' expression ']')*
+  : ('.' Identifier | '[' expression ']')
   ;
 
 number
@@ -16,19 +16,36 @@ number
   ;
 
 
+booleanValue
+  : value=('TRUE'| 'FALSE')
+  ;
+
+select
+  : Identifier selector*
+  ;
+
 factor
-  : Identifier selector
+  : select
   | number
+  | booleanValue
   | '(' expression ')'
   | '~' factor
   ;
 
 term
-  : factor (op=('*' | 'DIV' | 'MOD' | '&') factor)*
+  : factor term2*
+  ;
+
+term2
+  : op=('*' | 'DIV' | 'MOD' | '&') factor
   ;
 
 simpleExpression
-  : (sign=('+' | '-'))? term (op=('+' | '-' | 'OR') term)*
+  : (sign=('+' | '-'))? term simpleExpression2*
+  ;
+
+simpleExpression2
+  : op=('+' | '-' | 'OR') term
   ;
 
 expression
@@ -36,7 +53,7 @@ expression
   ;
 
 assignment
-  : Identifier selector ':=' expression
+  : select ':=' expression
   ;
 
 
@@ -45,14 +62,20 @@ actualParameters
   ;
 
 procedureCall
-  : Identifier selector (actualParameters)?
+  : select actualParameters?
   ;
 
 
 ifStatement
-  : 'IF' expression 'THEN' statementSequence
-     ('ELSEIF' expression 'THEN' statementSequence)*
-     ('ELSE' statementSequence)? 'END'
+  : 'IF' expression 'THEN' statementSequence elseIf* elsep
+  ;
+
+elseIf
+  : 'ELSEIF' expression 'THEN' statementSequence
+  ;
+
+elsep
+  : ('ELSE' statementSequence)? 'END'
   ;
 
 whileStatement
@@ -64,7 +87,7 @@ statement
   ;
 
 statementSequence
-  : statement (';' statement)
+  : statement (';' statement)*
   ;
 
 identList
@@ -80,7 +103,7 @@ fieldList
   ;
 
 recordType
-  : 'RECORD' fieldList (';' fieldList) 'END'
+  : 'RECORD' fieldList (';' fieldList)* 'END'
   ;
 
 type
@@ -98,11 +121,11 @@ formalParameters
   ;
 
 procedureHeading
-  : 'PROCEDURE' Identifier formalParameters?
+  : 'PROCEDURE' name formalParameters?
   ;
 
 procedureBody
-  : declarations ('BEGIN' statementSequence)? 'END' Identifier
+  : declarations ('BEGIN' statementSequence)? 'END' name
   ;
 
 procedureDeclaration
@@ -110,15 +133,30 @@ procedureDeclaration
   ;
 
 declarations
-  : ('CONST' (Identifier '=' expression ';')* )?
-    ('TYPE' (Identifier '=' type ';')* )?
-    ('VAR' (identList ':' type ';')* )?
+  : constDeclaration? typeDeclaration? varDeclaration?
     (procedureDeclaration ';')*
   ;
 
+constDeclaration
+  : 'CONST' (Identifier '=' expression ';')*
+  ;
+
+typeDeclaration
+  : 'TYPE' (Identifier '=' type ';')*
+  ;
+
+varDeclaration
+  : 'VAR' (identList ':' type ';')*
+  ;
+
+
+name
+  : Identifier
+  ;
+
 module
-  : 'MODULE' Identifier ';' declarations ('BEGIN' statementSequence)?
-    'END' Identifier '.'
+  : 'MODULE' name ';' declarations ('BEGIN' statementSequence)?
+    'END' name '.'
   ;
 
 
@@ -130,6 +168,8 @@ module
 
 // keywords
 
+TRUE         :        'TRUE' ;
+FALSE        :       'FALSE' ;
 DIV          :         'DIV' ;
 MOD          :         'MOD' ;
 OR           :          'OR' ;
