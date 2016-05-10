@@ -168,7 +168,7 @@ trait WhileNamerComponent extends NamerComponent {
 @component
 trait ApplyNamerComponent extends NamerComponent {
   (apply: ApplyApi)          => {
-    val fun = name(apply.fun).asInstanceOf[Expr]
+    val fun  = name(apply.fun).asInstanceOf[Expr]
     val args = apply.args.map { arg =>
       name(arg).asInstanceOf[Expr]
     }
@@ -200,8 +200,6 @@ trait SelectNamerComponent extends NamerComponent {
       case Some(vsym: VariableSymbol) => vsym.typeSymbol
       case s                          => s
     }
-    println(slctdOwner.map(_.asInstanceOf[TypeDefSymbol].typeSymbol.map(_.declarations)))
-    println(slctdOwner.map(_.getSymbol(Name("a"), _ => true)))
     slctdOwner.foreach(select.tree.owner = _)
     val tree           = name(select.tree).asInstanceOf[SimpleUseTree]
     tree.symbol.foreach(select.symbol = _)

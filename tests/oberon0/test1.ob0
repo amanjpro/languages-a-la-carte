@@ -2,7 +2,7 @@
 
 
 MODULE Sample;
-  TYPE T = RECORD b: BOOLEAN; a: INTEGER END;
+  TYPE T = RECORD b: INTEGER; a: INTEGER END;
   VAR p: T;
 
   PROCEDURE Multiply; VAR x, y, z: INTEGER;
@@ -44,7 +44,7 @@ MODULE Sample;
     Write(param);
   END Out;
 
-  PROCEDURE Out2(rec: RECORD a: INTEGER; b: BOOLEAN END);
+  PROCEDURE Out2(rec: RECORD a: INTEGER; b: INTEGER END);
   BEGIN
     Write(rec.a);
     Write(rec.b);
@@ -53,6 +53,6 @@ MODULE Sample;
 BEGIN
   Out(2);
   p.a := 2;
-  p.b := FALSE;
+  p.b := 3;
   Out2(p);
 END Sample.

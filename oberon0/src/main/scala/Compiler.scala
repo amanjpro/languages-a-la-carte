@@ -83,7 +83,7 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
       val writeLn = {
         val tpe    = Some(MethodType(VoidType, Nil))
         MethodSymbol(PUBLIC_ACC | STATIC,
-          Name("Write"), Some(VoidSymbol), Nil, tpe, Some(ProgramSymbol))
+          Name("WriteLn"), Some(VoidSymbol), Nil, tpe, Some(ProgramSymbol))
       }
 
       ProgramSymbol.declare(read)
