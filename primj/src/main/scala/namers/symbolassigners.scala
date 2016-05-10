@@ -125,13 +125,19 @@ trait ValDefSymbolAssignerComponent extends SymbolAssignerComponent {
     valdef.rhs.owner = symbol
     val rhs     = assign(valdef.rhs).asInstanceOf[Expr]
     checkDoubleDef(owner, valdef.name, valdef.pos)
-    if(valdef.mods.isField) {
-      owner.foreach(sym => {
+    declareSymbol(valdef, symbol)
+    valdef.symbol = symbol
+    TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
+  }
+
+
+  protected def declareSymbol(valdef: ValDefApi,
+    symbol: Symbol): Unit = {
+   if(valdef.mods.isField) {
+      valdef.owner.foreach(sym => {
         sym.declare(symbol)
       })
     }
-    valdef.symbol = symbol
-    TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
   }
 
   protected def checkDoubleDef(owner: Option[Symbol],
