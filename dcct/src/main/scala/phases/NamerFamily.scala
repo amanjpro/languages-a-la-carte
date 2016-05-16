@@ -23,7 +23,7 @@ trait DcctNamerFamilyApi extends TransformationFamily[Tree, Tree] {
       "NamerComponent", "name", "")
       // "Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal")
 
-  def name: Tree => Tree = family
+  def name: Tree => Tree = family 
 }
 
 case class DcctNamerFamily(compiler: CompilerInterface)

@@ -15,6 +15,7 @@ import tiny.parsers
 import tiny.debug.logger
 import calcj.ast.{TreeCopiers => _, _}
 import calcj.ast.operators._
+import tiny.ast.NoTree
 import primj.ast._
 import primj.ast.TreeFactories._
 import dcct.antlr._
@@ -41,7 +42,6 @@ class Parser extends tiny.parsers.Parser {
   def parse(source: SourceFile): Tree = {
     val tree = new DcctVisitor(source.name,
       source.lines).visit(source.content)
-    println(tree)
     logger.info(s"[PARSE TREE]\n $tree")
     // Program(tree, None, source.name)
     tree match {
@@ -123,18 +123,20 @@ class Parser extends tiny.parsers.Parser {
     override def visitProgram(@NotNull ctx: DcctParser.ProgramContext): Tree = {
       logger.info("Parsing program started...")
       // Extract entity and array defs from schema
-      // TODO handle nonexistence of schema!
-      val cloudTypeDefs = ctx.schema().cloudDataDecl().asScala.toList.map {
-        // I expect definitely an entity def here "currently"
-        // TODO handke emptiness of cloud data decls
-        child => visit(child).asInstanceOf[ClassDefApi]
-      }
-     primj.ast.TreeFactories.mkProgram(cloudTypeDefs, source)
-      // visitChildren(ctx)
+      val schema =  ctx.schema()
+
+      val cloudTypeDefs = if (schema != null) {
+        val decls = ctx.schema().cloudDataDecl().asScala.toList.map {
+          child => visit(child).asInstanceOf[ClassDefApi]
+        }
+        Some(decls)
+      } else None
+      
+      primj.ast.TreeFactories.mkProgram(cloudTypeDefs.getOrElse(Nil), source)
+
     }
 
     override def visitSchema(@NotNull ctx: DcctParser.SchemaContext): Tree = {
-      logger.info("Visiting schema...")
       visitChildren(ctx)
     }
 
@@ -147,18 +149,30 @@ class Parser extends tiny.parsers.Parser {
     }
 
     override def visitCloudDataDecl(@NotNull ctx: DcctParser.CloudDataDeclContext): Tree = {
-      visit(ctx.entityDecl())
+      // TODO is this the right way to visit all kinds of cloud types?
+      visit(ctx.entityDecl()) 
+//      if(ctx.arrayDecl() != null) visit(ctx.arrayDecl()) 
     }
 
 
     override def visitEntityDecl(@NotNull ctx: DcctParser.EntityDeclContext): Tree = {
+      // TODO do not allow a table without any fields to be generated! by checking that
+      // we have either at least one property or one element
       val entityIdent = ctx.Identifier().getText
-      val elements = ctx.elements().element().asScala.toList.map {
-        element => visit(element).asInstanceOf[ValDefApi] // correct type?
-      }
-      val properties = ctx.properties().property().asScala.toList.map { 
-        property => visit(property).asInstanceOf[ValDefApi] 
-      }
+
+      val elements: List[ValDefApi] = if (ctx.elements() != null) {
+        ctx.elements().element().asScala.toList.map {
+          element => visit(element).asInstanceOf[ValDefApi]
+        }
+      } else Nil
+      
+      val properties: List[ValDefApi] = if (ctx.properties() != null) {
+        ctx.properties().property().asScala.toList.map {
+          property => visit(property).asInstanceOf[ValDefApi]
+        }
+      } else Nil
+      
+      
       mkClassDef(noflags, Name(entityIdent), Nil, mkTemplate(elements ++ properties, pos(ctx.elements())), pos(ctx))
     }
     

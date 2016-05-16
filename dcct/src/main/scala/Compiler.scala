@@ -26,11 +26,11 @@ import ooj.modifiers.Ops.noflags
 import ooj.names.StdNames
 import ooj.types.TypeUtils
 import ooj.eval.Env
-
 import dcct.phases._
 import dcct.antlr._
 import org.antlr.v4.runtime._
 import org.antlr.v4.runtime.tree._
+import ch.usi.inf.l3.sana.dcct.phases.DcctCodeGenFamily
 trait Compiler extends tiny.CompilerApi[Tree, Unit] {
   self =>
 
@@ -149,6 +149,7 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
 
     private[this] lazy val symassigner   = DcctSymbolAssignerFamily(compiler)
     private[this] lazy val namer         = DcctNamerFamily(compiler)
+    private[this] lazy val codegenerator         = DcctCodeGenFamily(compiler)
     // TODO: Add typer to here when you have it
 
     def compile: Tree => Unit = {
@@ -163,9 +164,9 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
         //      (PrimjTyperFamily.typed join
         //        (PrimjShapeCheckerFamily.check))))
 
-        val f =
-         ( ( (symassigner.assign) join
-            (namer.name) ) join (DcctCodeGenFamily(compiler).codegen) )
+        val f = symassigner.assign join (
+            namer.name  join (
+                codegenerator.codegen))
 
         val targetCode = f(x)
         val targetFile = config.files.toList.head

@@ -19,7 +19,6 @@ trait RefType extends Type {
   def name: Name
 }
 
-
 trait ClassTypeApi extends RefType {
   def qual: String
   def parents: Set[Symbol]

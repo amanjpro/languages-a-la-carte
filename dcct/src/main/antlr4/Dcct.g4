@@ -3,7 +3,6 @@ grammar Dcct;
 
 // Parser
 
-//TODO this might be wrong, I get a warning
 program
   : schema? expression+ EOF
   | schema  expression* EOF
@@ -55,7 +54,7 @@ entityDecl
   : 'entity' Identifier '(' elements ')' ('{' properties '}')?
   ;
 
-//TODO I think I am enforcing one or more elements, fix...
+//TODO I think this def and the properties one are inconsistent
 elements
   :   element? (',' element)*
   ;
