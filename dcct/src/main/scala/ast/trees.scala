@@ -3,7 +3,12 @@ package ch.usi.inf.l3.sana.dcct.ast
 import ch.usi.inf.l3.sana
 import sana.tiny
 import sana.primj
+import sana.ooj
+import sana.calcj
 import tiny.ast._
+import ooj.ast._
+import calcj.ast._
+import primj.ast._
 import tiny.source.Position
 import tiny.types.Type
 import tiny.names.Name
@@ -90,10 +95,10 @@ import primj.types._
  * 
  * TODO consult Amanj about using the ClassDef tree for arrays.
  */
-trait ArrayDefApi extends NamedTree {
+trait ArrayDefApi extends DefTree {
   def name: Name
-  def indices: List[UseTree]
-  def properties: List[Expr] 
+  def indices: List[ValDefApi]
+  def properties: List[ValDefApi] 
   
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
     val r1 = indices.foldLeft(z)((z, y) => {
@@ -183,7 +188,7 @@ protected[ast] class ForEach(val inits: List[Tree], val allOrEntries: primj.ast.
     s"ForEach($inits, $cond, $allOrEntries, $body)"
 }
 
-protected[ast] class ArrayDef(val name: Name, val indices: List[UseTree], val properties: List[Expr]) extends ArrayDefApi {
+protected[ast] class ArrayDef(val name: Name, val indices: List[ValDefApi], val properties: List[ValDefApi]) extends ArrayDefApi {
   override def toString: String =
     s"Array$indices,$properties)"
 } 

@@ -64,5 +64,34 @@ trait CloudSetSymbol extends ClassSymbol {
 }
 object CloudSetSymbol extends CloudSetSymbol
 
+
+trait ArraySymbol extends TypeSymbol {
+  // TODO add suitable types.
+  override def tpe: Option[Type] = None
+  override def owner: Option[Symbol] = None
+  override def mods: Flags = noflags
+  // TODO how can I get rid of this?
+  override def name: Name = Name("Array")
+
+  override def mods_=(f:Flags): Unit = ???
+  override def name_=(x: Name): Unit = ???
+  override def owner_=(x:Option[Symbol]): Unit = ???
+  override def tpe_=(x: Option[Type]): Unit = ???
+  
+  override def declare(symbol: Symbol): Unit = ???
+  override def delete(symbol: Symbol): Unit = ???
+  override def defines(symbol: Symbol,
+    p: Symbol => Boolean): Boolean = false
+  
+  override def getSymbol(name: Name,
+    p: Symbol => Boolean): Option[Symbol] = None
+}
+
+object ArraySymbol extends ArraySymbol {
+  private class ArraySymbolImp(override var name: Name) extends ArraySymbol 
+  
+  def apply(name: Name): ArraySymbol = new ArraySymbolImp(name)
+}
+
 // TODO add a tuple type.
 

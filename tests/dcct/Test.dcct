@@ -3,3 +3,8 @@
 entity Order(oIdent: Int) {
   quantity: CInt;
 }
+
+array Orders[c: Customer] {
+  nitems: CInt;
+  description: CString;
+}

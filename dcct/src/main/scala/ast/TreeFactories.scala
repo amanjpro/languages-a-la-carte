@@ -16,8 +16,8 @@ import sana.primj.ast._
 
 trait TreeFactories extends sana.ooj.ast.TreeFactories {
   
-  def mkArrayDef(name: Name, indices: List[UseTree], 
-      properties: List[Expr], symbol: Option[Symbol] = None) : ArrayDefApi = {
+  def mkArrayDef(name: Name, indices: List[ValDefApi], 
+      properties: List[ValDefApi], symbol: Option[Symbol] = None) : ArrayDefApi = {
     val res = new ArrayDef(name, indices, properties)
     symbol.foreach ( sym => {
       res.symbol = sym

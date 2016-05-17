@@ -17,13 +17,12 @@ import calcj.ast.{TreeCopiers => _, _}
 import calcj.ast.operators._
 import tiny.ast.NoTree
 import primj.ast._
-import primj.ast.TreeFactories._
 import dcct.antlr._
 import primj.modifiers._
 import primj.modifiers.Ops._
 import ooj.ast._
-import ooj.ast.TreeFactories._
-
+import dcct.ast.TreeFactories._
+import dcct.ast._
 
 import org.antlr.v4.runtime.misc.NotNull
 import org.antlr.v4.runtime.ParserRuleContext
@@ -127,7 +126,12 @@ class Parser extends tiny.parsers.Parser {
 
       val cloudTypeDefs = if (schema != null) {
         val decls = ctx.schema().cloudDataDecl().asScala.toList.map {
-          child => visit(child).asInstanceOf[ClassDefApi]
+          child => 
+            val cloudDef =  visit(child)
+            if (cloudDef.isInstanceOf[ClassDefApi])
+             cloudDef.asInstanceOf[ClassDefApi] 
+           else 
+             cloudDef.asInstanceOf[ArrayDefApi] 
         }
         Some(decls)
       } else None
@@ -150,8 +154,9 @@ class Parser extends tiny.parsers.Parser {
 
     override def visitCloudDataDecl(@NotNull ctx: DcctParser.CloudDataDeclContext): Tree = {
       // TODO is this the right way to visit all kinds of cloud types?
-      visit(ctx.entityDecl()) 
-//      if(ctx.arrayDecl() != null) visit(ctx.arrayDecl()) 
+      if(ctx.entityDecl != null ) { println("Entity Found "); visit(ctx.entityDecl()) }
+      else if(ctx.arrayDecl != null) visit(ctx.arrayDecl()) 
+      else  visitChildren(ctx); 
     }
 
 
@@ -178,11 +183,21 @@ class Parser extends tiny.parsers.Parser {
     
     override def visitArrayDecl(@NotNull ctx: DcctParser.ArrayDeclContext): Tree = {
       val arrayIdent = ctx.Identifier().getText
-      val elements = ctx.elements().element().asScala.toList.map {
-        element => visit(element).asInstanceOf[ValDefApi] // correct type?
-      }
+      val indices: List[ValDefApi] = if (ctx.elements() != null) {
+        ctx.elements().element().asScala.toList.map {
+          element => visit(element).asInstanceOf[ValDefApi]
+        }
+      } else Nil
+      
+      val properties: List[ValDefApi] = if (ctx.properties() != null) {
+        ctx.properties().property().asScala.toList.map {
+          property => visit(property).asInstanceOf[ValDefApi]
+        }
+      } else Nil
+
       // TODO create the proper arraydef tree here.
-      mkClassDef(noflags, Name(arrayIdent), Nil, mkTemplate(elements, pos(ctx.elements())), pos(ctx))
+     mkArrayDef(Name(arrayIdent), indices, 
+      properties)  
     }
     
     override def visitElements(@NotNull ctx: DcctParser.ElementsContext): Tree = {

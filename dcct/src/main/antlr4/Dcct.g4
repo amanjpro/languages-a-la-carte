@@ -9,7 +9,7 @@ program
   ;
 
 schema
-  : cloudDataDecl* 
+  : cloudDataDecl+ 
   ;
 
 // Types

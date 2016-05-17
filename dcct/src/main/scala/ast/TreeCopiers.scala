@@ -17,8 +17,8 @@ import sana.dcct.ast._
 trait TreeCopiers extends sana.ooj.ast.TreeCopiers {
   
   def copyArray(template: ArrayDef)(name: Name = template.name, 
-      indices: List[UseTree] = template.indices,
-      properties: List[Expr] = template.properties): ArrayDefApi =  {
+      indices: List[ValDefApi] = template.indices,
+      properties: List[ValDefApi] = template.properties): ArrayDefApi =  {
     
     val res = sana.dcct.ast.
         TreeFactories.mkArrayDef(name, indices, properties)

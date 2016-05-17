@@ -8,8 +8,7 @@ import sana.tiny.ast.{Tree, NoTree}
 import sana.primj.PrimjNodes
 import sana.primj.namers._
 import sana.ooj.namers.TemplateNamerComponent
-import sana.dcct.namers.ClassDefNamerComponent
-
+import sana.dcct.namers._
 
 
 trait DcctNamerFamilyApi extends TransformationFamily[Tree, Tree] {
@@ -19,7 +18,7 @@ trait DcctNamerFamilyApi extends TransformationFamily[Tree, Tree] {
 
   def components: List[PartialFunction[Tree, Tree]] =
     generateComponents[Tree, Tree](
-      "Program,ClassDef,Template,ValDef,TypeUse,Ident",
+      "Program,ClassDef,Template,ValDef,TypeUse,Ident, ArrayDef",
       "NamerComponent", "name", "")
       // "Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal")
 

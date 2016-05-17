@@ -5,6 +5,7 @@ object DCCTNodes {
   final val nodes =
     """Program,
        ClassDef,
+       ArrayDef,
        Template, 
        ValDef,
        Ident,
