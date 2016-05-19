@@ -27,6 +27,8 @@ import dcct.ast._
 import org.antlr.v4.runtime.misc.NotNull
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 
 
 import scala.collection.JavaConverters._
@@ -90,6 +92,8 @@ class Parser extends tiny.parsers.Parser {
 
     }
 /************************      Schema Related         ************************/
+
+// TODO I believe I can delete everything that does only visit Children
     override def visitSchema(@NotNull ctx: DcctParser.SchemaContext): Tree = {
       visitChildren(ctx)
     }
@@ -113,8 +117,7 @@ class Parser extends tiny.parsers.Parser {
     override def visitEntityDecl(@NotNull ctx: DcctParser.EntityDeclContext): Tree = {
       // TODO do not allow a table without any fields to be generated! by checking that
       // we have either at least one property or one element
-      val entityIdent = ctx.Identifier().getText
-
+     
       val elements: List[ValDefApi] = getElementsList(ctx.elements())      
       val properties: List[ValDefApi] = if (ctx.properties() != null) {
         ctx.properties().property().asScala.toList.map {
@@ -123,11 +126,10 @@ class Parser extends tiny.parsers.Parser {
       } else Nil
       
       
-      mkClassDef(noflags, Name(entityIdent), Nil, mkTemplate(elements ++ properties, pos(ctx.elements())), pos(ctx))
+      mkClassDef(noflags, getIdentName(ctx.Identifier), Nil, mkTemplate(elements ++ properties, pos(ctx.elements())), pos(ctx))
     }
     
     override def visitArrayDecl(@NotNull ctx: DcctParser.ArrayDeclContext): Tree = {
-      val arrayIdent = ctx.Identifier().getText
       val indices: List[ValDefApi] = getElementsList(ctx.elements())     
       val properties: List[ValDefApi] = if (ctx.properties() != null) {
         ctx.properties().property().asScala.toList.map {
@@ -136,7 +138,7 @@ class Parser extends tiny.parsers.Parser {
       } else Nil
 
       // TODO create the proper arraydef tree here.
-     mkArrayDef(Name(arrayIdent), indices, 
+     mkArrayDef(getIdentName(ctx.Identifier), indices, 
       properties)  
     }
     
@@ -146,10 +148,7 @@ class Parser extends tiny.parsers.Parser {
 
     
     override def visitElement(@NotNull ctx: DcctParser.ElementContext): ValDefApi = {
-      val elemIdent = ctx.Identifier()
-      
       val tpe = visitIndexType(ctx.indexType())
-      val name = Name(ctx.Identifier.getText)
       // Param here indicates that the entity we are currently processing is weak,
       // and when the entity it is dependent on is removed (any ValDef with PARAM) 
       // flag, we have to delete this entity as well. 
@@ -160,7 +159,8 @@ class Parser extends tiny.parsers.Parser {
       // defining a new flag. In this case PARAM will be a parameter, 
       // DEPENDENCY will be the dependency!
       
-      ooj.ast.TreeFactories.mkValDef(Flags(PARAM), tpe, name, NoTree, pos(ctx))
+      ooj.ast.TreeFactories.mkValDef(
+        Flags(PARAM), tpe, getIdentName(ctx.Identifier), NoTree, pos(ctx))
     }
     
     override def visitProperties(@NotNull ctx: DcctParser.PropertiesContext): Tree = {
@@ -169,11 +169,9 @@ class Parser extends tiny.parsers.Parser {
 
     
     override def visitProperty(@NotNull ctx: DcctParser.PropertyContext): Tree = {
-      val propIdent = ctx.Identifier()
       val tpe = visitCloudType(ctx.cloudType())
-      val name = Name(ctx.Identifier.getText)
       // TODO maybe better flag the property types?
-      ooj.ast.TreeFactories.mkValDef(noflags, tpe, name, NoTree, pos(ctx))
+      ooj.ast.TreeFactories.mkValDef(noflags, tpe, getIdentName(ctx.Identifier), NoTree, pos(ctx))
     }
     
 /************************      Actions and Statements        ************************/
@@ -300,6 +298,10 @@ class Parser extends tiny.parsers.Parser {
         }
       } else Nil  
     }
+
+  def getIdentName(ident: TerminalNode ): Name = {
+    Name(ident.getText)
+  }
   }
 }
 
