@@ -4,9 +4,11 @@ grammar Dcct;
 // Parser
 
 program
-  : schema? expression+ EOF
-  | schema  expression* EOF
+  : schema? actionDeclaration+ EOF
+  | schema  actionDeclaration* EOF
   ;
+
+///////////////////////// Schema and schema contents ///////////////////////
 
 schema
   : cloudDataDecl+ 
@@ -20,7 +22,7 @@ schema
 // error.
 
 indexType
-  : 'Int'
+  : 'Int'    
   | 'String'
   | Identifier // of array or entity
   ;
@@ -37,7 +39,16 @@ expressionType
   | 'Set' '<' expressionType '>'
   | expressionType '->' expressionType
   ;
-  
+
+
+//TODO add regions and stuff
+annotationType
+  : '@SR'
+  | '@MAV'
+  | '@EC'
+  ;
+
+
 cloudSetType
   : 'CSet' '<' indexType '>'
   ;
@@ -73,66 +84,70 @@ property
   
   
 // Arrays
+// An array must have properties
   arrayDecl
   : 'array' Identifier '[' elements ']' '{' properties '}'
   ;
   
   
-// Expressions, expression, and related stuff
+///////////////////////// Actions and expressions ///////////////////////
+
+actionDeclaration
+    :   'action' Identifier elements ':' indexType block
+    ;
+
 expressions
-  :   expression (',' expression)*
-  ;
-
-
- expression
-  : 'new' Identifier '(' expressions ')'
-  | 'delete' expression
-  | Identifier '[' expressions ']'
-  | expression '(' expressions ')'
-  | expression '.' expression
-  | 'all' Identifier
-  | 'entries' Identifier
-  | 'yield'
-  | 'flush'
-  | expression expression
-  | expression ';' expression
-  | '(' expressions ')'
-  | expression bop expression
-  | foreach
-  | value
-  | varDeclaration
-  ;
-  
-bop
-  : '=='
-  | '!='
-  ;
-
-varDeclaration
-  : 'var' Identifier '=' value
-  ;
-
-
-value
-  : Identifier
-  | literals
-  | Identifier '[' values ']'
-  | '(' values ')'
-  | '(' Identifier ':' expressionType ')' '=>' expression
-  ;
-
-
-ifelse
-  : 'if' '(' expression ')' block 'else' block
+  : expression ';' (expression ';')*
   ;
 
 block
-  : '{' expression '}'
+  : '{'expressions '}'
+  ; 
+
+
+// Expressions, expression, and related stuff
+expressionArgs
+  :   expression (',' expression)*
   ;
 
-values
-  : value ',' value
-  | value
+ expression
+  : 'new' Identifier '(' expressionArgs ')' // Create a new entity
+  | 'delete' expression                     // Delete an entity
+  | Identifier '[' expressionArgs ']'       // Array selector
+  | expression '(' expressionArgs ')'       // action call, or apply
+  | expression '.' expression               // Expression select
+  | 'all' Identifier                        // all entities 
+  | 'entries' Identifier                    // all elems in an array
+  | expression bop expression               // Binary operations and assignment
+  | foreach                                 // foreach loop
+  | varDeclaration                          // car declaration, not an expression but whatever
+  | Identifier                              // also not an expression
+  | literals                                // String or integer literals
+  | ifelse                                  // if or else, not an expression
+  ;
+
+bop
+  : '=='
+  | '!='
+  | '>'
+  | '<'
+  | '>='
+  | '<='
+  | '+'
+  | '-'
+  | '*'
+  | '/'
+  | '&&'
+  | '||'
+  | '='
+  ;
+
+varDeclaration
+  : 'var' Identifier '=' expression
+  ;
+
+ifelse
+  : 'if' '(' expression ')' block 'else' block
   ;
 
 foreach
@@ -149,7 +164,7 @@ literals
  
 
 // LEXER
-
+// TODO I think I need boolens as well
 // Types
 INT        : 'Int';
 STRING     : 'String';
@@ -165,8 +180,6 @@ NEW        : 'new';
 DELETE     : 'delete';
 ALL        : 'all';
 ENTRIES    : 'entries';
-YIELD      : 'yield';
-FLUSH      : 'flush';
 IF         : 'if';
 ELSE       : 'else';
 FOREACH    : 'foreach';
