@@ -120,7 +120,7 @@ expression
   |  'all' Identifier                                                   # allEntites           // all entities 
   |  'entries' Identifier                                               # allSetArrayEntries   // all elems in an array
   |  foreach                                                            # foreachLoop          // foreach loop
-  |  'var' Identifier '=' expression                                    # valDecl              // var declaration, not an expression but whatever
+  |  'var' indexType '=' expression                                    # valDecl              // var declaration, not an expression but whatever
   |  'if' '(' expression ')' block 'else' block                         # branching            // if or else, not an expression
 
   // Expressions
@@ -129,7 +129,7 @@ expression
   |  Identifier                                                         # identifier           // also not an expression 
   |  literals                                                           # literal              // String or integer literals
   |  op=('+'|'-') expression                                          # UnaryNum
-  |  op=('~' | '!') expression                                        # UnaryBool
+  |  '!' expression                                        # UnaryBool
   |  expression op=('*'|'/'|'%') expression                           # Mul
   |  expression op=('+'|'-') expression                               # Add
   |  expression op=('<=' | '>=' | '>' | '<') expression               # Rel

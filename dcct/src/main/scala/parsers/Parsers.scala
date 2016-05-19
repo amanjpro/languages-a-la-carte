@@ -58,35 +58,7 @@ class Parser extends tiny.parsers.Parser {
         token.getLine, token.getCharPositionInLine + 1))
     }
 
-
-    def createBinary[T <: ParserRuleContext](es: java.util.List[T],
-      trm: String, ctx: ParserRuleContext): Expr = {
-      val e1 = visit(es.get(0))
-      val op = trm match {
-        case "*"     => Mul
-        case "/"     => Div
-        case "%"     => Mod
-        case "+"     => Add
-        case "-"     => Sub
-        case "<"     => Lt
-        case ">"     => Gt
-        case "<="    => Le
-        case ">="    => Ge
-        case "=="    => Eq
-        case "!="    => Neq
-        case "&&"    => And
-        case "||"    => Or
-      }
-      val e2 = visit(es.get(1))
-      (e1, e2) match {
-        case (x: Expr, y: Expr) =>
-          primj.ast.TreeFactories.mkBinary(x, op, y, pos(ctx))
-        case _                  =>
-          // TODO: report an error
-          throw new Exception("Expression is expected but got: " + e1 + " " + e2)
-      }
-    }
-    
+     
     /**
      * Extract defs from the schema and return the program tree containing them.
      */
@@ -204,7 +176,7 @@ class Parser extends tiny.parsers.Parser {
       ooj.ast.TreeFactories.mkValDef(noflags, tpe, name, NoTree, pos(ctx))
     }
     
-/************************      Actions and Expressions        ************************/
+/************************      Actions and Statements        ************************/
 
    override def visitActionDeclaration(@NotNull 
      ctx: DcctParser.ActionDeclarationContext): Tree = {    
@@ -230,13 +202,96 @@ class Parser extends tiny.parsers.Parser {
   }
   
 
-  // TODO  add expression args here.
-  override def visitBopExpr(@NotNull ctx: DcctParser.BopExprContext): Tree = {
-    
+/************************      Expressions        ************************/
+
+/////////////// Binary Visitors 
+  override def visitMul(@NotNull ctx: DcctParser.MulContext): Tree = {
+      createBinary(ctx.expression, ctx.op.getText, ctx)
   }
-  
+
+  override def visitAdd(@NotNull ctx: DcctParser.AddContext): Tree = {
+      createBinary(ctx.expression, ctx.op.getText, ctx)
+  }
+
+
+  override def visitRel(@NotNull ctx: DcctParser.RelContext): Tree = {
+      createBinary(ctx.expression, ctx.op.getText, ctx)
+  }
+
+  override def visitEqu(@NotNull ctx: DcctParser.EquContext): Tree = {
+      createBinary(ctx.expression, ctx.op.getText, ctx)
+  }
+
+  override def visitAnd(@NotNull ctx: DcctParser.AndContext): Tree =  {
+      createBinary(ctx.expression, "&&", ctx)
+  }
+
+  override def visitOr(@NotNull ctx: DcctParser.OrContext): Tree =  {
+      createBinary(ctx.expression, "||", ctx)
+  }
+
+/////////////// Unary Visitors 
+  override def visitUnaryNum(@NotNull ctx: DcctParser.UnaryNumContext): Tree = {
+      createUnaryOrPostfix(false, ctx.expression, ctx.op.getText, ctx)
+  }
+
+  override def visitUnaryBool(@NotNull ctx: DcctParser.UnaryBoolContext): Tree = {
+      createUnaryOrPostfix(false, ctx.expression, ctx.getText, ctx)
+  }
+
        
 /********************************       Helpers       *****************************/
+  def createUnaryOrPostfix[T <: ParserRuleContext](isPostfix: Boolean,
+      exp: T, trm: String, ctx: ParserRuleContext): Expr = {
+
+      val e1 = visit(exp)
+      val op = trm match {
+        case "-"     => Neg
+        case "+"     => Pos
+        case "++"    => Inc
+        case "--"    => Dec
+        case "~"     => BCompl
+        case "!"     => Not
+      }
+      (e1, op) match {
+        case (e: Expr, op: POp) if isPostfix =>
+          mkUnary(true, op, e, pos(ctx))
+        case (e: Expr, op: UOp) =>
+          mkUnary(false, op, e, pos(ctx))
+        case _                  =>
+          // TODO: report an error
+          throw new Exception(
+            "Expression is expected, but got " + e1 + " " + op)
+      }
+    }
+ 
+  def createBinary[T <: ParserRuleContext](es: java.util.List[T],
+      trm: String, ctx: ParserRuleContext): Expr = {
+      val e1 = visit(es.get(0))
+      val op = trm match {
+        case "*"     => Mul
+        case "/"     => Div
+        case "%"     => Mod
+        case "+"     => Add
+        case "-"     => Sub
+        case "<"     => Lt
+        case ">"     => Gt
+        case "<="    => Le
+        case ">="    => Ge
+        case "=="    => Eq
+        case "!="    => Neq
+        case "&&"    => And
+        case "||"    => Or
+      }
+      val e2 = visit(es.get(1))
+      (e1, e2) match {
+        case (x: Expr, y: Expr) =>
+          primj.ast.TreeFactories.mkBinary(x, op, y, pos(ctx))
+        case _                  =>
+          // TODO: report an error
+          throw new Exception("Expression is expected but got: " + e1 + " " + e2)
+      }
+    }
 
   def getElementsList(ctx: DcctParser.ElementsContext): List[ValDefApi] = {
     if (ctx != null) {
