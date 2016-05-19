@@ -222,7 +222,21 @@ class Parser extends tiny.parsers.Parser {
       }
     }
 
-    /********************************      Helpers        ** ************************/
+  override def visitBlock(@NotNull ctx: DcctParser.BlockContext): Tree = { 
+      val expressions =  ctx.expressions.expression.asScala.toList.map {
+          expression => visit(expression)
+        }
+     mkBlock(expressions, pos(ctx))   
+  }
+  
+
+  // TODO  add expression args here.
+  override def visitBopExpr(@NotNull ctx: DcctParser.BopExprContext): Tree = {
+    
+  }
+  
+       
+/********************************       Helpers       *****************************/
 
   def getElementsList(ctx: DcctParser.ElementsContext): List[ValDefApi] = {
     if (ctx != null) {

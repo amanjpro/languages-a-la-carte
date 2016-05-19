@@ -110,49 +110,38 @@ expressionArgs
   :   expression (',' expression)*
   ;
 
- expression
-  : 'new' Identifier '(' expressionArgs ')' // Create a new entity
-  | 'delete' expression                     // Delete an entity
-  | Identifier '[' expressionArgs ']'       // Array selector
-  | expression '(' expressionArgs ')'       // action call, or apply
-  | expression '.' expression               // Expression select
-  | 'all' Identifier                        // all entities 
-  | 'entries' Identifier                    // all elems in an array
-  | expression bop expression               // Binary operations and assignment
-  | foreach                                 // foreach loop
-  | varDeclaration                          // car declaration, not an expression but whatever
-  | Identifier                              // also not an expression
-  | literals                                // String or integer literals
-  | ifelse                                  // if or else, not an expression
+expression
+  // Statements 
+  :  'new' Identifier '(' expressionArgs ')'                            # newEntity            // Create a new entity
+  |  'delete' expression                                                # deleteEntity         // Delete an entity
+  |  Identifier '[' expressionArgs ']'                                  # arraySelector        // Array selector
+  |  expression '(' expressionArgs ')'                                  # actionCall           // action call, or apply
+  |  expression '.' expression                                          # entityArraySelect    // Expression select
+  |  'all' Identifier                                                   # allEntites           // all entities 
+  |  'entries' Identifier                                               # allSetArrayEntries   // all elems in an array
+  |  foreach                                                            # foreachLoop          // foreach loop
+  |  'var' Identifier '=' expression                                    # valDecl              // var declaration, not an expression but whatever
+  |  'if' '(' expression ')' block 'else' block                         # branching            // if or else, not an expression
+
+  // Expressions
+  |  <assoc=right> Identifier '=' expression                            # assign
+  |  '(' expression ')'                                                 # parExpr
+  |  Identifier                                                         # identifier           // also not an expression 
+  |  literals                                                           # literal              // String or integer literals
+  |  op=('+'|'-') expression                                          # UnaryNum
+  |  op=('~' | '!') expression                                        # UnaryBool
+  |  expression op=('*'|'/'|'%') expression                           # Mul
+  |  expression op=('+'|'-') expression                               # Add
+  |  expression op=('<=' | '>=' | '>' | '<') expression               # Rel
+  |  expression op=('==' | '!=') expression                           # Equ
+  |  expression '&&' expression                                       # And
+  |  expression '||' expression                                       # Or
   ;
 
-bop
-  : '=='
-  | '!='
-  | '>'
-  | '<'
-  | '>='
-  | '<='
-  | '+'
-  | '-'
-  | '*'
-  | '/'
-  | '&&'
-  | '||'
-  | '='
-  ;
-
-varDeclaration
-  : 'var' Identifier '=' expression
-  ;
-
-ifelse
-  : 'if' '(' expression ')' block 'else' block
-  ;
 
 foreach
   : 'foreach' Identifier 'in' ('all' | 'entries') expression '.' expression
-    ('where' expression bop expression)?
+    ('where' expression)?
     ('orderby' expression '.' expression)?
     block
   ;
