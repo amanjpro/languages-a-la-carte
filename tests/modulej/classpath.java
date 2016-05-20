@@ -23,8 +23,13 @@ class A extends Object {
                                      */
 
 
+  Object b1 = new Object();
+  Object b2 = new Object();
+  Object b3 = new Object();
   public String m(String a) {
     String s = "";
+    Object b4 = new Object();
+    Object b5 = new Object();
     return m(s);
   }
 }
