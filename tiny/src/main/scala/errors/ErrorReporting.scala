@@ -18,7 +18,7 @@ object ErrorReporting {
 
 
   def isErroneous(): Boolean =
-    messages.filter(_.isError) != Vector.empty
+    !messages.filter(_.isError).isEmpty
 
 
 
