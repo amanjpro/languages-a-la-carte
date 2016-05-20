@@ -52,6 +52,8 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
 
   ErrorReporting.isTest = config.isTest
 
+  protected val language = new Language
+
   def sourceReader: SourceReader =new SourceReader {
     type P = Java1Parser
     def newLexer(is: ANTLRInputStream): Lexer =
@@ -62,10 +64,10 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
   }
 
   def compile: Tree => Unit = {
-    Language.compile
+    language.compile
   }
 
-  object Language extends super.Language {
+  class Language extends super.Language {
     def init(): Unit = {
 
 
@@ -89,10 +91,10 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
     }
 
     // type-checking phases
-    private[this] lazy val symassigner = SymbolAssignerFamily(compiler)
-    private[this] lazy val namer       = NamerFamily(compiler)
-    private[this] lazy val deftyper    = DefTyperFamily(compiler)
-    private[this] lazy val typer       = TyperFamily(compiler)
+    protected lazy val symassigner = SymbolAssignerFamily(compiler)
+    protected lazy val namer       = NamerFamily(compiler)
+    protected lazy val deftyper    = DefTyperFamily(compiler)
+    protected lazy val typer       = TyperFamily(compiler)
 
     def compiler: CompilerInterface = new CompilerInterface {
       val classpath =
@@ -126,32 +128,34 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
       def unparse(tree: Tree): String   = ???
     }
 
+
+    protected val constantFolder = (t: Tree) => {
+      val env = ConstantCollectingFamily(compiler)
+        .collect((t, Env.emptyEnv))
+      val (tf, _)   = ConstantFoldingFamily(compiler)
+        .constantFold((t, env))
+      tf
+    }
+    protected val labelChecker = (t: Tree) =>
+      LabelNameCheckerFamily(compiler).check((t, Nil))
+    protected val jumpChecker = (t: Tree) =>
+      JumpCheckerFamily(compiler).check((t, Nil))
+    protected val forwardRefChecker = (t: Tree) =>
+      ForwardRefCheckerFamily(compiler).check((t, Nil))
+    protected val constructorsChecker = (t: Tree) =>
+      ConstructorsCheckerFamily(compiler)
+        .check((t, new ConstructorCheckerEnv))
+    protected val flowAnalyzer = (t: Tree) => {
+      FlowCorrectnessCheckerFamily(compiler).check((t, new FlowEnv))
+      t
+    }
+    protected val exceptionHandlingChecker = (t: Tree) => {
+      ExceptionHandlingCheckerFamily(compiler).check((t, Nil))
+      t
+    }
+
     def compile: Tree => Unit = {
       (x: Tree) => {
-        val constantFolder = (t: Tree) => {
-          val env = ConstantCollectingFamily(compiler)
-            .collect((t, Env.emptyEnv))
-          val (tf, _)   = ConstantFoldingFamily(compiler)
-            .constantFold((t, env))
-          tf
-        }
-        val labelChecker = (t: Tree) =>
-          LabelNameCheckerFamily(compiler).check((t, Nil))
-        val jumpChecker = (t: Tree) =>
-          JumpCheckerFamily(compiler).check((t, Nil))
-        val forwardRefChecker = (t: Tree) =>
-          ForwardRefCheckerFamily(compiler).check((t, Nil))
-        val constructorsChecker = (t: Tree) =>
-          ConstructorsCheckerFamily(compiler)
-            .check((t, new ConstructorCheckerEnv))
-        val flowAnalyzer = (t: Tree) => {
-          FlowCorrectnessCheckerFamily(compiler).check((t, new FlowEnv))
-          t
-        }
-        val exceptionHandlingChecker = (t: Tree) => {
-          ExceptionHandlingCheckerFamily(compiler).check((t, Nil))
-          t
-        }
 
         val f = symassigner.assign join
                   namer.name join
@@ -171,7 +175,7 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
   }
 
   def start: Unit = {
-    Language.init()
+    language.init()
     val cunits  = {
       val files = config.files.filter(_.endsWith(".java"))
       files.map(f => parse(f))
