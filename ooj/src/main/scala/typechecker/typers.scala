@@ -886,7 +886,9 @@ trait IdentNamer {
               p(s) && csym.definesDirectlyOrInherits(s, p)
             })
           case sym                                     =>
-            sym.getSymbol(id.name, _.isInstanceOf[TermSymbol])
+            sym.getSymbol(id.name, sym =>
+                sym.isInstanceOf[TermSymbol] &&
+                      !sym.isInstanceOf[MethodSymbol])
         }
       }
 
