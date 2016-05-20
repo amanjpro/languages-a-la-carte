@@ -385,35 +385,32 @@ trait BinaryCodeGenComponent extends CodeGenComponent {
   (bin: BinaryApi) => {
     (bin.tpe, bin.op) match {
       case (Some(tpe), And)                                    =>
-        val mv = bw.methodVisitor
+        val mv   = bw.methodVisitor
+        val end  = new Label
+        val fls  = new Label
         codegen((bin.lhs, bw))
-        val l0 = new Label
-        mv.foreach(mv => mv.visitJumpInsn(IFEQ, l0))
+        mv.foreach(mv => mv.visitJumpInsn(IFEQ, fls))
         codegen((bin.rhs, bw))
-        mv.foreach(mv => mv.visitJumpInsn(IFEQ, l0))
+        mv.foreach(mv => mv.visitJumpInsn(IFEQ, fls))
         mv.foreach(mv => mv.visitInsn(ICONST_1))
-        val l1 = new Label
-        mv.foreach(mv => mv.visitJumpInsn(GOTO, l1))
-        mv.foreach(mv => mv.visitLabel(l0))
+        mv.foreach(mv => mv.visitJumpInsn(GOTO, end))
+        mv.foreach(mv => mv.visitLabel(fls))
         mv.foreach(mv => mv.visitInsn(ICONST_0))
-        mv.foreach(mv => mv.visitLabel(l1))
-        StackInfo.incrementSP
+        mv.foreach(mv => mv.visitLabel(end))
+
       case (Some(tpe), Or)                                     =>
-        val mv = bw.methodVisitor
+        val mv  = bw.methodVisitor
+        val end = new Label
+        val tru = new Label
         codegen((bin.lhs, bw))
-        val l0 = new Label
-        mv.foreach(mv => mv.visitJumpInsn(IFNE, l0))
-        codegen((bin.lhs, bw))
-        val l1 = new Label
-        mv.foreach(mv => mv.visitJumpInsn(IFEQ, l1))
-        mv.foreach(mv => mv.visitLabel(l0))
-        mv.foreach(mv => mv.visitInsn(ICONST_1))
-        val l2 = new Label
-        mv.foreach(mv => mv.visitJumpInsn(GOTO, l2))
-        mv.foreach(mv => mv.visitLabel(l1))
+        mv.foreach(mv => mv.visitJumpInsn(IFNE, tru))
+        codegen((bin.rhs, bw))
+        mv.foreach(mv => mv.visitJumpInsn(IFNE, tru))
         mv.foreach(mv => mv.visitInsn(ICONST_0))
-        mv.foreach(mv => mv.visitLabel(l2))
-        StackInfo.incrementSP
+        mv.foreach(mv => mv.visitJumpInsn(GOTO, end))
+        mv.foreach(mv => mv.visitLabel(tru))
+        mv.foreach(mv => mv.visitInsn(ICONST_1))
+        mv.foreach(mv => mv.visitLabel(end))
       case (Some(tpe), InstanceOf)                            =>
         bin.rhs match {
           case use: UseTree          =>
@@ -507,20 +504,16 @@ trait BinaryCodeGenComponent extends CodeGenComponent {
           val l0 = new Label
           if(tpe <:< IntType || tpe <:< BooleanType) {
             mv.foreach(mv => mv.visitJumpInsn(IF_ICMPNE, l0))
-          }
-          else if(tpe <:< LongType) {
+          } else if(tpe <:< LongType) {
             mv.foreach(mv => mv.visitInsn(LCMP))
             mv.foreach(mv => mv.visitJumpInsn(IFNE, l0))
-          }
-          else if(tpe <:< FloatType) {
+          } else if(tpe <:< FloatType) {
             mv.foreach(mv => mv.visitInsn(FCMPL))
             mv.foreach(mv => mv.visitJumpInsn(IFNE, l0))
-          }
-          else if(tpe <:< DoubleType) {
+          } else if(tpe <:< DoubleType) {
             mv.foreach(mv => mv.visitInsn(DCMPL))
             mv.foreach(mv => mv.visitJumpInsn(IFNE, l0))
-          }
-          else {
+          } else {
             mv.foreach(mv => mv.visitJumpInsn(IF_ACMPNE, l0))
           }
           mv.foreach(mv => mv.visitInsn(ICONST_1))
