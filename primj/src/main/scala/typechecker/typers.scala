@@ -248,7 +248,7 @@ trait ApplyTyperComponent extends TyperComponent {
           TreeCopiers.copyApply(apply)(fun = fun, args = args)
         } else {
           // TODO: Fix the error message
-          error(TYPE_MISMATCH, "", "", apply.pos)
+          error(TYPE_MISMATCH, mt.toString, args.toString, apply.pos)
           apply
         }
       case _                                    =>
