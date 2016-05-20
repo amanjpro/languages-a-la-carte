@@ -20,6 +20,8 @@ sealed class Flags(private val flags: Set[Flag]) {
 
   def hasFlag(flag: Flag): Boolean = flags.contains(flag)
 
+  def flagsAsSet: Set[Flag] = flags
+
   final def asString: String = flags.mkString(" | ")
   override def toString: String = asString
 }
