@@ -20,6 +20,7 @@ import tiny.ast.{SimpleUseTree, UseTree, Tree}
 import modulej.ast.Implicits._
 import ooj.ast.PackageDefApi
 import ooj.names.StdNames.DEFAULT_PACKAGE_NAME
+import tiny.ast.{TypeUseApi, IdentApi}
 import modulej.ast.TreeExtractors._
 import tiny.names.{Name, StdNames}
 import tiny.source.Position
@@ -48,10 +49,10 @@ trait TreeUtils extends ppj.ast.TreeUtils {
   def toQualifiedString(use: UseTree): String = use match {
     case Select(qual: UseTree, t)           =>
       s"${toQualifiedString(qual)}.${t.name.asString}"
-    case Ident(name)                        =>
-      name.asString
-    case TypeUse(name)                      =>
-      name.asString
+    case id: IdentApi                       =>
+      id.name.asString
+    case tuse: TypeUseApi                   =>
+      tuse.name.asString
     case _                                  =>
       ""
   }
