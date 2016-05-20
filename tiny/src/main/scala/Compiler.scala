@@ -29,6 +29,7 @@ trait CompilerApi[Input, Output] {
 
   trait Language extends LanguageModule[Input, Output] {
     def init(): Unit
+    def codegen(tree: Tree): Unit = ()
     def compiler: CompilerInterface
     def compile: Input => Output
   }
