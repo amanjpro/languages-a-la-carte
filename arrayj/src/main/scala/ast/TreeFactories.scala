@@ -13,7 +13,7 @@ import primj.ast.Implicits._
 
 trait TreeFactories extends brokenj.ast.TreeFactories {
 
-  def mkArrayInitizalizer(elements: List[Expr],
+  def mkArrayInitializer(elements: List[Expr],
       pos: Option[Position] = None,
       symbol: Option[Symbol] = None,
       owner: Option[Symbol] = None,

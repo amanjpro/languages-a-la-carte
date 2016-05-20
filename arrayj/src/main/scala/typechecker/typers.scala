@@ -118,10 +118,10 @@ trait ArrayTypeUseTyperComponent extends TyperComponent {
 trait ArrayInitializerTyperComponent extends TyperComponent {
   (init: ArrayInitializerApi) => {
     val elements = setComponentTypesIfNeeded(init)
-    val res      = TreeCopiers.copyArrayInitizalizer(init)(elements = elements)
+    val res      = TreeCopiers.copyArrayInitializer(init)(elements = elements)
     checkArrayInitializerType(res)
     val elements2 = narrawDownElemsIfNeeded(elements, init.componentType)
-    TreeCopiers.copyArrayInitizalizer(res)(elements = elements2)
+    TreeCopiers.copyArrayInitializer(res)(elements = elements2)
   }
 
   protected def toArrayType(tpe: Type): Type =

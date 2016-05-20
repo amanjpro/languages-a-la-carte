@@ -67,7 +67,7 @@ trait ArrayInitializerSymbolAssignerComponent extends SymbolAssignerComponent {
       owner.foreach(elem.owner = _)
       assign(elem).asInstanceOf[Expr]
     }
-    TreeCopiers.copyArrayInitizalizer(init)(elements = elements)
+    TreeCopiers.copyArrayInitializer(init)(elements = elements)
   }
 }
 

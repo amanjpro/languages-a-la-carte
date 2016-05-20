@@ -13,12 +13,12 @@ import tiny.source.Position
 import arrayj.ast.{TreeFactories => ATreeFactories, _}
 
 trait TreeFactories extends ooj.ast.TreeFactories {
-  def mkArrayInitizalizer(elements: List[Expr],
+  def mkArrayInitializer(elements: List[Expr],
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None,
     owner: Option[Symbol] = None,
     tpe: Option[Type] = None): ArrayInitializerApi =
-    ATreeFactories.mkArrayInitizalizer(elements, pos, symbol, owner, tpe)
+    ATreeFactories.mkArrayInitializer(elements, pos, symbol, owner, tpe)
 
 
   def mkArrayAccess(array: Expr, index: Expr,

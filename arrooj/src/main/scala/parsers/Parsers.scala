@@ -797,7 +797,7 @@ class Parser extends parsers.Parser {
         else
           varsCntx.asScala.toList.map(visit(_).asInstanceOf[Expr])
       }
-      arrayj.ast.TreeFactories.mkArrayInitizalizer(exprs, pos(ctx))
+      arrayj.ast.TreeFactories.mkArrayInitializer(exprs, pos(ctx))
     }
 
 

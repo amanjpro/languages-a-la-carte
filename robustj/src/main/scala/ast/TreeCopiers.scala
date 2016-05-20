@@ -53,6 +53,26 @@ trait TreeCopiers {
     res
   }
 
+  // arrooj
+  def copyArrayInitializer(template: ArrayInitializerApi)(
+      elements: List[Expr] = template.elements): ArrayInitializerApi =
+    TC.copyArrayInitializer(template)(elements)
+
+
+  def copyArrayAccess(template: ArrayAccessApi)(
+    array: Expr = template.array,
+    index: Expr = template.index): ArrayAccessApi =
+    TC.copyArrayAccess(template)(array, index)
+
+  def copyArrayTypeUse(template: ArrayTypeUseApi)(
+      tpt: UseTree = template.tpt): ArrayTypeUseApi =
+    TC.copyArrayTypeUse(template)(tpt)
+
+  def copyArrayCreation(template: ArrayCreationApi)(
+      array: Expr = template.array,
+      size: Option[Expr] = template.size): ArrayCreationApi =
+    TC.copyArrayCreation(template)(array, size)
+
 
   // ooj
 

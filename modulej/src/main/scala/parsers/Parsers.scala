@@ -905,7 +905,7 @@ class Parser extends parsers.Parser {
         else
           varsCntx.asScala.toList.map(visit(_).asInstanceOf[Expr])
       }
-      arrayj.ast.TreeFactories.mkArrayInitizalizer(exprs, pos(ctx))
+      TreeFactories.mkArrayInitializer(exprs, pos(ctx))
     }
 
 
@@ -1312,7 +1312,7 @@ class Parser extends parsers.Parser {
       val array = if(ctx.name != null) visit(ctx.name).asInstanceOf[Expr]
                   else visit(ctx.primaryNoNewArray).asInstanceOf[Expr]
       val index = visit(ctx.expression).asInstanceOf[Expr]
-      arrayj.ast.TreeFactories.mkArrayAccess(array, index, pos(ctx))
+      TreeFactories.mkArrayAccess(array, index, pos(ctx))
     }
 
     override def visitPrimaryLit(ctx:
@@ -1430,14 +1430,14 @@ class Parser extends parsers.Parser {
       Java1Parser.PrimaryArrayAccessContext): Tree = {
       val array = visit(ctx.name).asInstanceOf[Expr]
       val index = visit(ctx.expression).asInstanceOf[Expr]
-      arrayj.ast.TreeFactories.mkArrayAccess(array, index, pos(ctx))
+      TreeFactories.mkArrayAccess(array, index, pos(ctx))
     }
 
     override def visitPrimaryArrayAccess2(ctx:
       Java1Parser.PrimaryArrayAccess2Context): Tree = {
       val array = visit(ctx.primaryNoNewArray).asInstanceOf[Expr]
       val index = visit(ctx.expression).asInstanceOf[Expr]
-      arrayj.ast.TreeFactories.mkArrayAccess(array, index, pos(ctx))
+      TreeFactories.mkArrayAccess(array, index, pos(ctx))
     }
 
 
@@ -1470,14 +1470,14 @@ class Parser extends parsers.Parser {
       val ebase = visit(ctx.primitiveType).asInstanceOf[Expr]
       val edims = if(ctx.dims != null) {
         ctx.dims.dim.asScala.foldLeft(ebase)((z, y) => {
-          arrayj.ast.TreeFactories.mkArrayCreation(z, None, pos(y))
+          TreeFactories.mkArrayCreation(z, None, pos(y))
         })
       } else {
         ebase
       }
       ctx.dimExpr.asScala.reverse.foldLeft(edims)((z, y) => {
         val d = visit(y).asInstanceOf[Expr]
-        arrayj.ast.TreeFactories.mkArrayCreation(z, Some(d), pos(y))
+        TreeFactories.mkArrayCreation(z, Some(d), pos(y))
       })
     }
 
@@ -1486,14 +1486,14 @@ class Parser extends parsers.Parser {
       val ebase = visit(ctx.classOrInterfaceType).asInstanceOf[Expr]
       val edims = if(ctx.dims != null) {
         ctx.dims.dim.asScala.foldLeft(ebase)((z, y) => {
-          arrayj.ast.TreeFactories.mkArrayCreation(z, None, pos(y))
+          TreeFactories.mkArrayCreation(z, None, pos(y))
         })
       } else {
         ebase
       }
       ctx.dimExpr.asScala.reverse.foldLeft(edims)((z, y) => {
         val d = visit(y).asInstanceOf[Expr]
-        arrayj.ast.TreeFactories.mkArrayCreation(z, Some(d), pos(y))
+        TreeFactories.mkArrayCreation(z, Some(d), pos(y))
       })
     }
 

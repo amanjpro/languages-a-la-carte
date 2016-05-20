@@ -136,12 +136,12 @@ trait TreeFactories {
             owner: Option[Symbol] = None): TypeUseApi =
     TF.mkTypeUse(name, pos, symbol, enclosing, owner)
 
-  def mkArrayInitizalizer(elements: List[Expr],
+  def mkArrayInitializer(elements: List[Expr],
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None,
     owner: Option[Symbol] = None,
     tpe: Option[Type] = None): ArrayInitializerApi =
-    TF.mkArrayInitizalizer(elements, pos, symbol, owner, tpe)
+    TF.mkArrayInitializer(elements, pos, symbol, owner, tpe)
 
 
   def mkArrayAccess(array: Expr, index: Expr,

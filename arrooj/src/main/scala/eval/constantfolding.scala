@@ -76,7 +76,7 @@ trait ArrayInitializerConstantFoldingComponent
       ((y1.asInstanceOf[Expr]::zelements, y2))
     })
     val res =
-      TreeCopiers.copyArrayInitizalizer(init)(elements = stnemele.reverse)
+      TreeCopiers.copyArrayInitializer(init)(elements = stnemele.reverse)
     (res, env1)
   }
 }

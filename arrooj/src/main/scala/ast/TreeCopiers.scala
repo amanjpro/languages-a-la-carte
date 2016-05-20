@@ -13,9 +13,9 @@ import tiny.source.Position
 import arrayj.ast.{TreeCopiers => ATreeCopiers, _}
 
 trait TreeCopiers extends ooj.ast.TreeCopiers {
-  def copyArrayInitizalizer(template: ArrayInitializerApi)(
+  def copyArrayInitializer(template: ArrayInitializerApi)(
       elements: List[Expr] = template.elements): ArrayInitializerApi =
-    ATreeCopiers.copyArrayInitizalizer(template)(elements)
+    ATreeCopiers.copyArrayInitializer(template)(elements)
 
 
   def copyArrayAccess(template: ArrayAccessApi)(

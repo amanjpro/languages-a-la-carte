@@ -11,9 +11,9 @@ import tiny.source.Position
 
 trait TreeCopiers extends brokenj.ast.TreeCopiers {
 
-  def copyArrayInitizalizer(template: ArrayInitializerApi)(
+  def copyArrayInitializer(template: ArrayInitializerApi)(
       elements: List[Expr] = template.elements): ArrayInitializerApi = {
-    val res = TreeFactories.mkArrayInitizalizer(elements)
+    val res = TreeFactories.mkArrayInitializer(elements)
     copyProperties(template, res)
     res
   }
