@@ -135,6 +135,7 @@ trait IdentQualifierComponent extends QualifierComponent {
         }
         val res = TreeFactories.mkSelect(ths, ident)
         ident.symbol.foreach(res.symbol = _)
+        ident.tpe.foreach(res.tpe = _)
         res
       case Some(sym)    if !ident.isQualified &&
                            sym.mods.isStatic                               =>
@@ -152,6 +153,7 @@ trait IdentQualifierComponent extends QualifierComponent {
         }
         val res = TreeFactories.mkSelect(tuse, ident)
         ident.symbol.foreach(res.symbol = _)
+        ident.tpe.foreach(res.tpe = _)
         res
       case _                                                               =>
         ident
