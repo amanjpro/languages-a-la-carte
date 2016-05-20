@@ -1,7 +1,7 @@
 package ch.usi.inf.l3.sana.calcj.ast
 
 
-trait operators {
+object operators {
   trait Op
 
 
@@ -92,5 +92,3 @@ trait operators {
     override def toString: String = ">>>"
   }
 }
-
-object operators extends operators
