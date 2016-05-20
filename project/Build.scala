@@ -110,7 +110,7 @@ object build extends Build {
       // site.settings ++ ghpages.settings: _*) ++ settings ),
     aggregate = Seq(testLang, tiny, calcj, primj,
                    brokenj, ooj, dcct, arrayj, arrooj, robustj, dynj,
-                   ppj, modulej, oberon0)
+                   ppj, modulej, oberon0, guod)
       // arrayj)
   ) settings (unidocSettings: _*)
 
@@ -127,6 +127,7 @@ object build extends Build {
   lazy val dynj        = project("dynj", Seq(robustj))
   lazy val ppj         = project("ppj", Seq(dynj))
   lazy val modulej     = project("modulej", Seq(ppj)) // this implements java 1.0
+  lazy val guod        = project("guod", Seq(modulej))
 
 
 
