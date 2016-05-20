@@ -172,7 +172,7 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
     case Some(owner) if owner.directlyDefinesName(name,
                                _.isInstanceOf[ClassSymbol])     =>
       error(CLASS_ALREADY_DEFINED,
-          "", "", pos)
+          name.asString, "", pos)
     case _                                                      =>
       ()
   }
