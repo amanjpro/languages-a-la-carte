@@ -27,11 +27,13 @@ indexType
   | Identifier // of array or entity
   ;
 
-  
+// a cloud type consists of: consistency annotation, setIdentifier, and a cloud
+// type itself.
+// TODO I do not provide an easy way create sets and stuff, but this works for
+// now.
+
 cloudType
-  : 'CInt'
-  | 'CString'
-  | cloudSetType
+  : annotationType? Identifier? ('CInt' | 'CString' | cloudSetType)
   ;
   
 expressionType
@@ -116,11 +118,10 @@ expression
   |  'delete' expression                                                # deleteEntity         // Delete an entity
   |  Identifier '[' expressionArgs ']'                                  # arraySelector        // Array selector
   |  expression '(' expressionArgs ')'                                  # actionCall           // action call, or apply
-  |  expression '.' expression                                          # entityArraySelect    // Expression select
-  |  'all' Identifier                                                   # allEntites           // all entities 
-  |  'entries' Identifier                                               # allSetArrayEntries   // all elems in an array
+  |  expression '.' Identifier                                          # entityArraySelect    // Expression select
+  |  'all' Identifier                                                   # allEntitesOrArrayElem           // all entities 
   |  foreach                                                            # foreachLoop          // foreach loop
-  |  'var' indexType '=' expression                                    # valDecl              // var declaration, not an expression but whatever
+  |  'var' indexType '=' expression                                     # valDecl              // var declaration, not an expression but whatever
   |  'if' '(' expression ')' block 'else' block                         # branching            // if or else, not an expression
 
   // Expressions
@@ -128,14 +129,14 @@ expression
   |  '(' expression ')'                                                 # parExpr
   |  Identifier                                                         # identifier           // also not an expression 
   |  literals                                                           # literal              // String or integer literals
-  |  op=('+'|'-') expression                                          # UnaryNum
-  |  '!' expression                                        # UnaryBool
-  |  expression op=('*'|'/'|'%') expression                           # Mul
-  |  expression op=('+'|'-') expression                               # Add
-  |  expression op=('<=' | '>=' | '>' | '<') expression               # Rel
-  |  expression op=('==' | '!=') expression                           # Equ
-  |  expression '&&' expression                                       # And
-  |  expression '||' expression                                       # Or
+  |  op=('+'|'-') expression                                            # UnaryNum
+  |  '!' expression                                                     # UnaryBool
+  |  expression op=('*'|'/'|'%') expression                             # Mul
+  |  expression op=('+'|'-') expression                                 # Add
+  |  expression op=('<=' | '>=' | '>' | '<') expression                 # Rel
+  |  expression op=('==' | '!=') expression                             # Equ
+  |  expression '&&' expression                                         # And
+  |  expression '||' expression                                         # Or
   ;
 
 

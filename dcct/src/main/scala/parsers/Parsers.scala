@@ -117,7 +117,7 @@ class Parser extends tiny.parsers.Parser {
     override def visitEntityDecl(@NotNull ctx: DcctParser.EntityDeclContext): Tree = {
       // TODO do not allow a table without any fields to be generated! by checking that
       // we have either at least one property or one element
-     
+       
       val elements: List[ValDefApi] = getElementsList(ctx.elements())      
       val properties: List[ValDefApi] = if (ctx.properties() != null) {
         ctx.properties().property().asScala.toList.map {
@@ -201,6 +201,7 @@ class Parser extends tiny.parsers.Parser {
   
 
 /************************      Expressions        ************************/
+// TODO implement visitExpressionArgs
 
 /////////////// Binary Visitors 
   override def visitMul(@NotNull ctx: DcctParser.MulContext): Tree = {
@@ -237,7 +238,23 @@ class Parser extends tiny.parsers.Parser {
       createUnaryOrPostfix(false, ctx.expression, ctx.getText, ctx)
   }
 
-       
+/////////////// Other expressions
+
+// TODO implement later when lower level elements are implemented
+//  override def visitEntityArraySelect(@NotNull ctx: DcctParser.EntityArraySelectContext ) : Tree = {
+//   visit (ctx.expression)  match 
+//  }
+
+ override def visitAllEntitesOrArrayElem(
+   @NotNull ctx: DcctParser.AllEntitesOrArrayElemContext): Tree = {
+      val ident =  mkIdent(Name("ALL"), pos(ctx))
+      val arg = mkIdent((Name(ctx.Identifier.getText)))
+      mkApply(ident, List(arg), pos(ctx))
+  }
+
+
+
+
 /********************************       Helpers       *****************************/
   def createUnaryOrPostfix[T <: ParserRuleContext](isPostfix: Boolean,
       exp: T, trm: String, ctx: ParserRuleContext): Expr = {
@@ -304,10 +321,5 @@ class Parser extends tiny.parsers.Parser {
   }
   }
 }
-
-
-
-
-
 
 object Parser extends Parser

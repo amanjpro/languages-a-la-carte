@@ -193,3 +193,4 @@ protected[ast] class ArrayDef(val name: Name, val indices: List[ValDefApi], val 
     s"Array$indices,$properties)"
 } 
 
+
