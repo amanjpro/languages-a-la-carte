@@ -34,9 +34,22 @@ trait CodegenUtils {
     case "void"                   => "V"
     case _                        =>
       val internalName = fullName.replaceAll("[.]", "/")
-      if(addSemicolon)
+      if(addSemicolon && isNotPrimitiveTypeArray(internalName)) {
         s"L$internalName;"
-      else s"$internalName"
+      } else s"$internalName"
+  }
+
+
+  def isNotPrimitiveTypeArray(tpe: String): Boolean = {
+    val elemTpe = tpe.filter(_ != '[')
+    elemTpe != "Z" &&
+      elemTpe != "C" &&
+        elemTpe != "B" &&
+          elemTpe != "S" &&
+            elemTpe != "I" &&
+              elemTpe != "J" &&
+                elemTpe != "F" &&
+                  elemTpe != "D"
   }
 
   def elementTypeToOpcode(etpe: Option[Type]): Either[String, Int] =
@@ -74,9 +87,8 @@ trait CodegenUtils {
       tpe match {
         case VoidType                   => "V"
         case atpe: ArrayType            =>
-          val res = s"[${toInternalTypeRepresentation(
-                          atpe.componentType, false)}"
-          if(addSemicolon) s"$res;" else res
+          s"[${toInternalTypeRepresentation(
+                          atpe.componentType, true)}"
         case ctpe: ClassTypeApi         =>
           val res = s"${ctpe.qualifiedName.replaceAll("[.]", "/")}"
           if(addSemicolon) s"L$res;" else res

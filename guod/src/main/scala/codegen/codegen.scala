@@ -1069,22 +1069,29 @@ trait ArrayInitializerCodeGenComponent extends CodeGenComponent {
     val mv = bw.methodVisitor
     val size = init.elements.size
     mv.foreach(mv => mv.visitLdcInsn(size))
-    elementTypeToOpcode(init.tpe) match {
+    elementTypeToOpcode(init.componentType.map(f => f())) match {
       case Right(opcode)           =>
         mv.foreach(mv => mv.visitIntInsn(NEWARRAY, opcode))
       case Left(tpe)               =>
-        mv.foreach(mv => mv.visitTypeInsn(NEWARRAY, tpe))
+        mv.foreach(mv => mv.visitTypeInsn(ANEWARRAY, tpe))
     }
+    mv.foreach(mv => mv.visitInsn(DUP))
     val elements = init.elements.zipWithIndex
     elements.foreach { e =>
       val element = e._1
       val index   = e._2
       mv.foreach(mv => mv.visitLdcInsn(index))
-      mv.foreach(mv => mv.visitLdcInsn(element))
+      codegen((element, bw))
       mv.foreach(mv => storeToLocalVariable(element.tpe,
             StackInfo, mv))
-      StackInfo.incrementSP
+      mv.foreach(mv => mv.visitInsn(DUP))
     }
+    mv.foreach(mv => mv.visitInsn(POP))
+    StackInfo.incrementSP
+    StackInfo.incrementSP
+    StackInfo.incrementSP
+    StackInfo.incrementSP
+    StackInfo.decrementSP
   }
 
   protected def storeToLocalVariable(tpe: Option[Type],
