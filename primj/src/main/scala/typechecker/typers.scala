@@ -316,11 +316,11 @@ trait UnaryTyperComponent extends calcj.typechecker.UnaryTyperComponent {
   (unary: UnaryApi) => {
     super.apply(unary) match {
       case unary: UnaryApi if unary.op == Inc || unary.op == Dec    =>
-        if(! TreeUtils.isVariable(unary.expr))
+        if(! isVariable(unary.expr))
           error(ASSIGNING_NOT_TO_VARIABLE,
             unary.expr.toString, unary.expr.toString,
             unary.expr.pos)
-        else if(TreeUtils.isFinal(unary.expr))
+        else if(isFinal(unary.expr))
           error(REASSIGNING_FINAL_VARIABLE,
             unary.expr.toString, unary.expr.toString, unary.expr.pos)
         else ()
@@ -329,6 +329,13 @@ trait UnaryTyperComponent extends calcj.typechecker.UnaryTyperComponent {
         unary
     }
   }
+
+
+  protected def isVariable(tree: Tree): Boolean =
+    TreeUtils.isVariable(tree)
+
+  protected def isFinal(tree: Tree): Boolean =
+    TreeUtils.isFinal(tree)
 }
 
 

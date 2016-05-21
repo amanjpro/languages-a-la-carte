@@ -56,6 +56,11 @@ trait ArrayAccessTyperComponent
   }
 }
 
+@component
+trait UnaryTyperComponent extends primj.typechecker.UnaryTyperComponent {
+  override protected def isVariable(tree: Tree): Boolean =
+    TreeUtils.isArrayAccessOrVariableAccess(tree)
+}
 
 @component
 trait ArrayTypeUseTyperComponent

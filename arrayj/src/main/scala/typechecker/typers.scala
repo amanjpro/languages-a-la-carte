@@ -72,6 +72,12 @@ trait ArrayCreationTyperComponent extends TyperComponent {
 
 
 @component
+trait UnaryTyperComponent extends primj.typechecker.UnaryTyperComponent {
+  override protected def isVariable(tree: Tree): Boolean =
+    TreeUtils.isArrayAccessOrVariableAccess(tree)
+}
+
+@component
 trait ArrayAccessTyperComponent extends TyperComponent {
   (access: ArrayAccessApi) => {
     val array = typed(access.array).asInstanceOf[Expr]

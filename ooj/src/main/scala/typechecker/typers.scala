@@ -1131,6 +1131,12 @@ trait AssignTyperComponent extends primj.typechecker.AssignTyperComponent {
 }
 
 @component
+trait UnaryTyperComponent extends primj.typechecker.UnaryTyperComponent {
+  override protected def isVariable(tree: Tree): Boolean =
+    TreeUtils.isVariable(tree)
+}
+
+@component
 trait TernaryTyperComponent extends
   primj.typechecker.TernaryTyperComponent {
 
