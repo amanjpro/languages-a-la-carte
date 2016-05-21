@@ -7,12 +7,15 @@ import sana.tiny
 import sana.ooj
 import sana.arrooj
 import sana.primj
+import sana.modulej
 
 import guod.ast._
 import tiny.types._
 import ooj.types._
 import arrooj.types._
 import calcj.types._
+import modulej.ast.TreeUtils
+import guod.ast.Implicits._
 import primj.types.VoidType
 
 import org.objectweb.asm.{Opcodes, MethodVisitor}
@@ -162,6 +165,28 @@ trait CodegenUtils {
       mv.visitInsn(opcode)
     else
       mv.visitVarInsn(opcode, index)
+  }
+
+
+  def popIfNeeded(tree: Tree, mv: MethodVisitor,
+          sinfo: StackInfo): Unit = {
+    if(TreeUtils.isValidStatementExpression(tree)) {
+      tree.tpe match {
+        case Some(LongType)            =>
+          mv.visitInsn(Opcodes.POP2)
+          sinfo.decrementSP
+          sinfo.decrementSP
+        case Some(DoubleType)          =>
+          mv.visitInsn(Opcodes.POP2)
+          sinfo.decrementSP
+          sinfo.decrementSP
+        case Some(VoidType)            =>
+          ()
+        case _                         =>
+          mv.visitInsn(Opcodes.POP)
+          sinfo.decrementSP
+      }
+    }
   }
 }
 

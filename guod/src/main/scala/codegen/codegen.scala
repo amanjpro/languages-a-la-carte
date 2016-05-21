@@ -9,6 +9,8 @@ import sana.ooj
 import sana.dynj
 import sana.primj
 import sana.calcj
+import sana.arrooj
+import sana.modulej
 
 
 
@@ -20,11 +22,13 @@ import guod.modifiers.ModifiersUtils
 import guod.ast.TreeFactories
 import guod.ast.TreeExtractors._
 import guod.ast._
+import modulej.ast.TreeUtils
 import ooj.types.RefType
 import ooj.symbols.{ClassSymbol, PackageSymbol}
 import ooj.names.StdNames.CONSTRUCTOR_NAME
 import primj.types.MethodType
 import tiny.types.Type
+import arrooj.types.ArrayType
 import calcj.types._
 import calcj.ast.operators._
 import dynj.ast.operators._
@@ -87,12 +91,23 @@ trait StackInfo {
 }
 object StackInfo extends StackInfo {
   private[this] var stack: Int = 0
+  private[this] var top: Int   = 0
 
-  def resetStack(): Unit = stack = 0
-  def incrementSP(): Unit = stack = stack + 1
+  def resetStack(): Unit = {
+    stack = 0
+    top   = 0
+  }
+  def incrementSP(): Unit = {
+    stack = stack + 1
+    top   = top.max(stack)
+  }
   def decrementSP(): Unit = stack = stack - 1
-  def setStack(n: Int): Unit = stack = n
-  def maxStack: Int = stack
+  def setStack(n: Int): Unit = {
+    stack = n
+    top   = top.max(n)
+  }
+
+  def maxStack: Int = top.max(stack)
 }
 
 case class ByteCodeWriter(destination: String,
@@ -304,10 +319,8 @@ trait SuperCodeGenComponent extends CodeGenComponent {
 @component(tree, bw)
 trait ThisCodeGenComponent extends CodeGenComponent {
   (ths: ThisApi)  => {
-    if(!bw.isRhs) {
-      bw.methodVisitor.foreach(_.visitVarInsn(ALOAD, 0))
-      StackInfo.incrementSP
-    }
+    bw.methodVisitor.foreach(_.visitVarInsn(ALOAD, 0))
+    StackInfo.incrementSP
   }
 }
 
@@ -342,8 +355,8 @@ trait CastCodeGenComponent extends CodeGenComponent {
     val mv = bw.methodVisitor
     codegen((cast.expr, bw))
     for {
-      tpe1 <- cast.expr.tpe
-      tpe2 <- cast.tpt.tpe
+      tpe1 <- cast.tpt.tpe
+      tpe2 <- cast.expr.tpe
     } {
       if(tpe1 <:< LongType && tpe2 <:< IntType)
         mv.foreach(mv => mv.visitInsn(I2L))
@@ -351,23 +364,23 @@ trait CastCodeGenComponent extends CodeGenComponent {
         mv.foreach(mv => mv.visitInsn(I2F))
       else if(tpe1 <:< DoubleType && tpe2 <:< IntType)
         mv.foreach(mv => mv.visitInsn(I2D))
-      else if(tpe1 <:< LongType && tpe2 <:< IntType)
+      else if(tpe1 <:< IntType && tpe2 <:< LongType)
         mv.foreach(mv => mv.visitInsn(L2I))
-      else if(tpe1 <:< LongType && tpe2 <:< FloatType)
-        mv.foreach(mv => mv.visitInsn(L2F))
-      else if(tpe1 <:< LongType && tpe2 <:< DoubleType)
-        mv.foreach(mv => mv.visitInsn(L2D))
-      else if(tpe1 <:< FloatType && tpe2 <:< IntType)
-        mv.foreach(mv => mv.visitInsn(F2I))
       else if(tpe1 <:< FloatType && tpe2 <:< LongType)
-        mv.foreach(mv => mv.visitInsn(F2L))
-      else if(tpe1 <:< FloatType && tpe2 <:< DoubleType)
-        mv.foreach(mv => mv.visitInsn(F2D))
-      else if(tpe1 <:< DoubleType && tpe2 <:< IntType)
-        mv.foreach(mv => mv.visitInsn(D2I))
+        mv.foreach(mv => mv.visitInsn(L2F))
       else if(tpe1 <:< DoubleType && tpe2 <:< LongType)
-        mv.foreach(mv => mv.visitInsn(D2L))
+        mv.foreach(mv => mv.visitInsn(L2D))
+      else if(tpe1 <:< IntType && tpe2 <:< FloatType)
+        mv.foreach(mv => mv.visitInsn(F2I))
+      else if(tpe1 <:< FloatType && tpe2 <:< FloatType)
+        mv.foreach(mv => mv.visitInsn(F2L))
       else if(tpe1 <:< DoubleType && tpe2 <:< FloatType)
+        mv.foreach(mv => mv.visitInsn(F2D))
+      else if(tpe1 <:< IntType && tpe2 <:< DoubleType)
+        mv.foreach(mv => mv.visitInsn(D2I))
+      else if(tpe1 <:< LongType && tpe2 <:< DoubleType)
+        mv.foreach(mv => mv.visitInsn(D2L))
+      else if(tpe1 <:< FloatType && tpe2 <:< DoubleType)
         mv.foreach(mv => mv.visitInsn(D2F))
       else if(tpe1.isInstanceOf[RefType] && tpe2.isInstanceOf[RefType]) {
         val name = useTreeToInternalType(cast.tpt)
@@ -669,7 +682,7 @@ trait UnaryCodeGenComponent extends CodeGenComponent {
   (unary: UnaryApi) => {
     val mv = bw.methodVisitor
     (unary.tpe, unary.op) match {
-      case (Some(tpe), Not)                              =>
+      case (Some(tpe), Not)                                                    =>
         codegen((unary.expr, bw))
         val l0 = new Label
         mv.foreach(mv => mv.visitJumpInsn(IFNE, l0))
@@ -679,63 +692,113 @@ trait UnaryCodeGenComponent extends CodeGenComponent {
         mv.foreach(mv => mv.visitLabel(l0))
         mv.foreach(mv => mv.visitInsn(ICONST_0))
         mv.foreach(mv => mv.visitLabel(l1))
+      case (Some(tpe), BCompl)                                                 =>
+        codegen((unary.expr, bw))
+        if(tpe <:< IntType) {
+          mv.foreach(mv => mv.visitInsn(ICONST_M1))
+          mv.foreach(mv =>  mv.visitInsn(IXOR))
+        } else {
+          mv.foreach(mv => mv.visitLdcInsn(-1L))
+          StackInfo.incrementSP
+          mv.foreach(mv =>  mv.visitInsn(LXOR))
+        }
         StackInfo.incrementSP
-      case (Some(tpe), BCompl)                           =>
+      case (Some(tpe), uop)   if unary.isPostfix && (uop == Inc || uop == Dec)  =>
         codegen((unary.expr, bw))
-        mv.foreach(mv => mv.visitInsn(ICONST_M1))
-        mv.foreach(mv =>  mv.visitInsn(IXOR))
-        StackInfo.incrementSP
-      case (Some(tpe), Inc)     if unary.isPostfix       =>
-        val (one, op) = oneAndOp(unary.tpe, true)
-        codegen((unary.expr, bw))
-        mv.foreach(mv => mv.visitInsn(one))
-        mv.foreach(mv => mv.visitInsn(op))
-        codegen((unary.expr, bw.copy(isRhs = true)))
-      case (Some(tpe), Inc)                              =>
-        val (one, op) = oneAndOp(unary.tpe, true)
-        codegen((unary.expr, bw))
-        mv.foreach(mv => mv.visitInsn(one))
-        mv.foreach(mv => mv.visitInsn(op))
-        codegen((unary.expr, bw.copy(isRhs = true)))
-      case (Some(tpe), Dec)     if unary.isPostfix       =>
-        val (one, op) = oneAndOp(unary.tpe, false)
-        codegen((unary.expr, bw))
-        mv.foreach(mv => mv.visitInsn(one))
-        mv.foreach(mv => mv.visitInsn(op))
-        codegen((unary.expr, bw.copy(isRhs = true)))
-      case (Some(tpe), Dec)                              =>
-        val (one, op) = oneAndOp(unary.tpe, false)
-        codegen((unary.expr, bw))
-        mv.foreach(mv => mv.visitInsn(one))
-        mv.foreach(mv => mv.visitInsn(op))
-        codegen((unary.expr, bw.copy(isRhs = true)))
-      case (Some(tpe), Neg) if tpe <:< IntType           =>
+        val op       = if(uop == Inc) Add else Sub
+        val lit      = one(unary.tpe)
+        val bin      = TreeFactories.mkBinary(unary.expr, op, lit)
+        val assign   = TreeFactories.mkAssign(unary.expr, bin)
+        unary.tpe.foreach{ tpe =>
+          bin.tpe = tpe
+          assign.tpe = tpe
+        }
+        codegen((assign, bw))
+        mv.foreach(mv => popIfNeeded(assign, mv, StackInfo))
+        //
+        //
+        //
+        // val (one, op) = oneAndOp(unary.tpe, uop == Inc)
+        // codegen((unary.expr, bw))
+        // if(isArrayAccess(unary.expr))
+        //   codegen((unary.expr, bw))
+        // codegen((unary.expr, bw))
+        // mv.foreach(mv => mv.visitInsn(one))
+        // if(tpe =:= LongType || tpe =:= DoubleType)
+        //   StackInfo.incrementSP
+        // StackInfo.incrementSP
+        // mv.foreach(mv => mv.visitInsn(op))
+        // if(!isArrayAccess(unary.expr))
+        //   codegen((unary.expr, bw.copy(isRhs = true)))
+        // else
+        //   unary.expr.tpe match {
+        //     case Some(atpe: ArrayType)   =>
+        //       mv.foreach(mv =>
+        //           storeToLocalVariable(Some(atpe.componentType), StackInfo, mv))
+        //     case _                       => ()// never happens
+        //   }
+      case (Some(tpe), uop)   if uop == Inc || uop == Dec                       =>
+        // val (one, op) = oneAndOp(unary.tpe, uop == Inc)
+        // if(isArrayAccess(unary.expr))
+        //   codegen((unary.expr, bw))
+        // codegen((unary.expr, bw))
+        // mv.foreach(mv => mv.visitInsn(one))
+        // if(tpe =:= LongType || tpe =:= DoubleType)
+        //   StackInfo.incrementSP
+        // StackInfo.incrementSP
+        // mv.foreach(mv => mv.visitInsn(op))
+        // if(!isArrayAccess(unary.expr))
+        //   codegen((unary.expr, bw.copy(isRhs = true)))
+        // else
+        //   unary.expr.tpe match {
+        //     case Some(atpe: ArrayType)   =>
+        //       mv.foreach(mv =>
+        //           storeToLocalVariable(Some(atpe.componentType), StackInfo, mv))
+        //     case _                       => ()// never happens
+        //   }
+        // codegen((unary.expr, bw))
+        val op       = if(uop == Inc) Add else Sub
+        val lit      = one(unary.tpe)
+        val bin      = TreeFactories.mkBinary(unary.expr, op, lit)
+        unary.tpe.foreach(bin.tpe = _)
+        val assign   = TreeFactories.mkAssign(unary.expr, bin)
+        codegen((assign, bw))
+      case (Some(tpe), Neg) if tpe <:< IntType                                 =>
         mv.foreach(mv => mv.visitInsn(INEG))
-      case (Some(tpe), Neg) if tpe <:< LongType          =>
+      case (Some(tpe), Neg) if tpe <:< LongType                                =>
         mv.foreach(mv => mv.visitInsn(LNEG))
-      case (Some(tpe), Neg) if tpe <:< FloatType         =>
+      case (Some(tpe), Neg) if tpe <:< FloatType                               =>
         mv.foreach(mv => mv.visitInsn(FNEG))
-      case (Some(tpe), Neg) if tpe <:< DoubleType        =>
+      case (Some(tpe), Neg) if tpe <:< DoubleType                              =>
         mv.foreach(mv => mv.visitInsn(DNEG))
-      case (Some(tpe), Pos)                              =>
+      case (Some(tpe), Pos)                                                    =>
         ()
-      case _                                             =>
+      case _                                                                   =>
         ()
     }
   }
 
+  protected def popIfNeeded(tree: Tree, mv: MethodVisitor,
+        sinfo: StackInfo): Unit =
+    CodegenUtils.popIfNeeded(tree, mv, sinfo)
+
+  protected def storeToLocalVariable(tpe: Option[Type],
+        stackInfo: StackInfo, mv: MethodVisitor): Unit =
+        CodegenUtils.storeToLocalVariable(tpe, -1, stackInfo, mv, true)
 
 
-  protected def oneAndOp(tpe: Option[Type],
-          isAdd: Boolean): (Int, Int) = tpe match {
-    case Some(tpe)    if tpe <:< IntType && isAdd      => (ICONST_1, IADD)
-    case Some(tpe)    if tpe <:< IntType               => (ICONST_1, ISUB)
-    case Some(tpe)    if tpe <:< LongType && isAdd     => (LCONST_1, LADD)
-    case Some(tpe)    if tpe <:< LongType              => (LCONST_1, LSUB)
-    case Some(tpe)    if tpe <:< FloatType && isAdd    => (FCONST_1, FADD)
-    case Some(tpe)    if tpe <:< FloatType             => (FCONST_1, FSUB)
-    case Some(tpe)    if tpe <:< DoubleType && isAdd   => (DCONST_1, DADD)
-    case Some(tpe)    if tpe <:< DoubleType            => (DCONST_1, DADD)
+  protected def isArrayAccess(expr: Expr): Boolean =
+    TreeUtils.isArrayAccess(expr)
+
+  protected def one(tpe: Option[Type]): Expr = tpe match {
+    case Some(tpe)    if tpe <:< IntType       =>
+      TreeFactories.mkLiteral(IntConstant(1))
+    case Some(tpe)    if tpe <:< LongType      =>
+      TreeFactories.mkLiteral(LongConstant(1l))
+    case Some(tpe)    if tpe <:< FloatType     =>
+      TreeFactories.mkLiteral(FloatConstant(1f))
+    case Some(tpe)    if tpe <:< DoubleType    =>
+      TreeFactories.mkLiteral(DoubleConstant(1))
 
   }
 }
@@ -812,6 +875,7 @@ trait ForCodeGenComponent extends CodeGenComponent {
     val next   = new Label
     forloop.inits.foreach { init =>
       codegen((init, bw))
+      bw.methodVisitor.foreach(mv => popIfNeeded(init, mv, StackInfo))
     }
     val steps = new Label
     val cond = new Label
@@ -825,14 +889,19 @@ trait ForCodeGenComponent extends CodeGenComponent {
     mv.foreach(mv => mv.visitLabel(steps))
     forloop.steps.foreach { step =>
       codegen((step, bw))
+      bw.methodVisitor.foreach(mv => popIfNeeded(step, mv, StackInfo))
     }
 
     mv.foreach(mv => mv.visitLabel(cond))
     codegen((forloop.cond, bw))
-    mv.foreach(mv => mv.visitJumpInsn(IFEQ, body))
+    mv.foreach(mv => mv.visitJumpInsn(IFNE, body))
 
     mv.foreach(mv => mv.visitLabel(next))
   }
+
+  protected def popIfNeeded(tree: Tree, mv: MethodVisitor,
+        sinfo: StackInfo): Unit =
+    CodegenUtils.popIfNeeded(tree, mv, sinfo)
 }
 
 
@@ -952,7 +1021,7 @@ trait LiteralCodeGenComponent extends CodeGenComponent {
       case Literal(DoubleConstant(v))             =>
         mv.foreach(mv => mv.visitLdcInsn(v))
       case Literal(StringConstant(v))             =>
-        mv.foreach(mv => mv.visitLdcInsn(v))
+        mv.foreach(mv => mv.visitLdcInsn(v.substring(1, v.length -1)))
       case Literal(NullConstant)                  =>
         mv.foreach(mv => mv.visitInsn(ACONST_NULL))
     }
@@ -965,8 +1034,14 @@ trait LiteralCodeGenComponent extends CodeGenComponent {
 @component(tree, bw)
 trait BlockCodeGenComponent extends CodeGenComponent {
   (block: BlockApi) => {
-    block.stmts.foreach(stmt => codegen((stmt, bw)))
+    block.stmts.foreach { stmt =>
+      codegen((stmt, bw))
+      bw.methodVisitor.foreach(mv => popIfNeeded(stmt, mv, StackInfo))
+    }
   }
+  protected def popIfNeeded(tree: Tree, mv: MethodVisitor,
+          sinfo: StackInfo): Unit =
+    CodegenUtils.popIfNeeded(tree, mv, sinfo)
 }
 
 
@@ -1072,6 +1147,8 @@ trait AssignCodeGenComponent extends CodeGenComponent {
         codegen((assign.rhs, bw))
         codegen((lhs, bw.copy(isRhs = true)))
     }
+    codegen((assign.lhs, bw))
+    StackInfo.incrementSP
   }
 
   protected def storeToLocalVariable(tpe: Option[Type],
