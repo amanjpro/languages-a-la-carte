@@ -8,6 +8,7 @@ import sana.tiny
 import sana.ooj
 import sana.primj
 import sana.calcj
+import sana.modulej
 
 
 
@@ -18,6 +19,7 @@ import tiny.names.Name
 import ooj.modifiers.STATIC
 import guod.modifiers.ModifiersUtils
 import guod.ast.TreeExtractors._
+import modulej.ast.TreeUtils
 import guod.ast._
 import tiny.symbols.Symbol
 import calcj.types.{LongType, DoubleType}
