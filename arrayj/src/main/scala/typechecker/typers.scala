@@ -138,9 +138,9 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
       (init.componentType, elem) match {
         case (Some(bt), elem: ArrayInitializerApi)    =>
           bt() match {
-            case ArrayType(ArrayType(t)) =>
+            case ArrayType(t) =>
               elem.componentType = () => t
-            case _                       =>
+            case _            =>
           }
         case _                                                             =>
           ()
@@ -183,7 +183,9 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
       }
       r.getOrElse(false)
     })
-    init.componentType.foreach(tpe => init.tpe = toArrayType(tpe()))
+    init.componentType.foreach { tpe =>
+      init.tpe = toArrayType(tpe())
+    }
   }
 
 

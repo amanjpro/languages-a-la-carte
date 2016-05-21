@@ -88,9 +88,9 @@ trait ArrayInitializerTyperComponent
       (init.componentType, elem) match {
         case (Some(bt), elem: ArrayInitializerApi)    =>
           bt() match {
-            case ArrayType(ArrayType(t)) =>
+            case ArrayType(t) =>
               elem.componentType = () => t
-            case _                       =>
+            case _            =>
           }
         case _                                                             =>
           ()
