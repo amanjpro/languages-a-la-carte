@@ -99,7 +99,7 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
 
     protected val classpath = config.classpath.toList.map(new java.io.File(_))
     protected val loader    = new ClassPathLoader(classpath)
-    def compiler: CompilerInterface = new CompilerInterface {
+    val compiler: CompilerInterface = new CompilerInterface {
       val classpath = self.classpath
       val loader    = self.loader
 
