@@ -23,6 +23,7 @@ import primj.modifiers.Ops._
 import ooj.ast._
 import dcct.ast.TreeFactories._
 import dcct.ast._
+import dcct.ast.Implicits._
 
 import org.antlr.v4.runtime.misc.NotNull
 import org.antlr.v4.runtime.ParserRuleContext
@@ -102,8 +103,18 @@ class Parser extends tiny.parsers.Parser {
       primj.ast.TreeFactories.mkTypeUse(Name(ctx.getText), pos(ctx))
     }
     
-    override def visitCloudType(@NotNull ctx: DcctParser.CloudTypeContext): UseTree ={ 
-      primj.ast.TreeFactories.mkTypeUse(Name(ctx.getText), pos(ctx))
+    override def visitCloudType(@NotNull ctx: DcctParser.CloudTypeContext): UseTree = { 
+      val cloudType = primj.ast.TreeFactories.mkTypeUse(Name(ctx.cloudPrimType.getText), pos(ctx))
+
+      if( ctx.annotationType != null ) 
+        cloudType.consistencyAnnotation = Name(ctx.annotationType.getText)
+      
+      if(ctx.Identifier != null )
+        cloudType.consistencyRegion = Name(ctx.Identifier.getText)
+
+      println(cloudType.show)
+    
+      cloudType
     }
 
     override def visitCloudDataDecl(@NotNull ctx: DcctParser.CloudDataDeclContext): Tree = {

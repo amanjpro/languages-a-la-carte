@@ -33,7 +33,12 @@ indexType
 // now.
 
 cloudType
-  : annotationType? Identifier? ('CInt' | 'CString' | cloudSetType)
+  : annotationType? Identifier? cloudPrimType;
+
+cloudPrimType
+  : 'CInt' 
+  | 'CString' 
+  | cloudSetType  
   ;
   
 expressionType

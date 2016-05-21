@@ -22,5 +22,9 @@ trait AugmentedTypeUseApi {
   def consistencyRegion_=(name: Name): Unit =
     tree.attributes = tree.attributes + ('consistencyRegion -> name)
 
+  def show: String = {
+    s"[THE AUG TREE]  ${consistencyAnnotation.toString} ${consistencyRegion.toString}  ${tree.toString}" 
+  }
+
 }
 
