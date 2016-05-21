@@ -68,6 +68,7 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
   }
 
   class Language extends super.Language {
+    self =>
     def init(): Unit = {
 
 
@@ -96,10 +97,11 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
     protected lazy val deftyper    = DefTyperFamily(compiler)
     protected lazy val typer       = TyperFamily(compiler)
 
+    protected val classpath = config.classpath.toList.map(new java.io.File(_))
+    protected val loader    = new ClassPathLoader(classpath)
     def compiler: CompilerInterface = new CompilerInterface {
-      val classpath =
-        config.classpath.toList.map(new java.io.File(_))
-      val loader    = new ClassPathLoader(classpath)
+      val classpath = self.classpath
+      val loader    = self.loader
 
       def typeCheck(owner: Option[Symbol])(tree: Tree): Tree = {
         owner.foreach(tree.owner = _)

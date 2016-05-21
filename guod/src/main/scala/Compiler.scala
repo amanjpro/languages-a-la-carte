@@ -29,16 +29,14 @@ trait Compiler extends modulej.Compiler {
         ByteCodeWriter("")))
     def codegen: Tree => Unit = (t: Tree) => {
       t match {
-        // case p               if !ErrorReporting.isErroneous             =>
-          // ()
-        case p                                                          =>
+        case p               if !ErrorReporting.isErroneous             =>
           val f = initializers join
                     qualifiers join  
                       localvariables join
                         generate
           f(p)
-        // case _                                                          =>
-          // ()
+        case _                                                          =>
+          ()
       }
     }
 

@@ -127,7 +127,7 @@ trait ClassPathLoaderApi {
           pkgs: List[String],
           fullName: FullName): (Option[Tree], List[FullName]) = {
     if(!loadedClasses.contains(fullName)) {
-      loadedClasses = fullName :: loadedClasses
+      loadedClasses    = fullName :: loadedClasses
       val classData    = classLoader.getResourceAsStream(url)
       val cr           = new ClassReader(classData)
       val reader       = new ClassFileParser(fullName)
