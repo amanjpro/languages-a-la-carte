@@ -15,7 +15,7 @@ import tiny.dsl._
 import tiny.core.TransformationComponent
 import tiny.modifiers.Flags
 import tiny.names.Name
-import ooj.modifiers.STATIC
+import ooj.modifiers.{STATIC, STATIC_INIT}
 import guod.modifiers.ModifiersUtils
 import guod.ast.TreeFactories
 import guod.ast.TreeExtractors._
@@ -80,11 +80,18 @@ trait TemplateInitializerComponent extends InitializerComponent {
       (z, y) => {
         y match {
           case valdef: ValDefApi                                 =>
-            val id = TreeFactories.mkIdent(valdef.name)
+            val id = TreeFactories.mkIdent(valdef.name, valdef.pos)
+            val assign = TreeFactories.mkAssign(id, valdef.rhs, valdef.pos)
+            // val res = compiler.typeCheck(valdef.owner)(assign)
             valdef.symbol.foreach(id.symbol = _)
-            valdef.tpe.foreach(id.tpe = _)
-            valdef.owner.foreach(id.owner = _)
-            val assign = TreeFactories.mkAssign(id, valdef.rhs)
+            valdef.tpe.foreach { tpe =>
+              id.tpe = tpe
+              assign.tpe = tpe
+            }
+            valdef.owner.foreach { owner =>
+              id.owner = owner
+              assign.owner = owner
+            }
             val p      = valdef.rhs match {
               case Literal(NullConstant)     =>
                 false
@@ -133,16 +140,19 @@ trait TemplateInitializerComponent extends InitializerComponent {
         }
       case member                                             =>
           member
-      }
+    }
 
-      val clinit = {
-        val mods   = Flags(STATIC)
-        val ret    = TreeFactories.mkTypeUse(Name("void"))
-        val name   = StdNames.CLINIT_NAME
-        val body   = TreeFactories.mkBlock(staticInits)
-      compiler.typeCheck(template.owner) {
-        TreeFactories.mkMethodDef(mods, ret, name, Nil, Nil, body)
-      }
+    val clinit = {
+      val mods   = STATIC | STATIC_INIT
+      val ret    = TreeFactories.mkTypeUse(Name("void"), template.pos)
+      val name   = StdNames.CLINIT_NAME
+      val body1  = TreeFactories.mkBlock(staticInits, template.pos)
+      val body2  = TreeFactories.mkBlock(Nil, template.pos)
+      val res    = compiler.typeCheck(template.owner) {
+        TreeFactories.mkMethodDef(mods, ret, name, Nil,
+          Nil, body1, template.pos)
+      }.asInstanceOf[MethodDefApi]
+      TreeCopiers.copyMethodDef(res)(body = body2)
     }
 
     TreeCopiers.copyTemplate(template)(members = members ++ List(clinit))

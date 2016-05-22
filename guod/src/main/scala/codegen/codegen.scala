@@ -41,7 +41,7 @@ import ooj.modifiers.Ops._
 
 import org.objectweb.asm.{ClassWriter, MethodVisitor, Label}
 import org.objectweb.asm.Opcodes._
-import java.io.{FileOutputStream, BufferedOutputStream}
+import java.io.{FileOutputStream, BufferedOutputStream, File}
 
 // Ident: DONE
 // TypeUse: DONE
@@ -178,8 +178,11 @@ trait ClassDefCodeGenComponent extends CodeGenComponent {
     // write the file
     val filename  =
       if(bw.destination.size > 0)
-        s"${bw.destination}/$fullName.class"
+        s"${bw.destination}${File.separator}$fullName.class"
       else s"$fullName.class"
+    val path = filename.split("[./]").dropRight(2).mkString(File.separator)
+    val dir  = new File(path)
+    dir.mkdirs
     val byteArray = cw.toByteArray
     val bos = new BufferedOutputStream(new FileOutputStream(filename))
     Stream.continually(bos.write(byteArray))
@@ -707,61 +710,25 @@ trait UnaryCodeGenComponent extends CodeGenComponent {
         codegen((unary.expr, bw))
         val op       = if(uop == Inc) Add else Sub
         val lit      = one(unary.tpe)
-        val bin      = TreeFactories.mkBinary(unary.expr, op, lit)
-        val assign   = TreeFactories.mkAssign(unary.expr, bin)
-        unary.tpe.foreach{ tpe =>
+        val bin      = TreeFactories.mkBinary(unary.expr, op, lit, unary.pos)
+        val assign   = TreeFactories.mkAssign(unary.expr, bin, unary.pos)
+        // val res = compiler.typeCheck(unary.owner)(assign)
+        unary.tpe.foreach { tpe =>
           bin.tpe = tpe
           assign.tpe = tpe
         }
         codegen((assign, bw))
         mv.foreach(mv => popIfNeeded(assign, mv, StackInfo))
-        //
-        //
-        //
-        // val (one, op) = oneAndOp(unary.tpe, uop == Inc)
-        // codegen((unary.expr, bw))
-        // if(isArrayAccess(unary.expr))
-        //   codegen((unary.expr, bw))
-        // codegen((unary.expr, bw))
-        // mv.foreach(mv => mv.visitInsn(one))
-        // if(tpe =:= LongType || tpe =:= DoubleType)
-        //   StackInfo.incrementSP
-        // StackInfo.incrementSP
-        // mv.foreach(mv => mv.visitInsn(op))
-        // if(!isArrayAccess(unary.expr))
-        //   codegen((unary.expr, bw.copy(isRhs = true)))
-        // else
-        //   unary.expr.tpe match {
-        //     case Some(atpe: ArrayType)   =>
-        //       mv.foreach(mv =>
-        //           storeToLocalVariable(Some(atpe.componentType), StackInfo, mv))
-        //     case _                       => ()// never happens
-        //   }
-      case (Some(tpe), uop)   if uop == Inc || uop == Dec                       =>
-        // val (one, op) = oneAndOp(unary.tpe, uop == Inc)
-        // if(isArrayAccess(unary.expr))
-        //   codegen((unary.expr, bw))
-        // codegen((unary.expr, bw))
-        // mv.foreach(mv => mv.visitInsn(one))
-        // if(tpe =:= LongType || tpe =:= DoubleType)
-        //   StackInfo.incrementSP
-        // StackInfo.incrementSP
-        // mv.foreach(mv => mv.visitInsn(op))
-        // if(!isArrayAccess(unary.expr))
-        //   codegen((unary.expr, bw.copy(isRhs = true)))
-        // else
-        //   unary.expr.tpe match {
-        //     case Some(atpe: ArrayType)   =>
-        //       mv.foreach(mv =>
-        //           storeToLocalVariable(Some(atpe.componentType), StackInfo, mv))
-        //     case _                       => ()// never happens
-        //   }
-        // codegen((unary.expr, bw))
+    case (Some(tpe), uop)   if uop == Inc || uop == Dec                       =>
         val op       = if(uop == Inc) Add else Sub
         val lit      = one(unary.tpe)
-        val bin      = TreeFactories.mkBinary(unary.expr, op, lit)
-        unary.tpe.foreach(bin.tpe = _)
-        val assign   = TreeFactories.mkAssign(unary.expr, bin)
+        val bin      = TreeFactories.mkBinary(unary.expr, op, lit, unary.pos)
+        val assign   = TreeFactories.mkAssign(unary.expr, bin, unary.pos)
+        unary.tpe.foreach { tpe =>
+          bin.tpe = tpe
+          assign.tpe = tpe
+        }
+        // compiler.typeCheck(unary.owner)(assign)
         codegen((assign, bw))
       case (Some(tpe), Neg) if tpe <:< IntType                                 =>
         mv.foreach(mv => mv.visitInsn(INEG))
@@ -791,13 +758,13 @@ trait UnaryCodeGenComponent extends CodeGenComponent {
     TreeUtils.isArrayAccess(expr)
 
   protected def one(tpe: Option[Type]): Expr = tpe match {
-    case Some(tpe)    if tpe <:< IntType       =>
+    case Some(tpe)    if tpe <:< IntType        =>
       TreeFactories.mkLiteral(IntConstant(1))
-    case Some(tpe)    if tpe <:< LongType      =>
+    case Some(tpe)    if tpe <:< LongType       =>
       TreeFactories.mkLiteral(LongConstant(1l))
-    case Some(tpe)    if tpe <:< FloatType     =>
+    case Some(tpe)    if tpe <:< FloatType      =>
       TreeFactories.mkLiteral(FloatConstant(1f))
-    case Some(tpe)    if tpe <:< DoubleType    =>
+    case Some(tpe)    if tpe <:< DoubleType     =>
       TreeFactories.mkLiteral(DoubleConstant(1))
 
   }
@@ -926,9 +893,14 @@ trait SwitchCodeGenComponent extends CodeGenComponent {
       val res = nonDefaultCases.zip(labels).flatMap { it =>
         val cse = it._1
         val lbl = it._2
-        cse.guards.map { guard =>
-          (guard.asInstanceOf[LiteralApi].constant.value.asInstanceOf[Int],
-            lbl)
+        cse.guards.flatMap { guard =>
+          guard.asInstanceOf[LiteralApi].constant.value match {
+            case i: Int         => List((i, lbl))
+            case i: Char        => List((i.toInt, lbl))
+            case i: Short       => List((i.toInt, lbl))
+            case i: Byte        => List((i.toInt, lbl))
+            case _              => Nil
+          }
         }
       }
       val res2 = res.sortWith((e1, e2) => e1._1 < e2._1)
@@ -1133,11 +1105,6 @@ trait ArrayAccessCodeGenComponent extends CodeGenComponent {
 trait AssignCodeGenComponent extends CodeGenComponent {
   (assign: AssignApi) => {
     assign.lhs match {
-      // case ArrayAccess(Select(q: ThisApi, t), i)                  =>
-      //   codegen((q, bw))
-      //   codegen((i, bw))
-      //   codegen((assign.rhs, bw))
-      //   codegen((t, bw.copy(isRhs = true)))
       case ArrayAccess(a, i)                                      =>
         codegen((a, bw))
         codegen((i, bw))

@@ -125,38 +125,40 @@ trait IdentQualifierComponent extends QualifierComponent {
                            (sym.mods.isField || ident.isMethodIdent) &&
                            !sym.mods.isStatic                              =>
         val sym = enclosingClass(ident.owner)
-        val ths = TreeFactories.mkThis()
-        for {
-          o <- ident.owner
-          s <- sym
-          t <- s.tpe
-        } {
-          ths.tpe      = t
-          ths.owner    = o
-          ths.symbol   = s
-        }
-        val res = TreeFactories.mkSelect(ths, ident)
-        ident.symbol.foreach(res.symbol = _)
-        ident.tpe.foreach(res.tpe = _)
-        res
+        val ths = TreeFactories.mkThis(ident.pos)
+        val res = TreeFactories.mkSelect(ths, ident, ident.pos)
+        compiler.typeCheck(ident.owner)(res)
+        // for {
+        //   o <- ident.owner
+        //   s <- sym
+        //   t <- s.tpe
+        // } {
+        //   ths.tpe      = t
+        //   ths.owner    = o
+        //   ths.symbol   = s
+        // }
+        // ident.symbol.foreach(res.symbol = _)
+        // ident.tpe.foreach(res.tpe = _)
+        // res
       case Some(sym)    if !ident.isQualified &&
                            sym.mods.isStatic                               =>
         val sym = enclosingClass(ident.owner)
         val name = sym.map(_.name).getOrElse(StdNames.noname)
-        val tuse = TreeFactories.mkTypeUse(name)
-        for {
-          o <- ident.owner
-          s <- sym
-          t <- s.tpe
-        } {
-          tuse.tpe      = t
-          tuse.owner    = o
-          tuse.symbol   = s
-        }
-        val res = TreeFactories.mkSelect(tuse, ident)
-        ident.symbol.foreach(res.symbol = _)
-        ident.tpe.foreach(res.tpe = _)
-        res
+        val tuse = TreeFactories.mkTypeUse(name, ident.pos)
+        // for {
+        //   o <- ident.owner
+        //   s <- sym
+        //   t <- s.tpe
+        // } {
+        //   tuse.tpe      = t
+        //   tuse.owner    = o
+        //   tuse.symbol   = s
+        // }
+        val res = TreeFactories.mkSelect(tuse, ident, ident.pos)
+        compiler.typeCheck(ident.owner)(res)
+        // ident.symbol.foreach(res.symbol = _)
+        // ident.tpe.foreach(res.tpe = _)
+        // res
       case _                                                               =>
         ident
     }
@@ -418,7 +420,7 @@ trait ArrayTypeUseQualifierComponent extends QualifierComponent {
 @component
 trait ArrayCreationQualifierComponent extends QualifierComponent {
   (creation: ArrayCreationApi) => {
-    val array  = fullyqualify(creation.array).asInstanceOf[UseTree]
+    val array  = fullyqualify(creation.array).asInstanceOf[Expr]
     val size   = creation.size.map(fullyqualify(_).asInstanceOf[Expr])
     TreeCopiers.copyArrayCreation(creation)(array = array, size = size)
   }
@@ -432,7 +434,14 @@ trait TypeUseQualifierComponent extends QualifierComponent {
     else {
       val fullName = toFullyQualifiedTypeName(tuse.symbol)
       if(fullName != tuse.name.asString) {
-        val tree = fromQualifiedString(fullName)
+        val tree = fromQualifiedString(fullName) match {
+          case s@Select(q, id: IdentApi)       =>
+            val res = TreeFactories.mkTypeUse(id.name, tuse.pos)
+            TreeFactories.mkSelect(q, res, tuse.pos)
+          case id: IdentApi                    =>
+            TreeFactories.mkTypeUse(id.name, tuse.pos)
+          case t                               => t
+        }
         compiler.typeCheck(tuse.owner)(tree)
       } else tuse
     }
