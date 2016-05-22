@@ -65,7 +65,11 @@ trait ArrayCreationTyperComponent extends TyperComponent {
       if(!(tpe <:< IntType)) {
         error(ARRAY_SIZE_NOT_INT, "", "", s.pos)
         s
-      } else TypePromotions.castIfNeeded(s, tpe, IntType)
+      } else {
+        compiler.typeCheck(s.owner)(
+          TypePromotions.castIfNeeded(s, tpe, IntType)
+        ).asInstanceOf[Expr]
+      }
     }
   }
 }
@@ -104,7 +108,11 @@ trait ArrayAccessTyperComponent extends TyperComponent {
       if(!(tpe <:< IntType)) {
         error(ARRAY_SIZE_NOT_INT, "", "", index.pos)
         index
-      } else TypePromotions.castIfNeeded(index, tpe, IntType)
+      } else {
+        compiler.typeCheck(index.owner)(
+          TypePromotions.castIfNeeded(index, tpe, IntType)
+        ).asInstanceOf[Expr]
+      }
     }.getOrElse(index)
 }
 
