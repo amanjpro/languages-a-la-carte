@@ -25,25 +25,25 @@ trait SymbolUtils extends sana.modulej.symbols.SymbolUtils {
       else ""
     case Some(cunit: CompilationUnitSymbol) =>
       toFullyQualifiedTypeName(cunit.owner)
-    case Some(sym: BooleanSymbol)           =>
-      sym.name.asString
-    case Some(sym: ByteSymbol)              =>
-      sym.name.asString
-    case Some(sym: CharSymbol)              =>
-      sym.name.asString
-    case Some(sym: ShortSymbol)             =>
-      sym.name.asString
-    case Some(sym: IntSymbol)               =>
-      sym.name.asString
-    case Some(sym: LongSymbol)              =>
-      sym.name.asString
-    case Some(sym: FloatSymbol)             =>
-      sym.name.asString
-    case Some(sym: DoubleSymbol)            =>
-      sym.name.asString
-    case Some(sym: VoidSymbol)              =>
-      sym.name.asString
-    case _                                  =>
+    case Some(BooleanSymbol)                =>
+      BooleanSymbol.name.asString
+    case Some(ByteSymbol)                   =>
+      ByteSymbol.name.asString
+    case Some(CharSymbol)                   =>
+      CharSymbol.name.asString
+    case Some(ShortSymbol)                  =>
+      ShortSymbol.name.asString
+    case Some(IntSymbol)                    =>
+      IntSymbol.name.asString
+    case Some(LongSymbol)                   =>
+      LongSymbol.name.asString
+    case Some(FloatSymbol)                  =>
+      FloatSymbol.name.asString
+    case Some(DoubleSymbol)                 =>
+      DoubleSymbol.name.asString
+    case Some(VoidSymbol)                   =>
+      VoidSymbol.name.asString
+    case t                                  =>
       ""
   }
 }
