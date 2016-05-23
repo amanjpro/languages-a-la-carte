@@ -80,8 +80,16 @@ trait TemplateInitializerComponent extends InitializerComponent {
       (z, y) => {
         y match {
           case valdef: ValDefApi                                 =>
+            val qual = if(valdef.mods.isStatic) {
+              val sym = enclosingClass(valdef.owner)
+              val name = sym.map(_.name).getOrElse(StdNames.noname)
+              TreeFactories.mkTypeUse(name, valdef.pos)
+            } else {
+              TreeFactories.mkThis(valdef.pos)
+            }
             val id = TreeFactories.mkIdent(valdef.name, valdef.pos)
-            val assign = TreeFactories.mkAssign(id, valdef.rhs, valdef.pos)
+            val select = TreeFactories.mkSelect(qual, id, valdef.pos)
+            val assign = TreeFactories.mkAssign(select, valdef.rhs, valdef.pos)
             // val res = compiler.typeCheck(valdef.owner)(assign)
             valdef.symbol.foreach(id.symbol = _)
             valdef.tpe.foreach { tpe =>
@@ -158,4 +166,7 @@ trait TemplateInitializerComponent extends InitializerComponent {
     TreeCopiers.copyTemplate(template)(members = members ++ List(clinit))
 
   }
+
+  protected def enclosingClass(owner: Option[Symbol]): Option[Symbol] =
+    SymbolUtils.enclosingClass(owner)
 }
