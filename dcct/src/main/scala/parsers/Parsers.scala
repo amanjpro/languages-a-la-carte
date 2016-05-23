@@ -20,9 +20,11 @@ import primj.ast._
 import dcct.antlr._
 import primj.modifiers._
 import primj.modifiers.Ops._
+import ooj.names.StdNames._
 import ooj.ast._
 import dcct.ast.TreeFactories._
 import dcct.ast._
+import ooj.ast.Implicits._ // TODO could be a source of problems
 import dcct.ast.Implicits._
 
 import org.antlr.v4.runtime.misc.NotNull
@@ -212,8 +214,12 @@ class Parser extends tiny.parsers.Parser {
   
 
 /************************      Expressions        ************************/
-// TODO implement visitExpressionArgs
 
+/*
+ * expression.asScala.toList.map(
+    e => visit(e).asInstanceOf[Expr])
+
+ */
 /////////////// Binary Visitors 
   override def visitMul(@NotNull ctx: DcctParser.MulContext): Tree = {
       createBinary(ctx.expression, ctx.op.getText, ctx)
@@ -250,11 +256,11 @@ class Parser extends tiny.parsers.Parser {
   }
 
 /////////////// Other expressions
-
-// TODO implement later when lower level elements are implemented
-//  override def visitEntityArraySelect(@NotNull ctx: DcctParser.EntityArraySelectContext ) : Tree = {
-//   visit (ctx.expression)  match 
-//  }
+// TODO could be a source of bugs, check the generated parse tree.
+// TODO maybe just creat a method getIdent! 
+  override def visitEntityArraySelect(@NotNull ctx: DcctParser.EntityArraySelectContext ) : Tree = {
+   mkSelect(visit(ctx.expression), mkIdent(getIdentName(ctx.Identifier)))
+  }
 
  override def visitAllEntitesOrArrayElem(
    @NotNull ctx: DcctParser.AllEntitesOrArrayElemContext): Tree = {
@@ -262,6 +268,58 @@ class Parser extends tiny.parsers.Parser {
       val arg = mkIdent((Name(ctx.Identifier.getText)))
       mkApply(ident, List(arg), pos(ctx))
   }
+
+  override def visitNewEntity(@NotNull ctx: DcctParser.NewEntityContext ) : Tree = {
+    val qual    = mkIdent(getIdentName(ctx.Identifier))
+    val ps      = pos(ctx)
+    val init    = mkIdent(CONSTRUCTOR_NAME, ps)
+    init.isConstructorIdent = true
+    val fun     = mkSelect(qual, init, ps)
+    val args = ctx.expressionArgs match {
+        case null                       => Nil
+        // TODO a helper for this too is better
+        case list                       =>
+          list.expression.asScala.toList.map { (x) =>
+            visit(x).asInstanceOf[Expr]
+          }
+      }
+      val app = mkApply(fun, args, ps)
+      mkNew(app, ps)
+ 
+  }
+
+  override def visitBranching(@NotNull ctx: DcctParser.BranchingContext ) : Tree = {
+    val cond  = visit(ctx.expression)
+    val thenp = ctx.block
+    val elsep = ctx.block match {
+      case null => NoTree
+      case block => block
+    }
+  
+    //TODO not sure how this would work
+    (cond, thenp, elsep) match {
+      case (c: Expr, t: Expr, e: Expr) =>
+        mkIf(c, t, e, pos(ctx))
+      case _                           =>
+        // TODO: report an error
+        throw new Exception("Bad tree shape")
+    }
+  }
+  
+  override def visitActionCall(@NotNull ctx: DcctParser.ActionCallContext ) : Tree = {
+      val applyLHS     = visit(ctx.expression).asInstanceOf[Expr]
+      val args   = ctx.expressionArgs match {
+        case null           => Nil
+        case args           =>
+          args.expression.asScala.toList.map {
+            case e => visit(e).asInstanceOf[Expr]
+          }
+        }
+      mkApply(applyLHS, args, pos(ctx))
+  }
+  
+
+  
 
 
 
