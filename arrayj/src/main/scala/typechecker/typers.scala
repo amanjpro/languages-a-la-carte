@@ -17,7 +17,8 @@ import tiny.types.TypeUtils._
 import tiny.symbols.{Symbol, TypeSymbol, TermSymbol}
 import tiny.source.Position
 import tiny.errors.ErrorReporting.{error,warning}
-import calcj.typechecker.{TyperComponent, TypePromotions}
+import calcj.typechecker.TyperComponent
+import primj.typechecker.TypePromotions
 import calcj.types._
 import calcj.ast.LiteralApi
 import primj.symbols._
@@ -133,9 +134,10 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
   (init: ArrayInitializerApi) => {
     val elements = setComponentTypesIfNeeded(init)
     val res      = TreeCopiers.copyArrayInitializer(init)(elements = elements)
-    checkArrayInitializerType(res)
-    val elements2 = narrawDownElemsIfNeeded(elements, init.componentType)
-    TreeCopiers.copyArrayInitializer(res)(elements = elements2)
+    if(checkArrayInitializerType(res)) {
+      val elements2 = narrowDownOrWidenElemsIfNeeded(elements, init.componentType)
+      TreeCopiers.copyArrayInitializer(res)(elements = elements2)
+    } else res
   }
 
   protected def toArrayType(tpe: Type): Type =
@@ -156,12 +158,12 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
       typed(elem).asInstanceOf[Expr]
     }
 
-  protected def narrawDownElemsIfNeeded(elements: List[Expr],
+  protected def narrowDownOrWidenElemsIfNeeded(elements: List[Expr],
       ctpe: Option[() =>Type]): List[Expr] = {
     ctpe match {
       case Some(bt)      =>
         val ctpe = bt()
-            if(ctpe =:= IntType) {
+        if(ctpe =:= IntType) {
           for {
             elem <- elements
           } yield {
@@ -170,12 +172,18 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
               case e                      => e
             }
           }
-        } else elements
+        } else elements.map { elem =>
+          typed(widenIfNeeded(elem, Some(ctpe))).asInstanceOf[Expr]
+        }
       case _             =>
         elements
     }
   }
-  protected def checkArrayInitializerType(init: ArrayInitializerApi): Unit = {
+
+  protected def widenIfNeeded(expr: Expr, tpe: Option[Type]): Expr =
+    TypePromotions.widenIfNeeded(expr, tpe)
+
+  protected def checkArrayInitializerType(init: ArrayInitializerApi): Boolean = {
     val hasErrors = init.elements.foldLeft(false)((z, y) => {
       val r = for {
         etpe <- y.tpe
@@ -194,6 +202,7 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
     init.componentType.foreach { tpe =>
       init.tpe = toArrayType(tpe())
     }
+    !hasErrors
   }
 
 
@@ -238,6 +247,8 @@ trait ValDefTyperComponent extends primj.typechecker.ValDefTyperComponent {
     valdef.tpe = ttpe
     val res = TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
     checkValDef(res)
+    val rhs2 = typed(widenIfNeeded(valdef.rhs, valdef.tpe)).asInstanceOf[Expr]
+    TreeCopiers.copyValDef(res)(rhs = rhs2)
     res
   }
 

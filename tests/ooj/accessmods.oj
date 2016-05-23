@@ -2,6 +2,7 @@
 // FIELD_NOT_ACCESSIBLE
 // NAME_NOT_FOUND
 // FIELD_NOT_ACCESSIBLE
+// FIELD_NOT_ACCESSIBLE
 
 package test;
 
@@ -41,7 +42,7 @@ class B extends A {
 
   void m () {
     f1(); // fails
-    f2(a); // fails
+    f2(a); // fails twice
     f2(b);
     f3(c);
     f4(d);

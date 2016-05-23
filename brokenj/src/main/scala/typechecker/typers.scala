@@ -16,7 +16,8 @@ import tiny.types.TypeUtils._
 import tiny.symbols.{TypeSymbol, TermSymbol}
 import tiny.source.Position
 import tiny.errors.ErrorReporting.{error,warning}
-import calcj.typechecker.{TyperComponent, TypePromotions}
+import calcj.typechecker.TyperComponent
+import primj.typechecker.TypePromotions
 import calcj.types._
 import primj.symbols._
 import brokenj.errors.ErrorCodes._

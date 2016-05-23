@@ -14,10 +14,10 @@ import tiny.types.{TypeUtils => _, _}
 import tiny.symbols.{Symbol, TypeSymbol, TermSymbol}
 import tiny.source.Position
 import tiny.errors.ErrorReporting.{error,warning}
-import calcj.typechecker.{TyperComponent, TypePromotions}
 import calcj.types._
 import calcj.ast.UnaryApi
 import calcj.ast.operators._
+import calcj.typechecker.TyperComponent
 import primj.ast._
 import primj.ast.TreeFactories._
 import primj.symbols.{VariableSymbol, MethodSymbol, SymbolUtils}
@@ -67,7 +67,8 @@ trait AssignTyperComponent extends TyperComponent {
       case (Some(ltpe), Some(rtpe))
           if TypeUtils.isAssignable(rhs, rtpe, ltpe)     =>
         rhs.tpe.foreach(assign.tpe = _)
-        TreeCopiers.copyAssign(assign)(lhs = lhs, rhs = rhs)
+        val rhs2 = typed(widenIfNeeded(rhs, lhs.tpe)).asInstanceOf[Expr]
+        TreeCopiers.copyAssign(assign)(lhs = lhs, rhs = rhs2)
       case (Some(ltpe), Some(rtpe))                      =>
         error(TYPE_MISMATCH,
           ltpe.toString, rtpe.toString, rhs.pos)
@@ -78,6 +79,10 @@ trait AssignTyperComponent extends TyperComponent {
         assign
     }
   }
+
+
+  protected def widenIfNeeded(expr: Expr, tpe: Option[Type]): Expr =
+    TypePromotions.widenIfNeeded(expr, tpe)
 }
 
 
@@ -239,13 +244,18 @@ trait ApplyTyperComponent extends TyperComponent {
     (funty, argtys) match {
       case (Some(mt: MethodType), argtys) =>
         if(TypeUtils.checkList(argtys, mt.params, _ <:< _)) {
-          funty match {
-            case Some(MethodType(r, _)) =>
+          val args2 = funty match {
+            case Some(MethodType(r, ptpe)) =>
               apply.tpe = r
+              args.zip(ptpe).map { elem =>
+                val arg = elem._1
+                val tpe = Some(elem._2)
+                typed(widenIfNeeded(arg, tpe)).asInstanceOf[Expr]
+              }
             case _                      =>
-              ()
+              args
           }
-          TreeCopiers.copyApply(apply)(fun = fun, args = args)
+          TreeCopiers.copyApply(apply)(fun = fun, args = args2)
         } else {
           // TODO: Fix the error message
           error(TYPE_MISMATCH, mt.toString, args.toString, apply.pos)
@@ -257,6 +267,9 @@ trait ApplyTyperComponent extends TyperComponent {
         apply
     }
   }
+
+  protected def widenIfNeeded(expr: Expr, tpe: Option[Type]): Expr =
+    TypePromotions.widenIfNeeded(expr, tpe)
 }
 
 
@@ -289,7 +302,12 @@ trait ReturnTyperComponent extends TyperComponent {
                 TypeUtils.isAssignable(expr, etpe, rtpe))
             ok match {
               case Some(true)          =>
-                res
+                val res2 = res.expr.map { e =>
+                  val expr = typed(widenIfNeeded(e,
+                    Some(rtpe))).asInstanceOf[Expr]
+                  TreeCopiers.copyReturn(res)(expr = Some(expr))
+                }
+                res2.getOrElse(res)
               case l                   =>
                 error(TYPE_MISMATCH,
                   expr.tpe.map(_.toString).getOrElse("<error>"),
@@ -308,6 +326,8 @@ trait ReturnTyperComponent extends TyperComponent {
     }
   }
 
+  protected def widenIfNeeded(expr: Expr, tpe: Option[Type]): Expr =
+    TypePromotions.widenIfNeeded(expr, tpe)
 
 }
 
@@ -354,8 +374,10 @@ trait ValDefTyperComponent extends TyperComponent {
     val ttpe   = tpt.tpe.getOrElse(ErrorType)
     valdef.tpe = ttpe
     val res = TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
-    checkValDef(res)
-    res
+    if(checkValDef(res)) {
+      val rhs2 = typed(widenIfNeeded(valdef.rhs, valdef.tpe)).asInstanceOf[Expr]
+      TreeCopiers.copyValDef(res)(rhs = rhs2)
+    } else res
   }
 
 
@@ -372,22 +394,25 @@ trait ValDefTyperComponent extends TyperComponent {
   }
 
 
-  protected def checkValDef(valdef: ValDefApi): Unit = {
+  protected def checkValDef(valdef: ValDefApi): Boolean = {
     val rtpe   = valdef.rhs.tpe.getOrElse(ErrorType)
     val ttpe   = valdef.tpt.tpe.getOrElse(ErrorType)
     if(ttpe =:= VoidType) {
       error(VOID_VARIABLE_TYPE,
           ttpe.toString, ttpe.toString, valdef.rhs.pos)
+      false
     } else if(valdef.mods.isFinal && !valdef.mods.isParam &&
               valdef.rhs == NoTree) {
       error(UNINITIALIZED_FINAL_VARIABLE,
           valdef.toString, "", valdef.pos)
+      false
     } else (TypeUtils.isAssignable(valdef.rhs, rtpe, ttpe)) match {
         case false if valdef.rhs != NoTree        =>
           error(TYPE_MISMATCH,
             rtpe.toString, ttpe.toString, valdef.rhs.pos)
+          false
         case _                                    =>
-          ()
+          true
       }
   }
 
@@ -398,6 +423,8 @@ trait ValDefTyperComponent extends TyperComponent {
       error(VARIABLE_ALREADY_DEFINED,
           "", "", pos)
 
+  protected def widenIfNeeded(expr: Expr, tpe: Option[Type]): Expr =
+    TypePromotions.widenIfNeeded(expr, tpe)
 }
 
 

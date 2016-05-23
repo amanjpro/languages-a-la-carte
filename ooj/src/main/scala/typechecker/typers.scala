@@ -16,7 +16,8 @@ import tiny.source.Position
 import tiny.names.Name
 import tiny.modifiers.Flags
 import tiny.errors.ErrorReporting.{error,warning}
-import calcj.typechecker.{TyperComponent, TypePromotions}
+import calcj.typechecker.TyperComponent
+import primj.typechecker.TypePromotions
 import calcj.types._
 import calcj.ast.operators.{Add, Eq, Neq, BOp}
 import calcj.ast.{BinaryApi, LiteralApi}
@@ -103,18 +104,25 @@ trait ValDefTyperComponent extends TyperComponent {
     val ttpe   = tpt.tpe.getOrElse(ErrorType)
     valdef.tpe = ttpe
     val res = TreeCopiers.copyValDef(valdef)(tpt = tpt, rhs = rhs)
-    checkValDef(res)
-    res
+    if(checkValDef(res)) {
+      val rhs2 =
+        typed(widenIfNeeded(valdef.rhs, valdef.tpe)).asInstanceOf[Expr]
+      TreeCopiers.copyValDef(res)(rhs = rhs2)
+    } else res
   }
 
-  protected def checkValDef(valdef: ValDefApi): Unit = {
+  protected def widenIfNeeded(expr: Expr, tpe: Option[Type]): Expr =
+    TypePromotions.widenIfNeeded(expr, tpe)
+
+  protected def checkValDef(valdef: ValDefApi): Boolean = {
     val rhs    = valdef.rhs
     val tpt    = valdef.tpt
     val rtpe   = rhs.tpe.getOrElse(ErrorType)
     val ttpe   = tpt.tpe.getOrElse(ErrorType)
-    if(ttpe =:= VoidType) {
+    val chk1 = if(ttpe =:= VoidType) {
       error(VOID_VARIABLE_TYPE,
           ttpe.toString, ttpe.toString, rhs.pos)
+      false
     // } else if(valdef.mods.isFinal && !valdef.mods.isParam &&
     //           rhs == NoTree) {
     //   error(UNINITIALIZED_FINAL_VARIABLE,
@@ -124,8 +132,9 @@ trait ValDefTyperComponent extends TyperComponent {
         case false if rhs != NoTree        =>
           error(TYPE_MISMATCH,
             rtpe.toString, ttpe.toString, rhs.pos)
+          false
         case _                             =>
-          ()
+          true
       }
 
 
@@ -138,31 +147,37 @@ trait ValDefTyperComponent extends TyperComponent {
       }
     })
 
-    valdef.owner match {
+    val chk2 = valdef.owner match {
       case Some(csym: ClassSymbol) if csym.mods.isInterface       =>
-        if(!valdef.mods.isStatic)
+        val c1 = if(!valdef.mods.isStatic) {
           error(NON_STATIC_FIELD_IN_INTERFACE,
               valdef.toString, "A static final field", valdef.pos)
-        if(!valdef.mods.isFinal)
+          false
+        } else true
+        val c2 = if(!valdef.mods.isFinal) {
           error(NON_FINAL_FIELD_IN_INTERFACE,
               valdef.toString, "A static final field", valdef.pos)
+          false
+        } else true
+        c1 && c2
       case _                                                      =>
-        ()
+        true
     }
 
-
-
-
-    if(valdef.mods.isField &&
+    val chk3 = if(valdef.mods.isField &&
       valdef.owner.map(! _.isInstanceOf[TypeSymbol]).getOrElse(false)) {
       error(FIELD_OWNED_BY_NON_CLASS,
         valdef.toString, "A field", valdef.pos)
+      false
     } else if(valdef.mods.isLocalVariable &&
       valdef.owner.map(sym => !(sym.isInstanceOf[ScopeSymbol] ||
             sym.isInstanceOf[MethodSymbol])).getOrElse(false)) {
       error(LOCAL_VARIABLE_OWNED_BY_NON_LOCAL,
         valdef.toString, "A local variable", valdef.pos)
-    }
+      false
+    } else true
+
+    chk1 && chk2 && chk3
   }
 
   protected def typeRhs(valdef: ValDefApi): Expr = {
@@ -512,6 +527,7 @@ trait ThisTyperComponent extends TyperComponent {
       case None                  =>
         error(ACCESSING_THIS_OUTSIDE_A_CLASS,
               ths.toString, "", ths.pos)
+        ths.tpe = ErrorType
       case _                     =>
         ()
     }
@@ -522,6 +538,7 @@ trait ThisTyperComponent extends TyperComponent {
         case true                  =>
           error(ACCESSING_THIS_IN_STATIC,
                 ths.toString, "", ths.pos)
+          ths.tpe = ErrorType
         case false                 =>
           ()
       }
@@ -557,9 +574,11 @@ trait SuperTyperComponent extends TyperComponent {
       case None                                                     =>
         error(ACCESSING_SUPER_OUTSIDE_A_CLASS,
               spr.toString, "", spr.pos)
+        spr.tpe = ErrorType
       case Some(sym) if sym.tpe == Some(TypeUtils.objectClassType)  =>
         error(ACCESSING_SUPER_IN_OBJECT_CLASS,
               spr.toString, "", spr.pos)
+        spr.tpe = ErrorType
       case _                                                        =>
         ()
     }
@@ -570,6 +589,7 @@ trait SuperTyperComponent extends TyperComponent {
         case true                  =>
           error(ACCESSING_SUPER_IN_STATIC,
                 spr.toString, "", spr.pos)
+          spr.tpe = ErrorType
         case false                 =>
           ()
       }
@@ -622,11 +642,16 @@ trait ApplyTyperComponent extends TyperComponent {
           typed(f).asInstanceOf[IdentApi]
       }
     }
-    fun.tpe match {
+    val args2 = fun.tpe match {
       case Some(mtpe: MethodType) =>
         apply.tpe = mtpe.ret
+        args.zip(mtpe.params).map { elem =>
+          val arg = elem._1
+          val tpe = Some(elem._2)
+          typed(widenIfNeeded(arg, tpe)).asInstanceOf[Expr]
+        }
       case _                      =>
-        ()
+        args
     }
     fun.symbol match {
       case Some(m: MethodSymbol)   =>
@@ -634,9 +659,9 @@ trait ApplyTyperComponent extends TyperComponent {
       case _                       =>
         ()
     }
-    val res = TreeCopiers.copyApply(apply)(fun = fun, args = args)
+    val res = TreeCopiers.copyApply(apply)(fun = fun, args = args2)
     if(isExplicitConstructorInvocation(res)) {
-      args.foreach { arg =>
+      args2.foreach { arg =>
         arg.bottomUp(())((z, y) => {
           y match {
             case id: IdentApi  if pointsToNonStaticField(id)   =>
@@ -655,6 +680,9 @@ trait ApplyTyperComponent extends TyperComponent {
     }
     res
   }
+
+  protected def widenIfNeeded(expr: Expr, tpe: Option[Type]): Expr =
+    TypePromotions.widenIfNeeded(expr, tpe)
 
   protected def definedByEnclosingClass(t: Tree,
                                         sym: Option[Symbol]): Boolean = {
