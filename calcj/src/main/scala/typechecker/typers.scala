@@ -47,12 +47,13 @@ trait BinaryTyperComponent extends TyperComponent {
               res.tpe = rtpe
               e1.tpe match {
                 case Some(tpe)   if tpe.isInstanceOf[PrimitiveType] &&
-                                    bin.isCompoundBinary                =>
+                                    bin.isCompoundBinary &&
+                                    !bin.isTypedBinary &&
+                                    !bin.isTypedCompoundBinary          =>
                   SymbolUtils.getSymbol(tpe) match {
                     case Some(symbol)           =>
                       val tuse = TreeFactories.mkTypeUse(symbol.name,
                         expr1.pos)
-                      res.isCompoundBinary = false
                       res.isTypedCompoundBinary = true
                       res.isTypedBinary = true
                       compiler.typeCheck(bin.owner)(
