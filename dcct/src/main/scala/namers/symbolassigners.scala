@@ -20,6 +20,7 @@ import ooj.ast.Implicits._
 import dcct.symbols._
 import dcct.ast._
 import primj.namers.SymbolAssignerComponent
+import primj.symbols.ScopeSymbol
 
 
 @component
@@ -41,6 +42,18 @@ trait ArrayDefSymbolAssignerComponent extends SymbolAssignerComponent {
         assign(x).asInstanceOf[ValDefApi]
     }
     array
+  }
+}
+
+@component 
+trait ForeachSymbolAssignerComponent extends SymbolAssignerComponent {
+  (foreach: ForEachApi) => {
+    val owner = foreach.owner
+    val symbol = ScopeSymbol(owner)
+    foreach.entityVar.owner = symbol
+    foreach.body.owner = symbol
+    foreach.symbol = symbol
+    foreach
   }
 }
 

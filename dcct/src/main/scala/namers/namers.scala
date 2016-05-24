@@ -39,3 +39,9 @@ trait ArrayDefNamerComponent extends NamerComponent {
   (array: ArrayDefApi)  => array
 }
 
+@component
+trait ForeachNamerComponent extends NamerComponent {
+  (foreach: ForEachApi)  => foreach
+}
+
+

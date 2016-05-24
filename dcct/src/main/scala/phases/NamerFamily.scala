@@ -18,9 +18,8 @@ trait DcctNamerFamilyApi extends TransformationFamily[Tree, Tree] {
 
   def components: List[PartialFunction[Tree, Tree]] =
     generateComponents[Tree, Tree](
-      "Program,ClassDef,Template,ValDef,TypeUse,Ident, ArrayDef",
+      "Program, MethodDef, ValDef, TypeUse, Ident, ClassDef, Template, ArrayDef, Foreach",
       "NamerComponent", "name", "")
-      // "Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal")
 
   def name: Tree => Tree = family 
 }
