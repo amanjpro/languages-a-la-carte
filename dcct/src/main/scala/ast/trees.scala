@@ -143,20 +143,16 @@ trait ArrayDefApi extends DefTree {
  * 
  */
 trait ForEachApi extends Expr {
-  def inits: List[Tree]
-  def allOrEntries: primj.ast.ApplyApi
-  def cond: Expr
-  def body: Expr
+  def entityVar: ValDefApi
+  def whereExpr: Expr
+  def body: BlockApi
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
-    val r1 = inits.foldLeft(z)((z, y) => {
-      y.bottomUp(z)(f)
-    })
-    val r2 = allOrEntries.bottomUp(z)(f)
-    val r3 = cond.bottomUp(r1)(f)
-    val r4 = body.bottomUp(r2)(f)
+    val r1 = entityVar.bottomUp(z)(f)
+    val r2 = whereExpr.bottomUp(r1)(f)
+    val r3 = body.bottomUp(r2)(f)
 
-    f(r4, this)
+    f(r3, this)
   }
 }
 
@@ -182,10 +178,10 @@ trait ForEachApi extends Expr {
  * flush and yeild are also implemented using Apply! 
  */
 
-protected[ast] class ForEach(val inits: List[Tree], val allOrEntries: primj.ast.ApplyApi,
-  val cond: Expr, val body: Expr) extends ForEachApi {
+protected[ast] class ForEach(val entityVar: ValDefApi,val whereExpr: Expr, val body: BlockApi) 
+extends ForEachApi {
   override def toString: String =
-    s"ForEach($inits, $cond, $allOrEntries, $body)"
+    s"ForEach($entityVar, $whereExpr, $body)"
 }
 
 protected[ast] class ArrayDef(val name: Name, val indices: List[ValDefApi], val properties: List[ValDefApi]) extends ArrayDefApi {

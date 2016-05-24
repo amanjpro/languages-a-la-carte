@@ -126,7 +126,7 @@ expression
   |  expression '.' Identifier                                          # entityArraySelect    // Expression select
   |  'all' Identifier                                                   # allEntitesOrArrayElem           // all entities 
   |  foreach                                                            # foreachLoop          // foreach loop
-  |  'var' indexType '=' expression                                     # valDecl              // var declaration, not an expression but whatever
+  |  'var' Identifier indexType '=' expression                          # valDecl              // var declaration, not an expression but whatever
   |  'if' '(' expression ')' block 'else' block                         # branching            // if or else, not an expression
 
   // Expressions
@@ -146,15 +146,14 @@ expression
 
 
 foreach
-  : 'foreach' Identifier 'in' ('all' | 'entries') expression '.' expression
+  : 'foreach' Identifier 'in' 'all' Identifier
     ('where' expression)?
-    ('orderby' expression '.' expression)?
     block
   ;
 
 literals
-  : IntegerLiteral
-  | StringLiteral
+  : IntegerLiteral  #IntLit
+  | StringLiteral   #StringLit
   ;
  
 

@@ -139,7 +139,8 @@ class Parser extends tiny.parsers.Parser {
       } else Nil
       
       
-      mkClassDef(noflags, getIdentName(ctx.Identifier), Nil, mkTemplate(elements ++ properties, pos(ctx.elements())), pos(ctx))
+      mkClassDef(noflags, getIdentName(ctx.Identifier), 
+        Nil, mkTemplate(elements ++ properties, pos(ctx.elements())), pos(ctx))
     }
     
     override def visitArrayDecl(@NotNull ctx: DcctParser.ArrayDeclContext): Tree = {
@@ -255,6 +256,38 @@ class Parser extends tiny.parsers.Parser {
       createUnaryOrPostfix(false, ctx.expression, ctx.getText, ctx)
   }
 
+///////////// Desugared to an apply. 
+  override def visitAllEntitesOrArrayElem(
+   @NotNull ctx: DcctParser.AllEntitesOrArrayElemContext): Tree = {
+      val ident =  mkIdent(Name("ALL"), pos(ctx))
+      val arg = mkIdent((Name(ctx.Identifier.getText)))
+      mkApply(ident, List(arg), pos(ctx))
+  }
+
+  override def visitDeleteEntity(@NotNull ctx: DcctParser.DeleteEntityContext): Tree = {
+    val ident =  mkIdent(Name("DELETE"), pos(ctx))
+    val arg = visit(ctx.expression).asInstanceOf[Expr]
+    mkApply(ident, List(arg), pos(ctx))
+  }
+
+
+  override def visitArraySelector(@NotNull ctx: DcctParser.ArraySelectorContext): Tree = {
+    // TODO this could equivelant to an SQL/CQL select or update, depending
+    // whether it appears in an assignment statement.
+    // I believe I need to check this within an assignment statement or
+    // something
+    val ident =  mkIdent(Name("SELECT"), pos(ctx))
+    val args = ctx.expressionArgs match {
+        case null                       => Nil
+        case list                       =>
+          list.expression.asScala.toList.map { (x) =>
+            visit(x).asInstanceOf[Expr]
+          }
+      }
+    mkApply(ident, args, pos(ctx))
+ 
+  }
+
 /////////////// Other expressions
 // TODO could be a source of bugs, check the generated parse tree.
 // TODO maybe just creat a method getIdent! 
@@ -262,12 +295,6 @@ class Parser extends tiny.parsers.Parser {
    mkSelect(visit(ctx.expression), mkIdent(getIdentName(ctx.Identifier)))
   }
 
- override def visitAllEntitesOrArrayElem(
-   @NotNull ctx: DcctParser.AllEntitesOrArrayElemContext): Tree = {
-      val ident =  mkIdent(Name("ALL"), pos(ctx))
-      val arg = mkIdent((Name(ctx.Identifier.getText)))
-      mkApply(ident, List(arg), pos(ctx))
-  }
 
   override def visitNewEntity(@NotNull ctx: DcctParser.NewEntityContext ) : Tree = {
     val qual    = mkIdent(getIdentName(ctx.Identifier))
@@ -317,10 +344,44 @@ class Parser extends tiny.parsers.Parser {
         }
       mkApply(applyLHS, args, pos(ctx))
   }
-  
+
+  override def visitIntLit(@NotNull ctx: DcctParser.IntLitContext): Tree = {
+    mkLiteral(IntConstant(ctx.getText.toInt), pos(ctx))
+  }
+
+  override def visitStringLit(@NotNull ctx: DcctParser.StringLitContext): Tree = {
+    mkLiteral(StringConstant(ctx.getText), pos(ctx))
+  }
 
   
+  override def visitValDecl(@NotNull ctx: DcctParser.ValDeclContext): Tree = {
+    val mods = noflags      
+    val tpe = visitIndexType(ctx.indexType)
+    val name = getIdentName(ctx.Identifier)
+    val rhs =  visit(ctx.expression).asInstanceOf[Expr]
+    mkValDef(mods, tpe, name, rhs, pos(ctx))
+  }
 
+  override def visitAssign(@NotNull ctx: DcctParser.AssignContext): Tree = {
+    val varIdent = getIdentName(ctx.Identifier)
+    // TODO maybe put a catch for cast exceptions?
+    val rhs = visit(ctx.expression).asInstanceOf[Expr]
+    mkAssign(mkIdent(varIdent), rhs, pos(ctx))
+    
+      
+  }
+
+  override def visitForeach(@NotNull ctx: DcctParser.ForeachContext): Tree = {
+    val varIdent = getIdentName(ctx.Identifier(0))
+    val whereExpr = visit(ctx.expression).asInstanceOf[Expr]
+    val entitySelected = getIdentName(ctx.Identifier(1))
+    val entityVarType = primj.ast.TreeFactories.mkTypeUse(entitySelected, pos(ctx))
+    val entityVar =  mkValDef(noflags, entityVarType, varIdent, NoTree, pos(ctx))
+    val block = visit(ctx.block).asInstanceOf[BlockApi]
+      
+    mkForEach(entityVar, whereExpr: Expr, block)
+ 
+  }
 
 
 
