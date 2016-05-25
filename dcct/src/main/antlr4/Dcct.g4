@@ -3,8 +3,10 @@ grammar Dcct;
 
 // Parser
 
+//TODO this might be wrong, I get a warning
 program
-  : schema expression* EOF
+  : schema? expression+ EOF
+  | schema  expression* EOF
   ;
 
 schema
@@ -50,12 +52,12 @@ cloudDataDecl
 // Entities
 // TODO think if I need to make the body optional
 entityDecl
-  : 'entity' Identifier '(' elements ')' '{' properties '}'
+  : 'entity' Identifier '(' elements ')' ('{' properties '}')?
   ;
 
 //TODO I think I am enforcing one or more elements, fix...
 elements
-  :   element (',' element)*
+  :   element? (',' element)*
   ;
 
 element
@@ -263,4 +265,3 @@ COMMENT
 LINE_COMMENT
   :   '//' ~[\r\n]* -> skip
   ;
-

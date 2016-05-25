@@ -7,7 +7,8 @@ import sana.tiny.core.Implicits._
 import sana.tiny.ast.{Tree, NoTree}
 import sana.primj.PrimjNodes
 import sana.primj.namers._
-import sana.ooj.namers.{TemplateSymbolAssignerComponent, ClassDefSymbolAssignerComponent, ClassDefNamerComponent, TemplateNamerComponent}
+import sana.ooj.namers.TemplateNamerComponent
+import sana.dcct.namers.ClassDefNamerComponent
 
 
 

@@ -135,13 +135,15 @@ class Parser extends tiny.parsers.Parser {
 
     override def visitSchema(@NotNull ctx: DcctParser.SchemaContext): Tree = {
       logger.info("Visiting schema...")
-      // I kind of skip this?
       visitChildren(ctx)
     }
 
-    override def visitIndexType(@NotNull ctx: DcctParser.IndexTypeContext): Tree = {
-      // TODO not sure what to do here either! 
+    override def visitIndexType(@NotNull ctx: DcctParser.IndexTypeContext): Tree = { 
       visitChildren(ctx)
+    }
+    
+    override def visitCloudType(@NotNull ctx: DcctParser.CloudTypeContext): Tree ={ 
+      visitChildren(ctx); 
     }
 
     override def visitCloudDataDecl(@NotNull ctx: DcctParser.CloudDataDeclContext): Tree = {
@@ -150,18 +152,26 @@ class Parser extends tiny.parsers.Parser {
 
 
     override def visitEntityDecl(@NotNull ctx: DcctParser.EntityDeclContext): Tree = {
-      // Should give me the ident name?
       val entityIdent = ctx.Identifier().getText
       val elements = ctx.elements().element().asScala.toList.map {
         element => visit(element).asInstanceOf[ValDefApi] // correct type?
       }
-      // TODO first parameter is flags. Figure out what I should put there.
-      // TODO 4th param is body, put properties there later.
-      mkClassDef(noflags, Name(entityIdent), Nil, mkTemplate(elements, pos(ctx)), pos(ctx))
+      val properties = ctx.properties().property().asScala.toList.map { 
+        property => visit(property).asInstanceOf[ValDefApi] 
+      }
+      mkClassDef(noflags, Name(entityIdent), Nil, mkTemplate(elements ++ properties, pos(ctx.elements())), pos(ctx))
+    }
+    
+    override def visitArrayDecl(@NotNull ctx: DcctParser.ArrayDeclContext): Tree = {
+      val arrayIdent = ctx.Identifier().getText
+      val elements = ctx.elements().element().asScala.toList.map {
+        element => visit(element).asInstanceOf[ValDefApi] // correct type?
+      }
+      // TODO create the proper arraydef tree here.
+      mkClassDef(noflags, Name(arrayIdent), Nil, mkTemplate(elements, pos(ctx.elements())), pos(ctx))
     }
     
     override def visitElements(@NotNull ctx: DcctParser.ElementsContext): Tree = {
-      // TODO not sure what to do here either
       visitChildren(ctx)
     }
 
@@ -183,6 +193,21 @@ class Parser extends tiny.parsers.Parser {
       // DEPENDENCY will be the dependency!
       
       ooj.ast.TreeFactories.mkValDef(Flags(PARAM), tpe, name, NoTree, pos(ctx))
+    }
+    
+    override def visitProperties(@NotNull ctx: DcctParser.PropertiesContext): Tree = {
+      visitChildren(ctx)
+    }
+
+    
+    override def visitProperty(@NotNull ctx: DcctParser.PropertyContext): Tree = {
+      val propIdent = ctx.Identifier()
+      val propType = ctx.cloudType()
+      // TODO add the cloud types to my standard defs 
+      val tpe = primj.ast.TreeFactories.mkTypeUse(Name(propType.getText), pos(ctx))
+      val name = Name(ctx.Identifier.getText)
+      // TODO maybe better flag the property types?
+      ooj.ast.TreeFactories.mkValDef(noflags, tpe, name, NoTree, pos(ctx))
     }
 
 
@@ -569,4 +594,3 @@ class Parser extends tiny.parsers.Parser {
   }
 }
 object Parser extends Parser
-
