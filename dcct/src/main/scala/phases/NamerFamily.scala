@@ -15,7 +15,7 @@ import sana.dcct.namers.ClassDefNamerComponent
 trait DcctNamerFamilyApi extends TransformationFamily[Tree, Tree] {
   self =>
 
-  override def default: Tree = NoTree
+  override def default = {case s => s}
 
   def components: List[PartialFunction[Tree, Tree]] =
     generateComponents[Tree, Tree](

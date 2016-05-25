@@ -11,7 +11,7 @@ import sana.dcct.codegenerator._
 trait DcctCodeGenFamilyApi extends TransformationFamily[Tree, String] {
   self =>
 
-  override def default: String = ""
+  override def default = {case s => ""}
 
   def components: List[PartialFunction[Tree, String]] =
     generateComponents[Tree, String](
