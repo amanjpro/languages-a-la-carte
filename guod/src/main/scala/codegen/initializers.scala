@@ -79,7 +79,7 @@ trait TemplateInitializerComponent extends InitializerComponent {
     val (staticInits, instanceInits) = template.members.foldLeft((z1, z2)) {
       (z, y) => {
         y match {
-          case valdef: ValDefApi                                 =>
+          case valdef: ValDefApi        if valdef.rhs != NoTree          =>
             val qual = if(valdef.mods.isStatic) {
               val sym = enclosingClass(valdef.owner)
               val name = sym.map(_.name).getOrElse(StdNames.noname)
@@ -113,9 +113,9 @@ trait TemplateInitializerComponent extends InitializerComponent {
             else if(!valdef.mods.isStatic)
               (z._1, z._2 ++ List(assign))
             else z
-          case block: BlockApi                                   =>
+          case block: BlockApi                                           =>
             (z._1 ++ block.stmts, z._2)
-          case _                                                 =>
+          case _                                                         =>
             z
         }
       }
