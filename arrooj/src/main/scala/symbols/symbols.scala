@@ -39,6 +39,19 @@ trait ArraySymbol extends ClassSymbol {
     otpe <- objectClassSymbol.tpe
   } yield TypeUtils.mkArrayType(ctpe)
   def tpe_=(tpe: Option[Type]): Unit = ???
+
+
+  override def equals(other: Any): Boolean = other match {
+    case null                 => false
+    case that: ArraySymbol    =>
+      this.owner == that.owner &&
+        this.componentSymbol == that.componentSymbol &&
+        this.name == that.name
+    case _                    =>
+      false
+  }
+  override def toString(): String = s"Array symbol: $name"
+  override def hashCode(): Int = name.hashCode * 43 + componentSymbol.hashCode
 }
 
 
