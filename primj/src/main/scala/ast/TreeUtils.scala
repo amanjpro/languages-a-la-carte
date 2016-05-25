@@ -89,8 +89,8 @@ trait TreeUtils extends calcj.ast.TreeUtils {
   // INFO: Update this to Java as we go
   def isValidExpression(e: Tree): Boolean = e match {
     case _: LiteralApi | _: IdentApi | _: BinaryApi | _: UnaryApi |
-         _: AssignApi | _: TernaryApi | _: ApplyApi              => true
-    case _                                              => false
+         _: CastApi | _: AssignApi | _: TernaryApi | _: ApplyApi        => true
+    case _                                                              => false
   }
 
   def allPathsReturn(expr: Tree): Boolean =
