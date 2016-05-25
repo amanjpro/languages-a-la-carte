@@ -163,17 +163,20 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
     ctpe match {
       case Some(bt)      =>
         val ctpe = bt()
-        if(ctpe =:= IntType) {
-          for {
-            elem <- elements
-          } yield {
-            elem match {
-              case lit: LiteralApi        => narrowDown(lit, ctpe)
-              case e                      => e
+        elements.flatMap { elem =>
+          elem.tpe.map { tpe =>
+            if(ctpe =:= tpe) {
+              elem
+            } else if(ctpe >:> tpe) {
+              typed(widenIfNeeded(elem, Some(ctpe))).asInstanceOf[Expr]
+            } else {
+              elem match {
+                case lit: LiteralApi        =>
+                  typed(narrowDown(lit, ctpe)).asInstanceOf[Expr]
+                case e                      => elem
+              }
             }
           }
-        } else elements.map { elem =>
-          typed(widenIfNeeded(elem, Some(ctpe))).asInstanceOf[Expr]
         }
       case _             =>
         elements
