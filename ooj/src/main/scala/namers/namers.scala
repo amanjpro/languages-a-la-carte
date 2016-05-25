@@ -310,7 +310,10 @@ trait IdentNamer {
     // At the beginning: we treat all (Ident)s as ambiguous names.
     // Can we see any (VariableSymbol)s with this name from the current scope?
     val temp = id.owner.flatMap { owner        =>
-      val p = (s: Symbol) => s.isInstanceOf[VariableSymbol]
+      val p = (s: Symbol) => {
+        s.isInstanceOf[VariableSymbol] ||
+          (id.isMethodIdent && s.isInstanceOf[MethodSymbol])
+      }
       owner match {
         case csym: ClassSymbol if id.isQualified       =>
           csym.getSymbol(id.name, { s =>
