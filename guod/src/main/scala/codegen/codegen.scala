@@ -82,34 +82,6 @@ import java.io.{FileOutputStream, BufferedOutputStream, File}
 // Synchronized: DONE
 // CompilationUnit: DONE
 
-trait StackInfo {
-  def resetStack(): Unit
-  def incrementSP(): Unit
-  def decrementSP(): Unit
-  def setStack(n: Int): Unit
-  def maxStack: Int
-}
-object StackInfo extends StackInfo {
-  private[this] var stack: Int = 0
-  private[this] var top: Int   = 0
-
-  def resetStack(): Unit = {
-    stack = 0
-    top   = 0
-  }
-  def incrementSP(): Unit = {
-    stack = stack + 1
-    top   = top.max(stack)
-  }
-  def decrementSP(): Unit = stack = stack - 1
-  def setStack(n: Int): Unit = {
-    stack = n
-    top   = top.max(n)
-  }
-
-  def maxStack: Int = top.max(stack)
-}
-
 case class ByteCodeWriter(destination: String,
           classWriter: Option[ClassWriter] = None,
           methodVisitor: Option[MethodVisitor] = None,
@@ -147,7 +119,7 @@ trait CompilationUnitCodeGenComponent extends CodeGenComponent {
 @component(tree, bw)
 trait ClassDefCodeGenComponent extends CodeGenComponent {
   (clazz: ClassDefApi) => {
-    val cw   = new ClassWriter(0)
+    val cw   = new ClassWriter(ClassWriter.COMPUTE_MAXS)
     val bw2 = bw.copy(classWriter = Some(cw))
     val mods = {
       val m = clazz.symbol.map(_.mods).getOrElse(clazz.mods)
@@ -255,14 +227,14 @@ trait ValDefCodeGenComponent extends CodeGenComponent {
       valdef.variableIndex.foreach { index =>
         codegen((valdef.rhs, bw))
         mv.foreach(mv => storeToLocalVariable(valdef.tpe, index,
-            StackInfo, mv))
+            mv))
       }
     }
   }
 
   protected def storeToLocalVariable(tpe: Option[Type], index: Int,
-        stackInfo: StackInfo, mv: MethodVisitor): Unit =
-        CodegenUtils.storeToLocalVariable(tpe, index, stackInfo, mv, false)
+        mv: MethodVisitor): Unit =
+        CodegenUtils.storeToLocalVariable(tpe, index, mv, false)
 
   protected def useTreeToInternalType(use: UseTree): String =
     CodegenUtils.useTreeToInternalType(use, true)
@@ -276,7 +248,6 @@ trait ValDefCodeGenComponent extends CodeGenComponent {
 @component(tree, bw)
 trait MethodDefCodeGenComponent extends CodeGenComponent {
   (mthd: MethodDefApi) => {
-    StackInfo.resetStack
     val mods          = {
       val m = mthd.symbol.map(_.mods).getOrElse(mthd.mods)
       modifiersToBytecode(m)
@@ -296,7 +267,7 @@ trait MethodDefCodeGenComponent extends CodeGenComponent {
       codegen((mthd.body, bw2))
       if(ret == "V") mv.visitInsn(RETURN)
       val maxLocals = mthd.locals
-      mv.visitMaxs(StackInfo.maxStack, maxLocals)
+      mv.visitMaxs(0, 0)
       mv.visitEnd
     }
   }
@@ -315,7 +286,6 @@ trait MethodDefCodeGenComponent extends CodeGenComponent {
 trait SuperCodeGenComponent extends CodeGenComponent {
   (spr: SuperApi)  => {
     bw.methodVisitor.foreach(_.visitVarInsn(ALOAD, 0))
-    StackInfo.incrementSP
   }
 }
 
@@ -323,7 +293,6 @@ trait SuperCodeGenComponent extends CodeGenComponent {
 trait ThisCodeGenComponent extends CodeGenComponent {
   (ths: ThisApi)  => {
     bw.methodVisitor.foreach(_.visitVarInsn(ALOAD, 0))
-    StackInfo.incrementSP
   }
 }
 
@@ -361,36 +330,39 @@ trait CastCodeGenComponent extends CodeGenComponent {
       tpe1 <- cast.tpt.tpe
       tpe2 <- cast.expr.tpe
     } {
-      if(tpe1 <:< LongType && tpe2 <:< IntType)
+      if(tpe1 =:= LongType && tpe2 <:< IntType) {
         mv.foreach(mv => mv.visitInsn(I2L))
-      else if(tpe1 <:< FloatType && tpe2 <:< IntType)
+      } else if(tpe1 =:= FloatType && tpe2 <:< IntType) {
         mv.foreach(mv => mv.visitInsn(I2F))
-      else if(tpe1 <:< DoubleType && tpe2 <:< IntType)
+      } else if(tpe1 =:= DoubleType && tpe2 <:< IntType) {
         mv.foreach(mv => mv.visitInsn(I2D))
-      else if(tpe1 <:< IntType && tpe2 <:< LongType)
+      } else if(tpe1 <:< IntType && tpe2 =:= LongType) {
         mv.foreach(mv => mv.visitInsn(L2I))
-      else if(tpe1 <:< FloatType && tpe2 <:< LongType)
+      } else if(tpe1 =:= FloatType && tpe2 =:= LongType) {
         mv.foreach(mv => mv.visitInsn(L2F))
-      else if(tpe1 <:< DoubleType && tpe2 <:< LongType)
+      } else if(tpe1 =:= DoubleType && tpe2 =:= LongType) {
         mv.foreach(mv => mv.visitInsn(L2D))
-      else if(tpe1 <:< IntType && tpe2 <:< FloatType)
+      } else if(tpe1 <:< IntType && tpe2 =:= FloatType) {
         mv.foreach(mv => mv.visitInsn(F2I))
-      else if(tpe1 <:< FloatType && tpe2 <:< FloatType)
+      } else if(tpe1 =:= FloatType && tpe2 =:= FloatType) {
         mv.foreach(mv => mv.visitInsn(F2L))
-      else if(tpe1 <:< DoubleType && tpe2 <:< FloatType)
+      } else if(tpe1 =:= DoubleType && tpe2 =:= FloatType) {
         mv.foreach(mv => mv.visitInsn(F2D))
-      else if(tpe1 <:< IntType && tpe2 <:< DoubleType)
+      } else if(tpe1 <:< IntType && tpe2 =:= DoubleType) {
         mv.foreach(mv => mv.visitInsn(D2I))
-      else if(tpe1 <:< LongType && tpe2 <:< DoubleType)
+      } else if(tpe1 =:= LongType && tpe2 =:= DoubleType) {
         mv.foreach(mv => mv.visitInsn(D2L))
-      else if(tpe1 <:< FloatType && tpe2 <:< DoubleType)
+      } else if(tpe1 =:= FloatType && tpe2 =:= DoubleType) {
         mv.foreach(mv => mv.visitInsn(D2F))
-      else if(tpe1.isInstanceOf[RefType] && tpe2.isInstanceOf[RefType]) {
+      } else if(tpe1.isInstanceOf[RefType] && tpe2.isInstanceOf[RefType]) {
         val name = useTreeToInternalType(cast.tpt)
         mv.foreach(mv => mv.visitTypeInsn(CHECKCAST, name))
       }
     }
   }
+
+  protected def duplicateCode(lhs: Expr): Int =
+    CodegenUtils.duplicateCode(lhs)
 
   protected def useTreeToInternalType(use: UseTree): String =
     CodegenUtils.useTreeToInternalType(use, false)
@@ -404,7 +376,8 @@ trait BinaryCodeGenComponent extends CodeGenComponent {
         val mv   = bw.methodVisitor
         val end  = new Label
         val fls  = new Label
-        codegen((bin.lhs, bw))
+        if(!bin.isCompoundBinary)
+          codegen((bin.lhs, bw))
         mv.foreach(mv => mv.visitJumpInsn(IFEQ, fls))
         codegen((bin.rhs, bw))
         mv.foreach(mv => mv.visitJumpInsn(IFEQ, fls))
@@ -413,14 +386,14 @@ trait BinaryCodeGenComponent extends CodeGenComponent {
         mv.foreach(mv => mv.visitLabel(fls))
         mv.foreach(mv => mv.visitInsn(ICONST_0))
         mv.foreach(mv => mv.visitLabel(end))
-
       case (Some(tpe), Or)                                     =>
         val mv  = bw.methodVisitor
         val end = new Label
         val tru = new Label
         codegen((bin.lhs, bw))
         mv.foreach(mv => mv.visitJumpInsn(IFNE, tru))
-        codegen((bin.rhs, bw))
+        if(!bin.isCompoundBinary)
+          codegen((bin.lhs, bw))
         mv.foreach(mv => mv.visitJumpInsn(IFNE, tru))
         mv.foreach(mv => mv.visitInsn(ICONST_0))
         mv.foreach(mv => mv.visitJumpInsn(GOTO, end))
@@ -439,17 +412,19 @@ trait BinaryCodeGenComponent extends CodeGenComponent {
       case _                                                  =>
         codegenArith(bin, bw)
     }
-    StackInfo.decrementSP
   }
 
+  protected def duplicateCode(lhs: Expr): Int =
+    CodegenUtils.duplicateCode(lhs)
 
   protected def useTreeToInternalType(use: UseTree): String =
     CodegenUtils.useTreeToInternalType(use, false)
 
   def codegenArith(bin: BinaryApi, bw: ByteCodeWriter): Unit = {
-    codegen((bin.lhs, bw))
-    codegen((bin.rhs, bw))
     val mv = bw.methodVisitor
+    if(!bin.isCompoundBinary)
+      codegen((bin.lhs, bw))
+    codegen((bin.rhs, bw))
     (bin.tpe, bin.op) match {
       case (Some(tpe), Add) if tpe <:< IntType           =>
         mv.foreach(mv => mv.visitInsn(IADD))
@@ -459,6 +434,10 @@ trait BinaryCodeGenComponent extends CodeGenComponent {
         mv.foreach(mv => mv.visitInsn(FADD))
       case (Some(tpe), Add) if tpe <:< DoubleType        =>
         mv.foreach(mv => mv.visitInsn(DADD))
+      case (Some(tpe), Add)                              =>
+        mv.foreach( mv =>
+          mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/String",
+            "concat", "(Ljava/lang/String;)Ljava/lang/String;", false))
       case (Some(tpe), Sub) if tpe <:< IntType           =>
         mv.foreach(mv => mv.visitInsn(ISUB))
       case (Some(tpe), Sub) if tpe <:< LongType          =>
@@ -538,7 +517,6 @@ trait BinaryCodeGenComponent extends CodeGenComponent {
           mv.foreach(mv => mv.visitLabel(l0))
           mv.foreach(mv => mv.visitInsn(ICONST_0))
           mv.foreach(mv => mv.visitLabel(l1))
-          StackInfo.incrementSP
         }
       case (Some(_), Neq)                                =>
         bin.lhs.tpe.foreach {tpe =>
@@ -567,7 +545,6 @@ trait BinaryCodeGenComponent extends CodeGenComponent {
           mv.foreach(mv => mv.visitLabel(l0))
           mv.foreach(mv => mv.visitInsn(ICONST_0))
           mv.foreach(mv => mv.visitLabel(l1))
-          StackInfo.incrementSP
         }
       case (Some(_), Gt)                                 =>
         bin.lhs.tpe.foreach {tpe =>
@@ -593,7 +570,6 @@ trait BinaryCodeGenComponent extends CodeGenComponent {
           mv.foreach(mv => mv.visitLabel(l0))
           mv.foreach(mv => mv.visitInsn(ICONST_0))
           mv.foreach(mv => mv.visitLabel(l1))
-          StackInfo.incrementSP
         }
       case (Some(_), Lt)                                 =>
         bin.lhs.tpe.foreach {tpe =>
@@ -619,7 +595,6 @@ trait BinaryCodeGenComponent extends CodeGenComponent {
           mv.foreach(mv => mv.visitLabel(l0))
           mv.foreach(mv => mv.visitInsn(ICONST_0))
           mv.foreach(mv => mv.visitLabel(l1))
-          StackInfo.incrementSP
         }
       case (Some(tpe), Le)                               =>
         bin.lhs.tpe.foreach {tpe =>
@@ -645,7 +620,6 @@ trait BinaryCodeGenComponent extends CodeGenComponent {
           mv.foreach(mv => mv.visitLabel(l0))
           mv.foreach(mv => mv.visitInsn(ICONST_0))
           mv.foreach(mv => mv.visitLabel(l1))
-          StackInfo.incrementSP
         }
       case (Some(tpe), Ge)                               =>
         bin.lhs.tpe.foreach {tpe =>
@@ -671,7 +645,6 @@ trait BinaryCodeGenComponent extends CodeGenComponent {
           mv.foreach(mv => mv.visitLabel(l0))
           mv.foreach(mv => mv.visitInsn(ICONST_0))
           mv.foreach(mv => mv.visitLabel(l1))
-          StackInfo.incrementSP
         }
       case _                                             =>
         ()
@@ -702,34 +675,58 @@ trait UnaryCodeGenComponent extends CodeGenComponent {
           mv.foreach(mv =>  mv.visitInsn(IXOR))
         } else {
           mv.foreach(mv => mv.visitLdcInsn(-1L))
-          StackInfo.incrementSP
           mv.foreach(mv =>  mv.visitInsn(LXOR))
         }
-        StackInfo.incrementSP
-      case (Some(tpe), uop)   if unary.isPostfix && (uop == Inc || uop == Dec)  =>
-        codegen((unary.expr, bw))
-        val op       = if(uop == Inc) Add else Sub
+      case (Some(tpe), uop)   if uop == Inc || uop == Dec                      =>
+        val op       = translateOp(unary.expr.tpe, unary.op)
         val lit      = one(unary.tpe)
-        val bin      = TreeFactories.mkBinary(unary.expr, op, lit, unary.pos)
-        val assign   = TreeFactories.mkAssign(unary.expr, bin, unary.pos)
-        // val res = compiler.typeCheck(unary.owner)(assign)
-        unary.tpe.foreach { tpe =>
-          bin.tpe = tpe
-          assign.tpe = tpe
+        val dupOp    = unary.expr match {
+          case ArrayAccess(a, i)                                        =>
+            codegen((a, bw))
+            codegen((i, bw))
+            mv.foreach(mv => mv.visitInsn(DUP2))
+            mv.foreach(mv =>
+                loadFromLocalVariable(unary.expr.tpe, -1, mv, true))
+            if(isDoubleWord(unary.expr.tpe))
+              DUP2_X2
+            else
+              DUP_X2
+          case Select(q, t: IdentApi)            if !isStatic(t.symbol) =>
+            codegen((q, bw))
+            mv.foreach(mv => mv.visitInsn(DUP))
+            mv.foreach(mv => getField(t, mv))
+            if(isDoubleWord(unary.expr.tpe))
+              DUP2_X1
+            else
+              DUP_X1
+          case expr                    =>
+            codegen((expr, bw))
+            if(isDoubleWord(unary.expr.tpe))
+              DUP2
+            else
+              DUP
         }
-        codegen((assign, bw))
-        mv.foreach(mv => popIfNeeded(assign, mv, StackInfo))
-    case (Some(tpe), uop)   if uop == Inc || uop == Dec                       =>
-        val op       = if(uop == Inc) Add else Sub
-        val lit      = one(unary.tpe)
-        val bin      = TreeFactories.mkBinary(unary.expr, op, lit, unary.pos)
-        val assign   = TreeFactories.mkAssign(unary.expr, bin, unary.pos)
-        unary.tpe.foreach { tpe =>
-          bin.tpe = tpe
-          assign.tpe = tpe
+
+        if(!unary.isPostfix) {
+          codegen((lit, bw))
+          mv.foreach(mv => mv.visitInsn(op))
         }
-        // compiler.typeCheck(unary.owner)(assign)
-        codegen((assign, bw))
+        // store the number at the top of the stack
+        bw.methodVisitor.foreach(mv => mv.visitInsn(dupOp))
+
+        if(unary.isPostfix) {
+          codegen((lit, bw))
+          mv.foreach(mv => mv.visitInsn(op))
+        }
+
+        unary.expr match {
+          case _: ArrayAccessApi       =>
+            mv.foreach(mv => storeToLocalVariable(unary.expr.tpe, mv))
+          case Select(_, t: IdentApi)  =>
+            mv.foreach(mv => putField(t, mv))
+          case expr                    =>
+            codegen((expr, bw.copy(isRhs = true)))
+        }
       case (Some(tpe), Neg) if tpe <:< IntType                                 =>
         mv.foreach(mv => mv.visitInsn(INEG))
       case (Some(tpe), Neg) if tpe <:< LongType                                =>
@@ -745,17 +742,60 @@ trait UnaryCodeGenComponent extends CodeGenComponent {
     }
   }
 
-  protected def popIfNeeded(tree: Tree, mv: MethodVisitor,
-        sinfo: StackInfo): Unit =
-    CodegenUtils.popIfNeeded(tree, mv, sinfo)
+  protected def isStatic(symbol: Option[Symbol]): Boolean =
+    symbol.map(_.mods.isStatic).getOrElse(false)
+
+  protected def isDoubleWord(tpe: Option[Type]): Boolean =
+    CodegenUtils.isDoubleWord(tpe)
+
+  protected def getField(id: IdentApi, mv: MethodVisitor): Unit =
+    CodegenUtils.getField(id, mv)
+
+  protected def putField(id: IdentApi, mv: MethodVisitor): Unit =
+    CodegenUtils.putField(id, mv)
+
+  protected def loadFromLocalVariable(tpe: Option[Type],
+        index: Int,
+        mv: MethodVisitor,
+        isArray: Boolean): Unit =
+    CodegenUtils.loadFromLocalVariable(tpe, index, mv, isArray)
+
+
+  protected def translateOp(tpe: Option[Type], uop: Op): Int = {
+    val res = tpe.map { tpe =>
+      tpe match {
+        case LongType            if uop == Inc   => LADD
+        case LongType                            => LSUB
+        case FloatType           if uop == Inc   => FADD
+        case FloatType                           => FSUB
+        case DoubleType          if uop == Inc   => DADD
+        case DoubleType                          => DSUB
+        case _                   if uop == Inc   => IADD
+        case _                                   => ISUB
+      }
+    }
+    res.getOrElse(IADD)
+  }
+
+
+  protected def duplicateCode(expr: Expr): Int = expr match {
+    case _: ArrayAccessApi      => DUP2
+    case _                      => CodegenUtils.duplicateCode(expr)
+  }
 
   protected def storeToLocalVariable(tpe: Option[Type],
-        stackInfo: StackInfo, mv: MethodVisitor): Unit =
-        CodegenUtils.storeToLocalVariable(tpe, -1, stackInfo, mv, true)
+        mv: MethodVisitor): Unit =
+        CodegenUtils.storeToLocalVariable(tpe, -1, mv, true)
 
+  protected def enclosingClass(owner: Option[Symbol]): Option[Symbol] =
+    SymbolUtils.enclosingClass(owner)
 
-  protected def isArrayAccess(expr: Expr): Boolean =
-    TreeUtils.isArrayAccess(expr)
+  protected def toFullyQualifiedTypeName(symbol: Option[Symbol]): String =
+    SymbolUtils.toFullyQualifiedTypeName(symbol)
+
+  protected def toInternalTypeRepresentation(tpe: Type): String =
+    CodegenUtils.toInternalTypeRepresentation(tpe, true)
+
 
   protected def one(tpe: Option[Type]): Expr = tpe match {
     case Some(tpe)    if tpe <:< IntType        =>
@@ -778,16 +818,11 @@ trait IfCodeGenComponent extends CodeGenComponent {
     val mv = bw.methodVisitor
     val l0 = new Label
     mv.foreach(mv => mv.visitJumpInsn(IFNE, l0))
-    val condStack = StackInfo.maxStack
     codegen((ifelse.thenp, bw))
-    val thenStack = StackInfo.maxStack
-    StackInfo.setStack(condStack)
     val l1 = new Label
     mv.foreach(mv => mv.visitJumpInsn(GOTO, l1))
     mv.foreach(mv => mv.visitLabel(l0))
     codegen((ifelse.elsep, bw))
-    val elseStack = StackInfo.maxStack
-    StackInfo.setStack(thenStack.max(elseStack))
     mv.foreach(mv => mv.visitLabel(l1))
   }
 }
@@ -820,16 +855,11 @@ trait TernaryCodeGenComponent extends CodeGenComponent {
     val mv = bw.methodVisitor
     val l0 = new Label
     mv.foreach(mv => mv.visitJumpInsn(IFNE, l0))
-    val condStack = StackInfo.maxStack
     codegen((tern.thenp, bw))
-    val thenStack = StackInfo.maxStack
     val l1 = new Label
     mv.foreach(mv => mv.visitJumpInsn(GOTO, l1))
     mv.foreach(mv => mv.visitLabel(l0))
-    StackInfo.setStack(condStack)
     codegen((tern.elsep, bw))
-    val elseStack = StackInfo.maxStack
-    StackInfo.setStack(thenStack.max(elseStack))
     mv.foreach(mv => mv.visitLabel(l1))
   }
 }
@@ -842,7 +872,7 @@ trait ForCodeGenComponent extends CodeGenComponent {
     val next   = new Label
     forloop.inits.foreach { init =>
       codegen((init, bw))
-      bw.methodVisitor.foreach(mv => popIfNeeded(init, mv, StackInfo))
+      bw.methodVisitor.foreach(mv => popIfNeeded(init, mv))
     }
     val steps = new Label
     val cond = new Label
@@ -856,7 +886,7 @@ trait ForCodeGenComponent extends CodeGenComponent {
     mv.foreach(mv => mv.visitLabel(steps))
     forloop.steps.foreach { step =>
       codegen((step, bw))
-      bw.methodVisitor.foreach(mv => popIfNeeded(step, mv, StackInfo))
+      bw.methodVisitor.foreach(mv => popIfNeeded(step, mv))
     }
 
     mv.foreach(mv => mv.visitLabel(cond))
@@ -866,9 +896,8 @@ trait ForCodeGenComponent extends CodeGenComponent {
     mv.foreach(mv => mv.visitLabel(next))
   }
 
-  protected def popIfNeeded(tree: Tree, mv: MethodVisitor,
-        sinfo: StackInfo): Unit =
-    CodegenUtils.popIfNeeded(tree, mv, sinfo)
+  protected def popIfNeeded(tree: Tree, mv: MethodVisitor): Unit =
+    CodegenUtils.popIfNeeded(tree, mv)
 }
 
 
@@ -997,7 +1026,6 @@ trait LiteralCodeGenComponent extends CodeGenComponent {
       case Literal(NullConstant)                  =>
         mv.foreach(mv => mv.visitInsn(ACONST_NULL))
     }
-    StackInfo.incrementSP
   }
 }
 
@@ -1008,12 +1036,11 @@ trait BlockCodeGenComponent extends CodeGenComponent {
   (block: BlockApi) => {
     block.stmts.foreach { stmt =>
       codegen((stmt, bw))
-      bw.methodVisitor.foreach(mv => popIfNeeded(stmt, mv, StackInfo))
+      bw.methodVisitor.foreach(mv => popIfNeeded(stmt, mv))
     }
   }
-  protected def popIfNeeded(tree: Tree, mv: MethodVisitor,
-          sinfo: StackInfo): Unit =
-    CodegenUtils.popIfNeeded(tree, mv, sinfo)
+  protected def popIfNeeded(tree: Tree, mv: MethodVisitor): Unit =
+    CodegenUtils.popIfNeeded(tree, mv)
 }
 
 
@@ -1047,28 +1074,25 @@ trait ArrayInitializerCodeGenComponent extends CodeGenComponent {
       case Left(tpe)               =>
         mv.foreach(mv => mv.visitTypeInsn(ANEWARRAY, tpe))
     }
-    mv.foreach(mv => mv.visitInsn(DUP))
     val elements = init.elements.zipWithIndex
     elements.foreach { e =>
       val element = e._1
       val index   = e._2
+      mv.foreach(mv => mv.visitInsn(DUP))
       mv.foreach(mv => mv.visitLdcInsn(index))
       codegen((element, bw))
       mv.foreach(mv => storeToLocalVariable(element.tpe,
-            StackInfo, mv))
-      mv.foreach(mv => mv.visitInsn(DUP))
+            mv))
     }
-    mv.foreach(mv => mv.visitInsn(POP))
-    StackInfo.incrementSP
-    StackInfo.incrementSP
-    StackInfo.incrementSP
-    StackInfo.incrementSP
-    StackInfo.decrementSP
+  }
+
+  protected def duplicateCode(lhs: Expr): Int = {
+    CodegenUtils.duplicateCode(lhs)
   }
 
   protected def storeToLocalVariable(tpe: Option[Type],
-        stackInfo: StackInfo, mv: MethodVisitor): Unit =
-        CodegenUtils.storeToLocalVariable(tpe, -1, stackInfo, mv, true)
+        mv: MethodVisitor): Unit =
+        CodegenUtils.storeToLocalVariable(tpe, -1, mv, true)
 
   protected def elementTypeToOpcode(etpe: Option[Type]): Either[String, Int] =
     CodegenUtils.elementTypeToOpcode(etpe)
@@ -1079,55 +1103,113 @@ trait ArrayInitializerCodeGenComponent extends CodeGenComponent {
 trait ArrayAccessCodeGenComponent extends CodeGenComponent {
   (access: ArrayAccessApi)               => {
     val mv = bw.methodVisitor
-    StackInfo.incrementSP
     codegen((access.array, bw.copy(isRhs = false)))
     codegen((access.index, bw.copy(isRhs = false)))
     if(bw.isRhs) {
-      mv.foreach(mv => storeToLocalVariable(access.tpe, StackInfo, mv))
-      StackInfo.decrementSP
-      StackInfo.decrementSP
+      mv.foreach(mv => storeToLocalVariable(access.tpe, mv))
     } else {
-      mv.foreach(mv => loadFromLocalVariable(access.tpe, StackInfo, mv))
-      StackInfo.decrementSP
+      mv.foreach(mv => loadFromLocalVariable(access.tpe, mv))
     }
   }
 
   protected def storeToLocalVariable(tpe: Option[Type],
-        stackInfo: StackInfo, mv: MethodVisitor): Unit =
-        CodegenUtils.storeToLocalVariable(tpe, -1, stackInfo, mv, true)
+        mv: MethodVisitor): Unit =
+        CodegenUtils.storeToLocalVariable(tpe, -1, mv, true)
 
   protected def loadFromLocalVariable(tpe: Option[Type],
-        stackInfo: StackInfo, mv: MethodVisitor): Unit =
-        CodegenUtils.loadFromLocalVariable(tpe, -1, stackInfo, mv, true)
+        mv: MethodVisitor): Unit =
+        CodegenUtils.loadFromLocalVariable(tpe, -1, mv, true)
 }
 
 @component(tree, bw)
 trait AssignCodeGenComponent extends CodeGenComponent {
   (assign: AssignApi) => {
+    val mv = bw.methodVisitor
     assign.lhs match {
-      case ArrayAccess(a, i)                                      =>
+      case ArrayAccess(a, i)          if isCompoundBinary(assign.rhs) =>
+        codegen((a, bw))
+        codegen((i, bw))
+        mv.foreach(mv => mv.visitInsn(DUP2))
+        mv.foreach(mv =>
+            loadFromLocalVariable(assign.lhs.tpe, -1, mv, true))
+        codegen((assign.rhs, bw))
+        if(isDoubleWord(assign.lhs.tpe))
+          bw.methodVisitor.foreach(mv => mv.visitInsn(DUP2_X2))
+        else
+          bw.methodVisitor.foreach(mv => mv.visitInsn(DUP_X2))
+        mv.foreach(mv => storeToLocalVariable(assign.lhs.tpe, mv))
+      case ArrayAccess(a, i)                                           =>
         codegen((a, bw))
         codegen((i, bw))
         codegen((assign.rhs, bw))
-        val mv = bw.methodVisitor
-        mv.foreach(mv => storeToLocalVariable(assign.lhs.tpe, StackInfo, mv))
-        StackInfo.decrementSP
-        StackInfo.decrementSP
-      case Select(q: ThisApi, t)                                  =>
+        if(isDoubleWord(assign.lhs.tpe))
+          bw.methodVisitor.foreach(mv => mv.visitInsn(DUP2_X2))
+        else
+          bw.methodVisitor.foreach(mv => mv.visitInsn(DUP_X2))
+        mv.foreach(mv => storeToLocalVariable(assign.lhs.tpe, mv))
+      case Select(q, t: IdentApi)  if isCompoundBinary(assign.rhs) &&
+                                      !isStatic(t.symbol)              =>
+        codegen((q, bw))
+        mv.foreach(mv => mv.visitInsn(DUP))
+        mv.foreach(mv => getField(t, mv))
+        codegen((assign.rhs, bw))
+        if(isDoubleWord(t.tpe))
+          bw.methodVisitor.foreach(mv => mv.visitInsn(DUP2_X1))
+        else
+          bw.methodVisitor.foreach(mv => mv.visitInsn(DUP_X1))
+        mv.foreach(mv => putField(t, mv))
+      case Select(q, t)          if !isStatic(t.symbol)                =>
         codegen((q, bw))
         codegen((assign.rhs, bw))
+        if(isDoubleWord(t.tpe))
+          bw.methodVisitor.foreach(mv => mv.visitInsn(DUP2_X1))
+        else
+          bw.methodVisitor.foreach(mv => mv.visitInsn(DUP_X1))
         codegen((t, bw.copy(isRhs = true)))
-      case lhs                                                    =>
+      case lhs                                                         =>
+        if(isCompoundBinary(assign.rhs)) {
+          codegen((lhs, bw))
+        }
         codegen((assign.rhs, bw))
+        bw.methodVisitor.foreach(mv =>
+          mv.visitInsn(duplicateCode(lhs)))
         codegen((lhs, bw.copy(isRhs = true)))
     }
-    codegen((assign.lhs, bw))
-    StackInfo.incrementSP
   }
 
+  protected def isStatic(symbol: Option[Symbol]): Boolean =
+    symbol.map(_.mods.isStatic).getOrElse(false)
+
+  protected def isDoubleWord(tpe: Option[Type]): Boolean =
+    CodegenUtils.isDoubleWord(tpe)
+
+  protected def getField(id: IdentApi, mv: MethodVisitor): Unit =
+    CodegenUtils.getField(id, mv)
+
+  protected def putField(id: IdentApi, mv: MethodVisitor): Unit =
+    CodegenUtils.putField(id, mv)
+
+
+
+  protected def isCompoundBinary(expr: Expr): Boolean = expr match {
+    case Cast(_, bin: BinaryApi)  => bin.isCompoundBinary
+    case bin: BinaryApi           => bin.isCompoundBinary
+    case _                        => false
+  }
+
+  protected def duplicateCode(lhs: Expr): Int = {
+    CodegenUtils.duplicateCode(lhs)
+  }
+
+  protected def loadFromLocalVariable(tpe: Option[Type],
+        index: Int,
+        mv: MethodVisitor,
+        isArray: Boolean): Unit =
+    CodegenUtils.loadFromLocalVariable(tpe, index, mv, isArray)
+
   protected def storeToLocalVariable(tpe: Option[Type],
-        stackInfo: StackInfo, mv: MethodVisitor): Unit =
-        CodegenUtils.storeToLocalVariable(tpe, -1, stackInfo, mv, true)
+        mv: MethodVisitor): Unit =
+        CodegenUtils.storeToLocalVariable(tpe, -1, mv, true)
 
   protected def toFullyQualifiedTypeName(symbol: Option[Symbol]): String =
     SymbolUtils.toFullyQualifiedTypeName(symbol)
@@ -1153,16 +1235,13 @@ trait ApplyCodeGenComponent extends CodeGenComponent {
         (cname.replaceAll("[.]", "/"), fname, sig)
       case _                    => ("", "", "")
     }
-    StackInfo.incrementSP
     if(app.fun.symbol.map(_.mods.isStatic).getOrElse(false)) {
       app.args.foreach(arg => codegen((arg, bw)))
       mv.foreach( mv =>
           mv.visitMethodInsn(INVOKESTATIC, className, funName, funSig, false))
-      StackInfo.incrementSP
     } else {
       app.args.foreach { arg =>
         codegen((arg, bw))
-        StackInfo.decrementSP
       }
       val opcode = if(app.fun.symbol.map(_.mods.isPrivateAcc).getOrElse(false)) {
         INVOKESPECIAL
@@ -1193,9 +1272,7 @@ trait NewCodeGenComponent extends CodeGenComponent {
     val mv = bw.methodVisitor
     val cname = nw.tpe.map(toInternalTypeRepresentation(_)).getOrElse("")
     mv.foreach(mv => mv.visitTypeInsn(NEW, cname))
-    StackInfo.incrementSP
     mv.foreach(mv => mv.visitInsn(DUP))
-    StackInfo.incrementSP
     codegen((nw.app, bw))
   }
 
@@ -1229,8 +1306,7 @@ trait SynchronizedCodeGenComponent extends CodeGenComponent {
       val l3 = new Label
       mv.foreach(mv => mv.visitTryCatchBlock(l2, l3, l2, null))
       codegen((synch.expr, bw))
-      mv.foreach(mv => mv.visitInsn(DUP))
-      StackInfo.incrementSP
+      mv.foreach(mv => mv.visitInsn(duplicateCode(synch.expr)))
       mv.foreach(mv => mv.visitVarInsn(ASTORE, index1))
       mv.foreach(mv => mv.visitInsn(MONITORENTER))
       mv.foreach(mv => mv.visitLabel(l0))
@@ -1248,8 +1324,11 @@ trait SynchronizedCodeGenComponent extends CodeGenComponent {
       mv.foreach(mv => mv.visitVarInsn(ALOAD, index2))
       mv.foreach(mv => mv.visitInsn(ATHROW))
       mv.foreach(mv => mv.visitLabel(l4))
-      StackInfo.incrementSP
     }
+  }
+
+  protected def duplicateCode(lhs: Expr): Int = {
+    CodegenUtils.duplicateCode(lhs)
   }
 }
 
@@ -1257,23 +1336,25 @@ trait SynchronizedCodeGenComponent extends CodeGenComponent {
 @component(tree, bw)
 trait SelectCodeGenComponent extends CodeGenComponent {
   (select: SelectApi) => {
-    codegen((select.qual, bw))
-    val shallNotPop = select.qual.symbol.map ( sym =>
-      sym.isInstanceOf[ClassSymbol] ||
-          sym.isInstanceOf[PackageSymbol]
-    ).getOrElse(false)
-    if(select.symbol.map(_.mods.isStatic).getOrElse(false) &&
-          !shallNotPop) {
-      bw.methodVisitor.foreach(mv => mv.visitInsn(POP))
-      StackInfo.decrementSP
+    select match {
+      case Select(qual, id)     if id.name == Name("length") &&
+                  qual.tpe.map(_.isInstanceOf[ArrayType]).getOrElse(false) =>
+        // do array length
+        codegen((qual, bw))
+        bw.methodVisitor.foreach(mv => mv.visitInsn(ARRAYLENGTH))
+      case _                                                               =>
+        codegen((select.qual, bw))
+        val shallNotPop = select.qual.symbol.map ( sym =>
+          sym.isInstanceOf[ClassSymbol] ||
+              sym.isInstanceOf[PackageSymbol]
+        ).getOrElse(false)
+        if(select.symbol.map(_.mods.isStatic).getOrElse(false) &&
+              !shallNotPop) {
+          bw.methodVisitor.foreach(mv => mv.visitInsn(POP))
+        }
+        codegen((select.tree, bw))
     }
-    codegen((select.tree, bw))
   }
-
-
-  def isInConstructor(owner: Option[Symbol]): Boolean =
-    SymbolUtils.enclosingMethod(owner).map(
-      _.mods.isConstructor).getOrElse(false)
 }
 
 @component(tree, bw)
@@ -1284,56 +1365,34 @@ trait IdentCodeGenComponent extends CodeGenComponent {
       case Some(index)                                              =>
         if(bw.isRhs) {
           mv.foreach(mv => storeToLocalVariable(id.tpe, index,
-            StackInfo, mv))
-          StackInfo.decrementSP
+            mv))
         } else {
           mv.foreach(mv => loadFromLocalVariable(id.tpe, index,
-            StackInfo, mv))
-          StackInfo.incrementSP
+            mv))
         }
       case None   if id.symbol.map(_.mods.isField).getOrElse(false) =>
-        val isStatic  = id.symbol.map(_.mods.isStatic).getOrElse(false)
-        val className = toFullyQualifiedTypeName(
-          enclosingClass(id.owner)).replaceAll("[.]", "/")
-        val tpe       = id.tpe.map(tpe =>
-            toInternalTypeRepresentation(tpe)).getOrElse("")
         if(bw.isRhs) {
-          if(isStatic)
-            mv.foreach(mv => mv.visitFieldInsn(PUTSTATIC,
-              className, id.name.asString, tpe))
-          else
-            mv.foreach(mv => mv.visitFieldInsn(PUTFIELD, className,
-              id.name.asString, tpe))
-          StackInfo.decrementSP
+          mv.foreach(mv => putField(id, mv))
         } else {
-          if(isStatic)
-            mv.foreach(mv => mv.visitFieldInsn(GETSTATIC,
-              className, id.name.asString, tpe))
-          else
-            mv.foreach(mv => mv.visitFieldInsn(GETFIELD, className,
-              id.name.asString, tpe))
-          StackInfo.incrementSP
+          mv.foreach(mv => getField(id, mv))
         }
       case _                                                       =>
     }
   }
 
-  protected def enclosingClass(owner: Option[Symbol]): Option[Symbol] =
-    SymbolUtils.enclosingClass(owner)
+  def getField(id: IdentApi, mv: MethodVisitor): Unit =
+    CodegenUtils.getField(id, mv)
 
-  protected def toFullyQualifiedTypeName(symbol: Option[Symbol]): String =
-    SymbolUtils.toFullyQualifiedTypeName(symbol)
-
-  protected def toInternalTypeRepresentation(tpe: Type): String =
-    CodegenUtils.toInternalTypeRepresentation(tpe, true)
+  def putField(id: IdentApi, mv: MethodVisitor): Unit =
+    CodegenUtils.putField(id, mv)
 
   protected def storeToLocalVariable(tpe: Option[Type], index: Int,
-        stackInfo: StackInfo, mv: MethodVisitor): Unit =
-        CodegenUtils.storeToLocalVariable(tpe, index, stackInfo, mv, false)
+        mv: MethodVisitor): Unit =
+        CodegenUtils.storeToLocalVariable(tpe, index, mv, false)
 
   protected def loadFromLocalVariable(tpe: Option[Type], index: Int,
-        stackInfo: StackInfo, mv: MethodVisitor): Unit =
-        CodegenUtils.loadFromLocalVariable(tpe, index, stackInfo, mv, false)
+        mv: MethodVisitor): Unit =
+        CodegenUtils.loadFromLocalVariable(tpe, index, mv, false)
 }
 
 
@@ -1389,7 +1448,6 @@ trait TryCodeGenComponent extends CodeGenComponent {
         // start catch body
         mv.visitLabel(startLabel)
         mv.visitVarInsn(ASTORE, index)
-        StackInfo.decrementSP
         //body
         codegen((ctch.catchClause, bw))
         mv.visitLabel(endLabel)

@@ -14,8 +14,10 @@ import tiny.types._
 import ooj.types._
 import arrooj.types._
 import calcj.types._
+import modulej.modifiers.Ops._
 import modulej.ast.TreeUtils
 import guod.ast.Implicits._
+import guod.symbols.SymbolUtils
 import primj.types.VoidType
 
 import org.objectweb.asm.{Opcodes, MethodVisitor}
@@ -68,6 +70,16 @@ trait CodegenUtils {
     }
 
 
+  def duplicateCode(expr: Expr): Int = expr.tpe match {
+    case Some(LongType) | Some(DoubleType)           =>
+      Opcodes.DUP2
+    case Some(atpe: ArrayType)                       =>
+      if(atpe.componentType =:= DoubleType ||
+          atpe.componentType =:= LongType) Opcodes.DUP2_X2
+      else Opcodes.DUP2_X1
+    case _                                           =>
+      Opcodes.DUP
+  }
 
   def toInternalTypeRepresentation(tpe: Type,
           addSemicolon: Boolean): String = {
@@ -115,31 +127,9 @@ trait CodegenUtils {
 
   def storeToLocalVariable(tpe: Option[Type],
         index: Int,
-        stackInfo: StackInfo,
         mv: MethodVisitor,
         isArray: Boolean): Unit = {
-    val opcode = tpe match {
-      case Some(BooleanType)         =>
-        if(isArray) Opcodes.IASTORE else Opcodes.ISTORE
-      case Some(ByteType)            =>
-        if(isArray) Opcodes.BASTORE else Opcodes.ISTORE
-      case Some(ShortType)           =>
-        if(isArray) Opcodes.SASTORE else Opcodes.ISTORE
-      case Some(CharType)            =>
-        if(isArray) Opcodes.CASTORE else Opcodes.ISTORE
-      case Some(IntType)             =>
-        if(isArray) Opcodes.IASTORE else Opcodes.ISTORE
-      case Some(LongType)            =>
-        stackInfo.decrementSP
-        if(isArray) Opcodes.LASTORE else Opcodes.LSTORE
-      case Some(FloatType)           =>
-        if(isArray) Opcodes.FASTORE else Opcodes.FSTORE
-      case Some(DoubleType)          =>
-        stackInfo.decrementSP
-        if(isArray) Opcodes.DASTORE else Opcodes.DSTORE
-      case _                         =>
-        if(isArray) Opcodes.AASTORE else Opcodes.ASTORE
-    }
+    val opcode = storingToLocalVariableOpcode(tpe, isArray)
     if(isArray)
       mv.visitInsn(opcode)
     else
@@ -147,13 +137,67 @@ trait CodegenUtils {
   }
 
 
+  def storingToLocalVariableOpcode(tpe: Option[Type],
+          isArray: Boolean): Int = tpe match {
+    case Some(BooleanType)         =>
+      if(isArray) Opcodes.BASTORE else Opcodes.ISTORE
+    case Some(ByteType)            =>
+      if(isArray) Opcodes.BASTORE else Opcodes.ISTORE
+    case Some(ShortType)           =>
+      if(isArray) Opcodes.SASTORE else Opcodes.ISTORE
+    case Some(CharType)            =>
+      if(isArray) Opcodes.CASTORE else Opcodes.ISTORE
+    case Some(IntType)             =>
+      if(isArray) Opcodes.IASTORE else Opcodes.ISTORE
+    case Some(LongType)            =>
+      if(isArray) Opcodes.LASTORE else Opcodes.LSTORE
+    case Some(FloatType)           =>
+      if(isArray) Opcodes.FASTORE else Opcodes.FSTORE
+    case Some(DoubleType)          =>
+      if(isArray) Opcodes.DASTORE else Opcodes.DSTORE
+    case _                         =>
+      if(isArray) Opcodes.AASTORE else Opcodes.ASTORE
+  }
+
+  def getField(id: IdentApi, mv: MethodVisitor): Unit = {
+    val isStatic  = id.symbol.map(_.mods.isStatic).getOrElse(false)
+    val className = SymbolUtils.toFullyQualifiedTypeName(
+      SymbolUtils.enclosingClass(id.owner)).replaceAll("[.]", "/")
+    val tpe       = id.tpe.map(tpe =>
+      toInternalTypeRepresentation(tpe, true)).getOrElse("")
+
+    if(isStatic)
+      mv.visitFieldInsn(Opcodes.GETSTATIC,
+        className, id.name.asString, tpe)
+    else
+      mv.visitFieldInsn(Opcodes.GETFIELD, className,
+        id.name.asString, tpe)
+  }
+
+  def putField(id: IdentApi, mv: MethodVisitor): Unit = {
+    val isStatic  = id.symbol.map(_.mods.isStatic).getOrElse(false)
+    val className = SymbolUtils.toFullyQualifiedTypeName(
+      SymbolUtils.enclosingClass(id.owner)).replaceAll("[.]", "/")
+    val tpe       = id.tpe.map(tpe =>
+      toInternalTypeRepresentation(tpe, true)).getOrElse("")
+
+    if(isStatic)
+      mv.visitFieldInsn(Opcodes.PUTSTATIC,
+        className, id.name.asString, tpe)
+    else
+      mv.visitFieldInsn(Opcodes.PUTFIELD, className,
+        id.name.asString, tpe)
+  }
+
+
+
   def loadFromLocalVariable(tpe: Option[Type],
         index: Int,
-        stackInfo: StackInfo, mv: MethodVisitor,
+        mv: MethodVisitor,
         isArray: Boolean): Unit = {
     val opcode = tpe match {
       case Some(BooleanType)         =>
-        if(isArray) Opcodes.IALOAD else Opcodes.ILOAD
+        if(isArray) Opcodes.BALOAD else Opcodes.ILOAD
       case Some(ByteType)            =>
         if(isArray) Opcodes.BALOAD else Opcodes.ILOAD
       case Some(ShortType)           =>
@@ -163,12 +207,10 @@ trait CodegenUtils {
       case Some(IntType)             =>
         if(isArray) Opcodes.IALOAD else Opcodes.ILOAD
       case Some(LongType)            =>
-        stackInfo.incrementSP
         if(isArray) Opcodes.LALOAD else Opcodes.LLOAD
       case Some(FloatType)           =>
         if(isArray) Opcodes.FALOAD else Opcodes.FLOAD
       case Some(DoubleType)          =>
-        stackInfo.incrementSP
         if(isArray) Opcodes.DALOAD else Opcodes.DLOAD
       case _                         =>
         if(isArray) Opcodes.AALOAD else Opcodes.ALOAD
@@ -179,24 +221,20 @@ trait CodegenUtils {
       mv.visitVarInsn(opcode, index)
   }
 
+  def isDoubleWord(tpe: Option[Type]): Boolean =
+    tpe.map(tpe => tpe =:= LongType || tpe =:= DoubleType).getOrElse(false)
 
-  def popIfNeeded(tree: Tree, mv: MethodVisitor,
-          sinfo: StackInfo): Unit = {
+  def popIfNeeded(tree: Tree, mv: MethodVisitor): Unit = {
     if(TreeUtils.isValidStatementExpression(tree)) {
       tree.tpe match {
         case Some(LongType)            =>
           mv.visitInsn(Opcodes.POP2)
-          sinfo.decrementSP
-          sinfo.decrementSP
         case Some(DoubleType)          =>
           mv.visitInsn(Opcodes.POP2)
-          sinfo.decrementSP
-          sinfo.decrementSP
         case Some(VoidType)            =>
           ()
         case _                         =>
           mv.visitInsn(Opcodes.POP)
-          sinfo.decrementSP
       }
     }
   }
