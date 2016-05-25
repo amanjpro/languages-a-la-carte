@@ -121,12 +121,6 @@ trait TemplateInitializerComponent extends InitializerComponent {
       }
     }
 
-    val noFinalInstanceInits = instanceInits.filter {
-      case Assign(id, _)    =>
-        id.symbol.map(!_.mods.isFinal).getOrElse(true)
-      case _                =>
-        true
-    }
 
     val members    = template.members.filter(!_.isInstanceOf[BlockApi]).map {
       case mthd: MethodDefApi      if mthd.mods.isConstructor =>
@@ -134,8 +128,7 @@ trait TemplateInitializerComponent extends InitializerComponent {
           case block: BlockApi              =>
             val body = block.stmts match {
               case (hd@Apply(Select(_: ThisApi, _), _))::rest       =>
-                val stmts = hd::(noFinalInstanceInits ++ rest)
-                TreeCopiers.copyBlock(block)(stmts = stmts)
+                block
               case (hd@Apply(Select(_: SuperApi, _), _))::rest      =>
                 val stmts = hd::(instanceInits ++ rest)
                 TreeCopiers.copyBlock(block)(stmts = stmts)
