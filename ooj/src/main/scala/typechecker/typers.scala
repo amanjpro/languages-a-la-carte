@@ -527,7 +527,6 @@ trait ThisTyperComponent extends TyperComponent {
       case None                  =>
         error(ACCESSING_THIS_OUTSIDE_A_CLASS,
               ths.toString, "", ths.pos)
-        ths.tpe = ErrorType
       case _                     =>
         ()
     }
@@ -538,7 +537,6 @@ trait ThisTyperComponent extends TyperComponent {
         case true                  =>
           error(ACCESSING_THIS_IN_STATIC,
                 ths.toString, "", ths.pos)
-          ths.tpe = ErrorType
         case false                 =>
           ()
       }
@@ -574,11 +572,9 @@ trait SuperTyperComponent extends TyperComponent {
       case None                                                     =>
         error(ACCESSING_SUPER_OUTSIDE_A_CLASS,
               spr.toString, "", spr.pos)
-        spr.tpe = ErrorType
       case Some(sym) if sym.tpe == Some(TypeUtils.objectClassType)  =>
         error(ACCESSING_SUPER_IN_OBJECT_CLASS,
               spr.toString, "", spr.pos)
-        spr.tpe = ErrorType
       case _                                                        =>
         ()
     }
@@ -589,7 +585,6 @@ trait SuperTyperComponent extends TyperComponent {
         case true                  =>
           error(ACCESSING_SUPER_IN_STATIC,
                 spr.toString, "", spr.pos)
-          spr.tpe = ErrorType
         case false                 =>
           ()
       }
