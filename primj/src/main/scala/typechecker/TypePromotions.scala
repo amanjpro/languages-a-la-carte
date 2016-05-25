@@ -16,6 +16,8 @@ trait TypePromotions extends sana.calcj.typechecker.TypePromotions {
       etpe <- expr.tpe
       tpe  <- otpe      if etpe <:< tpe &&
                              etpe =/= tpe &&
+                             tpe >:> IntType &&
+                             tpe =/= IntType &&
                              etpe.isInstanceOf[PrimitiveType]
       sym  <- SymbolUtils.getSymbol(tpe)
     } yield {
