@@ -1,5 +1,0 @@
-// passes
-
-entity Order(orderNo: Int){
-   quantity: CInt;
-}

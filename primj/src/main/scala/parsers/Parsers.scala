@@ -21,7 +21,6 @@ import primj.modifiers._
 import primj.modifiers.Ops._
 
 
-
 import org.antlr.v4.runtime.misc.NotNull
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor

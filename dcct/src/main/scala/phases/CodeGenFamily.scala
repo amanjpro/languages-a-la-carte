@@ -19,7 +19,7 @@ trait DcctCodeGenFamilyApi extends TransformationFamily[Tree, String] {
       "CodeGenComponent", "codegen", "")
       // "Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal")
 
-  def codegen: Tree => String = family
+  def codegen: Tree => String = family 
 }
 
 case class DcctCodeGenFamily(compiler: CompilerInterface)

@@ -1,0 +1,10 @@
+// passes
+
+entity Order(oIdent: Int) {
+  quantity: @SR qnt CInt;
+}
+
+array Orders[c: Customer] {
+  nitems: CInt;
+  description: CString;
+}

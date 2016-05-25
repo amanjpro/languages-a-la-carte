@@ -17,8 +17,8 @@ import sana.dcct.ast._
 trait TreeCopiers extends sana.ooj.ast.TreeCopiers {
   
   def copyArray(template: ArrayDef)(name: Name = template.name, 
-      indices: List[UseTree] = template.indices,
-      properties: List[Expr] = template.properties): ArrayDefApi =  {
+      indices: List[ValDefApi] = template.indices,
+      properties: List[ValDefApi] = template.properties): ArrayDefApi =  {
     
     val res = sana.dcct.ast.
         TreeFactories.mkArrayDef(name, indices, properties)
@@ -27,12 +27,11 @@ trait TreeCopiers extends sana.ooj.ast.TreeCopiers {
     res
   }
   
-  def copyForEach(template: ForEach)(inits: List[Tree],  
-      allOrEntries: sana.primj.ast.ApplyApi,
-      cond: Expr, body: Expr): ForEachApi = {
+  def copyForEach(template: ForEach)(entityVar: ValDefApi,
+    whereExpr: Expr, body: BlockApi): ForEachApi = {
     
     val res = sana.dcct.ast.
-      TreeFactories.mkForEach(inits, allOrEntries, cond, body)
+      TreeFactories.mkForEach(entityVar, whereExpr, body)
       
     copyProperties(template, res)
     res

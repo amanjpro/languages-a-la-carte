@@ -23,7 +23,7 @@ trait DcctSymbolAssignerFamilyApi
       "SymbolAssignerComponent", "assign", "")
       // "Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal")
 
-  def assign: Tree => Tree = family
+  def assign: Tree => Tree = family 
 }
 
 case class DcctSymbolAssignerFamily(compiler: CompilerInterface)

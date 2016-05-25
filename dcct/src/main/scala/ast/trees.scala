@@ -3,7 +3,12 @@ package ch.usi.inf.l3.sana.dcct.ast
 import ch.usi.inf.l3.sana
 import sana.tiny
 import sana.primj
+import sana.ooj
+import sana.calcj
 import tiny.ast._
+import ooj.ast._
+import calcj.ast._
+import primj.ast._
 import tiny.source.Position
 import tiny.types.Type
 import tiny.names.Name
@@ -90,10 +95,10 @@ import primj.types._
  * 
  * TODO consult Amanj about using the ClassDef tree for arrays.
  */
-trait ArrayDefApi extends NamedTree {
+trait ArrayDefApi extends DefTree {
   def name: Name
-  def indices: List[UseTree]
-  def properties: List[Expr] 
+  def indices: List[ValDefApi]
+  def properties: List[ValDefApi] 
   
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
     val r1 = indices.foldLeft(z)((z, y) => {
@@ -138,20 +143,16 @@ trait ArrayDefApi extends NamedTree {
  * 
  */
 trait ForEachApi extends Expr {
-  def inits: List[Tree]
-  def allOrEntries: primj.ast.ApplyApi
-  def cond: Expr
-  def body: Expr
+  def entityVar: ValDefApi
+  def whereExpr: Expr
+  def body: BlockApi
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
-    val r1 = inits.foldLeft(z)((z, y) => {
-      y.bottomUp(z)(f)
-    })
-    val r2 = allOrEntries.bottomUp(z)(f)
-    val r3 = cond.bottomUp(r1)(f)
-    val r4 = body.bottomUp(r2)(f)
+    val r1 = entityVar.bottomUp(z)(f)
+    val r2 = whereExpr.bottomUp(r1)(f)
+    val r3 = body.bottomUp(r2)(f)
 
-    f(r4, this)
+    f(r3, this)
   }
 }
 
@@ -177,14 +178,15 @@ trait ForEachApi extends Expr {
  * flush and yeild are also implemented using Apply! 
  */
 
-protected[ast] class ForEach(val inits: List[Tree], val allOrEntries: primj.ast.ApplyApi,
-  val cond: Expr, val body: Expr) extends ForEachApi {
+protected[ast] class ForEach(val entityVar: ValDefApi,val whereExpr: Expr, val body: BlockApi) 
+extends ForEachApi {
   override def toString: String =
-    s"ForEach($inits, $cond, $allOrEntries, $body)"
+    s"ForEach($entityVar, $whereExpr, $body)"
 }
 
-protected[ast] class ArrayDef(val name: Name, val indices: List[UseTree], val properties: List[Expr]) extends ArrayDefApi {
+protected[ast] class ArrayDef(val name: Name, val indices: List[ValDefApi], val properties: List[ValDefApi]) extends ArrayDefApi {
   override def toString: String =
     s"Array$indices,$properties)"
 } 
+
 

@@ -21,8 +21,7 @@ trait PrimjSymbolAssignerFamilyApi
   def components: List[PartialFunction[Tree, Tree]] =
     generateComponents[Tree, Tree](PrimjNodes.nodes,
       "SymbolAssignerComponent", "assign", "")
-      // "Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal")
-
+      
   def assign: Tree => Tree = family
 }
 

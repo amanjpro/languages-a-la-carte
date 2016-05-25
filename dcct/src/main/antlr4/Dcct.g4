@@ -3,14 +3,15 @@ grammar Dcct;
 
 // Parser
 
-//TODO this might be wrong, I get a warning
 program
-  : schema? expression+ EOF
-  | schema  expression* EOF
+  : schema? actionDeclaration+ EOF
+  | schema  actionDeclaration* EOF
   ;
 
+///////////////////////// Schema and schema contents ///////////////////////
+
 schema
-  : cloudDataDecl* 
+  : cloudDataDecl+ 
   ;
 
 // Types
@@ -21,16 +22,23 @@ schema
 // error.
 
 indexType
-  : 'Int'
+  : 'Int'    
   | 'String'
   | Identifier // of array or entity
   ;
 
-  
+// a cloud type consists of: consistency annotation, setIdentifier, and a cloud
+// type itself.
+// TODO I do not provide an easy way create sets and stuff, but this works for
+// now.
+
 cloudType
-  : 'CInt'
-  | 'CString'
-  | cloudSetType
+  : annotationType? Identifier? cloudPrimType;
+
+cloudPrimType
+  : 'CInt' 
+  | 'CString' 
+  | cloudSetType  
   ;
   
 expressionType
@@ -38,7 +46,16 @@ expressionType
   | 'Set' '<' expressionType '>'
   | expressionType '->' expressionType
   ;
-  
+
+
+//TODO add regions and stuff
+annotationType
+  : '@SR'
+  | '@MAV'
+  | '@EC'
+  ;
+
+
 cloudSetType
   : 'CSet' '<' indexType '>'
   ;
@@ -52,12 +69,12 @@ cloudDataDecl
 // Entities
 // TODO think if I need to make the body optional
 entityDecl
-  : 'entity' Identifier '(' elements ')' ('{' properties '}')?
+  : 'entity' Identifier '(' elements? ')' ('{' properties '}')?
   ;
 
-//TODO I think I am enforcing one or more elements, fix...
+//TODO I think this def and the properties one are inconsistent
 elements
-  :   element? (',' element)*
+  :   element (',' element)*
   ;
 
 element
@@ -74,83 +91,77 @@ property
   
   
 // Arrays
+// An array must have properties
   arrayDecl
   : 'array' Identifier '[' elements ']' '{' properties '}'
   ;
   
   
-// Expressions, expression, and related stuff
+///////////////////////// Actions and expressions ///////////////////////
+
+actionDeclaration
+    :   'action' Identifier '(' elements? ')' ':' indexType block
+    ;
+
 expressions
-  :   expression (',' expression)*
-  ;
-
-
- expression
-  : 'new' Identifier '(' expressions ')'
-  | 'delete' expression
-  | Identifier '[' expressions ']'
-  | expression '(' expressions ')'
-  | expression '.' expression
-  | 'all' Identifier
-  | 'entries' Identifier
-  | 'yield'
-  | 'flush'
-  | expression expression
-  | expression ';' expression
-  | '(' expressions ')'
-  | expression bop expression
-  | foreach
-  | value
-  | varDeclaration
-  ;
-  
-bop
-  : '=='
-  | '!='
-  ;
-
-varDeclaration
-  : 'var' Identifier '=' value
-  ;
-
-
-value
-  : Identifier
-  | literals
-  | Identifier '[' values ']'
-  | '(' values ')'
-  | '(' Identifier ':' expressionType ')' '=>' expression
-  ;
-
-
-ifelse
-  : 'if' '(' expression ')' block 'else' block
+  : expression ';' (expression ';')*
   ;
 
 block
-  : '{' expression '}'
+  : '{'expressions '}'
+  ; 
+
+
+// Expressions, expression, and related stuff
+expressionArgs
+  :   expression (',' expression)*
   ;
 
-values
-  : value ',' value
-  | value
+expression
+  // Statements 
+  :  'new' Identifier '(' expressionArgs? ')'                            # newEntity            // Create a new entity
+  |  'delete' expression                                                # deleteEntity         // Delete an entity
+  |  Identifier '[' expressionArgs ']'                                  # arraySelector        // Array selector
+  |  expression '(' expressionArgs? ')'                                  # actionCall           // action call, or apply
+  // I will overload operations for cloud ints and strings, and when in an
+  // assignment, I can tell if there is a read or a write, so no ops related to 
+  // primitive cloud types, so I only need this kind of select.
+  |  Identifier '.' Identifier                                          # entityArraySelect    // Expression select
+  |  'all' Identifier                                                   # allEntitesOrArrayElem           // all entities 
+  |  foreach                                                            # foreachLoop          // foreach loop
+  |  'var' Identifier ':' indexType '=' expression                      # valDecl              // var declaration, not an expression but whatever
+  |  'if' '(' expression ')' block 'else' block                         # branching            // if or else, not an expression
+  // Expressions
+  |  '(' expression ')'                                                 # parExpr
+  |  Identifier                                                         # identifier           // also not an expression 
+  |  literals                                                           # literal              // String or integer literals
+  |  op=('+'|'-') expression                                            # UnaryNum
+  |  '!' expression                                                     # UnaryBool
+  |  expression op=('*'|'/'|'%') expression                             # Mul
+  |  expression op=('+'|'-') expression                                 # Add
+  |  expression op=('<=' | '>=' | '>' | '<') expression                 # Rel
+  |  expression op=('==' | '!=') expression                             # Equ
+  |  expression '&&' expression                                         # And
+  |  expression '||' expression                                         # Or
+  |  <assoc=right> expression '=' expression                            # assign
+
   ;
+
 
 foreach
-  : 'foreach' Identifier 'in' ('all' | 'entries') expression '.' expression
-    ('where' expression bop expression)?
-    ('orderby' expression '.' expression)?
+  : 'foreach' Identifier 'in' 'all' Identifier
+    ('where' expression)?
     block
   ;
 
 literals
-  : IntegerLiteral
-  | StringLiteral
+  : IntegerLiteral  #IntLit
+  | StringLiteral   #StringLit
   ;
  
 
 // LEXER
-
+// TODO I think I need boolens as well
 // Types
 INT        : 'Int';
 STRING     : 'String';
@@ -166,8 +177,6 @@ NEW        : 'new';
 DELETE     : 'delete';
 ALL        : 'all';
 ENTRIES    : 'entries';
-YIELD      : 'yield';
-FLUSH      : 'flush';
 IF         : 'if';
 ELSE       : 'else';
 FOREACH    : 'foreach';
@@ -192,13 +201,24 @@ DOT        : '.';
 
 
 // Operators
-LT         : '<';
-GT         : '>';
-COLON      : ':';
-ARROW      : '->';
-TARROW     : '=>';
-ASSIGN     : '=';
-BANG       : '!';
+ASSIGN          : '=';
+GT              : '>';
+LT              : '<';
+BANG            : '!';
+QUESTION        : '?';
+COLON           : ':';
+EQUAL           : '==';
+LE              : '<=';
+GE              : '>=';
+NOTEQUAL        : '!=';
+AND             : '&&';
+OR              : '||';
+ADD             : '+';
+SUB             : '-';
+MUL             : '*';
+DIV             : '/';
+MOD             : '%';
+
 
 
 Identifier
@@ -227,12 +247,20 @@ LetterOrDigit
       {Character.isJavaIdentifierPart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
   ;
 
+
 fragment
-Digit: [0-9];
+NonZeroDigit: [1-9];
 
-Digits: Digit+;
+fragment
+Digit
+  : '0'
+  | NonZeroDigit
+  ;
 
-IntegerLiteral: Digits;
+fragment
+Digits: Digit*;
+
+IntegerLiteral: NonZeroDigit Digits;
 
 StringLiteral
   :   '"' StringCharacters? '"'

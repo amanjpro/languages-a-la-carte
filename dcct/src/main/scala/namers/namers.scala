@@ -4,6 +4,7 @@ import sana.ooj
 import sana.primj
 import sana.tiny
 import sana.calcj
+import sana.dcct
 
 import tiny.core.TransformationComponent
 import tiny.dsl._
@@ -21,10 +22,10 @@ import ooj.ast._
 import ooj.ast.TreeExtractors._
 import ooj.types.ClassType
 import ooj.names.StdNames
-import ooj.modifiers._
 import ooj.modifiers.Ops._
 import ooj.symbols.{SymbolUtils, ClassSymbol, PackageSymbol}
 import ooj.ast.Implicits._
+import dcct.ast._
 
 @component 
 trait ClassDefNamerComponent extends ooj.namers.ClassDefNamerComponent {
@@ -33,3 +34,14 @@ trait ClassDefNamerComponent extends ooj.namers.ClassDefNamerComponent {
     Nil
   }
 }
+@component
+trait ArrayDefNamerComponent extends NamerComponent {
+  (array: ArrayDefApi)  => array
+}
+
+@component
+trait ForeachNamerComponent extends NamerComponent {
+  (foreach: ForEachApi)  => foreach
+}
+
+
