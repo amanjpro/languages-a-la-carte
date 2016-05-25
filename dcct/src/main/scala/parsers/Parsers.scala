@@ -73,14 +73,14 @@ class Parser extends tiny.parsers.Parser {
       val schema =  ctx.schema()
       val actionDefs = ctx.actionDeclaration
 
-      if(actionDefs != null) {
+      val actions = if(actionDefs != null) {
         actionDefs.asScala.toList.map {
           action => visit(action).asInstanceOf[DefTree]
         }
-      }
+      } else Nil
 
       val cloudTypeDefs = if (schema != null) {
-        val decls = ctx.schema().cloudDataDecl().asScala.toList.map {
+        ctx.schema().cloudDataDecl().asScala.toList.map {
           child => 
             val cloudDef =  visit(child)
             if (cloudDef.isInstanceOf[ClassDefApi])
@@ -88,10 +88,10 @@ class Parser extends tiny.parsers.Parser {
            else 
              cloudDef.asInstanceOf[ArrayDefApi] 
         }
-        Some(decls)
-      } else None
+        
+      } else Nil
       
-      primj.ast.TreeFactories.mkProgram(cloudTypeDefs.getOrElse(Nil), source)
+      primj.ast.TreeFactories.mkProgram(cloudTypeDefs ++ actions, source)
 
     }
 /************************      Schema Related         ************************/
@@ -114,8 +114,6 @@ class Parser extends tiny.parsers.Parser {
       if(ctx.Identifier != null )
         cloudType.consistencyRegion = Name(ctx.Identifier.getText)
 
-      println(cloudType.show)
-    
       cloudType
     }
 
@@ -191,7 +189,8 @@ class Parser extends tiny.parsers.Parser {
 /************************      Actions and Statements        ************************/
 
    override def visitActionDeclaration(@NotNull 
-     ctx: DcctParser.ActionDeclarationContext): Tree = {    
+     ctx: DcctParser.ActionDeclarationContext): Tree = {   
+
       val tpe    = visit(ctx.indexType)
       val name   = ctx.Identifier.getText
       val params = getElementsList(ctx.elements())
@@ -289,10 +288,16 @@ class Parser extends tiny.parsers.Parser {
   }
 
 /////////////// Other expressions
-// TODO could be a source of bugs, check the generated parse tree.
-// TODO maybe just creat a method getIdent! 
+  override def visitIdentifier(@NotNull ctx: DcctParser.IdentifierContext ) : Tree = {
+   mkIdent(getIdentName(ctx.Identifier))
+  }
+
+  override def visitParExpr(@NotNull ctx: DcctParser.ParExprContext ) : Tree = {
+    visit(ctx.expression).asInstanceOf[Expr]
+  }
+// TODO maybe just create a method getIdent! 
   override def visitEntityArraySelect(@NotNull ctx: DcctParser.EntityArraySelectContext ) : Tree = {
-   mkSelect(visit(ctx.expression), mkIdent(getIdentName(ctx.Identifier)))
+   mkSelect(mkIdent(getIdentName(ctx.Identifier(0))), mkIdent(getIdentName(ctx.Identifier(1))))
   }
 
 
@@ -363,10 +368,11 @@ class Parser extends tiny.parsers.Parser {
   }
 
   override def visitAssign(@NotNull ctx: DcctParser.AssignContext): Tree = {
-    val varIdent = getIdentName(ctx.Identifier)
+    // either an ident or selector
+    val lhs = visit(ctx.expression(0)).asInstanceOf[Expr]
     // TODO maybe put a catch for cast exceptions?
-    val rhs = visit(ctx.expression).asInstanceOf[Expr]
-    mkAssign(mkIdent(varIdent), rhs, pos(ctx))
+    val rhs = visit(ctx.expression(1)).asInstanceOf[Expr]
+    mkAssign(lhs, rhs, pos(ctx))
     
       
   }
@@ -434,7 +440,7 @@ class Parser extends tiny.parsers.Parser {
           primj.ast.TreeFactories.mkBinary(x, op, y, pos(ctx))
         case _                  =>
           // TODO: report an error
-          throw new Exception("Expression is expected but got: " + e1 + " " + e2)
+          throw new Exception("Expression is expected but got: EXP1 " + e1 + ", EXP2 " + e2)
       }
     }
 

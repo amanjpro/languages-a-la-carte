@@ -69,12 +69,12 @@ cloudDataDecl
 // Entities
 // TODO think if I need to make the body optional
 entityDecl
-  : 'entity' Identifier '(' elements ')' ('{' properties '}')?
+  : 'entity' Identifier '(' elements? ')' ('{' properties '}')?
   ;
 
 //TODO I think this def and the properties one are inconsistent
 elements
-  :   element? (',' element)*
+  :   element (',' element)*
   ;
 
 element
@@ -100,7 +100,7 @@ property
 ///////////////////////// Actions and expressions ///////////////////////
 
 actionDeclaration
-    :   'action' Identifier elements ':' indexType block
+    :   'action' Identifier '(' elements? ')' ':' indexType block
     ;
 
 expressions
@@ -119,18 +119,19 @@ expressionArgs
 
 expression
   // Statements 
-  :  'new' Identifier '(' expressionArgs ')'                            # newEntity            // Create a new entity
+  :  'new' Identifier '(' expressionArgs? ')'                            # newEntity            // Create a new entity
   |  'delete' expression                                                # deleteEntity         // Delete an entity
   |  Identifier '[' expressionArgs ']'                                  # arraySelector        // Array selector
-  |  expression '(' expressionArgs ')'                                  # actionCall           // action call, or apply
-  |  expression '.' Identifier                                          # entityArraySelect    // Expression select
+  |  expression '(' expressionArgs? ')'                                  # actionCall           // action call, or apply
+  // I will overload operations for cloud ints and strings, and when in an
+  // assignment, I can tell if there is a read or a write, so no ops related to 
+  // primitive cloud types, so I only need this kind of select.
+  |  Identifier '.' Identifier                                          # entityArraySelect    // Expression select
   |  'all' Identifier                                                   # allEntitesOrArrayElem           // all entities 
   |  foreach                                                            # foreachLoop          // foreach loop
-  |  'var' Identifier indexType '=' expression                          # valDecl              // var declaration, not an expression but whatever
+  |  'var' Identifier ':' indexType '=' expression                      # valDecl              // var declaration, not an expression but whatever
   |  'if' '(' expression ')' block 'else' block                         # branching            // if or else, not an expression
-
   // Expressions
-  |  <assoc=right> Identifier '=' expression                            # assign
   |  '(' expression ')'                                                 # parExpr
   |  Identifier                                                         # identifier           // also not an expression 
   |  literals                                                           # literal              // String or integer literals
@@ -142,6 +143,8 @@ expression
   |  expression op=('==' | '!=') expression                             # Equ
   |  expression '&&' expression                                         # And
   |  expression '||' expression                                         # Or
+  |  <assoc=right> expression '=' expression                            # assign
+
   ;
 
 
@@ -198,13 +201,24 @@ DOT        : '.';
 
 
 // Operators
-LT         : '<';
-GT         : '>';
-COLON      : ':';
-ARROW      : '->';
-TARROW     : '=>';
-ASSIGN     : '=';
-BANG       : '!';
+ASSIGN          : '=';
+GT              : '>';
+LT              : '<';
+BANG            : '!';
+QUESTION        : '?';
+COLON           : ':';
+EQUAL           : '==';
+LE              : '<=';
+GE              : '>=';
+NOTEQUAL        : '!=';
+AND             : '&&';
+OR              : '||';
+ADD             : '+';
+SUB             : '-';
+MUL             : '*';
+DIV             : '/';
+MOD             : '%';
+
 
 
 Identifier
@@ -233,12 +247,20 @@ LetterOrDigit
       {Character.isJavaIdentifierPart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
   ;
 
+
 fragment
-Digit: [0-9];
+NonZeroDigit: [1-9];
 
-Digits: Digit+;
+fragment
+Digit
+  : '0'
+  | NonZeroDigit
+  ;
 
-IntegerLiteral: Digits;
+fragment
+Digits: Digit*;
+
+IntegerLiteral: NonZeroDigit Digits;
 
 StringLiteral
   :   '"' StringCharacters? '"'
