@@ -932,7 +932,7 @@ trait SwitchCodeGenComponent extends CodeGenComponent {
     val labels = nonDefaultCases.flatMap { cse =>
       Some(new Label)
     }
-    val defaultCase  = switch.cases.filter(_ == Nil)
+    val defaultCase  = switch.cases.filter(_.guards == Nil)
     val defaultLabel = defaultCase match {
       case Nil                  => next
       case _                    => new Label
@@ -964,7 +964,7 @@ trait SwitchCodeGenComponent extends CodeGenComponent {
     defaultCase match {
       case List(cse)            =>
         mv.foreach(mv => mv.visitLabel(defaultLabel))
-        codegen((cse, bw.copy(breakTarget = Some(next))))
+        codegen((cse.body, bw.copy(breakTarget = Some(next))))
       case _                    => ()
     }
     mv.foreach(mv => mv.visitLabel(next))
