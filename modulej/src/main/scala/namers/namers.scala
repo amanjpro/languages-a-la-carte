@@ -262,7 +262,9 @@ trait SimpleUseNamer {
               // sym.tpe.foreach(use.tpe = _)
               val fullName = s"$importURI.${use.name}"
               val newUse   = compiler.resolveNames(use.owner) {
-                fromQualifiedString(fullName, use)
+                val res = fromQualifiedString(fullName, use)
+                res.isImported = true
+                res
               }.asInstanceOf[UseTree]
               // use.owner.foreach(owner =>
                   // newUse.foreach(tree => tree.owner = owner))
@@ -277,7 +279,9 @@ trait SimpleUseNamer {
               compiler.load(fname) match {
                 case Some(clazz)                 =>
                   val newUse = compiler.resolveNames(use.owner) {
-                    fromQualifiedString(fname, use)
+                    val res = fromQualifiedString(fname, use)
+                    res.isImported = true
+                    res
                   }.asInstanceOf[UseTree]
                   Some(family(newUse))
                 case None                        =>
@@ -328,7 +332,7 @@ trait SimpleUseNamer {
   def family(use: UseTree): UseTree
 
   def shallUseImports(use: SimpleUseTree): Boolean =
-    !(use.isImportQual || use.isQualified)
+    !(use.isImportQual || use.isQualified || use.isImported)
 
 
   protected def toQualifiedString(use: UseTree): String =
