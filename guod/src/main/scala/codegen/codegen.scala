@@ -1133,7 +1133,7 @@ trait AssignCodeGenComponent extends CodeGenComponent {
         mv.foreach(mv =>
             loadFromLocalVariable(assign.lhs.tpe, -1, mv, true))
         codegen((assign.rhs, bw))
-        if(isDoubleWord(assign.lhs.tpe))
+        if(isDoubleWord(assign.rhs.tpe))
           bw.methodVisitor.foreach(mv => mv.visitInsn(DUP2_X2))
         else
           bw.methodVisitor.foreach(mv => mv.visitInsn(DUP_X2))
@@ -1142,7 +1142,7 @@ trait AssignCodeGenComponent extends CodeGenComponent {
         codegen((a, bw))
         codegen((i, bw))
         codegen((assign.rhs, bw))
-        if(isDoubleWord(assign.lhs.tpe))
+        if(isDoubleWord(assign.rhs.tpe))
           bw.methodVisitor.foreach(mv => mv.visitInsn(DUP2_X2))
         else
           bw.methodVisitor.foreach(mv => mv.visitInsn(DUP_X2))
@@ -1153,7 +1153,7 @@ trait AssignCodeGenComponent extends CodeGenComponent {
         mv.foreach(mv => mv.visitInsn(DUP))
         mv.foreach(mv => getField(t, mv))
         codegen((assign.rhs, bw))
-        if(isDoubleWord(t.tpe))
+        if(isDoubleWord(assign.rhs.tpe))
           bw.methodVisitor.foreach(mv => mv.visitInsn(DUP2_X1))
         else
           bw.methodVisitor.foreach(mv => mv.visitInsn(DUP_X1))
@@ -1161,7 +1161,7 @@ trait AssignCodeGenComponent extends CodeGenComponent {
       case Select(q, t)          if !isStatic(t.symbol)                =>
         codegen((q, bw))
         codegen((assign.rhs, bw))
-        if(isDoubleWord(t.tpe))
+        if(isDoubleWord(assign.rhs.tpe))
           bw.methodVisitor.foreach(mv => mv.visitInsn(DUP2_X1))
         else
           bw.methodVisitor.foreach(mv => mv.visitInsn(DUP_X1))
