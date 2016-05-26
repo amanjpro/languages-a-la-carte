@@ -133,10 +133,21 @@ trait ClassDefCodeGenComponent extends CodeGenComponent {
       val (ps, is) = clazz.parents.partition {p =>
           !(p.symbol.map(_.mods.isInterface).getOrElse(false))
         }
-      val parent = ps.headOption.getOrElse(TreeFactories.mkIdent(noname))
+      val parent = ps match {
+        case _      if clazz.symbol == Some(objectClassSymbol)   =>
+          None
+        case p::Nil                                              =>
+          Some(p)
+        case p1::p2::Nil                                         =>
+          if(p1.symbol == Some(objectClassSymbol))       Some(p2)
+          else                                           Some(p1)
+        case _                                                   =>
+          Some(TreeFactories.mkTypeUse(noname, clazz.pos))
+      }
       (parent, is)
     }
-    val parentName = fullNameToInternalName(toQualifiedString(parent))
+    val parentName = parent.map(p =>
+        fullNameToInternalName(toQualifiedString(p))).getOrElse(null)
     val interfaceNames =
       interfaces.map(use =>
           fullNameToInternalName(toQualifiedString(use))).toArray
@@ -161,6 +172,8 @@ trait ClassDefCodeGenComponent extends CodeGenComponent {
     bos.close()
   }
 
+  protected def objectClassSymbol: Symbol =
+    SymbolUtils.objectClassSymbol
   protected def fullNameToInternalName(fullName: String): String =
     CodegenUtils.fullNameToInternalName(fullName)
   protected def targetVersion: Int =
