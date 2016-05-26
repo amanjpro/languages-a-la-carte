@@ -31,7 +31,7 @@ trait Compiler extends modulej.Compiler {
       t match {
         case p               if !ErrorReporting.isErroneous             =>
           val f = initializers join
-                    qualifiers join  
+                    qualifiers join
                       localvariables join
                         generate
           f(p)
