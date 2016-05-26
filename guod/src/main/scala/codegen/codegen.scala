@@ -222,7 +222,7 @@ trait ValDefCodeGenComponent extends CodeGenComponent {
           case Literal(v: LongConstant)     if valdef.mods.isStatic =>
             v.value.toLong
           case Literal(v: FloatConstant)    if valdef.mods.isStatic =>
-            v.value.toDouble
+            v.value.toFloat
           case Literal(v: DoubleConstant)   if valdef.mods.isStatic =>
             v.value.toDouble
           case Literal(v: StringConstant)   if valdef.mods.isStatic =>
