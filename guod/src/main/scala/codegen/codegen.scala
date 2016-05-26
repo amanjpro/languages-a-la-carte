@@ -743,12 +743,16 @@ trait UnaryCodeGenComponent extends CodeGenComponent {
             codegen((expr, bw.copy(isRhs = true)))
         }
       case (Some(tpe), Neg) if tpe <:< IntType                                 =>
+        codegen((unary.expr, bw))
         mv.foreach(mv => mv.visitInsn(INEG))
       case (Some(tpe), Neg) if tpe <:< LongType                                =>
+        codegen((unary.expr, bw))
         mv.foreach(mv => mv.visitInsn(LNEG))
       case (Some(tpe), Neg) if tpe <:< FloatType                               =>
+        codegen((unary.expr, bw))
         mv.foreach(mv => mv.visitInsn(FNEG))
       case (Some(tpe), Neg) if tpe <:< DoubleType                              =>
+        codegen((unary.expr, bw))
         mv.foreach(mv => mv.visitInsn(DNEG))
       case (Some(tpe), Pos)                                                    =>
         ()
