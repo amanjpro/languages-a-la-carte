@@ -17,7 +17,11 @@ import tiny.source.Position
 import tiny.names.Name
 import modulej.ast.Implicits._
 import modulej.modifiers.Ops._
+import modulej.symbols.Implicits._
 import modulej.ast._
+import primj.ast.ValDefApi
+import calcj.ast.LiteralApi
+import primj.symbols.VariableSymbol
 import ooj.ast.{PackageDefApi, ClassDefApi,
                 CompilationUnitApi => OCompilationUnitApi}
 import robustj.names.StdNames._
@@ -67,6 +71,24 @@ trait ImportSymbolAssignerComponent extends SymbolAssignerComponent {
   }
 }
 
+@component
+trait ValDefSymbolAssignerComponent
+  extends ooj.namers.ValDefSymbolAssignerComponent {
+  (valdef: ValDefApi) => {
+    val res = super.apply(valdef).asInstanceOf[ValDefApi]
+    res.symbol match {
+      case Some(vsym: VariableSymbol)   if valdef.mods.isCompiled =>
+        valdef.rhs match {
+          case lit: LiteralApi     =>
+            vsym.compiledRHSLiteral = lit
+          case _                   => ()
+        }
+      case _                                                      =>
+        ()
+    }
+    res
+  }
+}
 
 // @component
 // trait PackageDefSymbolAssignerComponent

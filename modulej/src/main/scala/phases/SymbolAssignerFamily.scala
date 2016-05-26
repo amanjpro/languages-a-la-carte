@@ -13,6 +13,7 @@ import sana.primj.namers.{MethodDefSymbolAssignerComponent => _,
                           ValDefSymbolAssignerComponent => _, _}
 import sana.brokenj.namers._
 import sana.ooj.namers.{CompilationUnitSymbolAssignerComponent => _,
+                        ValDefSymbolAssignerComponent => _,
                         MethodDefSymbolAssignerComponent => _, _}
                         // PackageDefSymbolAssignerComponent => _,
                         // ClassDefSymbolAssignerComponent => _, _}

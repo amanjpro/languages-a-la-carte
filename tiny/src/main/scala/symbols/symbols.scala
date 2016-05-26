@@ -4,9 +4,12 @@ import ch.usi.inf.l3.sana
 import sana.tiny.types.Type
 import sana.tiny.modifiers.Flags
 import sana.tiny.names.Name
+import sana.tiny.ast.{Attributes, noAttributes}
 
 
 trait Symbol {
+  var attributes: Attributes = noAttributes
+
   var name: Name
   var mods: Flags
   var tpe: Option[Type]

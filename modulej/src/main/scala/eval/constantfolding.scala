@@ -6,6 +6,7 @@ import sana.ooj
 import sana.modulej
 import sana.tiny
 import sana.primj
+import sana.calcj
 
 import tiny.core.{TransformationComponent, CompilerInterface}
 import tiny.dsl._
@@ -13,10 +14,13 @@ import tiny.dsl._
 
 import modulej.ast._
 import modulej.ast.Implicits._
+import modulej.symbols.Implicits._
 import modulej.modifiers.Ops._
 import ooj.ast.{PackageDefApi, CompilationUnitApi => OCompilationUnitApi}
 import tiny.ast.{UseTree, IdentApi, TypeUseApi, NoTree}
 import primj.ast.ValDefApi
+import primj.symbols.VariableSymbol
+import calcj.ast.LiteralApi
 import ooj.eval.ConstantFoldingComponent
 
 
@@ -77,6 +81,24 @@ trait TypeUseConstantFoldingComponent
 @component(tree, env)
 trait IdentConstantFoldingComponent
   extends ooj.eval.IdentConstantFoldingComponent {
+
+  (id: IdentApi) => {
+    val (res, env2) = super.apply((id, env))
+    res match {
+      case lit: LiteralApi              =>
+        (lit, env2)
+      case other                        =>
+        other.symbol match {
+          case Some(vsym: VariableSymbol)  if vsym.mods.isCompiled     =>
+            vsym.compiledRHSLiteral match {
+              case Some(v)              => (v, env2)
+              case _                    => (res, env)
+            }
+          case _                                                       =>
+            (res, env2)
+        }
+    }
+  }
 
   override protected def nameIdent(id: IdentApi): UseTree =
     identNamer.nameIdent(id)

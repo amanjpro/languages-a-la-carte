@@ -460,8 +460,22 @@ trait ClassPathLoaderApi {
 
 
       val tpt  = stringToUseTree(desc, false)
+      val rhs  = value match {
+        case i: java.lang.Integer         =>
+          TreeFactories.mkLiteral(IntConstant(i))
+        case l: java.lang.Long            =>
+          TreeFactories.mkLiteral(LongConstant(l))
+        case f: java.lang.Float           =>
+          TreeFactories.mkLiteral(FloatConstant(f))
+        case d: java.lang.Double          =>
+          TreeFactories.mkLiteral(DoubleConstant(d))
+        case s: String                    =>
+          TreeFactories.mkLiteral(StringConstant(s))
+        case _                            =>
+          NoTree
+      }
       val vdef =
-        TreeFactories.mkValDef(mods, tpt, Name(name), NoTree)
+        TreeFactories.mkValDef(mods, tpt, Name(name), rhs)
       members = vdef::members
       null
     }
