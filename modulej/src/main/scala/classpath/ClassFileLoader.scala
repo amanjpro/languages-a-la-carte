@@ -73,34 +73,46 @@ trait ClassPathLoaderApi {
     val fname = fullyQualifiedName.replaceAll("[.]", "/")
     classPaths.foldLeft(false)((z, y) => {
       if(!z) {
-        val f = if(isClass) {
-          new JFile(s"${y}${sep}${fname}${binaryFileExtension}")
-        } else
-          new JFile(s"${y}${sep}${fname}")
-        f.exists && ((isClass && f.isFile) || (!isClass && f.isDirectory))
+        findPath(fullyQualifiedName, isClass).map(_ => true).getOrElse(false)
       } else z
     })
   }
 
   def load(fullyQualifiedName: FullName): Option[Tree] = {
-    val cname = findPath(fullyQualifiedName)
+    val cname = findPath(fullyQualifiedName, true)
     val res = cname.map(loadClass(_,
       fullyQualifiedName.split("[.]").toList.dropRight(1),
       fullyQualifiedName))
     res.map(TreeFactories.mkProgram(_))
   }
 
-  protected def findPath(fullyQualifiedName: FullName): Option[Path] = {
+  protected def findPath(fullyQualifiedName: FullName,
+          isClass: Boolean): Option[Path] = {
     val z: Option[String] = None
     val fname = fullyQualifiedName.replaceAll("[.]", "/")
     classPaths.foldLeft(z)((z, y) => {
       z match {
         case  None =>
-          val n = s"${y}${sep}${fname}${binaryFileExtension}"
-          val f = new JFile(n)
-          if(f.exists && f.isFile) {
-            Some(f.getCanonicalPath)
-          } else None
+          val n = s"${y}${sep}${fname}"//"${binaryFileExtension}"
+          val splitter = if(sep == "\\") "\\\\" else "/"
+          val fpath    = n.split(s"[$splitter]")
+          val name     = fpath.last
+          val path     = fpath.dropRight(1)
+          val file    = new JFile(path.mkString(sep))
+          file.listFiles match {
+            case null              => None
+            case files             =>
+              files.flatMap ( f =>
+                if(f.getName == s"${name}${binaryFileExtension}" &&
+                  f.isFile && isClass) List(f.getCanonicalPath)
+                else if(f.getName == s"${name}" &&
+                  f.isDirectory && !isClass) List(f.getCanonicalPath)
+                else Nil
+              ).headOption
+          }
+          // if(f.exists && f.isFile) {
+          //   Some(f.getCanonicalPath)
+          // } else None
         case _     =>
           z
       }
@@ -111,7 +123,7 @@ trait ClassPathLoaderApi {
     val (res, queue)      = loadClassAux(url, pkgs, fullName)
     val queuedClasses     = queue.foldLeft(Nil: List[Tree])((z, y) => {
       if(!loadedClasses.contains(y)) {
-        findPath(y) match {
+        findPath(y, true) match {
           case Some(cname) =>
             loadClass(cname,
               y.split("[.]").toList.dropRight(1), y) ++ z
@@ -138,7 +150,7 @@ trait ClassPathLoaderApi {
         val temp = reader.innerClasses
           .map ( ic => {
             val name = fullName + "$" + ic
-            val url  = findPath(name)
+            val url  = findPath(name, true)
             url match {
               case Some(url)      =>
                 loadClassAux(url, pkgs, name)
@@ -473,7 +485,7 @@ trait ClassPathLoaderApi {
         val endParamIndex = desc.indexOf(')')
         val (fst, snd)    = desc.splitAt(endParamIndex)
         if(name == CONSTRUCTOR_NAME.asString)
-          (fst.substring(1), s"A$simpleClassName}")
+          (fst.substring(1), s"L$simpleClassName;")
         else
           (fst.substring(1), snd.substring(1))
       }
