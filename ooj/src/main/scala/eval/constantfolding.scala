@@ -314,11 +314,11 @@ trait IdentConstantFoldingComponent
   extends ConstantFoldingComponent {
   (id: IdentApi)    => {
     nameIdent(id) match {
-      case id: IdentApi            =>
+      case id: IdentApi                           =>
         val ident = typeAndNameIdent(id)
         ident.symbol.map { sym =>
           env.getValue(sym) match {
-            case Some(ExprValue(expr))                    =>
+            case Some(ExprValue(expr))                     =>
               val (v, env2) = constantFold((expr, env))
               v match {
                 case lit: LiteralApi          =>
@@ -329,20 +329,16 @@ trait IdentConstantFoldingComponent
                 case _                        =>
                   (ident, env)
               }
-            case Some(LiteralValue(lit))                  =>
+            case Some(LiteralValue(lit))                   =>
               val clit = TreeCopiers.copyLiteral(lit)(constant = lit.constant)
               ident.pos.foreach(clit.pos = _)
               (clit, env)
-            case None if sym.isInstanceOf[PackageSymbol]  =>
-              (id, env)
-            case _                                        =>
+            case _                                         =>
               (ident, env)
           }
         }.getOrElse((ident, env))
-      case tuse: TypeUse            =>
-        (tuse, env)
-      case _                        =>
-        (id, env)
+      case tuse                                    =>
+        (compiler.typeCheck(tuse.owner)(tuse), env)
     }
   }
 
