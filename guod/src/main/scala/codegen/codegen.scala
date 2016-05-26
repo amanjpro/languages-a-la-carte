@@ -238,9 +238,11 @@ trait ValDefCodeGenComponent extends CodeGenComponent {
     } else if(valdef.mods.isLocalVariable){
       val mv = bw.methodVisitor
       valdef.variableIndex.foreach { index =>
-        codegen((valdef.rhs, bw))
-        mv.foreach(mv => storeToLocalVariable(valdef.tpe, index,
-            mv))
+        if(valdef.rhs != NoTree) {
+          codegen((valdef.rhs, bw))
+          mv.foreach(mv => storeToLocalVariable(valdef.tpe, index,
+              mv))
+        }
       }
     }
   }
