@@ -80,12 +80,14 @@ trait PackageSymbol extends TermSymbol {
    * The list is guaranteed not to be empty
    */
   def qualifiedNameAsList: List[Name] = {
-    owner match {
-      case Some(psym: PackageSymbol) =>
-        psym.qualifiedNameAsList ++ List(name)
-      case _                         =>
-        List(name)
-    }
+    if(name != StdNames.DEFAULT_PACKAGE_NAME)
+      owner match {
+        case Some(psym: PackageSymbol) =>
+          psym.qualifiedNameAsList ++ List(name)
+        case _                         =>
+          List(name)
+      }
+    else Nil
   }
 
   override def equals(other: Any): Boolean = other match {
