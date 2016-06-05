@@ -25,8 +25,8 @@ Then, using `sbt` you can build the wanted target. For example to build the
 sbt tiny/compile
 ```
 
-[] (Please consult the project's [wiki](https://github.com/amanjpro/sana/wiki)
-to know all possible targets.)
+Please consult the project's [wiki](https://github.com/amanjpro/languages-a-la-carte/wiki)
+to know all possible targets.
 
 You can generate a fat jar by running assembly for your target, for example for
 `tiny` it will be:
@@ -35,7 +35,8 @@ You can generate a fat jar by running assembly for your target, for example for
 sbt tiny/assembly
 ```
 
-To generate ANTLR grammar:
+To generate ANTLR grammar, you can use antlr4:antlr4Generate task, for primj it will be:
+
 ```
 sbt primj/antlr4:antlr4Generate
 ```
@@ -44,7 +45,7 @@ sbt primj/antlr4:antlr4Generate
 
 ## Usage
 
-[] (Please refer to the [wiki](https://github.com/amanjpro/sana/wiki))
+Please refer to the [wiki](https://github.com/amanjpro/languages-a-la-carte/wiki)
 
 ## Contributing
 
@@ -63,25 +64,14 @@ sbt primj/antlr4:antlr4Generate
 [](## History)
 
 
-[](## Credits)
+## Credits
+see CONTRIBUTERS
 
-
-## Language modules:
-- tiny: no components
-- calcj: arith ops
-- primj: primitives in Java
-- brokenj: switch, break, continue, label
-- ooj: classes, fields, methods, constructor, super, select, this, new, null
-- arrayj: arrays and array literals
-- robustj: exception handling
-- dynj: cast and isinstanceof
-- ppj: synchronized and volatile
-- modulej: imports and class loaders
 
 ## License
 
 ```
-Copyright (c) <2015>, Amanj Sherwany - http://www.amanj.me
+Copyright (c) <2015-2016>, see CONTRIBUTERS
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
