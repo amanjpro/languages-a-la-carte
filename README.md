@@ -2,14 +2,11 @@
 
 [![Build Status](https://travis-ci.com/amanjpro/languages-a-la-carte.svg?token=xagHpp4qXzfWp5WxM1j3)](https://travis-ci.com/amanjpro/languages-a-la-carte)
 
-Sana is an extensible compiler framework written in Scala. As a research
-project, Sana aims to be both fully modular in a sense that removing a new
-language component should be as easy as adding a new one. Sana also tries to be
-safe and immutable in most of the cases, but not when it adds a considerable
-amount of overhead. Sana implements ``languages à la carte'' which is proposed
-by Amanj Sherwany and Nate Nystrom.
-
-
+Sana is an extensible compiler framework written in Scala. Sana aims to be both
+fully modular in a sense that removing a new language component should be as
+easy as adding a new one, in a type-safe manner. Sana implements ``languages à
+la carte'' which is proposed by Amanj Sherwany and Nate Nystrom. As proof of
+concept, Sana implements the compiler for Java 1.0 among other languages.
 
 ## Installation
 
