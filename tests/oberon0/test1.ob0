@@ -1,3 +1,4 @@
+// passes
 
 
 MODULE Sample;
@@ -46,7 +47,6 @@ MODULE Sample;
   PROCEDURE Out2(rec: RECORD a: INTEGER; b: BOOLEAN END);
   BEGIN
     Write(rec.a);
-    Write(rec.b);
   END Out2;
 
 BEGIN
