@@ -38,7 +38,7 @@ import sana.oberon0
 
 import tiny.dsl._
 import oberon0.ast._
-import tiny.ast.{DefTree, UseTree, Expr, Tree, SimpleUseTree}
+import tiny.ast.{IdentApi, DefTree, UseTree, Expr, Tree, SimpleUseTree}
 import tiny.names.Name
 import tiny.source.Position
 import tiny.symbols.{Symbol, TypeSymbol}
@@ -47,7 +47,7 @@ import ooj.ast.{ClassDefApi, TemplateApi, SelectApi}
 import calcj.ast.{UnaryApi, LiteralApi, BinaryApi}
 import tiny.errors.ErrorReporting.{error, warning}
 import oberon0.errors.ErrorCodes._
-import primj.ast.{BlockApi, ValDefApi, IfApi, AssignApi, ApplyApi, WhileApi}
+import primj.ast.{MethodDefApi, BlockApi, ValDefApi, IfApi, AssignApi, ApplyApi, WhileApi}
 import arrayj.ast.ArrayAccessApi
 import oberon0.ast.Implicits._
 import primj.symbols.VariableSymbol
@@ -124,8 +124,10 @@ trait ArrayTypeUseNamerComponent extends NamerComponent {
     val tpt  = name(tuse.tpt).asInstanceOf[UseTree]
     val size = name(tuse.size).asInstanceOf[Expr]
     tpt.tpe.map { tpe =>
-      val tpe2 = ArrayType(tpe, size)
-      tuse.tpe = tpe2
+      tuse.tpe = ArrayType(tpe, size)
+    }
+    tpt.symbol.foreach { sym =>
+      tuse.symbol = ArraySymbol(sym, size)
     }
     TreeCopiers.copyArrayTypeUse(tuse)(tpt = tpt, size = size)
   }
@@ -139,7 +141,14 @@ trait BlockNamerComponent extends NamerComponent {
   }
 }
 
-
+@component
+trait MethodDefNamerComponent extends primj.namers.MethodDefNamerComponent {
+  (mthd: MethodDefApi)          => {
+    val mthd2 = super.apply(mthd).asInstanceOf[MethodDefApi]
+    val body = name(mthd2.body).asInstanceOf[Expr]
+    TreeCopiers.copyMethodDef(mthd2)(body = body)
+  }
+}
 @component
 trait BinaryNamerComponent extends NamerComponent {
   (bin: BinaryApi)          => {
@@ -214,6 +223,15 @@ trait ArrayAccessNamerComponent extends NamerComponent {
   (access: ArrayAccessApi)          => {
     val array = name(access.array).asInstanceOf[Expr]
     val index = name(access.index).asInstanceOf[Expr]
+    array.symbol match {
+      case Some(vs: VariableSymbol) =>
+        vs.typeSymbol.foreach(access.symbol = _)
+        vs.tpe.foreach {
+          case atpe: ArrayTypeApi => access.tpe = atpe.componentType
+        }
+      case _                        =>
+        ()
+    }
     TreeCopiers.copyArrayAccess(access)(array = array, index = index)
   }
 }
@@ -227,11 +245,18 @@ trait SelectNamerComponent extends NamerComponent {
       case Some(vsym: VariableSymbol) => vsym.typeSymbol
       case s                          => s
     }
-    println(slctdOwner.map(_.asInstanceOf[TypeDefSymbol].typeSymbol.map(_.declarations)))
-    println(slctdOwner.map(_.getSymbol(Name("a"), _ => true)))
     slctdOwner.foreach(select.tree.owner = _)
     val tree           = name(select.tree).asInstanceOf[SimpleUseTree]
     tree.symbol.foreach(select.symbol = _)
     TreeCopiers.copySelect(select)(qual = qual, tree = tree)
+  }
+}
+
+@component
+trait IdentNamerComponent extends primj.namers.IdentNamerComponent {
+  (id: IdentApi)          => {
+    val ident = super.apply(id).asInstanceOf[IdentApi]
+    ident.hasBeenNamed = false
+    ident
   }
 }

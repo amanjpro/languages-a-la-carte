@@ -35,7 +35,7 @@ import sana.tiny.symbols.Symbol
 import sana.tiny.ast.{Tree, NoTree}
 import sana.oberon0.Nodes
 import sana.oberon0.namers._
-import sana.primj.namers._
+import sana.primj.namers.{IdentNamerComponent => _, MethodDefNamerComponent => _, _}
 import sana.ooj.namers.TemplateNamerComponent
 // import sana.arrayj.namers.{ArrayAccessNamerComponent}
 
