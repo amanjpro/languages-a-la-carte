@@ -285,7 +285,8 @@ trait ApplyTyperComponent extends TyperComponent {
           TreeCopiers.copyApply(apply)(fun = fun, args = args2)
         } else {
           // TODO: Fix the error message
-          error(TYPE_MISMATCH, mt.toString, args.toString, apply.pos)
+          error(TYPE_MISMATCH, mt.toString,
+            args.map(_.tpe.toString).mkString(", "), apply.pos)
           apply
         }
       case _                                    =>
@@ -410,13 +411,13 @@ trait ValDefTyperComponent extends TyperComponent {
 
   protected def setTypeSymbol(valdef: ValDefApi, tpt: UseTree): Unit = {
     valdef.symbol.foreach(sym => {
-      sym.tpe.foreach(valdef.tpe = _)
       sym match {
         case vs: VariableSymbol    =>
           vs.typeSymbol = tpt.symbol
         case _                     =>
           ()
       }
+      sym.tpe.foreach(valdef.tpe = _)
     })
   }
 
