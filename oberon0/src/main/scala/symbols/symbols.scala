@@ -31,12 +31,15 @@ import ch.usi.inf.l3.sana
 import sana.tiny
 import sana.ooj
 import sana.calcj
+import sana.oberon0
 
 
 import tiny.names.Name
 import tiny.modifiers.Flags
 import tiny.modifiers.Ops.noflags
 import tiny.types.Type
+import tiny.ast.Expr
+import oberon0.types.ArrayType
 import tiny.symbols.{Symbol, TermSymbol, TypeSymbol}
 import ooj.symbols.PackageSymbol
 
@@ -64,6 +67,36 @@ object ModuleSymbol {
   def unapply(sym: ModuleSymbol): Option[(Name, Option[Symbol])] = sym match {
     case null              => None
     case _                 => Some((sym.name, sym.owner))
+  }
+}
+
+trait ArraySymbol extends TypeSymbol {
+  def elementSymbol: Symbol
+  def size: Expr
+
+  def mods_=(mods: Flags): Unit = ???
+  def mods: Flags = ???
+
+  def name_=(name: Name): Unit = ???
+  def name: Name = ???
+
+  def owner_=(owner: Option[Symbol]): Unit = ???
+  def owner: Option[Symbol] = ???
+
+  def tpe = elementSymbol.tpe.map(ArrayType(_, size))
+  def tpe_=(tpe: Option[Type]): Unit = ???
+}
+
+object ArraySymbol {
+  private class ArraySymbolImpl(val elementSymbol: Symbol, val size: Expr)
+    extends ArraySymbol
+
+  def apply(elementSymbol: Symbol, size: Expr): ArraySymbol =
+    new ArraySymbolImpl(elementSymbol, size)
+
+  def unapply(arraySymbol: ArraySymbol): Option[(Symbol, Expr)] = arraySymbol match {
+    case null                      => None
+    case asym                      => Some((asym.elementSymbol, asym.size))
   }
 }
 
