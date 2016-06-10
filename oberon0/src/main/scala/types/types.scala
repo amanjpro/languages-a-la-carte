@@ -33,6 +33,7 @@ import ch.usi.inf.l3.sana
 import sana.tiny
 import sana.calcj
 import sana.primj
+import sana.arrayj
 import sana.brokenj
 import sana.ooj
 import sana.oberon0
@@ -76,13 +77,13 @@ trait RecordTypeApi extends RefType {
 
 
 
-trait ArrayTypeApi extends RefType {
+trait ArrayTypeApi extends arrayj.types.ArrayTypeApi {
   def componentType: Type
   def size: Expr
 
   def name: Name = Name("<Array type>")
-  def =:=(other: Type): Boolean = this == other
-  def <:<(other: Type): Boolean = this =:= other
+  override def =:=(other: Type): Boolean = this == other
+  override def <:<(other: Type): Boolean = this =:= other
 }
 
 
