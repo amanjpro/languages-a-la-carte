@@ -38,6 +38,15 @@ To generate ANTLR grammar, you can use antlr4:antlr4Generate task, for primj it 
 sbt primj/antlr4:antlr4Generate
 ```
 
+There are two sets of tests, the unit tests can be executed in sbt using:
+```
+sbt tests
+```
+
+And the integration tests can run using:
+```
+./runtests [recompile] (module name or all)
+```
 
 
 ## Usage
