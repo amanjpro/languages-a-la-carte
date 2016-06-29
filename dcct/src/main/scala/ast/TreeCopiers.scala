@@ -16,7 +16,7 @@ import sana.dcct.ast._
 
 trait TreeCopiers extends sana.ooj.ast.TreeCopiers {
   
-  def copyArray(template: ArrayDef)(name: Name = template.name, 
+  def copyArrayDef(template: ArrayDefApi)(name: Name = template.name, 
       indices: List[ValDefApi] = template.indices,
       properties: List[ValDefApi] = template.properties): ArrayDefApi =  {
     
@@ -38,3 +38,4 @@ trait TreeCopiers extends sana.ooj.ast.TreeCopiers {
   }
 }
 
+object TreeCopiers extends TreeCopiers

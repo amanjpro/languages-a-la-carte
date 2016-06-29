@@ -19,7 +19,7 @@ trait SymbolUtils extends sana.primj.symbols.SymbolUtils {
   }
 
   override def standardDefinitions: Set[Symbol] =
-    Set(IndexIntSymbol, CloudIntSymbol, CloudIntSymbol, CloudSetSymbol)
+    Set(IndexIntSymbol, CloudIntSymbol, CloudStringSymbol, CloudSetSymbol)
 }
 
 object SymbolUtils extends SymbolUtils

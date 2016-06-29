@@ -37,10 +37,16 @@ trait ClassDefSymbolAssignerComponent extends ooj.namers.ClassDefSymbolAssignerC
 trait ArrayDefSymbolAssignerComponent extends SymbolAssignerComponent {
   // TODO why do I need the arraySymbol anyway???
   (array: ArrayDefApi) => { 
+    val symbol = ArraySymbol(array.name, array.owner)
     array.indices.map { x =>
-        x.owner = ArraySymbol(array.name)
+        x.owner = symbol
         assign(x).asInstanceOf[ValDefApi]
     }
+    array.properties.map { x =>
+        x.owner = symbol
+        assign(x).asInstanceOf[ValDefApi]
+    }
+    array.symbol = symbol
     array
   }
 }
