@@ -44,8 +44,8 @@ import calcj.ast.operators.{Inc, Dec}
 import primj.namers.NamerComponent
 import primj.symbols.{SymbolUtils => _, _}
 import primj.errors.ErrorCodes._
-import primj.ast.{ApplyApi, BlockApi}
-import ooj.ast._
+import primj.ast.{ApplyApi, BlockApi, ValDefApi}
+import ooj.ast.{TreeCopiers => _, _}
 import ooj.ast.TreeExtractors._
 import ooj.types.ClassType
 import ooj.names.StdNames
@@ -63,10 +63,9 @@ trait ClassDefNamerComponent extends ooj.namers.ClassDefNamerComponent {
 }
 @component
 trait ArrayDefNamerComponent extends NamerComponent {
-  (array: ArrayDefApi)  => array
-}
-
-@component
-trait ForeachNamerComponent extends NamerComponent {
-  (foreach: ForEachApi)  => foreach
+  (array: ArrayDefApi)  => {
+    val indices = array.indices.map(name(_).asInstanceOf[ValDefApi])
+    val properties = array.properties.map(name(_).asInstanceOf[ValDefApi])
+    TreeCopiers.copyArrayDef(array)(indices = indices, properties = properties)
+  }
 }

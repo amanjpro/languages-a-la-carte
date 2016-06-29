@@ -4,7 +4,7 @@ entity Order(oIdent: Int) {
   quantity: CInt;
 }
 
-array Orders[c: Customer] {
+array Orders[c: Int] {
   nitems: CInt;
   description: CString;
 }
