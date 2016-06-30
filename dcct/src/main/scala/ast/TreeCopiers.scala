@@ -54,7 +54,7 @@ trait TreeCopiers extends sana.ooj.ast.TreeCopiers {
     res
   }
   
-  def copyForEach(template: ForEach)(entityVar: ValDefApi,
+  def copyForEach(template: ForEachApi)(entityVar: ValDefApi,
     whereExpr: Expr, body: BlockApi): ForEachApi = {
     
     val res = sana.dcct.ast.
