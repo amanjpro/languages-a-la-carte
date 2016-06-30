@@ -33,8 +33,10 @@ import sana.tiny.core._
 import sana.tiny.core.Implicits._
 import sana.tiny.ast.{Tree, NoTree}
 import sana.tiny.symbols.Symbol
-import sana.primj.PrimjNodes
-import sana.primj.typechecker._
+import sana.dcct.DCCTNodes
+import sana.primj.typechecker.{ValDefTyperComponent => _, MethodDefTyperComponent => _, _}
+import sana.dcct.typechecker._
+import sana.ooj.typechecker.TemplateTyperComponent
 import sana.calcj.typechecker.{UnaryTyperComponent => _, _}
 
 
@@ -46,7 +48,7 @@ trait DcctTyperFamilyApi extends
   override def default = {case s => s}
 
   def components: List[PartialFunction[Tree, Tree]] =
-    generateComponents[Tree, Tree](PrimjNodes.nodes,
+    generateComponents[Tree, Tree](DCCTNodes.nodes,
       "TyperComponent", "typed", "")
 
   def typed: Tree => Tree = family
