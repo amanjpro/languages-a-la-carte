@@ -30,7 +30,7 @@ package ch.usi.inf.l3.sana.dcct
 // TODO add the rest here later.
 object DCCTNodes {
   final val nodes =
-    """Foreach,
+    """ForEach,
        ArrayDef,
        ClassDef,
        Template, 
