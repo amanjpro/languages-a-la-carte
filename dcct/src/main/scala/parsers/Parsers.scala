@@ -43,12 +43,13 @@ import tiny.debug.logger
 import calcj.ast.{TreeCopiers => _, _}
 import calcj.ast.operators._
 import tiny.ast.NoTree
-import primj.ast._
+import primj.ast.{TreeCopiers => _, _}
 import dcct.antlr._
 import primj.modifiers._
-import primj.modifiers.Ops._
+import ooj.modifiers._
+import ooj.modifiers.Ops._
 import ooj.names.StdNames._
-import ooj.ast._
+import ooj.ast.{TreeCopiers => _, _}
 import dcct.ast.TreeFactories._
 import dcct.ast._
 import ooj.ast.Implicits._ // TODO could be a source of problems
@@ -75,11 +76,12 @@ class Parser extends tiny.parsers.Parser {
       source.lines).visit(source.content)
     logger.info(s"[PARSE TREE]\n $tree")
     // Program(tree, None, source.name)
-    tree match {
+    val res = tree match {
       case program: primj.ast.ProgramApi =>
         primj.ast.TreeCopiers.copyProgram(program)(sourceName = source.name)
       case _                => tree
     }
+    res
   }
 
   class DcctVisitor(val source: String,
@@ -159,12 +161,14 @@ class Parser extends tiny.parsers.Parser {
       val elements: List[ValDefApi] = getElementsList(ctx.elements())      
       val properties: List[ValDefApi] = if (ctx.properties() != null) {
         ctx.properties().property().asScala.toList.map {
-          property => visit(property).asInstanceOf[ValDefApi]
+          property => {
+            visit(property).asInstanceOf[ValDefApi]
+          }
         }
       } else Nil
       
       
-      mkClassDef(noflags, getIdentName(ctx.Identifier), 
+      mkClassDef(noflags | CLASS, getIdentName(ctx.Identifier), 
         Nil, mkTemplate(elements ++ properties, pos(ctx.elements())), pos(ctx))
     }
     
@@ -210,7 +214,8 @@ class Parser extends tiny.parsers.Parser {
     override def visitProperty(@NotNull ctx: DcctParser.PropertyContext): Tree = {
       val tpe = visitCloudType(ctx.cloudType())
       // TODO maybe better flag the property types?
-      ooj.ast.TreeFactories.mkValDef(noflags, tpe, getIdentName(ctx.Identifier), NoTree, pos(ctx))
+      ooj.ast.TreeFactories.mkValDef(FIELD | noflags,
+        tpe, getIdentName(ctx.Identifier), NoTree, pos(ctx))
     }
     
 /************************      Actions and Statements        ************************/
