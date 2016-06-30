@@ -160,7 +160,7 @@ trait ValDefSymbolAssignerComponent extends SymbolAssignerComponent {
 
   protected def declareSymbol(valdef: ValDefApi,
     symbol: Symbol): Unit = {
-   if(valdef.mods.isField) {
+    if(valdef.mods.isField) {
       valdef.owner.foreach(sym => {
         sym.declare(symbol)
       })
@@ -170,9 +170,10 @@ trait ValDefSymbolAssignerComponent extends SymbolAssignerComponent {
   protected def checkDoubleDef(owner: Option[Symbol],
       name: Name, pos: Option[Position]): Unit =
     if(owner.map(_.directlyDefinesName(name,
-        _.isInstanceOf[VariableSymbol])).getOrElse(false))
+        _.isInstanceOf[VariableSymbol])).getOrElse(false)) {
       error(VARIABLE_ALREADY_DEFINED,
           "", "", pos)
+    }
 }
 
 
