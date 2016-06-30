@@ -56,7 +56,7 @@ trait ClassDefSymbolAssignerComponent extends ooj.namers.ClassDefSymbolAssignerC
   override protected def addDefaultConstructor(clazz: ClassDefApi, 
    sym: ClassSymbol ): TemplateApi = {
     clazz.body.owner = sym
-    assign(clazz.body).asInstanceOf[TemplateApi]
+    clazz.body
   }
 }
 
@@ -65,27 +65,32 @@ trait ArrayDefSymbolAssignerComponent extends SymbolAssignerComponent {
   // TODO why do I need the arraySymbol anyway???
   (array: ArrayDefApi) => { 
     val symbol = ArraySymbol(array.name, array.owner)
-    array.indices.map { x =>
-        x.owner = symbol
-        assign(x).asInstanceOf[ValDefApi]
+    val indices = array.indices.map { x =>
+      x.owner = symbol
+      assign(x).asInstanceOf[ValDefApi]
     }
-    array.properties.map { x =>
-        x.owner = symbol
-        assign(x).asInstanceOf[ValDefApi]
+    val properties = array.properties.map { x =>
+      x.owner = symbol
+      assign(x).asInstanceOf[ValDefApi]
     }
     array.symbol = symbol
-    array
+    TreeCopiers.copyArrayDef(array)(indices = indices, properties = properties)
   }
 }
 
 @component 
-trait ForeachSymbolAssignerComponent extends SymbolAssignerComponent {
+trait ForEachSymbolAssignerComponent extends SymbolAssignerComponent {
   (foreach: ForEachApi) => {
     val owner = foreach.owner
     val symbol = ScopeSymbol(owner)
     foreach.entityVar.owner = symbol
     foreach.body.owner = symbol
+    val entityVar = assign(foreach.entityVar).asInstanceOf[ValDefApi]
+    val whereExpr = assign(foreach.whereExpr).asInstanceOf[Expr]
+    val body      = assign(foreach.body).asInstanceOf[BlockApi]
     foreach.symbol = symbol
-    foreach
+    TreeCopiers.copyForEach(foreach)(entityVar = entityVar,
+      whereExpr = whereExpr, body = body)
   }
 }
+
