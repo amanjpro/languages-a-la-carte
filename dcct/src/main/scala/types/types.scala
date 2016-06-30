@@ -30,16 +30,20 @@ package ch.usi.inf.l3.sana.dcct.types
 import ch.usi.inf.l3.sana
 import sana.tiny.types._
 import sana.ooj.types._
+import sana.tiny.names.Name
+import sana.tiny.symbols.Symbol
 
 trait CloudType extends Type {
   def =:=(other: Type): Boolean = this == other
-  def <:<(other: Type): Boolean = {
-     other match {
-       case x:CloudType => true
-       case _ => false
-     }
-   }
+  def <:<(other: Type): Boolean = this =:= other
 }
+
+
+case class EntityType(val name: Name) extends ClassTypeApi {
+  def qual: String = ""
+  def parents: Set[Symbol] = Set.empty
+  override def <:<(t: Type): Boolean = this =:= t
+} 
 
 case object CIntType extends CloudType 
 
