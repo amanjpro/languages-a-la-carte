@@ -86,62 +86,7 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
   }
 
   object Language extends super.Language {
-        def init(): Unit = {
-      def singleParamConstructor(paramSymbol: Symbol,
-          owner: Symbol): MethodSymbol = {
-        val mods = PUBLIC_ACC | CONSTRUCTOR
-        val name = StdNames.CONSTRUCTOR_NAME
-        val cnstrTpe = Some(MethodType(VoidType, paramSymbol.tpe.toList))
-        val sym  = MethodSymbol(mods, name,
-            Some(VoidSymbol), Nil, cnstrTpe, Some(owner))
-        val psym    = VariableSymbol(PARAM | noflags,
-            Name("value"), Some(paramSymbol), Some(sym))
-        sym.params = List(psym)
-        sym
-      }
-
-      def createClassSymbol(name: Name, paramSym: Option[Symbol],
-              tpe: Type): ClassSymbol = {
-        val mods    = PUBLIC_ACC | FINAL
-        // val name    = StdNames.STRING_TYPE_NAME
-        val parents = List(ooj.symbols.SymbolUtils.objectClassSymbol)
-        val owner   = Some(ooj.symbols.SymbolUtils.langPackageSymbol)
-        // val tpe     = Some(TypeUtils.stringClassType)
-        val res     = ClassSymbol(mods, name, parents, owner, Some(tpe))
-        val cnstr   = paramSym match {
-          case None            =>
-            singleParamConstructor(res, res)
-          case Some(sym)       =>
-            singleParamConstructor(sym, res)
-        }
-        res.declare(cnstr)
-        res
-      }
-
-      val javaPackageSymbol: PackageSymbol = {
-        val name    = StdNames.JAVA_PACKAGE_NAME
-        val owner = Some(ProgramSymbol)
-        PackageSymbol(name, owner)
-      }
-
-      val langPackageSymbol: PackageSymbol = {
-        val name    = StdNames.LANG_PACKAGE_NAME
-        val owner = Some(javaPackageSymbol)
-        PackageSymbol(name, owner)
-      }
-
-      val obj: ClassSymbol = {
-        val mods    = Flags(PUBLIC_ACC)
-        val name    = StdNames.OBJECT_TYPE_NAME
-        val parents = Nil
-        val owner   = Some(langPackageSymbol)
-        val tpe     = Some(TypeUtils.objectClassType)
-        val res = ClassSymbol(mods, name, parents, owner, tpe)
-        res
-      }
-      langPackageSymbol.declare(obj)
-      javaPackageSymbol.declare(langPackageSymbol)
-      ProgramSymbol.declare(javaPackageSymbol)
+    def init(): Unit = {
       dcct.symbols.SymbolUtils.standardDefinitions.foreach { x =>
         ProgramSymbol.declare(x)
       }
@@ -163,10 +108,7 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
     def compiler: CompilerInterface = new CompilerInterface {
       def typeCheck(owner: Option[Symbol])(tree: Tree): Tree = {
         owner.foreach(tree.owner = _)
-        symassigner.assign.join(namer.name)(tree)
-        // TODO Uncomment this when you want
-        // owner.foreach(tree.owner = _)
-        // symassigner.assign.join(namer.name.join(typer.typed))(tree)
+        symassigner.assign.join(namer.name.join(typer.typed))(tree)
       }
       def definesModule(module: String): Boolean = false
       def load(fname: String): Option[Tree]   = None
@@ -176,8 +118,8 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
 
     private[this] lazy val symassigner   = DcctSymbolAssignerFamily(compiler)
     private[this] lazy val namer         = DcctNamerFamily(compiler)
+    private[this] lazy val typer         = DcctTyperFamily(compiler)
     private[this] lazy val codegenerator         = DcctCodeGenFamily(compiler)
-    // TODO: Add typer to here when you have it
 
     def compile: Tree => Unit = {
       init()
@@ -191,9 +133,10 @@ trait Compiler extends tiny.CompilerApi[Tree, Unit] {
         //      (PrimjTyperFamily.typed join
         //        (PrimjShapeCheckerFamily.check))))
 
-        val f = symassigner.assign join (
-            namer.name  join (
-                codegenerator.codegen))
+        val f = symassigner.assign join
+                  namer.name  join
+                    typer.typed join
+                      codegenerator.codegen
 
         val targetCode = f(x)
         val targetFile = config.files.toList.head
