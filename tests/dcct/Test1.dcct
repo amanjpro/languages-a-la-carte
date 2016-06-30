@@ -2,6 +2,7 @@
 
 entity Order(oIdent: Int) {
   quantity: CInt;
+  bb: CInt;
 }
 
 array Orders[c: Int] {
