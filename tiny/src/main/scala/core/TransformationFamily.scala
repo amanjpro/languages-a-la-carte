@@ -35,7 +35,21 @@ trait PhaseFamily[P, R] {
 
   def components: List[PartialFunction[P, R]]
 
-  def family: P => R = components.reduce((x, y) => x orElse y) orElse default
+  def family: P => R = { p =>
+    var comp = default
+    val iter = components.iterator
+
+    var shouldContinue = true
+    while(iter.hasNext && shouldContinue) {
+      val candidate = iter.next
+      if(candidate.isDefinedAt(p)) {
+        comp = candidate
+        shouldContinue = false
+      }
+    }
+    comp(p)
+    // components.reduce((x, y) => x orElse y) orElse default
+  }
 }
 
 trait TransformationFamily[P, R] extends PhaseFamily[P, R]
