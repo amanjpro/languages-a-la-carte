@@ -30,12 +30,14 @@ package ch.usi.inf.l3.sana.tiny.core
 trait PhaseFamily[P, R] {
   self =>
 
-  def default: PartialFunction[P, R] = ???
+  type Input  = P
+  type Output = R
+  def default: PartialFunction[Input, Output] = ???
   def compiler: CompilerInterface
 
-  def components: List[PartialFunction[P, R]]
+  def components: List[PartialFunction[Input, Output]]
 
-  def family: P => R = { p =>
+  def family: Input => Output = { p =>
     var comp = default
     val iter = components.iterator
 
