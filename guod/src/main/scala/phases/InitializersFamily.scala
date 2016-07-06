@@ -36,17 +36,15 @@ import sana.tiny.symbols.Symbol
 import sana.modulej.Nodes
 import sana.guod.codegen._
 
-@family("Program,PackageDef,ClassDef,Template,CompilationUnit",
-  "InitializerComponent", "inline")
 trait InitializersFamilyApi extends TransformationFamily[Tree, Tree] {
   self =>
 
   override def default = { case s => s }
 
-  // def components: List[PartialFunction[Tree, Tree]] =
-  //   generateComponents[Tree, Tree]("Program,PackageDef,ClassDef,Template,CompilationUnit",
-  //     "InitializerComponent", "inline", "")
-  //
+  def components: List[PartialFunction[Tree, Tree]] =
+    generateComponents[Tree, Tree]("Program,PackageDef,ClassDef,Template,CompilationUnit",
+      "InitializerComponent", "inline", "")
+
   def inline: Tree => Tree = family
 }
 

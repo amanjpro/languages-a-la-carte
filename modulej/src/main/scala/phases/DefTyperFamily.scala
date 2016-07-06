@@ -43,18 +43,16 @@ import sana.modulej.typechecker._
 
 
 
-@family("Program,CompilationUnit,PackageDef,ClassDef,Template,MethodDef,ValDef,TypeUse,Select,Ident,Block,ArrayTypeUse,Import",
-      "DefTyperComponent", "typed")
 trait DefTyperFamilyApi extends TransformationFamily[Tree, Tree] {
   self =>
 
   override def default = { case s => s }
 
-  // def components: List[PartialFunction[Tree, Tree]] =
-  //   generateComponents[Tree, Tree](
-  //     "Program,CompilationUnit,PackageDef,ClassDef,Template,MethodDef,ValDef,TypeUse,Select,Ident,Block,ArrayTypeUse,Import",
-  //     "DefTyperComponent", "typed", "")
-  //
+  def components: List[PartialFunction[Tree, Tree]] =
+    generateComponents[Tree, Tree](
+      "Program,CompilationUnit,PackageDef,ClassDef,Template,MethodDef,ValDef,TypeUse,Select,Ident,Block,ArrayTypeUse,Import",
+      "DefTyperComponent", "typed", "")
+
   def typed: Tree => Tree = family
 }
 

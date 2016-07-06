@@ -44,56 +44,17 @@ import sana.ppj.typechecker._
 import sana.dynj.typechecker._
 import sana.modulej.typechecker._
 
-@family("""Program,
-       CompilationUnit,
-       Import,
-       PackageDef,
-       ClassDef,
-       Template,
-       MethodDef,
-       ValDef,
-       Throw,
-       Try,
-       Catch,
-       Select,
-       This,
-       Super,
-       New,
-       Synchronized,
-       ArrayCreation,
-       ArrayAccess,
-       ArrayInitializer,
-       ArrayTypeUse,
-       Label,
-       Switch,
-       Case,
-       Break,
-       Continue,
-       Assign,
-       If,
-       While,
-       Block,
-       For,
-       Ternary,
-       Apply,
-       Return,
-       Cast,
-       Binary,
-       Unary,
-       Literal,
-       TypeUse,
-       Ident""",
-      "JumpCheckerComponent", "check", "Import,Throw")
+
 trait JumpCheckerFamilyApi extends CheckerFamily[(Tree, List[Tree])] {
   self =>
 
   override def default = { case s => () }
 
-  // def components: List[PartialFunction[(Tree, List[Tree]), Unit]] =
-  //   generateComponents[(Tree, List[Tree]), Unit](
-  //     Nodes.nodes,
-  //     "JumpCheckerComponent", "check", "Import,Throw")
-  //
+  def components: List[PartialFunction[(Tree, List[Tree]), Unit]] =
+    generateComponents[(Tree, List[Tree]), Unit](
+      Nodes.nodes,
+      "JumpCheckerComponent", "check", "Import,Throw")
+
   def check: ((Tree, List[Tree])) => Unit = family
 }
 

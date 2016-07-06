@@ -37,18 +37,16 @@ import sana.ooj.typechecker._
 
 
 
-@family("Program,CompilationUnit,PackageDef,ClassDef,Template,Block",
-  "ForwardRefCheckerComponent", "check")
 trait ForwardRefCheckerFamilyApi extends CheckerFamily[(Tree, List[Symbol])] {
   self =>
 
   override def default = { case s => () }
 
-  // def components: List[PartialFunction[(Tree, List[Symbol]), Unit]] =
-  //   generateComponents[(Tree, List[Symbol]), Unit](
-  //     "Program,CompilationUnit,PackageDef,ClassDef,Template,Block",
-  //     "ForwardRefCheckerComponent", "check", "")
-  //
+  def components: List[PartialFunction[(Tree, List[Symbol]), Unit]] =
+    generateComponents[(Tree, List[Symbol]), Unit](
+      "Program,CompilationUnit,PackageDef,ClassDef,Template,Block",
+      "ForwardRefCheckerComponent", "check", "")
+
   def check: ((Tree, List[Symbol])) => Unit = family
 }
 

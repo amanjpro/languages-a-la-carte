@@ -39,28 +39,15 @@ import sana.calcj.typechecker.{UnaryTyperComponent => _, _}
 
 
 
-@family("""Program,
-       MethodDef,
-       ValDef,
-       Ident,
-       TypeUse,
-       If,
-       While,
-       Block,
-       For,
-       Ternary,
-       Apply,
-       Return,
-       Assign,
-       Cast,
-       Binary,
-       Unary,
-       Literal""", "TyperComponent", "typed")
 trait PrimjTyperFamilyApi extends
   TransformationFamily[Tree, Tree] {
   self =>
 
   override def default = { case s: Tree => s }
+
+  def components: List[PartialFunction[Tree, Tree]] =
+    generateComponents[Tree, Tree](PrimjNodes.nodes,
+      "TyperComponent", "typed", "")
 
   def typed: Tree => Tree = family
 }

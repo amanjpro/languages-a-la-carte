@@ -45,56 +45,16 @@ import sana.modulej.eval._
 
 
 
-@family("""Program,
-       CompilationUnit,
-       Import,
-       PackageDef,
-       ClassDef,
-       Template,
-       MethodDef,
-       ValDef,
-       Throw,
-       Try,
-       Catch,
-       Select,
-       This,
-       Super,
-       New,
-       Synchronized,
-       ArrayCreation,
-       ArrayAccess,
-       ArrayInitializer,
-       ArrayTypeUse,
-       Label,
-       Switch,
-       Case,
-       Break,
-       Continue,
-       Assign,
-       If,
-       While,
-       Block,
-       For,
-       Ternary,
-       Apply,
-       Return,
-       Cast,
-       Binary,
-       Unary,
-       Literal,
-       TypeUse,
-       Ident""",
-  "ConstantFoldingComponent", "constantFold")
 trait ConstantFoldingFamilyApi
   extends TransformationFamily[(Tree, Env), (Tree, Env)] {
   self =>
 
   override def default = { case s: ((Tree, Env)) => s }
 
-  // def components: List[PartialFunction[(Tree, Env), (Tree, Env)]] =
-  //   generateComponents[(Tree, Env), (Tree, Env)](Nodes.nodes,
-  //     "ConstantFoldingComponent", "constantFold", "")
-  //
+  def components: List[PartialFunction[(Tree, Env), (Tree, Env)]] =
+    generateComponents[(Tree, Env), (Tree, Env)](Nodes.nodes,
+      "ConstantFoldingComponent", "constantFold", "")
+
   def constantFold: ((Tree, Env)) => (Tree, Env) = family
 }
 

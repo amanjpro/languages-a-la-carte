@@ -36,55 +36,15 @@ import sana.tiny.symbols.Symbol
 import sana.modulej.Nodes
 import sana.guod.codegen._
 
-@family("""Program,
-       CompilationUnit,
-       Import,
-       PackageDef,
-       ClassDef,
-       Template,
-       MethodDef,
-       ValDef,
-       Throw,
-       Try,
-       Catch,
-       Select,
-       This,
-       Super,
-       New,
-       Synchronized,
-       ArrayCreation,
-       ArrayAccess,
-       ArrayInitializer,
-       ArrayTypeUse,
-       Label,
-       Switch,
-       Case,
-       Break,
-       Continue,
-       Assign,
-       If,
-       While,
-       Block,
-       For,
-       Ternary,
-       Apply,
-       Return,
-       Cast,
-       Binary,
-       Unary,
-       Literal,
-       TypeUse,
-       Ident""",
-      "QualifierComponent", "fullyqualify", "Literal,Import,This,Super,Break,Continue")
 trait QualifierFamilyApi extends TransformationFamily[Tree, Tree] {
   self =>
 
   override def default = { case s => s }
 
-  // def components: List[PartialFunction[Tree, Tree]] =
-  //   generateComponents[Tree, Tree](Nodes.nodes,
-  //     "QualifierComponent", "fullyqualify", "Literal,Import,This,Super,Break,Continue")
-  //
+  def components: List[PartialFunction[Tree, Tree]] =
+    generateComponents[Tree, Tree](Nodes.nodes,
+      "QualifierComponent", "fullyqualify", "Literal,Import,This,Super,Break,Continue")
+
   def fullyqualify: Tree => Tree = family
 }
 

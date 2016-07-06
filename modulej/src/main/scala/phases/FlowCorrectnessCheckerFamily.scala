@@ -41,58 +41,19 @@ import sana.ppj.typechecker._
 import sana.dynj.typechecker._
 
 
-@family("""Program,
-       CompilationUnit,
-       Import,
-       PackageDef,
-       ClassDef,
-       Template,
-       MethodDef,
-       ValDef,
-       Throw,
-       Try,
-       Catch,
-       Select,
-       This,
-       Super,
-       New,
-       Synchronized,
-       ArrayCreation,
-       ArrayAccess,
-       ArrayInitializer,
-       ArrayTypeUse,
-       Label,
-       Switch,
-       Case,
-       Break,
-       Continue,
-       Assign,
-       If,
-       While,
-       Block,
-       For,
-       Ternary,
-       Apply,
-       Return,
-       Cast,
-       Binary,
-       Unary,
-       Literal,
-       TypeUse,
-       Ident""",
-      "FlowCorrectnessCheckerComponent", "check", "Import")
+
 trait FlowCorrectnessCheckerFamilyApi extends
   TransformationFamily[(Tree, FlowEnv), CompletenessStatus] {
   self =>
 
   override def default = { case s => N }
 
-  // def components:
-  //   List[PartialFunction[(Tree, FlowEnv), CompletenessStatus]] =
-  //   generateComponents[(Tree, FlowEnv), CompletenessStatus](
-  //     Nodes.nodes,
-  //     "FlowCorrectnessCheckerComponent", "check", "Import")
-  //
+  def components:
+    List[PartialFunction[(Tree, FlowEnv), CompletenessStatus]] =
+    generateComponents[(Tree, FlowEnv), CompletenessStatus](
+      Nodes.nodes,
+      "FlowCorrectnessCheckerComponent", "check", "Import")
+
   def check: ((Tree, FlowEnv)) => CompletenessStatus = family
 }
 

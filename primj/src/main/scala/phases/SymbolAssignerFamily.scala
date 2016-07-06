@@ -39,31 +39,16 @@ import sana.primj.namers._
 
 
 
-@family("""Program,
-       MethodDef,
-       ValDef,
-       Ident,
-       TypeUse,
-       If,
-       While,
-       Block,
-       For,
-       Ternary,
-       Apply,
-       Return,
-       Assign,
-       Cast,
-       Binary,
-       Unary,
-       Literal""",
-  "SymbolAssignerComponent", "assign")
 trait PrimjSymbolAssignerFamilyApi
   extends TransformationFamily[Tree, Tree] {
   self =>
 
-  val nodes    = PrimjNodes.nodes
   override def default = { case s: Tree => s }
 
+  def components: List[PartialFunction[Tree, Tree]] =
+    generateComponents[Tree, Tree](PrimjNodes.nodes,
+      "SymbolAssignerComponent", "assign", "")
+      
   def assign: Tree => Tree = family
 }
 
