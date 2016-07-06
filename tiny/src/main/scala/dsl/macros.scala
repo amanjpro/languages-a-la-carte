@@ -29,7 +29,6 @@ package ch.usi.inf.l3.sana.tiny
 
 
 import scala.reflect.macros.blackbox.Context
-import scala.reflect.macros.whitebox.{Context => WContext}
 import scala.annotation.{StaticAnnotation,compileTimeOnly}
 import scala.language.experimental.macros
 
@@ -54,119 +53,12 @@ object dsl {
     def macroTransform(annottees: Any*): Any = macro MacroImpls.componentImpl
   }
 
-  @compileTimeOnly("Enable macro paradise to components")
-  class family extends StaticAnnotation {
-    def macroTransform(annottees: Any*): Any = macro MacroImpls.familyImpl
-  }
 }
 
 
 object MacroImpls {
 
-
-  def familyImpl(c: WContext)(annottees: c.Expr[Any]*): c.Expr[Any] = {
-    import c.universe._
-    val inputs = annottees.map(_.tree).toList
-
-    val expandee = inputs match {
-      case (clazz: ClassDef) :: Nil =>
-        type InputTypes = Option[(List[ValDef], Tree)]
-        val result : InputTypes =
-          c.prefix.tree match {
-            case Apply(_, xs)                             =>
-              val Literal(Constant(commonNameString: String))   = xs(1)
-              val Literal(Constant(callbackString: String))     = xs(2)
-              val treeList                                      = {
-                val duplicated = xs(0).duplicate
-                val constant   = c.Expr[String](c.untypecheck(duplicated))
-                c.eval[String](constant).split(",").map(_.trim)
-              }.toList
-              val excludedTrees                                 = if(xs.size == 4) {
-                val duplicated = xs(3).duplicate
-                val constant   = c.Expr[String](c.untypecheck(duplicated))
-                c.eval[String](constant).split(",").map(_.trim).toList
-              } else Nil
-
-              var index = -1
-              var components: List[ValDef] = Nil
-              val iter       = treeList.iterator
-
-              while(iter.hasNext) {
-                val tree = iter.next
-                if(!excludedTrees.contains(tree)) {
-                  index += 1
-                  val compName  = TermName("comp" + index)
-                  val cbName    = TermName(callbackString)
-                  val clazzName = TypeName(tree + commonNameString)
-                  val component = q"""
-                    private[this] val $compName = new $clazzName {
-                      def compiler = self.compiler
-                      def $cbName = self.$cbName
-                    }
-                  """
-                  components = component :: components
-                }
-              }
-
-              val iter2    = components.iterator
-              var delegates: List[Tree] = Nil // q"override def family: Input => Output"
-              var i        = 0
-              while(i <= index) {
-                val compName = TermName("comp" + i)
-                delegates = delegates ++ List(q"""if($compName.isDefinedAt(p)) {
-                  $compName(p)
-                }""")
-                i += 1
-              }
-              val condition = delegates.reverse.foldLeft(q"default(p)") { (z, y) =>
-                y match {
-                  case q"if($expr1) $thenp else $elsep" =>
-                    q"if($expr1) $thenp else $z"
-                  case _                                =>
-                    z
-                }
-              }
-              val delegate = q"""override def family: Input => Output = (p) => {
-                $condition
-              }"""
-              Some((components, delegate))
-            case _                                        =>
-              c.abort(c.enclosingPosition,
-                "Malfored family expansion")
-              None
-          }
-
-        result match {
-          case None                          =>
-            EmptyTree
-          case Some((components, delegate))  =>
-            val body = {
-              val old = clazz.impl.body.filter { mthd =>
-                mthd match {
-                  case mt: DefDef    =>
-                    mt.name != TermName("$init$")
-                  case _             =>
-                    true
-                }
-              }
-              old ++ (delegate :: components)
-            }
-            q"""
-            ${clazz.mods} trait ${clazz.name} extends ..${clazz.impl.parents} {
-              self =>
-              ..$body
-              val components = Nil
-            }"""
-        }
-      case _ =>
-        c.abort(c.enclosingPosition,
-          "Only traits/classes can become family")
-        EmptyTree
-    }
-    c.Expr[Any](expandee)
-  }
-
-  def componentImpl(c: WContext)(annottees: c.Expr[Any]*): c.Expr[Any] = {
+  def componentImpl(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
     import c.universe._
     val inputs = annottees.map(_.tree).toList
     // Luckily Scala compiler is fool enough to accept that all apply
