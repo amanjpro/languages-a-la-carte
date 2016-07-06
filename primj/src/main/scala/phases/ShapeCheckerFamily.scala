@@ -37,16 +37,29 @@ import sana.primj.typechecker._
 import sana.calcj.typechecker._
 
 
-
+@family("""Program,
+       MethodDef,
+       ValDef,
+       Ident,
+       TypeUse,
+       If,
+       While,
+       Block,
+       For,
+       Ternary,
+       Apply,
+       Return,
+       Assign,
+       Cast,
+       Binary,
+       Unary,
+       Literal""",
+      "ShapeCheckerComponent", "check",
+      "Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal")
 trait PrimjShapeCheckerFamilyApi extends CheckerFamily[Tree] {
   self =>
 
   override def default = { case s: Tree => () }
-
-  def components: List[PartialFunction[Tree, Unit]] =
-    generateComponents[Tree, Unit](PrimjNodes.nodes,
-      "ShapeCheckerComponent", "check",
-      "Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal")
 
   def check: Tree => Unit = family
 }

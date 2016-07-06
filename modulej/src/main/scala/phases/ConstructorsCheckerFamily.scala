@@ -38,17 +38,19 @@ import sana.ooj.typechecker._
 
 
 
+@family("Program,CompilationUnit,PackageDef,ClassDef,Template,MethodDef,Block,Assign",
+  "ConstructorsCheckerComponent", "check")
 trait ConstructorsCheckerFamilyApi
   extends CheckerFamily[(Tree, ConstructorCheckerEnv)] {
   self =>
 
   override def default = { case s => () }
 
-  def components: List[PartialFunction[(Tree, ConstructorCheckerEnv), Unit]] =
-    generateComponents[(Tree, ConstructorCheckerEnv), Unit](
-      "Program,CompilationUnit,PackageDef,ClassDef,Template,MethodDef,Block,Assign",
-      "ConstructorsCheckerComponent", "check", "")
-
+  // def components: List[PartialFunction[(Tree, ConstructorCheckerEnv), Unit]] =
+  //   generateComponents[(Tree, ConstructorCheckerEnv), Unit](
+  //     "Program,CompilationUnit,PackageDef,ClassDef,Template,MethodDef,Block,Assign",
+  //     "ConstructorsCheckerComponent", "check", "")
+  //
   def check: ((Tree, ConstructorCheckerEnv)) => Unit = family
 }
 

@@ -37,16 +37,12 @@ import sana.primj.namers._
 
 
 
+@family("Program,MethodDef,ValDef,TypeUse,Ident",
+    "NamerComponent", "name")
 trait PrimjNamerFamilyApi extends TransformationFamily[Tree, Tree] {
   self =>
 
   override def default = { case s: Tree => s }
-
-  def components: List[PartialFunction[Tree, Tree]] =
-    generateComponents[Tree, Tree](
-      "Program,MethodDef,ValDef,TypeUse,Ident",
-      "NamerComponent", "name", "")
-      // "Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal")
 
   def name: Tree => Tree = family
 }

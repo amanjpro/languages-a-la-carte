@@ -36,15 +36,55 @@ import sana.tiny.symbols.Symbol
 import sana.modulej.Nodes
 import sana.guod.codegen._
 
+@family("""Program,
+       CompilationUnit,
+       Import,
+       PackageDef,
+       ClassDef,
+       Template,
+       MethodDef,
+       ValDef,
+       Throw,
+       Try,
+       Catch,
+       Select,
+       This,
+       Super,
+       New,
+       Synchronized,
+       ArrayCreation,
+       ArrayAccess,
+       ArrayInitializer,
+       ArrayTypeUse,
+       Label,
+       Switch,
+       Case,
+       Break,
+       Continue,
+       Assign,
+       If,
+       While,
+       Block,
+       For,
+       Ternary,
+       Apply,
+       Return,
+       Cast,
+       Binary,
+       Unary,
+       Literal,
+       TypeUse,
+       Ident""",
+      "CodeGenComponent", "codegen", "Import,Catch,ArrayTypeUse,Case,TypeUse")
 trait CodeGenFamilyApi extends TransformationFamily[(Tree, ByteCodeWriter), Unit] {
   self =>
 
   override def default = { case s => () }
 
-  def components: List[PartialFunction[(Tree, ByteCodeWriter), Unit]] =
-    generateComponents[(Tree, ByteCodeWriter), Unit](Nodes.nodes,
-      "CodeGenComponent", "codegen", "Import,Catch,ArrayTypeUse,Case,TypeUse")
-
+  // def components: List[PartialFunction[(Tree, ByteCodeWriter), Unit]] =
+  //   generateComponents[(Tree, ByteCodeWriter), Unit](Nodes.nodes,
+  //     "CodeGenComponent", "codegen", "Import,Catch,ArrayTypeUse,Case,TypeUse")
+  //
   def codegen: ((Tree, ByteCodeWriter)) => Unit = family
 }
 

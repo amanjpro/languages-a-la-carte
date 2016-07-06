@@ -36,15 +36,55 @@ import sana.tiny.symbols.Symbol
 import sana.modulej.Nodes
 import sana.guod.codegen._
 
+@family("""Program,
+       CompilationUnit,
+       Import,
+       PackageDef,
+       ClassDef,
+       Template,
+       MethodDef,
+       ValDef,
+       Throw,
+       Try,
+       Catch,
+       Select,
+       This,
+       Super,
+       New,
+       Synchronized,
+       ArrayCreation,
+       ArrayAccess,
+       ArrayInitializer,
+       ArrayTypeUse,
+       Label,
+       Switch,
+       Case,
+       Break,
+       Continue,
+       Assign,
+       If,
+       While,
+       Block,
+       For,
+       Ternary,
+       Apply,
+       Return,
+       Cast,
+       Binary,
+       Unary,
+       Literal,
+       TypeUse,
+       Ident""",
+      "LocalVariablesComponent", "subst", "Import,This,Super,Literal,TypeUse,ArrayTypeUse,ArrayCreation,Break,Continue")
 trait LocalVariablesFamilyApi extends TransformationFamily[(Tree, Env), Unit] {
   self =>
 
   override def default = { case s => () }
 
-  def components: List[PartialFunction[(Tree, Env), Unit]] =
-    generateComponents[(Tree, Env), Unit](Nodes.nodes,
-      "LocalVariablesComponent", "subst", "Import,This,Super,Literal,TypeUse,ArrayTypeUse,ArrayCreation,Break,Continue")
-
+  // def components: List[PartialFunction[(Tree, Env), Unit]] =
+  //   generateComponents[(Tree, Env), Unit](Nodes.nodes,
+  //     "LocalVariablesComponent", "subst", "Import,This,Super,Literal,TypeUse,ArrayTypeUse,ArrayCreation,Break,Continue")
+  //
   def subst: ((Tree, Env)) => Unit = family
 }
 

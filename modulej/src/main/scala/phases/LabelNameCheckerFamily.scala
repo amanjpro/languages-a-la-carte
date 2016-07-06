@@ -46,17 +46,56 @@ import sana.dynj.typechecker._
 import sana.modulej.typechecker._
 
 
-
+@family("""Program,
+       CompilationUnit,
+       Import,
+       PackageDef,
+       ClassDef,
+       Template,
+       MethodDef,
+       ValDef,
+       Throw,
+       Try,
+       Catch,
+       Select,
+       This,
+       Super,
+       New,
+       Synchronized,
+       ArrayCreation,
+       ArrayAccess,
+       ArrayInitializer,
+       ArrayTypeUse,
+       Label,
+       Switch,
+       Case,
+       Break,
+       Continue,
+       Assign,
+       If,
+       While,
+       Block,
+       For,
+       Ternary,
+       Apply,
+       Return,
+       Cast,
+       Binary,
+       Unary,
+       Literal,
+       TypeUse,
+       Ident""",
+      "LabelNameCheckerComponent", "check", "Import,Throw")
 trait LabelNameCheckerFamilyApi extends CheckerFamily[(Tree, List[LabelApi])] {
   self =>
 
   override def default = { case s => () }
 
-  def components: List[PartialFunction[(Tree, List[LabelApi]), Unit]] =
-    generateComponents[(Tree, List[LabelApi]), Unit](
-      Nodes.nodes,
-      "LabelNameCheckerComponent", "check", "Import,Throw")
-
+  // def components: List[PartialFunction[(Tree, List[LabelApi]), Unit]] =
+  //   generateComponents[(Tree, List[LabelApi]), Unit](
+  //     Nodes.nodes,
+  //     "LabelNameCheckerComponent", "check", "Import,Throw")
+  //
   def check: ((Tree, List[LabelApi])) => Unit = family
 }
 

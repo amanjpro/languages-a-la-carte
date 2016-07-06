@@ -83,17 +83,60 @@ import sana.modulej.typechecker._
 
 
 
+@family("""Program,
+       CompilationUnit,
+       Import,
+       PackageDef,
+       ClassDef,
+       Template,
+       MethodDef,
+       ValDef,
+       Throw,
+       Try,
+       Catch,
+       Select,
+       This,
+       Super,
+       New,
+       Synchronized,
+       ArrayCreation,
+       ArrayAccess,
+       ArrayInitializer,
+       ArrayTypeUse,
+       Label,
+       Switch,
+       Case,
+       Break,
+       Continue,
+       Assign,
+       If,
+       While,
+       Block,
+       For,
+       Ternary,
+       Apply,
+       Return,
+       Cast,
+       Binary,
+       Unary,
+       Literal,
+       TypeUse,
+       Ident""",
+    "ShapeCheckerComponent", "check",
+      """Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal,
+      Select,This,New,Super,Break,Continue, ArrayCreation, ArrayAccess,
+      ArrayTypeUse,Import""")
 trait ShapeCheckerFamilyApi extends CheckerFamily[Tree] {
   self =>
 
   override def default = { case s => () }
 
-  def components: List[PartialFunction[Tree, Unit]] =
-    generateComponents[Tree, Unit](Nodes.nodes,
-      "ShapeCheckerComponent", "check",
-      """Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal,
-      Select,This,New,Super,Break,Continue, ArrayCreation, ArrayAccess,
-      ArrayTypeUse,Import""")
+  // def components: List[PartialFunction[Tree, Unit]] =
+  //   generateComponents[Tree, Unit](Nodes.nodes,
+  //     "ShapeCheckerComponent", "check",
+  //     """Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal,
+  //     Select,This,New,Super,Break,Continue, ArrayCreation, ArrayAccess,
+  //     ArrayTypeUse,Import""")
 
   def check: Tree => Unit = family
 }

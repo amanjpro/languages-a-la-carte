@@ -37,17 +37,20 @@ import sana.ooj.eval._
 
 
 
+@family(
+  "Program,CompilationUnit,PackageDef,ClassDef,ValDef,MethodDef,Block,Template",
+    "ConstantCollectingComponent", "collect")
 trait ConstantCollectingFamilyApi
   extends TransformationFamily[(Tree, Env), Env] {
   self =>
 
   override def default = { case s: ((Tree, Env)) => s._2 }
 
-  def components: List[PartialFunction[(Tree, Env), Env]] =
-    generateComponents[(Tree, Env), Env](
-      "Program,CompilationUnit,PackageDef,ClassDef,ValDef,MethodDef,Block,Template",
-      "ConstantCollectingComponent", "collect", "")
-
+  // def components: List[PartialFunction[(Tree, Env), Env]] =
+  //   generateComponents[(Tree, Env), Env](
+  //     "Program,CompilationUnit,PackageDef,ClassDef,ValDef,MethodDef,Block,Template",
+  //     "ConstantCollectingComponent", "collect", "")
+  //
   def collect: ((Tree, Env)) => Env = family
 }
 

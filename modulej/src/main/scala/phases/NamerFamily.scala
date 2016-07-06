@@ -50,18 +50,20 @@ import sana.modulej.namers._
 
 
 
-
+@family("""Program,ClassDef,PackageDef,CompilationUnit,MethodDef,
+          ValDef,TypeUse,Ident,Template,Select,Block,ArrayTypeUse,Import""",
+      "NamerComponent", "name")
 trait NamerFamilyApi extends TransformationFamily[Tree, Tree] {
   self =>
 
   override def default = { case s => s }
 
-  def components: List[PartialFunction[Tree, Tree]] =
-    generateComponents[Tree, Tree](
-      """Program,ClassDef,PackageDef,CompilationUnit,MethodDef,
-          ValDef,TypeUse,Ident,Template,Select,Block,ArrayTypeUse,Import""",
-      "NamerComponent", "name", "")
-
+  // def components: List[PartialFunction[Tree, Tree]] =
+  //   generateComponents[Tree, Tree](
+  //     """Program,ClassDef,PackageDef,CompilationUnit,MethodDef,
+  //         ValDef,TypeUse,Ident,Template,Select,Block,ArrayTypeUse,Import""",
+  //     "NamerComponent", "name", "")
+  //
   def name: Tree => Tree = family
 }
 

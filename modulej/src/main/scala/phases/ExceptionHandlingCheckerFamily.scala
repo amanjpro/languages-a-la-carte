@@ -41,7 +41,46 @@ import sana.ppj.typechecker._
 import sana.dynj.typechecker._
 
 
-
+@family("""Program,
+       CompilationUnit,
+       Import,
+       PackageDef,
+       ClassDef,
+       Template,
+       MethodDef,
+       ValDef,
+       Throw,
+       Try,
+       Catch,
+       Select,
+       This,
+       Super,
+       New,
+       Synchronized,
+       ArrayCreation,
+       ArrayAccess,
+       ArrayInitializer,
+       ArrayTypeUse,
+       Label,
+       Switch,
+       Case,
+       Break,
+       Continue,
+       Assign,
+       If,
+       While,
+       Block,
+       For,
+       Ternary,
+       Apply,
+       Return,
+       Cast,
+       Binary,
+       Unary,
+       Literal,
+       TypeUse,
+       Ident""",
+      "ExceptionHandlingCheckerComponent", "check", "Import")
 trait ExceptionHandlingCheckerFamilyApi extends
   TransformationFamily[(Tree, List[HandledException]),
                                         List[HandledException]] {
@@ -49,13 +88,13 @@ trait ExceptionHandlingCheckerFamilyApi extends
 
   override def default = { case s => s._2 }
 
-  def components:
-    List[PartialFunction[(Tree, List[HandledException]),
-              List[HandledException]]] =
-    generateComponents[(Tree, List[HandledException]), List[HandledException]](
-      Nodes.nodes,
-      "ExceptionHandlingCheckerComponent", "check", "Import")
-
+  // def components:
+  //   List[PartialFunction[(Tree, List[HandledException]),
+  //             List[HandledException]]] =
+  //   generateComponents[(Tree, List[HandledException]), List[HandledException]](
+  //     Nodes.nodes,
+  //     "ExceptionHandlingCheckerComponent", "check", "Import")
+  //
   def check: ((Tree, List[HandledException])) => List[HandledException] =
     family
 }
