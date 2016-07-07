@@ -27,14 +27,37 @@
 
 package ch.usi.inf.l3.sana.tiny.core
 
+/**
+ * The supertype of all phase families
+ */
 trait PhaseFamily[P, R] {
   self =>
 
+  /**
+   * The default action of this family. This method is
+   * applied whenever the family fails to find the proper
+   * component for an input.
+   */
   def default: PartialFunction[P, R] = ???
+
+  /**
+   * A reference to an instance of CompilerInterface. Using this reference
+   * the families can access the basic functions of a compiler, like parser,
+   * typer, and class-loader.
+   */
   def compiler: CompilerInterface
 
+  /**
+   * The list of the components of this family
+   */
   def components: List[PartialFunction[P, R]]
 
+  /**
+   * The family (delegate) method of this family. This search among all
+   * the components and using their isDefinedAt method can find the right
+   * component for the input, in case there is no suitable component, default
+   * is applied.
+   */
   def family: P => R = { p =>
     var comp = default
     val iter = components.iterator
@@ -51,6 +74,8 @@ trait PhaseFamily[P, R] {
   }
 }
 
+/** The supertyp of all transformation families */
 trait TransformationFamily[P, R] extends PhaseFamily[P, R]
 
+/** The supertyp of all checker families */
 trait CheckerFamily[P] extends PhaseFamily[P, Unit]

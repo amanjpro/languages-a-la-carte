@@ -27,6 +27,12 @@
 
 package ch.usi.inf.l3.sana.tiny.core
 
+/**
+ * The interface of a language module
+ */
 trait LanguageModule[P, R] {
+  /**
+   * Returns a function to compile the input
+   */
   def compile: P => R
 }

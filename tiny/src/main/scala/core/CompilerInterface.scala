@@ -32,6 +32,11 @@ import ch.usi.inf.l3.sana.tiny.ast.Tree
 import ch.usi.inf.l3.sana.tiny.symbols.Symbol
 
 
+/**
+ * The generic interface of every compiler-module. Every compilation
+ * phase (and component) should have access to an instance of this
+ * trait.
+ */
 trait CompilerInterface {
 
   /**

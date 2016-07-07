@@ -27,12 +27,27 @@
 
 package ch.usi.inf.l3.sana.tiny.core
 
+/**
+ * Augments Function1 with two variants of join method.
+ *
+ * join method is basically `andThen` except when the return type
+ * of the second partial function is Unit, in this case it returns
+ * the return of the first function.
+ */
 object Implicits {
   implicit val dummy = ()
 
   implicit class Function1Component[P, R](component: P => R) {
 
+    /**
+     * The first variant of join, which is basically andThen
+     */
     def join[A](other: R => A): P => A = component andThen other
+
+    /**
+     * The second variant of join. This returns the value of the first
+     * partial function, after applying the second function.
+     */
     def join(other: R => Unit)(implicit evidence: Unit): P => R = (p: P) => {
       val r = component(p)
       other(r)
@@ -53,22 +68,45 @@ object Implicits {
 //
 // }
 
+
+/**
+ * The supertype of all phase components in Sana.
+ */
 trait PhaseComponent[P, R] extends PartialFunction[P, R] {
   self =>
 
+  /** type aliases for the input */
   type Input  = P
+
+  /** type aliases for the output */
   type Output = R
 
+  /**
+   * A reference to an instance of CompilerInterface. Using this reference
+   * the components can access the basic functions of a compiler, like parser,
+   * typer, and class-loader.
+   */
   def compiler: CompilerInterface
 
+  /**
+   * In an attempt to make PhaseComponent monadic, we need to have a
+   * unit function, in this case point is the unit function. It basically
+   * creates the smallest possible partial function of the input.
+   */
   def point(r: R): PhaseComponent[P, R] = new PhaseComponent[P, R] {
     def apply(p: P): R = r
     val compiler: CompilerInterface = self.compiler
     def isDefinedAt(p: P): Boolean = true
   }
 
+  /**
+   * Equivalent to the apply function of partial functions.
+   */
   def run(p: P): R = apply(p)
 
+  /**
+   * The bind function of this monadic container (partial function).
+   */
   def flatMap[T](other: R => PhaseComponent[P, T]): PhaseComponent[P, T] = {
     new PhaseComponent[P, T] {
       def apply(p: P): T = other(self(p)).apply(p)
@@ -78,6 +116,15 @@ trait PhaseComponent[P, R] extends PartialFunction[P, R] {
   }
 }
 
+/**
+ * The supertype of all transformation components. A transformation component
+ * is a component which might transform the input.
+ */
 trait TransformationComponent[P, R] extends PhaseComponent[P, R]
 
+/**
+ * The supertype of all checker components. A checker component
+ * is a component which may not transform the input and performs a number of
+ * checks..
+ */
 trait CheckerComponent[P] extends PhaseComponent[P, Unit]
