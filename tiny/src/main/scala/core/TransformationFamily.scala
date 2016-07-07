@@ -48,7 +48,6 @@ trait PhaseFamily[P, R] {
       }
     }
     comp(p)
-    // components.reduce((x, y) => x orElse y) orElse default
   }
 }
 

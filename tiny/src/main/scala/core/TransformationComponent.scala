@@ -31,11 +31,8 @@ object Implicits {
   implicit val dummy = ()
 
   implicit class Function1Component[P, R](component: P => R) {
-    def join[A](other: R => A): P => A = (p: P) => {
-      val r = component(p)
-      other(r)
-    }
 
+    def join[A](other: R => A): P => A = component andThen other
     def join(other: R => Unit)(implicit evidence: Unit): P => R = (p: P) => {
       val r = component(p)
       other(r)
