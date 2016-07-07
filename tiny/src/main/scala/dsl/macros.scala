@@ -33,7 +33,25 @@ import scala.annotation.{StaticAnnotation,compileTimeOnly}
 import scala.language.experimental.macros
 
 
+/**
+ * Macros are implemented in this module.
+ */
 object dsl {
+
+  /**
+   * a macro to generate a list of phase components.
+   *
+   * @param trees a coma separated list of the names of the ASTs to generate
+   *              instance of phase components for.
+   * @param commonName the common name of the components, for example the common
+   *                   name between {{{IdentTyperComponen}}} and
+   *                   {{{TypeUseTyperComponent}}} is {{{TyperComponent}}}.
+   * @param callback the name of the family (delegate) method of the phase family
+   *                 that the components become part of.
+   * @param exluded A coma separated list of the names of the ASTs that we we want
+   *                to exclude from the {{{trees}}} list.
+   * @return a list of phase components instances.
+   */
   def generateComponents[T, R](trees: String,
     commonName: String, callback: String,
     excluded: String): List[PartialFunction[T, R]] =
@@ -48,6 +66,12 @@ object dsl {
   // def defines(id: Any, tpe: String): Boolean = macro MacroImpls.definesImpl
 
 
+  /**
+   * component macros to generate the boiler-plate for phase components.
+   *
+   * This macro takes optionally a parameter. The parameter should be a pair.
+   * For more information consult the manual.
+   */
   @compileTimeOnly("Enable macro paradise to components")
   class component extends StaticAnnotation {
     def macroTransform(annottees: Any*): Any = macro MacroImpls.componentImpl
