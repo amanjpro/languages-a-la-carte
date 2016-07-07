@@ -31,6 +31,9 @@ import java.util.logging.{Logger => JLogger, Level,
   FileHandler, SimpleFormatter}
 
 
+/**
+ * A utility class for logging
+ */
 class Logger(destination: String) {
   private[this] val logger = JLogger.getLogger(JLogger.GLOBAL_LOGGER_NAME)
   private[this] val handler = new FileHandler(destination)
@@ -40,20 +43,26 @@ class Logger(destination: String) {
   logger.addHandler(handler)
 
 
+  /** Log for debugging */
   def debug(msg: String): Unit = {
     logger.log(Level.FINE, msg)
   }
 
+  /** Log general information */
   def info(msg: String): Unit = {
     logger.log(Level.INFO, msg)
   }
+  /** Log warnings */
   def warning(msg: String): Unit = {
     logger.log(Level.WARNING, msg)
   }
+
+  /** Log severe warnings */
   def severe(msg: String): Unit = {
     logger.severe(msg)
   }
 
+  /** set default logging level */
   def setLevel(level: Level): Unit = {
     handler.setLevel(level)
     logger.setLevel(level)

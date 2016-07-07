@@ -33,6 +33,7 @@ import java.io.File
 
 package object debug {
 
+  /** A logger instance */
   val logger: Logger = {
     val sp = OS.getProperty("file.separator")
     val commonPath = OS.getProperty("user.home") + sp + "." +
