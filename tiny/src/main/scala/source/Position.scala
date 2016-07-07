@@ -29,9 +29,16 @@ package ch.usi.inf.l3.sana.tiny.source
 
 
 trait Position {
+  /** The name of the source file */
   def source: String
+
+  /** The row number in the source file*/
   def row: Int
+
+  /** The column number in the source file*/
   def col: Int
+
+  /** The line which contains this position */
   def line: String
 }
 
