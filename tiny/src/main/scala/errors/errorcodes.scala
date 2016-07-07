@@ -27,6 +27,9 @@
 
 package ch.usi.inf.l3.sana.tiny.errors
 
+/**
+ * The supertype of all error-codes.
+ */
 trait ErrorCode {
   def message: String
   lazy val code: String = this.toString

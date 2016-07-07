@@ -32,10 +32,17 @@ import sana.tiny.source.Position
 import ErrorCodes._
 
 
+/**
+ * A module for error reporting
+ */
 object ErrorReporting {
+
+  /** A list of reported errors and warnings */
   def errors: Vector[Report] = messages
+
   private[this] var messages: Vector[Report] = Vector()
 
+  /** Are we in testing mode or production mode */
   private[this] var _isTest: Option[Boolean] = None
   def isTest: Boolean = _isTest.getOrElse(false)
   def isTest_=(b: Boolean): Unit = _isTest match {
@@ -44,6 +51,7 @@ object ErrorReporting {
   }
 
 
+  /** Returns true if the compilation process is erroneous */
   def isErroneous(): Boolean =
     !messages.filter(_.isError).isEmpty
 
@@ -92,6 +100,14 @@ object ErrorReporting {
 
 
 
+  /**
+   * Report an error
+   *
+   * @param code the error code of this error
+   * @param found the actual result
+   * @param required the expected result
+   * @param pos the position of the erroneous AST
+   */
   def error(code: ErrorCode, found: String, required: String,
     pos: Option[Position]): Unit = {
       messages = messages :+ Report(Error,
@@ -99,6 +115,14 @@ object ErrorReporting {
         isTest)
   }
 
+  /**
+   * Report a warning
+   *
+   * @param code the error code of thi warning
+   * @param found the actual result
+   * @param required the expected result
+   * @param pos the position of the erroneous AST
+   */
   def warning(code: ErrorCode, found: String, required: String,
     pos: Option[Position]): Unit = {
       messages = messages :+ Report(Warning,
