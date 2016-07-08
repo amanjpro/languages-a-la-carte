@@ -31,9 +31,16 @@ package ch.usi.inf.l3.sana.tiny
 package types {
 
   trait Type {
+    /** Checks if this type is equal to another. */
     def =:=(other: Type): Boolean
+
+    /** Checks if this type is different to another. */
     def =/=(other: Type): Boolean = !(this =:= other)
+
+    /** Checks if this type is subtype of another. */
     def <:<(other: Type): Boolean
+
+    /** Checks if this type is supertype of another. */
     def >:>(other: Type): Boolean = this =:= other || !(this <:< other)
   }
 
@@ -47,6 +54,7 @@ package types {
 
 
 package object types {
+  /** Converts a type to a string */
   def tpeToString(tpe: Option[Type]): String =
     tpe.map(_.toString).getOrElse("<no type>")
 }

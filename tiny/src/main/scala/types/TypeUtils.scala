@@ -30,6 +30,15 @@ package ch.usi.inf.l3.sana.tiny.types
 
 
 trait TypeUtils {
+  /**
+   * Given two lists with the same length of types, and a function.
+   * this method reduces the lists using the {{{&}}} operator after
+   * applying the function on any two pairs with the same index.
+   *
+   * @param ts1 the first list of types
+   * @param ts2 the second list of types
+   * @param f the function to be applied on the pairs
+   */
   def reduceLists(ts1: List[Type], ts2: List[Type],
     f: (Type, Type) => Boolean): Boolean = {
     if(ts1.size == ts2.size)
