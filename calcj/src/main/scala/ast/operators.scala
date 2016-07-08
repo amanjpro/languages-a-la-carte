@@ -29,92 +29,128 @@ package ch.usi.inf.l3.sana.calcj.ast
 
 
 object operators {
+
+  /** The supertype of the operators supported by this module */
   trait Op
 
 
   // Unary Operators
 
+  /** The supertype of the unary operators supported by this module */
   trait UOp extends Op
 
+  /** The supertype of the postfix unary-operators supported by this module */
   trait POp extends Op
 
+  /** Indicates ! in Java */
   object Not extends UOp {
     override def toString: String = "!"
   }
+
+  /** Indicates ~ in Java */
   object BCompl extends UOp {
     override def toString: String = "~"
   }
+
+  /** Indicates ++ in Java */
   object Inc extends UOp with POp {
     override def toString: String = "++"
   }
+
+  /** Indicates -- in Java */
   object Dec extends UOp with POp {
     override def toString: String = "--"
   }
+
+  /** Indicates the unary - in Java */
   object Neg extends UOp {
     override def toString: String = "-"
   }
+
+  /** Indicates the unary + in Java */
   object Pos extends UOp {
     override def toString: String = "+"
   }
 
   // Binary Operators
+
+  /** The supertype of the binary operators supported by this module */
   trait BOp extends Op
 
+  /** Indicates > in Java */
   object Gt extends BOp {
     override def toString: String = ">"
   }
+  /** Indicates < in Java */
   object Lt extends BOp {
     override def toString: String = "<"
   }
 
+  /** Indicates == in Java */
   object Eq extends BOp {
     override def toString: String = "=="
   }
+  /** Indicates <= in Java */
   object Le extends BOp {
     override def toString: String = "<="
   }
+  /** Indicates >= in Java */
   object Ge extends BOp {
     override def toString: String = ">="
   }
+  /** Indicates != in Java */
   object Neq extends BOp {
     override def toString: String = "!="
   }
+  /** Indicates && in Java */
   object And extends BOp {
     override def toString: String = "&&"
   }
+  /** Indicates || in Java */
   object Or extends BOp {
     override def toString: String = "||"
   }
+  /** Indicates binary + in Java */
   object Add extends BOp {
     override def toString: String = "+"
   }
+  /** Indicates binary - in Java */
   object Sub extends BOp {
     override def toString: String = "-"
   }
+  /** Indicates * in Java */
   object Mul extends BOp {
     override def toString: String = "*"
   }
+  /** Indicates / in Java */
   object Div extends BOp {
     override def toString: String = "/"
   }
+  /** Indicates & in Java */
   object BAnd extends BOp {
     override def toString: String = "&"
   }
+  /** Indicates | in Java */
   object BOr extends BOp {
     override def toString: String = "|"
   }
+  /** Indicates ^ in Java */
   object BXor extends BOp {
     override def toString: String = "^"
   }
+  /** Indicates % in Java */
   object Mod extends BOp {
     override def toString: String = "%"
   }
+  /** Indicates << in Java */
   object SHL extends BOp {
     override def toString: String = "<<"
   }
+  /** Indicates >> in Java */
   object SHR extends BOp {
     override def toString: String = ">>"
   }
+  /** Indicates >>> in Java */
   object USHR extends BOp {
     override def toString: String = ">>>"
   }

@@ -41,6 +41,13 @@ import operators._
 
 trait TreeFactories extends sana.tiny.ast.TreeFactories {
 
+  /**
+   * Creates a cast tree.
+   *
+   * @param tpt the type-tree of this cast
+   * @param expr the expression of this cast
+   * @param pos the position of this cast
+   */
   def mkCast(tpt: UseTree, expr: Expr,
            pos: Option[Position] = None): CastApi = {
     val res = new Cast(tpt, expr)
@@ -50,7 +57,13 @@ trait TreeFactories extends sana.tiny.ast.TreeFactories {
     res
   }
 
-
+  /**
+   * Creates a literal tree.
+   *
+   * @param constant the constant value of this tree
+   * @param pos the position of this tree
+   * @param owner the owner of this tree
+   */
   def mkLiteral(constant: Constant,
               pos: Option[Position] = None,
               owner: Option[Symbol] = None): LiteralApi = {
@@ -61,7 +74,16 @@ trait TreeFactories extends sana.tiny.ast.TreeFactories {
     res
   }
 
-
+  /**
+   * Creates a binary tree.
+   *
+   * @param lhs the left-hand-side expression of this tree
+   * @param op the operation of this tree
+   * @param rhs the right-hand-side expression of this tree
+   * @param pos the position of this tree
+   * @param tpe the tpe of this tree
+   * @param owner the owner of this tree
+   */
   def mkBinary(lhs: Expr, op: BOp, rhs: Expr,
               pos: Option[Position] = None,
               tpe: Option[Type]     = None,
@@ -73,6 +95,17 @@ trait TreeFactories extends sana.tiny.ast.TreeFactories {
     res
   }
 
+  /**
+   * Creates a unary tree.
+   *
+   * @param isPostfix a flag to indicate weather this is a postfix or prefix unary
+   *                  operation
+   * @param op the operation of this tree
+   * @param rhs the expression of this tree
+   * @param pos the position of this tree
+   * @param tpe the tpe of this tree
+   * @param owner the owner of this tree
+   */
   def mkUnary(isPostfix: Boolean, op: UOp, expr: Expr,
               pos: Option[Position] = None,
               tpe: Option[Type]     = None,

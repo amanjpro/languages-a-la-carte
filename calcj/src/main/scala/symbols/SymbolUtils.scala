@@ -34,6 +34,12 @@ import sana.calcj.types._
 
 
 trait SymbolUtils {
+  /**
+   * Given a type, returns the primitive symbol of this type.
+   *
+   * @param t the type that we want to get its symbol
+   * @return if the type is primitive, then its symbol or else None.
+   */
   def getSymbol(t: Type): Option[Symbol] = t match {
     case BooleanType           => Some(BooleanSymbol)
     case IntType               => Some(IntSymbol)
@@ -47,6 +53,7 @@ trait SymbolUtils {
   }
 
 
+  /** The standard types and methods of this language module */
   def standardDefinitions: Set[Symbol] = Set(
       DoubleSymbol,
       FloatSymbol,

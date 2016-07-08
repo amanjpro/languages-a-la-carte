@@ -55,6 +55,7 @@ trait TyperComponent extends
 @component
 trait BinaryTyperComponent extends TyperComponent {
 
+  /** Type checks a binary tree */
   (bin: BinaryApi)           => {
     if(!bin.isTypedBinary) {
       val e1 = typed(bin.lhs)
@@ -73,6 +74,7 @@ trait BinaryTyperComponent extends TyperComponent {
               val res = TreeCopiers.copyBinary(bin)(lhs = expr1, rhs = expr2)
               res.tpe = rtpe
               e1.tpe match {
+                // Do not type-check this tree twice
                 case Some(tpe)   if tpe.isInstanceOf[PrimitiveType] &&
                                     bin.isCompoundBinary &&
                                     !bin.isTypedBinary &&
@@ -107,6 +109,7 @@ trait BinaryTyperComponent extends TyperComponent {
   }
 
 
+  /** Types this tree as specified by Java Spec */
   protected def binaryTyper(ltpe: Type,
     rtpe: Type, bin: BinaryApi): Option[(Type, Type, Type)] = bin.op match {
       case Gt | Lt | Le | Ge                      =>
@@ -212,8 +215,8 @@ trait BinaryTyperComponent extends TyperComponent {
 @component
 trait UnaryTyperComponent extends TyperComponent {
 
+  /** Type checks a unary tree */
   (unary: UnaryApi)          => {
-    // TODO:
     // Pos unary operator, should ideally perform the cast and return
     // the containing expression not the whole unary expression (the
     // operation is redundant). But this will reproduce the same problem
@@ -243,6 +246,7 @@ trait UnaryTyperComponent extends TyperComponent {
     }
   }
 
+  /** Types a unary tree as specified by Java spec */
   protected def unaryTyper(tpe: Type,
     unary: UnaryApi): Option[(Type, Type)] = {
     (unary.op, tpe)  match {
@@ -280,6 +284,7 @@ trait UnaryTyperComponent extends TyperComponent {
 
 @component
 trait CastTyperComponent extends TyperComponent {
+  /** Type-checks a cast tree */
   (cast: CastApi)           => {
     val tpt  = typed(cast.tpt)
     val expr = typed(cast.expr)
@@ -298,6 +303,7 @@ trait CastTyperComponent extends TyperComponent {
 
 @component
 trait LiteralTyperComponent extends TyperComponent {
+  /** Type-checks a literal tree */
   (lit: LiteralApi)     => {
     lit.tpe    = lit.constant.tpe
     getSymbol(lit.constant.tpe).foreach {

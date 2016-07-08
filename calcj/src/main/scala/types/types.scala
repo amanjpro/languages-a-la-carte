@@ -39,6 +39,7 @@ trait NumericType extends PrimitiveType
 trait IntegralType extends NumericType
 trait DecimalType extends NumericType
 
+/** A type to represent the primitive {{{int}}}. */
 case object IntType extends IntegralType {
   def <:<(other: Type): Boolean = other match {
     case IntType              => true
@@ -47,6 +48,8 @@ case object IntType extends IntegralType {
     case _                    => false
   }
 }
+
+/** A type to represent the primitive {{{short}}}. */
 case object ShortType extends IntegralType {
   def <:<(other: Type): Boolean = other match {
     case IntType              => true
@@ -56,6 +59,8 @@ case object ShortType extends IntegralType {
     case _                    => false
   }
 }
+
+/** A type to represent the primitive {{{char}}}. */
 case object CharType extends IntegralType {
   def <:<(other: Type): Boolean = other match {
     case IntType              => true
@@ -65,6 +70,8 @@ case object CharType extends IntegralType {
     case _                    => false
   }
 }
+
+/** A type to represent the primitive {{{byte}}}. */
 case object ByteType extends IntegralType {
   def <:<(other: Type): Boolean = other match {
     case IntType              => true
@@ -74,6 +81,8 @@ case object ByteType extends IntegralType {
     case _                    => false
   }
 }
+
+/** A type to represent the primitive {{{long}}}. */
 case object LongType extends IntegralType {
   def <:<(other: Type): Boolean = other match {
     case LongType             => true
@@ -83,17 +92,21 @@ case object LongType extends IntegralType {
 }
 
 
+/** A type to represent the primitive {{{boolean}}}. */
 case object BooleanType extends PrimitiveType {
   def <:<(other: Type): Boolean = this =:= other
 }
 
 
+/** A type to represent the primitive {{{float}}}. */
 case object FloatType extends DecimalType {
   def <:<(other: Type): Boolean = other match {
     case _: DecimalType       => true
     case _                    => false
   }
 }
+
+/** A type to represent the primitive {{{double}}}. */
 case object DoubleType extends DecimalType {
   def <:<(other: Type): Boolean = other match {
     case DoubleType           => true

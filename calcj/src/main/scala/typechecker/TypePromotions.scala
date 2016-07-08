@@ -39,6 +39,12 @@ import sana.calcj.symbols.SymbolUtils._
 
 
 trait TypePromotions {
+  /**
+   * Performs the Java's binary promotion for two numeric types.
+   *
+   * @param t1 the first type
+   * @param t2 the second type
+   */
   def binaryNumericPromotion(t1: NumericType,
     t2: NumericType): PrimitiveType = (t1, t2) match {
       case (DoubleType, _) => DoubleType
@@ -50,6 +56,11 @@ trait TypePromotions {
       case (_, _)          => IntType
     }
 
+  /**
+   * Performs the Java's unary promotion a numeric type.
+   *
+   * @param t1 the numeric type
+   */
   def unaryNumericPromotion(t1: NumericType): NumericType = t1 match {
     case LongType        => LongType
     case x: IntegralType => IntType
@@ -58,6 +69,15 @@ trait TypePromotions {
 
 
 
+  /**
+   * Given an expression, and an actual type and the expected type, it
+   * casts the expression from the actual type to the expected type should
+   * they not be the same.
+   *
+   * @param e the expression to be casted if needed
+   * @param t1 the expected type
+   * @param t2 the actual type
+   */
   def castIfNeeded(e: Expr, t1: Type, t2: Type): Expr = {
     if(t1 =:= t2) e
     else {
@@ -73,6 +93,12 @@ trait TypePromotions {
   }
 
 
+  /**
+   * Checks if a tree (of type literal) can be narrowed to a type.
+   *
+   * @param expr the expression to be checked
+   * @param tpe the type to which we check {{{expr}}} to be narrowed to.
+   */
   def isNarrawableTo(expr: Tree, tpe: Type): Boolean = expr match {
     case Literal(c) if c.tpe =:= IntType =>
       val value = c.value.asInstanceOf[Int]

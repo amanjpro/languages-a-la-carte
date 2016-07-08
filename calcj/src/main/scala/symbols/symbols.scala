@@ -35,6 +35,7 @@ import sana.tiny.modifiers.Flags
 import sana.tiny.modifiers.Ops._
 import sana.tiny.names.Name
 
+/** The symbol of primitive type {{{int}}} */
 trait IntSymbol extends TypeSymbol {
   def tpe: Option[Type] = Some(IntType)
   def owner: Option[Symbol] = None
@@ -58,6 +59,7 @@ trait IntSymbol extends TypeSymbol {
 
 case object IntSymbol extends IntSymbol
 
+/** The symbol of primitive type {{{char}}} */
 trait CharSymbol extends TypeSymbol {
   def tpe: Option[Type] = Some(CharType)
   def owner: Option[Symbol] = None
@@ -79,6 +81,7 @@ trait CharSymbol extends TypeSymbol {
 
 case object CharSymbol extends CharSymbol
 
+/** The symbol of primitive type {{{short}}} */
 trait ShortSymbol extends TypeSymbol {
   def tpe: Option[Type] = Some(ShortType)
   def owner: Option[Symbol] = None
@@ -100,6 +103,7 @@ trait ShortSymbol extends TypeSymbol {
 
 case object ShortSymbol extends ShortSymbol
 
+/** The symbol of primitive type {{{byte}}} */
 trait ByteSymbol extends TypeSymbol {
   def tpe: Option[Type] = Some(ByteType)
   def owner: Option[Symbol] = None
@@ -121,6 +125,7 @@ trait ByteSymbol extends TypeSymbol {
 
 case object ByteSymbol extends ByteSymbol
 
+/** The symbol of primitive type {{{long}}} */
 trait LongSymbol extends TypeSymbol {
   def tpe: Option[Type] = Some(LongType)
   def owner: Option[Symbol] = None
@@ -142,6 +147,7 @@ trait LongSymbol extends TypeSymbol {
 
 case object LongSymbol extends LongSymbol
 
+/** The symbol of primitive type {{{float}}} */
 trait FloatSymbol extends TypeSymbol {
   def tpe: Option[Type] = Some(FloatType)
   def owner: Option[Symbol] = None
@@ -163,6 +169,7 @@ trait FloatSymbol extends TypeSymbol {
 
 case object FloatSymbol extends FloatSymbol
 
+/** The symbol of primitive type {{{double}}} */
 trait DoubleSymbol extends TypeSymbol {
   def tpe: Option[Type] = Some(DoubleType)
   def owner: Option[Symbol] = None
@@ -185,6 +192,7 @@ trait DoubleSymbol extends TypeSymbol {
 case object DoubleSymbol extends DoubleSymbol
 
 
+/** The symbol of primitive type {{{boolean}}} */
 trait BooleanSymbol extends TypeSymbol {
   def tpe: Option[Type] = Some(BooleanType)
   def owner: Option[Symbol] = None

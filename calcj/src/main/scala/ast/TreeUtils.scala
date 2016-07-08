@@ -39,6 +39,20 @@ import calcj.types._
 import tiny.types._
 
 trait TreeUtils {
+  /**
+   * Narrows the given literal to a type.
+   *
+   * For example {{{(int) 32}}} can be narrowed using this function to
+   * {{{(short) 32}}}
+   *
+   * The narrowing is only done if it is possible, for example the following
+   * returns the input, without any narrowing takes place:
+   *
+   * {{{narrowDown(32838383838, ShortType)}}}.
+   *
+   * @param lit the literal to be narrowed
+   * @param tpe the type to be narrowed to
+   */
   def narrowDown(lit: LiteralApi, tpe: Type): LiteralApi = {
     tpe match {
       case ShortType =>
@@ -58,7 +72,20 @@ trait TreeUtils {
     }
   }
 
-
+  /**
+   * Widens the given numeric literal to a type.
+   *
+   * For example {{{32}}} can be widened using this function to
+   * {{{32.0f}}}
+   *
+   * The widening is only done if the literal is a numeric literal.
+   * Or else it returns the input, without any widening takes place:
+   *
+   * {{{widen("Hello", IntType)}}}.
+   *
+   * @param lit the literal to be widened
+   * @param tpe the type to be widened to
+   */
   def widen(lit: LiteralApi, tpe: Type): LiteralApi = {
     tpe match {
       case IntType         =>

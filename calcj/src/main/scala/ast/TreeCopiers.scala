@@ -41,6 +41,13 @@ import operators._
 
 trait TreeCopiers extends sana.tiny.ast.TreeCopiers {
 
+  /**
+   * Returns a copy of a cast tree
+   *
+   * @param template the cast to be copied
+   * @param tpt the type-tree of this tree
+   * @param expr the expression of this tree
+   */
   def copyCast(template: CastApi)(
       tpt: UseTree = template.tpt,
       expr: Expr = template.expr): CastApi = {
@@ -49,7 +56,12 @@ trait TreeCopiers extends sana.tiny.ast.TreeCopiers {
     res
   }
 
-
+  /**
+   * Returns a copy of a literal tree
+   *
+   * @param template the tree to be copied
+   * @param constant the constant value of this tree
+   */
   def copyLiteral(template: LiteralApi)
       (constant: Constant = template.constant): LiteralApi = {
     val res = TreeFactories.mkLiteral(constant)
@@ -57,7 +69,14 @@ trait TreeCopiers extends sana.tiny.ast.TreeCopiers {
     res
   }
 
-
+  /**
+   * Returns a copy of a binary tree
+   *
+   * @param template the tree to be copied
+   * @param lhs the left-hand-side expression of this tree
+   * @param op the operation of this tree
+   * @param rhs the right-hand-side expression of this tree
+   */
   def copyBinary(template: BinaryApi)(lhs: Expr = template.lhs,
       op: BOp = template.op, rhs: Expr = template.rhs): BinaryApi = {
     val res = TreeFactories.mkBinary(lhs, op, rhs)
@@ -65,6 +84,15 @@ trait TreeCopiers extends sana.tiny.ast.TreeCopiers {
     res
   }
 
+  /**
+   * Returns a copy of a unary tree
+   *
+   * @param template the tree to be copied
+   * @param isPostfix a flag to indicate if this is a postfix or prefix unary
+   *                  operation.
+   * @param op the operation of this tree
+   * @param expr the expression of this tree
+   */
   def copyUnary(template: UnaryApi)(isPostfix: Boolean = template.isPostfix,
     op: UOp = template.op, expr: Expr = template.expr): UnaryApi = {
     val res = TreeFactories.mkUnary(isPostfix, op, expr)

@@ -34,8 +34,10 @@ import sana.calcj.ast.BinaryApi
 
 trait AugmentedBinary {
 
+  /** The tree to be augmented */
   def tree: BinaryApi
 
+  /** Returns weather [[AugmentedBinary.tree]] has been typed */
   def isTypedBinary: Boolean =
     tree.attributes.get('isTypedBinary)
       .map(_.asInstanceOf[Boolean])
@@ -44,6 +46,10 @@ trait AugmentedBinary {
   def isTypedBinary_=(flag: Boolean): Unit =
     tree.attributes = tree.attributes + ('isTypedBinary -> flag)
 
+  /**
+   * Returns weather [[AugmentedBinary.tree]] represents a
+   * compound binary operation
+   */
   def isCompoundBinary: Boolean =
     tree.attributes.get('isCompoundBinary)
       .map(_.asInstanceOf[Boolean])
@@ -52,6 +58,10 @@ trait AugmentedBinary {
   def isCompoundBinary_=(flag: Boolean): Unit =
     tree.attributes = tree.attributes + ('isCompoundBinary -> flag)
 
+  /**
+   * Returns weather [[AugmentedBinary.tree]] represents a
+   * type-checked compound binary operation
+   */
   def isTypedCompoundBinary: Boolean =
     tree.attributes.get('isTypedCompoundBinary)
       .map(_.asInstanceOf[Boolean])

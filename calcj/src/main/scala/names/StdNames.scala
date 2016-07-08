@@ -32,15 +32,29 @@ import sana.tiny
 import tiny.names.Name
 
 trait StdNames extends tiny.names.StdNames {
+
+  /** The name of the primitive type {{{byte}}} */
   val BYTE_TYPE_NAME         = Name("byte")
+
+  /** The name of the primitive type {{{short}}} */
   val SHORT_TYPE_NAME        = Name("short")
+
+  /** The name of the primitive type {{{char}}} */
   val CHAR_TYPE_NAME         = Name("char")
+
+  /** The name of the primitive type {{{int}}} */
   val INT_TYPE_NAME          = Name("int")
+
+  /** The name of the primitive type {{{long}}} */
   val LONG_TYPE_NAME         = Name("long")
 
+  /** The name of the primitive type {{{float}}} */
   val FLOAT_TYPE_NAME        = Name("float")
+
+  /** The name of the primitive type {{{double}}} */
   val DOUBLE_TYPE_NAME       = Name("double")
 
+  /** The name of the primitive type {{{boolean}}} */
   val BOOLEAN_TYPE_NAME      = Name("boolean")
 }
 

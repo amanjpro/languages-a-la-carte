@@ -35,13 +35,19 @@ import tiny.ast._
 import tiny.types._
 import calcj.types._
 
+/** The supertype of all constant values in this framework */
 trait Constant {
+  /** The type of which this constant value has */
   type Value <: Any
 
+  /** The value of this constant */
   def value: Value
 
+
+  /** The type-information of this constant value */
   def tpe: Type
 }
+
 object Constant {
   def unapply(const: Constant): Option[Any] = const match {
     case null                 => None
@@ -49,30 +55,35 @@ object Constant {
   }
 }
 
+/** A constant of type {{{byte}}} */
 case class ByteConstant(value: Byte) extends Constant {
   type Value = Byte
 
   val tpe: Type = ByteType
 }
 
+/** A constant of type {{{char}}} */
 case class CharConstant(value: Char) extends Constant {
   type Value = Char
 
   val tpe: Type = CharType
 }
 
+/** A constant of type {{{short}}} */
 case class ShortConstant(value: Short) extends Constant {
   type Value = Short
 
   val tpe: Type = ShortType
 }
 
+/** A constant of type {{{int}}} */
 case class IntConstant(value: Int) extends Constant {
   type Value = Int
 
   val tpe: Type = IntType
 }
 
+/** A constant of type {{{long}}} */
 case class LongConstant(value: Long) extends Constant {
   type Value = Long
 
@@ -80,18 +91,21 @@ case class LongConstant(value: Long) extends Constant {
 }
 
 
+/** A constant of type {{{float}}} */
 case class FloatConstant(value: Float) extends Constant {
   type Value = Float
 
   val tpe: Type = FloatType
 }
 
+/** A constant of type {{{double}}} */
 case class DoubleConstant(value: Double) extends Constant {
   type Value = Double
 
   val tpe: Type = DoubleType
 }
 
+/** A constant of type {{{boolean}}} */
 case class BooleanConstant(value: Boolean) extends Constant {
   type Value = Boolean
 

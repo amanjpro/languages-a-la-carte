@@ -42,6 +42,10 @@ import operators._
 
 
 
+/**
+ * A tree to represent a cast operation like:
+ * {{{(tpt) expr}}}
+ */
 trait CastApi extends Expr {
   def tpt: UseTree
   def expr: Expr
@@ -53,12 +57,14 @@ trait CastApi extends Expr {
   }
 }
 
+/** A tree to represent literal values */
 trait LiteralApi extends Expr {
   def constant: Constant
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = f(z, this)
 }
 
+/** A tree to represent binary operations */
 trait BinaryApi extends Expr {
   def lhs: Expr
   def op: BOp
@@ -71,6 +77,7 @@ trait BinaryApi extends Expr {
   }
 }
 
+/** A tree to represent unary operations */
 trait UnaryApi extends Expr {
   def isPostfix: Boolean
   def op: UOp
