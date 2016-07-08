@@ -39,7 +39,7 @@ trait MethodTypeApi extends Type {
 
   def =:=(t: Type): Boolean = t match {
     case that: MethodType =>
-      val pcheck = checkList(params, that.params, _ =:= _)
+      val pcheck = reduceLists(params, that.params, _ =:= _)
       pcheck && this.ret =:= that.ret
     case _                => false
   }
@@ -49,7 +49,7 @@ trait MethodTypeApi extends Type {
     val isEquiv = this =:= t
     lazy val isSub = t match {
       case that: MethodType =>
-        val pcheck = checkList(params, that.params, _ >:> _)
+        val pcheck = reduceLists(params, that.params, _ >:> _)
         pcheck && this.ret <:< that.ret
       case _                => false
     }

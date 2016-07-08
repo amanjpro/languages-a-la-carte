@@ -270,7 +270,7 @@ trait ApplyTyperComponent extends TyperComponent {
     val argtys = args.map(_.tpe).flatten
     (funty, argtys) match {
       case (Some(mt: MethodType), argtys) =>
-        if(TypeUtils.checkList(argtys, mt.params, _ <:< _)) {
+        if(TypeUtils.reduceLists(argtys, mt.params, _ <:< _)) {
           val args2 = funty match {
             case Some(MethodType(r, ptpe)) =>
               apply.tpe = r
