@@ -36,11 +36,18 @@ import Implicits._
 
 
 
+/** A copier for trees */
 trait TreeCopiers {
 
   protected def copyProperties(template: Tree,
       newTree: Tree): Unit = newTree.attributes = template.attributes
 
+  /**
+   * Returns a copy of an identifier
+   *
+   * @param template the identifier to be copied
+   * @param name the name of the new identifier
+   */
   def copyIdent(template: IdentApi)
             (name: Name): IdentApi = {
     val res = TreeFactories.mkIdent(name)
@@ -48,6 +55,13 @@ trait TreeCopiers {
     res
   }
 
+  /**
+   * Returns a copy of a type-use
+   *
+   * @param template the type-use to be copied
+   * @param name the name of the new type-use
+   * @see [[ch.usi.inf.l3.sana.tiny.ast.TypeUse]]
+   */
   def copyTypeUse(template: TypeUseApi)(name: Name): TypeUseApi = {
     val res = TreeFactories.mkTypeUse(name)
     copyProperties(template, res)

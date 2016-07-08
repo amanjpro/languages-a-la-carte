@@ -35,9 +35,19 @@ import sana.tiny.names.Name
 import Implicits._
 
 
-
+/**
+ * A factory for initializing new trees.
+ */
 trait TreeFactories {
 
+  /**
+   * Creates a new identifier
+   *
+   * @param name the name of the identifier
+   * @param pos the position of the identifier
+   * @param symbol the symbol of the identifier
+   * @param owner the owner of the identifier
+   */
   def mkIdent(name: Name,
             pos: Option[Position] = None,
             symbol: Option[Symbol] = None,
@@ -52,6 +62,15 @@ trait TreeFactories {
     res
   }
 
+  /**
+   * Creates a new type-use
+   *
+   * @param name the name of the type-use
+   * @param pos the position of the type-use
+   * @param symbol the symbol of the type-use
+   * @param owner the owner of the type-use
+   * @see [[ch.usi.inf.l3.sana.tiny.ast.TypeUse]]
+   */
   def mkTypeUse(name: Name,
             pos: Option[Position] = None,
             symbol: Option[Symbol] = None,

@@ -36,11 +36,29 @@ import sana.tiny.names.StdNames._
 import sana.tiny.names.Name
 
 
-
+/**
+ * The supertype of all trees.
+ */
 trait Tree {
+  /**
+   * The attributes of a tree. This is to implement open-classes in
+   * our framework (and Scala).
+   */
   var attributes: Attributes = noAttributes
 
+  /**
+   * Reduces this tree using a given function in a bottom-up manner.
+   *
+   * @param z the starting value
+   * @param f the function to be used for reducing this tree.
+   */
   def bottomUp[R](z: R)(f: (R, Tree) => R): R
+
+  /**
+   * Applies a function on this tree and all its children, in a bottom-up manner.
+   *
+   * @param f the function to be applied
+   */
   def foreach(f: Tree => Unit): Unit = {
     bottomUp(())((z, y) => f(y))
   }
@@ -49,27 +67,44 @@ trait Tree {
 
 
 
+/**
+ * The supertype of all trees that have a name, trees can have a name that they
+ * do not define, e.g. identifiers.
+ */
 trait NamedTree extends Tree {
   def name: Name
 }
 
+/** The supertype of all trees that define a name */
 trait DefTree extends NamedTree
 
 
+/** The supertype of all trees that represent a term, like fields and methods */
 trait TermTree extends DefTree
 
+/** The supertype of all trees that represent a type, like classes */
 trait TypeTree extends DefTree
 
+/** The supertype of all trees that represent an expression, like binary operations */
 trait Expr extends Tree
 
+/** The supertype of all trees that use a defined name, like identifiers */
 trait UseTree extends Expr with NamedTree
 
+/**
+ * The supertype of all trees that use a defined name, like identifiers. The difference
+ * between this and {{{UseTree}}} is that {{{SimpleUseTree}}} do not represent the
+ * compound trees, like {{{selector.selected}}}.
+ **/
 trait SimpleUseTree extends UseTree
 
 
+/** This tree represents a tree that points to a defined type. */
 trait TypeUseApi extends SimpleUseTree {
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = f(z, this)
 }
+
+/** This tree represents a tree that points to a defined term. */
 trait IdentApi extends SimpleUseTree {
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = f(z, this)
 }

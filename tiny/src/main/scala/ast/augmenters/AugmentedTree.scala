@@ -36,7 +36,10 @@ import sana.tiny.source.Position
 
 
 trait AugmentedTree {
+  /** The tree to be augmented */
   val tree: Tree
+
+  /** Returns the type of [[AugmentedTree.tree]] */
   def tpe: Option[Type] = {
     tree.attributes.get('type).map(_.asInstanceOf[Type])
   }
@@ -45,6 +48,7 @@ trait AugmentedTree {
     tree.attributes = tree.attributes + ('type -> tpe)
   }
 
+  /** Returns the owner of [[AugmentedTree.tree]] */
   def owner: Option[Symbol] = {
     tree.attributes.get('owner).map(_.asInstanceOf[Symbol])
   }
@@ -53,6 +57,7 @@ trait AugmentedTree {
     tree.attributes = tree.attributes + ('owner -> owner)
   }
 
+  /** Returns the symbol of [[AugmentedTree.tree]] */
   def symbol: Option[Symbol] = {
     tree.attributes.get('symbol).map(_.asInstanceOf[Symbol])
   }
@@ -61,6 +66,7 @@ trait AugmentedTree {
     tree.attributes = tree.attributes + ('symbol -> sym)
   }
 
+  /** Returns the position of [[AugmentedTree.tree]] */
   def pos: Option[Position] = {
     tree.attributes.get('position).map(_.asInstanceOf[Position])
   }

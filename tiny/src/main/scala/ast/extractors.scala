@@ -32,6 +32,8 @@ import ch.usi.inf.l3.sana
 import sana.tiny.names.Name
 
 
+
+/** The extractors of the trees */
 trait TreeExtractors {
 
 
