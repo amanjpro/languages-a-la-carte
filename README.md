@@ -71,7 +71,7 @@ Please refer to the [wiki](https://github.com/amanjpro/languages-a-la-carte/wiki
 
 
 ## Credits
-see [[https://github.com/amanjpro/languages-a-la-carte/blob/documented/CONTRIBUTORS | CONTRIBUTORS]]
+see [CONTRIBUTORS](https://github.com/amanjpro/languages-a-la-carte/blob/documented/CONTRIBUTORS)
 
 
 ## License
