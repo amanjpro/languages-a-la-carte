@@ -71,13 +71,13 @@ Please refer to the [wiki](https://github.com/amanjpro/languages-a-la-carte/wiki
 
 
 ## Credits
-see [[https://github.com/amanjpro/languages-a-la-carte/blob/documented/CONTRIBUTERS]]
+see [[https://github.com/amanjpro/languages-a-la-carte/blob/documented/CONTRIBUTORS | CONTRIBUTORS]]
 
 
 ## License
 
 ```
-Copyright (c) <2015-2016>, see CONTRIBUTERS
+Copyright (c) <2015-2016>, see CONTRIBUTORS
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
