@@ -41,10 +41,17 @@ import errors._
 
 trait CompilerApi[Input, Output] {
 
+  /** The name of this language */
   def langName: String
+
+  /** The version of this language */
   def langVersion: String
+
   type ConfigType <: SanaConfig
+
+  /** The configurations of this compilation run */
   def config: ConfigType
+
   def parser: Parser
 
   ErrorReporting.isTest = config.isTest
@@ -55,9 +62,16 @@ trait CompilerApi[Input, Output] {
 
 
   trait Language extends LanguageModule[Input, Output] {
+    /** Initializes the standard definitions and the compiler */
     def init(): Unit
+
+    /** Generates target-codes */
     def codegen(tree: Tree): Unit = ()
+
+    /** Returns the compiler interface */
     def compiler: CompilerInterface
+
+    /** Compiles the input */
     def compile: Input => Output
   }
 
