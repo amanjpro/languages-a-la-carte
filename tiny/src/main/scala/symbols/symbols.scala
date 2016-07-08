@@ -90,7 +90,7 @@ trait Symbol {
   protected[this] var decls: List[Symbol] = Nil
 
   /**
-   * @see [[Symbol.decls]]
+   * @see [[ch.usi.inf.l3.sana.tiny.symbols.Symbol.decls]]
    */
   def declarations: List[Symbol] = decls
 
