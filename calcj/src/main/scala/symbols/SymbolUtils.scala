@@ -32,7 +32,7 @@ import sana.tiny.symbols.Symbol
 import sana.tiny.types.Type
 import sana.calcj.types._
 
-
+/** Contains a utility methods for symbols. */
 trait SymbolUtils {
   /**
    * Given a type, returns the primitive symbol of this type.

@@ -46,8 +46,17 @@ import calcj.ast.operators._
 import calcj.types._
 
 
+/**
+ * Typer type-checks trees. By first type-checking the children of a tree
+ * then using these information to type-check the tree itself.
+ *
+ * This phase reports type-errors and attaches type-information to symbols and
+ * trees.
+ */
 trait TyperComponent extends
   TransformationComponent[Tree, Tree] {
+
+  /** The family (delegate) method of the typer-components. */
   def typed: Tree => Tree
 }
 
@@ -104,6 +113,7 @@ trait BinaryTyperComponent extends TyperComponent {
     } else bin
   }
 
+  /** @see [[TypePromotions.castIfNeeded]] */
   protected def castIfNeeded(e: Expr, t1: Type, t2: Type): Expr = {
     TypePromotions.castIfNeeded(e, t1, t2)
   }
@@ -312,6 +322,7 @@ trait LiteralTyperComponent extends TyperComponent {
     lit
   }
 
+  /** @see [[calcj.symbols.SymbolUtils.getSymbol]] */
   protected def getSymbol(t: Type): Option[Symbol] =
     SymbolUtils.getSymbol(t)
 }
