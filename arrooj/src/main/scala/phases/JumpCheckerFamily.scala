@@ -50,7 +50,7 @@ trait JumpCheckerFamilyApi extends CheckerFamily[(Tree, List[Tree])] {
   def components: List[PartialFunction[(Tree, List[Tree]), Unit]] =
     generateComponents[(Tree, List[Tree]), Unit](
       Nodes.nodes,
-      "JumpCheckerComponent", "check", "")
+      "JumpCheckerComponent", "check", "Literal,TypeUse,Ident")
 
   def check: ((Tree, List[Tree])) => Unit = family
 }

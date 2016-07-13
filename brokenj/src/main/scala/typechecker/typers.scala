@@ -151,12 +151,12 @@ trait LabelTyperComponent extends TyperComponent {
   }
 }
 
-@component
-trait ContinueTyperComponent extends TyperComponent {
-  (continue: ContinueApi) => continue
-}
-
-@component
-trait BreakTyperComponent extends TyperComponent {
-  (break: BreakApi) => break
-}
+// @component
+// trait ContinueTyperComponent extends TyperComponent {
+//   (continue: ContinueApi) => continue
+// }
+//
+// @component
+// trait BreakTyperComponent extends TyperComponent {
+//   (break: BreakApi) => break
+// }

@@ -243,22 +243,22 @@ trait CaseJumpCheckerComponent extends JumpCheckerComponent {
 }
 
 // even more boring cases
-@component(tree, encls)
-trait IdentJumpCheckerComponent extends JumpCheckerComponent {
-  (ident: IdentApi) => ident
-}
-
-@component(tree, encls)
-trait TypeUseJumpCheckerComponent extends JumpCheckerComponent {
-  (tuse: TypeUseApi) => tuse
-}
-
-
-
-@component(tree, encls)
-trait LiteralJumpCheckerComponent extends JumpCheckerComponent {
-  (lit: LiteralApi) => lit
-}
+// @component(tree, encls)
+// trait IdentJumpCheckerComponent extends JumpCheckerComponent {
+//   (ident: IdentApi) => ident
+// }
+//
+// @component(tree, encls)
+// trait TypeUseJumpCheckerComponent extends JumpCheckerComponent {
+//   (tuse: TypeUseApi) => tuse
+// }
+//
+//
+//
+// @component(tree, encls)
+// trait LiteralJumpCheckerComponent extends JumpCheckerComponent {
+//   (lit: LiteralApi) => lit
+// }
 
 // @component(tree, encls)
 // trait NoTreeJumpCheckerComponent extends JumpCheckerComponent {

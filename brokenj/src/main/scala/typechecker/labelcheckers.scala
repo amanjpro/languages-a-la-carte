@@ -260,22 +260,22 @@ trait CaseLabelNameCheckerComponent extends LabelNameCheckerComponent {
 }
 
 // even more boring cases
-@component(tree, labelNames)
-trait IdentLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (ident: IdentApi) => ident
-}
-
-@component(tree, labelNames)
-trait TypeUseLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (tuse: TypeUseApi) => tuse
-}
-
-
-
-@component(tree, labelNames)
-trait LiteralLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (lit: LiteralApi) => lit
-}
+// @component(tree, labelNames)
+// trait IdentLabelNameCheckerComponent extends LabelNameCheckerComponent {
+//   (ident: IdentApi) => ident
+// }
+//
+// @component(tree, labelNames)
+// trait TypeUseLabelNameCheckerComponent extends LabelNameCheckerComponent {
+//   (tuse: TypeUseApi) => tuse
+// }
+//
+//
+//
+// @component(tree, labelNames)
+// trait LiteralLabelNameCheckerComponent extends LabelNameCheckerComponent {
+//   (lit: LiteralApi) => lit
+// }
 
 // @component(tree, labelNames)
 // trait NoTreeLabelNameCheckerComponent extends LabelNameCheckerComponent {

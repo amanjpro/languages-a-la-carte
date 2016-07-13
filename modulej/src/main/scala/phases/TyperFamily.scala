@@ -72,7 +72,7 @@ trait TyperFamilyApi extends TransformationFamily[Tree, Tree] {
 
   def components: List[PartialFunction[Tree, Tree]] =
     generateComponents[Tree, Tree](Nodes.nodes,
-      "TyperComponent", "typed", "Import")
+      "TyperComponent", "typed", "Import,Continue,Break")
 
   def typed: Tree => Tree = family
 }

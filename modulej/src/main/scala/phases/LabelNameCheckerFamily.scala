@@ -55,7 +55,7 @@ trait LabelNameCheckerFamilyApi extends CheckerFamily[(Tree, List[LabelApi])] {
   def components: List[PartialFunction[(Tree, List[LabelApi]), Unit]] =
     generateComponents[(Tree, List[LabelApi]), Unit](
       Nodes.nodes,
-      "LabelNameCheckerComponent", "check", "Import,Throw")
+      "LabelNameCheckerComponent", "check", "Import,Throw,TypeUse,Literal,Ident")
 
   def check: ((Tree, List[LabelApi])) => Unit = family
 }
