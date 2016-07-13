@@ -42,6 +42,14 @@ import sana.primj.types._
 
 trait TreeFactories extends sana.primj.ast.TreeFactories {
 
+  /**
+   * Creates a new tree for a label statement
+   *
+   * @param name the name of this label statement
+   * @param stmt the statement of this label statement
+   * @param pos the position of this tree
+   * @param owner the owner of this tree
+   */
   def mkLabel(name: Name, stmt: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): LabelApi = {
@@ -52,6 +60,13 @@ trait TreeFactories extends sana.primj.ast.TreeFactories {
     res
   }
 
+  /**
+   * Creates a new tree for a break statement
+   *
+   * @param label the label of this break statement
+   * @param pos the position of this tree
+   * @param owner the owner of this tree
+   */
   def mkBreak(label: Option[Name],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): BreakApi = {
@@ -62,6 +77,13 @@ trait TreeFactories extends sana.primj.ast.TreeFactories {
     res
   }
 
+  /**
+   * Creates a new tree for a continue statement
+   *
+   * @param label the label of this continue statement
+   * @param pos the position of this tree
+   * @param owner the owner of this tree
+   */
   def mkContinue(label: Option[Name],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): ContinueApi = {
@@ -72,6 +94,14 @@ trait TreeFactories extends sana.primj.ast.TreeFactories {
     res
   }
 
+  /**
+   * Creates a new tree for a case in a switch statement
+   *
+   * @param guards the list of guards of this case
+   * @param body the body of this case
+   * @param pos the position of this tree
+   * @param owner the owner of this tree
+   */
   def mkCase(guards: List[Expr], body: Tree,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): CaseApi = {
@@ -82,6 +112,14 @@ trait TreeFactories extends sana.primj.ast.TreeFactories {
     res
   }
 
+  /**
+   * Creates a new tree for a switch statement
+   *
+   * @param expr the expression of this switch statement
+   * @param cases the list of cases of this switch statement
+   * @param pos the position of this tree
+   * @param owner the owner of this tree
+   */
   def mkSwitch(expr: Expr, cases: List[CaseApi],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): SwitchApi = {

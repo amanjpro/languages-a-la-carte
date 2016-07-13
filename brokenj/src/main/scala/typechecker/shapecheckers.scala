@@ -60,6 +60,7 @@ trait LabelShapeCheckerComponent extends ShapeCheckerComponent {
   }
 
 
+  /** @see [[brokenj.ast.TreeUtils.canHaveLabel]] */
   protected def canHaveLabel(stmt: Expr): Boolean =
     TreeUtils.canHaveLabel(stmt)
 }

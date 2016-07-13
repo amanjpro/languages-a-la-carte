@@ -38,6 +38,7 @@ import primj.ast._
 
 trait TreeUtils extends ast.TreeUtils {
 
+  /** @see [[primj.ast.TreeUtils.isSimpleExpression]] */
   override def isSimpleExpression(tree: Tree): Boolean = tree match {
     case _: ContinueApi                                   => false
     case _: BreakApi                                      => false
@@ -48,9 +49,11 @@ trait TreeUtils extends ast.TreeUtils {
       super.isSimpleExpression(tree)
   }
 
+  /** @see [[primj.ast.TreeUtils.allPathsReturn]] */
   override def allPathsReturn(tree: Tree): Boolean =
     allPathsReturnAux(tree, allPathsReturn)
 
+  /** @see [[primj.ast.TreeUtils.allPathsReturnAux]] */
   override protected def allPathsReturnAux(tree: Tree,
         recurse: Tree => Boolean): Boolean = tree match {
     // brokenj
@@ -68,6 +71,12 @@ trait TreeUtils extends ast.TreeUtils {
       super.allPathsReturnAux(e, recurse)
   }
 
+  /**
+   * Checks if the given tree can have a label. It follows the specification
+   * of Java.
+   *
+   * @param tree the tree to be checked
+   */
   def canHaveLabel(tree: Tree): Boolean = tree match {
     // INFO: Synchronize, Throw and Try to be added
     case _: LabelApi | _: IfApi | _: WhileApi | _: ForApi | _: BlockApi |
@@ -78,13 +87,26 @@ trait TreeUtils extends ast.TreeUtils {
       isValidStatementExpression(e)
   }
 
+  /**
+   * Checks if the given tree can have a continue statement in it. It follows
+   * the specification of Java.
+   *
+   * @param tree the tree to be checked
+   */
   def isContinuable(tree: Tree): Boolean = isLoopTree(tree)
 
+  /**
+   * Checks if the given tree can have a break statement in it. It follows
+   * the specification of Java.
+   *
+   * @param tree the tree to be checked
+   */
   def isBreakable(tree: Tree): Boolean = tree match {
     case _: CaseApi | _: WhileApi | _: ForApi      => true
     case _                                         => false
   }
 
+  /** @see [[primj.ast.TreeUtils.isValidStatement]] */
   override def isValidStatement(e: Tree): Boolean = e match {
     case _: SwitchApi | _: LabelApi | _: ContinueApi | _: BreakApi =>
       true
@@ -92,6 +114,11 @@ trait TreeUtils extends ast.TreeUtils {
       super.isValidStatement(e)
   }
 
+  /**
+   * Checks if the given tree represents a loop statement.
+   *
+   * @param tree the tree to be checked
+   */
   def isLoopTree(tree: Tree): Boolean = tree match {
     case _: WhileApi | _: ForApi            => true
     case _                                  => false

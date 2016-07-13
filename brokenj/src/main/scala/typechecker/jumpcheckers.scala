@@ -78,6 +78,16 @@ Continue: DONE
 
 
 
+/**
+ * This phase checks if the uses of break and continue is in compliance of
+ * Java's specification. It should be easy to adapt this to any other
+ * specification by changing the components that are different.
+ *
+ * This is done by accumulating a list of container trees (the trees can have
+ * break or continue in them), and whenever a continue or break statement is
+ * seen, we check if they occur in a tree that are allowed to have a
+ * break/continue statement.
+ */
 trait JumpCheckerComponent extends
   CheckerComponent[(Tree, List[Tree])] {
   def check: ((Tree, List[Tree])) => Unit
@@ -93,6 +103,7 @@ trait ContinueJumpCheckerComponent extends JumpCheckerComponent {
     else
       ()
 
+  /** @see [[brokenj.ast.TreeUtils.isContinuable]] */
   private def isContinuable(tree: Tree): Boolean =
     TreeUtils.isContinuable(tree)
 }
@@ -107,6 +118,7 @@ trait BreakJumpCheckerComponent extends JumpCheckerComponent {
     else
       ()
 
+  /** @see [[brokenj.ast.TreeUtils.isBreakable]] */
   private def isBreakable(tree: Tree): Boolean =
     TreeUtils.isBreakable(tree)
 }

@@ -78,6 +78,15 @@ Continue: DONE
 
 
 
+/**
+ * This phase checks if the uses of labels are in accordance with Java's specification.
+ * It should be easy to adapt this to any other programming language, by changing the
+ * components that are different with what is in Java.
+ *
+ * It works by collecting labels that, and then whenever a label is seen, it checks if
+ * it is distinct; also when a labeled continue or break is seen, this phase checks if
+ * the label is already defined.
+ */
 trait LabelNameCheckerComponent extends
   CheckerComponent[(Tree, List[LabelApi])] {
   def check: ((Tree, List[LabelApi])) => Unit
@@ -102,6 +111,7 @@ trait ContinueLabelNameCheckerComponent extends LabelNameCheckerComponent {
       }
   }
 
+  /** @see [[brokenj.ast.TreeUtils.isContinuable]] */
   private def isContinuable(tree: Tree): Boolean =
     TreeUtils.isContinuable(tree)
 }

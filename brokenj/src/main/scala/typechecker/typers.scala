@@ -121,6 +121,12 @@ trait SwitchTyperComponent extends TyperComponent {
     TreeCopiers.copySwitch(switch)(expr = expr, cases = cases)
   }
 
+  /**
+   * Check that all the case guards of a switch statement are distinct from
+   * each other.
+   *
+   * @param l list of all guards of a switch-statement
+   */
   def checkDistinctness(l: List[Expr]): Unit = l match {
     case Nil                                =>
       ()

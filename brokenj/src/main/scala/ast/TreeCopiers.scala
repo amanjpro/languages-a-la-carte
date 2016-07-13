@@ -42,6 +42,13 @@ import sana.primj.ast._
 
 trait TreeCopiers extends sana.primj.ast.TreeCopiers {
 
+  /**
+   * Returns a copy of a label statement
+   *
+   * @param template the tree to be copied
+   * @param name the name of this label statement
+   * @param stmt the statement of this label statement
+   */
   def copyLabel(template: LabelApi)(name: Name = template.name,
     stmt: Expr = template.stmt): LabelApi = {
     val res = TreeFactories.mkLabel(name, stmt)
@@ -49,6 +56,12 @@ trait TreeCopiers extends sana.primj.ast.TreeCopiers {
     res
   }
 
+  /**
+   * Returns a copy of a break statement
+   *
+   * @param template the tree to be copied
+   * @param label the label of this break statement
+   */
   def copyBreak(template: BreakApi)(label: Option[Name] =
     template.label): BreakApi = {
     val res = TreeFactories.mkBreak(label)
@@ -56,6 +69,12 @@ trait TreeCopiers extends sana.primj.ast.TreeCopiers {
     res
   }
 
+  /**
+   * Returns a copy of a continue statement
+   *
+   * @param template the tree to be copied
+   * @param label the label of this continue statement
+   */
   def copyContinue(template: ContinueApi)(label: Option[Name] =
         template.label): ContinueApi = {
     val res = TreeFactories.mkContinue(label)
@@ -63,6 +82,13 @@ trait TreeCopiers extends sana.primj.ast.TreeCopiers {
     res
   }
 
+  /**
+   * Returns a copy of a case
+   *
+   * @param template the tree to be copied
+   * @param guards the guards of this case
+   * @param body the body of this tree
+   */
   def copyCase(template: CaseApi)(guards: List[Expr] = template.guards,
     body: Tree = template.body): CaseApi = {
     val res = TreeFactories.mkCase(guards, body)
@@ -70,6 +96,13 @@ trait TreeCopiers extends sana.primj.ast.TreeCopiers {
     res
   }
 
+  /**
+   * Returns a copy of a switch-statement
+   *
+   * @param template the tree to be copied
+   * @param expr the expression of this switch statement
+   * @param cases the cases of this switch statement
+   */
   def copySwitch(template: SwitchApi)(expr: Expr = template.expr,
     cases: List[CaseApi] = template.cases): SwitchApi = {
     val res = TreeFactories.mkSwitch(expr, cases)

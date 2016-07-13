@@ -44,8 +44,16 @@ import primj.types.VoidType
 
 /********************* AST Nodes *********************************/
 
+/** A tree to represent a label statement */
 trait LabelApi extends Expr with NamedTree {
+  /** The name of the label */
   def name: Name
+  /**
+   * In the statement of the label. The following label:
+   * {{{l1: if(b) { ... } else { ... } }}}
+   * The `l1` part is the label and the if-else statement is
+   * the statement of this label.
+   */
   def stmt: Expr
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -54,22 +62,40 @@ trait LabelApi extends Expr with NamedTree {
   }
 }
 
+/** A tree to represent break statements */
 trait BreakApi extends Expr {
+  /**
+   * The label of the break. If the break doesn't have a label,
+   * then this label is None.
+   */
   def label: Option[Name]
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R =
     f(z, this)
 }
 
+/** A tree to represent continue statements */
 trait ContinueApi extends Expr {
+  /**
+   * The label of the continue. If the continue doesn't have a label,
+   * then this label is None.
+   */
   def label: Option[Name]
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R =
     f(z, this)
 }
 
+/** A tree to represent switch cases */
 trait CaseApi extends Tree {
+  /**
+   * A list of guards of a case. If this case is a default cases, then this
+   * list is an empty list.
+   */
   def guards: List[Expr]
+  /**
+   * The body of this case statement
+   */
   def body: Tree
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -85,8 +111,11 @@ trait CaseApi extends Tree {
 //   def pos: Option[Position] = None
 // }
 
+/** A tree to represent a switch statement */
 trait SwitchApi extends Expr {
+  /** The expression of this switch statement */
   def expr: Expr
+  /** The cases of this switch statement */
   def cases: List[CaseApi]
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
