@@ -81,10 +81,21 @@ trait ArrayCreationTyperComponent extends TyperComponent {
     res
   }
 
+  /**
+   * Given a type, this method creates an array-type of it.
+   *
+   * @param tpe the componentType of the array-type to be created
+   */
   protected def toArrayType(tpe: Type): Type =
     ArrayType(tpe)
 
 
+  /**
+   * Validates the type of the size of an array creation. This method makes
+   * sure that type of array-size is either int, or can be promoted to int.
+   *
+   * @param size the expression which represents the size
+   */
   protected def validateSizeType(size: Option[Expr]): Option[Expr] = {
     for {
       s   <- size
@@ -105,6 +116,7 @@ trait ArrayCreationTyperComponent extends TyperComponent {
 
 @component
 trait UnaryTyperComponent extends primj.typechecker.UnaryTyperComponent {
+  /** @see [[arrayj.ast.TreeUtils.isArrayAccessOrVariableAccess]] */
   override protected def isVariable(tree: Tree): Boolean =
     TreeUtils.isArrayAccessOrVariableAccess(tree)
 }
@@ -123,6 +135,11 @@ trait ArrayAccessTyperComponent extends TyperComponent {
     res
   }
 
+  /**
+   * Type-checks an array-access expression
+   *
+   * @param access the array-access expression to be type-checked
+   */
   protected def typeArrayAccess(access: ArrayAccessApi): Unit =
     access.array.tpe.map {
       case atpe: ArrayTypeApi          =>
@@ -131,6 +148,12 @@ trait ArrayAccessTyperComponent extends TyperComponent {
         error(NON_ARRAY_ELEMENT_ACCESS, "", "", access.pos)
     }
 
+  /**
+   * Validates the type of the index of an array-access. This method makes
+   * sure that type of array-index is either int, or can be promoted to int.
+   *
+   * @param size the expression which represents the array-index
+   */
   protected def validateIndexType(index: Expr): Expr =
     index.tpe.map { tpe =>
       if(!(tpe <:< IntType)) {
@@ -167,9 +190,22 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
     } else res
   }
 
+  /**
+   * Given a type, this method creates an array-type of it.
+   *
+   * @param tpe the componentType of the array-type to be created
+   */
   protected def toArrayType(tpe: Type): Type =
     ArrayType(tpe)
 
+  /**
+   * Sets the component type property of the components if needed. It is only needed
+   * to set the component types, if the component itself is an array initialization
+   * expression.
+   *
+   * @param init the array initialization that we may set component-type for its
+   *             components
+   */
   protected def setComponentTypesIfNeeded(
     init: ArrayInitializerApi): List[Expr]= init.elements.map { elem =>
       (init.componentType, elem) match {
@@ -185,6 +221,12 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
       typed(elem).asInstanceOf[Expr]
     }
 
+  /**
+   * Narrows down, or widens elements of an array initialization when needed.
+   *
+   * @param elements the elements of an array initialization
+   * @param ctpe the expected type of the components of an array
+   */
   protected def narrowDownOrWidenElemsIfNeeded(elements: List[Expr],
       ctpe: Option[() =>Type]): List[Expr] = {
     ctpe match {
@@ -210,9 +252,15 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
     }
   }
 
+  /** @see [[primj.typechecker.TypePromotions.widenIfNeeded]] */
   protected def widenIfNeeded(expr: Expr, tpe: Option[Type]): Expr =
     TypePromotions.widenIfNeeded(expr, tpe)
 
+  /**
+   * Checks the types of the elements of array initialization expression
+   *
+   * @param init the array initialization expression to be checked
+   */
   protected def checkArrayInitializerType(init: ArrayInitializerApi): Boolean = {
     val hasErrors = init.elements.foldLeft(false)((z, y) => {
       val r = for {
@@ -236,10 +284,11 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
   }
 
 
+  /** @see [[arrayj.ast.TreeUtils.isNarrawableTo]] */
   protected def isNarrawableTo(expr: Tree, tpe: Type): Boolean =
     TypePromotions.isNarrawableTo(expr, tpe)
 
-  // TODO: I need to do this
+  /** @see [[arrayj.ast.TreeUtils.narrowDown]] */
   protected def narrowDown(lit: LiteralApi, tpe: Type): LiteralApi =
     TreeUtils.narrowDown(lit, tpe)
 }
@@ -282,6 +331,11 @@ trait ValDefTyperComponent extends primj.typechecker.ValDefTyperComponent {
     res
   }
 
+  /**
+   * Returns the type of the component of an array
+   *
+   * @param symbol the symbol of the array
+   */
   protected def getComponentType(
       symbol: Option[Symbol]): Option[() => Type] =
     symbol.flatMap(_.tpe.flatMap {

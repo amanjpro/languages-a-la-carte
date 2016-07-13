@@ -35,6 +35,7 @@ import TreeExtractors._
 
 trait TreeUtils extends brokenj.ast.TreeUtils {
 
+  /** @see [[sana.primj.ast.TreeUtils.isTypeUse]] */
   override def isTypeUse(tree: UseTree): Boolean = tree match {
     case ArrayTypeUse(tpt)             =>
       isTypeUse(tpt)
@@ -42,23 +43,39 @@ trait TreeUtils extends brokenj.ast.TreeUtils {
       super.isTypeUse(tree)
   }
 
+  /** @see [[sana.primj.ast.TreeUtils.isValidExpression]] */
   override def isValidExpression(e: Tree): Boolean = e match {
     case _: ArrayCreationApi => true
     case _                   => super.isValidExpression(e)
   }
 
+  /**
+   * Checks if a tree represents an array initialization expression
+   *
+   * @param e the expression to be checked
+   */
   def isArrayInitialization(e: Tree): Boolean = e match {
     case _: ArrayInitializerApi => true
     case _                      => false
   }
 
 
+  /**
+   * Checks if a tree represents an array type-use
+   *
+   * @param e the expression to be checked
+   */
   def isArrayTypeUse(e: Tree): Boolean = e match {
     case _: ArrayTypeUseApi => true
     case _                  => false
   }
 
 
+  /**
+   * Checks if a tree represents an array access or a variable access
+   *
+   * @param e the expression to be checked
+   */
   def isArrayAccessOrVariableAccess(tree: Tree): Boolean = tree match {
     case ArrayAccess(array, _)        => isArrayAccessOrVariableAccess(array)
     case tree                         => isVariable(tree)

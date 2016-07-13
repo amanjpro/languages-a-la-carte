@@ -33,7 +33,9 @@ import ch.usi.inf.l3.sana
 import sana.tiny
 import tiny.types.Type
 
+/** A type for arrays */
 trait ArrayTypeApi extends Type {
+  /** The type of the component of this array-type */
   def componentType: Type
 
 

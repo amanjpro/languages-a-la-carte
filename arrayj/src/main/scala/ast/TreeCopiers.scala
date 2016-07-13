@@ -38,6 +38,12 @@ import tiny.source.Position
 
 trait TreeCopiers extends brokenj.ast.TreeCopiers {
 
+  /**
+   * Returns a copy of an array initialization expression
+   *
+   * @param template the tree to be copied
+   * @param elements the list of elements of this initialization
+   */
   def copyArrayInitializer(template: ArrayInitializerApi)(
       elements: List[Expr] = template.elements): ArrayInitializerApi = {
     val res = TreeFactories.mkArrayInitializer(elements)
@@ -45,7 +51,13 @@ trait TreeCopiers extends brokenj.ast.TreeCopiers {
     res
   }
 
-
+  /**
+   * Returns a copy of an array access expression
+   *
+   * @param template the tree to be copied
+   * @param array the array to be accessed
+   * @param index the index of the element that is accessed
+   */
   def copyArrayAccess(template: ArrayAccessApi)(
     array: Expr = template.array,
     index: Expr = template.index): ArrayAccessApi = {
@@ -54,6 +66,12 @@ trait TreeCopiers extends brokenj.ast.TreeCopiers {
     res
   }
 
+  /**
+   * Returns a copy of an array access-type-use
+   *
+   * @param template the tree to be copied
+   * @param array the type-tree of the array
+   */
   def copyArrayTypeUse(template: ArrayTypeUseApi)(
       tpt: UseTree = template.tpt): ArrayTypeUseApi = {
     val res = TreeFactories.mkArrayTypeUse(tpt)
@@ -61,6 +79,13 @@ trait TreeCopiers extends brokenj.ast.TreeCopiers {
     res
   }
 
+  /**
+   * Returns a copy of an array access-creation expression
+   *
+   * @param template the tree to be copied
+   * @param array the expression that represents the array that is created
+   * @param size the size of the array to be created
+   */
   def copyArrayCreation(template: ArrayCreationApi)(
       array: Expr = template.array,
       size: Option[Expr] = template.size): ArrayCreationApi = {

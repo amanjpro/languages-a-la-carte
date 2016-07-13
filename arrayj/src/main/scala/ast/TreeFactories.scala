@@ -39,7 +39,15 @@ import tiny.source.Position
 import primj.ast.Implicits._
 
 trait TreeFactories extends brokenj.ast.TreeFactories {
-
+  /**
+   * Creates a new tree for array initialization expressions
+   *
+   * @param elements the elements of this array initialization
+   * @param pos the position of this tree
+   * @param symbol the symbol of this tree
+   * @param owner the owner of this tree
+   * @param tpe the type-information of this tree
+   */
   def mkArrayInitializer(elements: List[Expr],
       pos: Option[Position] = None,
       symbol: Option[Symbol] = None,
@@ -53,7 +61,16 @@ trait TreeFactories extends brokenj.ast.TreeFactories {
     res
   }
 
-
+  /**
+   * Creates a new tree for array-access expressions
+   *
+   * @param array the array to be accessed
+   * @param index the index of the element that is accessed
+   * @param pos the position of this tree
+   * @param symbol the symbol of this tree
+   * @param owner the owner of this tree
+   * @param tpe the type-information of this tree
+   */
   def mkArrayAccess(array: Expr, index: Expr,
       pos: Option[Position] = None,
       symbol: Option[Symbol] = None,
@@ -67,6 +84,15 @@ trait TreeFactories extends brokenj.ast.TreeFactories {
     res
   }
 
+  /**
+   * Creates a new tree for array-type-use expressions
+   *
+   * @param tpt the type-tree of this tree
+   * @param pos the position of this tree
+   * @param symbol the symbol of this tree
+   * @param owner the owner of this tree
+   * @param tpe the type-information of this tree
+   */
   def mkArrayTypeUse(tpt: UseTree,
       pos: Option[Position] = None,
       symbol: Option[Symbol] = None,
@@ -80,6 +106,16 @@ trait TreeFactories extends brokenj.ast.TreeFactories {
     res
   }
 
+  /**
+   * Creates a new tree for array-creation expressions
+   *
+   * @param array the expression that represents the array to be created
+   * @param size the size of the created array
+   * @param pos the position of this tree
+   * @param symbol the symbol of this tree
+   * @param owner the owner of this tree
+   * @param tpe the type-information of this tree
+   */
   def mkArrayCreation(array: Expr,
       size: Option[Expr],
       pos: Option[Position] = None,

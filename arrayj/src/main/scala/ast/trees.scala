@@ -35,7 +35,9 @@ import tiny.names.Name
 
 /********************* AST Nodes *********************************/
 
+/** A tree to represent an array initialization */
 trait ArrayInitializerApi extends Expr {
+  /** The elements of this array initialization */
   def elements: List[Expr]
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -47,8 +49,11 @@ trait ArrayInitializerApi extends Expr {
 }
 
 
+/** A tree to represent array-accesses */
 trait ArrayAccessApi extends Expr {
+  /** The array to be accessed */
   def array: Expr
+  /** The index of which we want to access from [[ArrayAccessApi.array]] */
   def index: Expr
 
 
@@ -58,8 +63,23 @@ trait ArrayAccessApi extends Expr {
   }
 }
 
+/**
+ * A tree to represent an array type-use.  As an example the return-type tree
+ * of the following method is represented as an instance of this tree.
+ * {{{
+ * int[] m() {
+ *   ...
+ * }
+ * }}}
+ */
 trait ArrayTypeUseApi extends UseTree {
+  /**
+   * The type-tree of this array.
+   * In the following expression, {{{tpt}}} represents `int`:
+   * {{{int[]}}}
+   */
   def tpt: UseTree
+  /** The name of this tree, same as the name of [[ArrayTypeUseApi.tpt]] */
   def name: Name = tpt.name
 
 
@@ -69,8 +89,20 @@ trait ArrayTypeUseApi extends UseTree {
 }
 
 
+/** An array to represent array creation expressions */
 trait ArrayCreationApi extends Expr {
+  /**
+   * The array that this tree creates. In the following example:
+   * {{{new int[5]}}}
+   * `int` is represented by this field.
+   */
   def array: Expr
+  /**
+   * The size of this array that we create. It is of type Option,
+   * because we can have the size missing, as in the second dimension of
+   * the following example:
+   * {{{new int[5][]}}}
+   */
   def size: Option[Expr]
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {

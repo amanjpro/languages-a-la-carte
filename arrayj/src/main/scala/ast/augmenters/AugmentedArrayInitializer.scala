@@ -35,8 +35,10 @@ import sana.arrayj.ast.ArrayInitializerApi
 
 trait AugmentedArrayInitializer {
 
+  /** The tree to be augmented */
   def tree: ArrayInitializerApi
 
+  /** Returns the type of the components of [[AugmentedArrayInitializer.tree]] */
   def componentType: Option[() => Type] =
     tree
       .attributes
