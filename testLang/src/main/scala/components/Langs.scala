@@ -330,9 +330,9 @@ object SimpleTypeCheckerFamily extends SimpleTypeCheckerFamily
 
 trait SimplePrettyPrinterFamily extends PrettyPrinterFamily {
   self =>
-  private[this] final val CMP = "IntLit,Add" //Array("IntLit", "Add")
+  // private[this] final val CMP = "IntLit,Add" //Array("IntLit", "Add")
   override val components = {
-    generateComponents[Expr, String](CMP,
+    generateComponents[Expr, String]("IntLit,Add",
       "PrettyPrinterComponent", "pprint", "")
   }
 
