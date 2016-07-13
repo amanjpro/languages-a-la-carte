@@ -69,7 +69,7 @@ trait TreeFactories {
    * @param pos the position of the type-use
    * @param symbol the symbol of the type-use
    * @param owner the owner of the type-use
-   * @see [[ch.usi.inf.l3.sana.tiny.ast.TypeUse]]
+   * @see [[ch.usi.inf.l3.sana.tiny.ast.TypeUseApi]]
    */
   def mkTypeUse(name: Name,
             pos: Option[Position] = None,
