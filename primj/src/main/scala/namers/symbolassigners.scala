@@ -177,12 +177,12 @@ trait ValDefSymbolAssignerComponent extends SymbolAssignerComponent {
 }
 
 
-@component
-trait TypeUseSymbolAssignerComponent extends SymbolAssignerComponent {
-  (tuse: TypeUseApi)          => {
-    tuse
-  }
-}
+// @component
+// trait TypeUseSymbolAssignerComponent extends SymbolAssignerComponent {
+//   (tuse: TypeUseApi)          => {
+//     tuse
+//   }
+// }
 
 @component
 trait ForSymbolAssignerComponent extends SymbolAssignerComponent {
@@ -221,12 +221,12 @@ trait BlockSymbolAssignerComponent extends SymbolAssignerComponent {
   }
 }
 
-// Boring cases, just pass the owner around and assign it to
-// all the trees that can have an owner
-@component
-trait IdentSymbolAssignerComponent extends SymbolAssignerComponent {
-  (id: IdentApi)          => id
-}
+// // Boring cases, just pass the owner around and assign it to
+// // all the trees that can have an owner
+// @component
+// trait IdentSymbolAssignerComponent extends SymbolAssignerComponent {
+//   (id: IdentApi)          => id
+// }
 
 @component
 trait BinarySymbolAssignerComponent extends SymbolAssignerComponent {
@@ -360,7 +360,7 @@ trait ApplySymbolAssignerComponent extends SymbolAssignerComponent {
   }
 }
 
-@component
-trait LiteralSymbolAssignerComponent extends SymbolAssignerComponent {
-  (lit: LiteralApi) => lit
-}
+// @component
+// trait LiteralSymbolAssignerComponent extends SymbolAssignerComponent {
+//   (lit: LiteralApi) => lit
+// }

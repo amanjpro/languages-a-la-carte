@@ -52,7 +52,7 @@ trait SymbolAssignerFamilyApi
 
   def components: List[PartialFunction[Tree, Tree]] =
     generateComponents[Tree, Tree](OojNodes.nodes,
-      "SymbolAssignerComponent", "assign", "")
+      "SymbolAssignerComponent", "assign", "TypeUse,Ident,Literal")
       // "Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal")
 
   def assign: Tree => Tree = family
