@@ -148,7 +148,7 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
   }
 
   /**
-   * Returns a copy of method/function application
+   * Returns a copy of a method/function application
    *
    * @param template the tree to be copied
    * @param fun the function/method to be applied
@@ -163,7 +163,7 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
   }
 
   /**
-   * Returns a copy of return statement
+   * Returns a copy of a return statement
    *
    * @param template the tree to be copied
    * @param expr the expression of this return statement
@@ -177,7 +177,7 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
 
 
   /**
-   * Returns a copy of method definition
+   * Returns a copy of a method definition
    *
    * @param template the tree to be copied
    * @param ret the return type-tree of this method/function
@@ -194,7 +194,7 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
   }
 
   /**
-   * Returns a copy of variable definition
+   * Returns a copy of a variable definition
    *
    * @param template the tree to be copied
    * @param mods the modifiers (i.e. flags) of this variable
