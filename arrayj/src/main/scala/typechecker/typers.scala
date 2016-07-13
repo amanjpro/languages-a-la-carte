@@ -252,7 +252,7 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
     }
   }
 
-  /** @see [[primj.typechecker.TypePromotions.widenIfNeeded]] */
+  /** @see [[sana.primj.typechecker.TypePromotions.widenIfNeeded]] */
   protected def widenIfNeeded(expr: Expr, tpe: Option[Type]): Expr =
     TypePromotions.widenIfNeeded(expr, tpe)
 
@@ -284,7 +284,7 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
   }
 
 
-  /** @see [[arrayj.ast.TreeUtils.isNarrawableTo]] */
+  /** @see [[sana.primj.typechecker.TypePromotions.isNarrawableTo]] */
   protected def isNarrawableTo(expr: Tree, tpe: Type): Boolean =
     TypePromotions.isNarrawableTo(expr, tpe)
 
