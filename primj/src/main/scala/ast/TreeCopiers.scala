@@ -152,7 +152,7 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
    *
    * @param template the tree to be copied
    * @param fun the function/method to be applied
-   * @param args the list arguments of this function/method application
+   * @param args the list of arguments of this function/method application
    */
   def copyApply(template: ApplyApi)(fun: Expr = template.fun,
     args: List[Expr] = template.args): ApplyApi = {
