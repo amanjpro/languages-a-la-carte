@@ -69,13 +69,26 @@ Literal: DONE
 Unary: DONE
 */
 
-
+/**
+ * Namer binds name uses to their definitions.
+ *
+ * This phase reports bind-errors and attaches symbols of the definition trees
+ * to the use-trees. This phase expects all definition trees to have their symbols
+ * attached to.
+ *
+ * This phase only assigns names to the top-level definitions and does not go
+ * all the way down to the trees. For example it assigns names to the methods,
+ * and variable definitions defined as top-level trees, but it never assigns
+ * names to their right-hand-side trees (their bodies).
+ */
 trait NamerComponent extends TransformationComponent[Tree, Tree] {
+  /** The family (delegate) method of the namer-components. */
   def name: Tree => Tree
 }
 
 @component
 trait ProgramNamerComponent extends NamerComponent {
+  /** assigns names to the program */
   (program: ProgramApi)          => {
     val newMembers =
       program.members.map(x => name(x).asInstanceOf[DefTree])

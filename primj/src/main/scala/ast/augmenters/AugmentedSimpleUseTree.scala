@@ -32,8 +32,13 @@ import sana.tiny.ast.SimpleUseTree
 
 trait AugmentedSimpleUseTree {
 
+  /** The tree to be augmented */
   def tree: SimpleUseTree
 
+  /**
+   * Returns true if [[AugmentedSimpleUseTree.tree]] has already been
+   * named.
+   */
   def hasBeenNamed: Boolean =
     tree.attributes.get('hasBeenNamed)
       .map(_.asInstanceOf[Boolean])

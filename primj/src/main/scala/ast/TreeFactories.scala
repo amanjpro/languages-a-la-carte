@@ -43,6 +43,14 @@ import sana.primj.types._
 
 trait TreeFactories extends sana.calcj.ast.TreeFactories {
 
+  /**
+   * Creates a new tree for program
+   *
+   * @param members the list of definitions of this program
+   * @param sourceName the name of the source file of this tree
+   * @param pos the position of this tree
+   * @param symbol the symbol of this tree
+   */
   def mkProgram(members: List[DefTree], sourceName: String,
               symbol: Option[Symbol] = None): ProgramApi = {
     val res = new Program(members, sourceName)
@@ -53,7 +61,15 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
     res
   }
 
-
+  /**
+   * Creates a new tree for assignment
+   *
+   * @param lhs the left-hand side expression
+   * @param rhs the right-hand side expression
+   * @param pos the position of this tree
+   * @param symbol the symbol of this tree
+   * @param owner the owner of this tree
+   */
   def mkAssign(lhs: Expr, rhs: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): AssignApi = {
@@ -64,7 +80,15 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
     res
   }
 
-
+  /**
+   * Creates a new tree for if-else statement
+   *
+   * @param cond the condition of if-else
+   * @param thenp the then-clause of if-else
+   * @param elsep the else-clause of if-else
+   * @param pos the position of this tree
+   * @param owner the owner of this tree
+   */
   def mkIf(cond: Expr, thenp: Expr, elsep: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): IfApi = {
@@ -75,7 +99,15 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
     res
   }
 
-
+  /**
+   * Creates a new tree for while/do-while statement
+   *
+   * @param isDoWhile A flag to indicate if this loop is while or do-while loop
+   * @param cond the condition of the loop
+   * @param body the body of the loop
+   * @param pos the position of this tree
+   * @param owner the owner of this tree
+   */
   def mkWhile(isDoWhile: Boolean, cond: Expr, body: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): WhileApi = {
@@ -86,6 +118,16 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
     res
   }
 
+  /**
+   * Creates a new tree for for-loop statement
+   *
+   * @param cond the condition of the loop
+   * @param inits the initialization statements of the loop
+   * @param steps the steps expressions of the loop
+   * @param body the body of the loop
+   * @param pos the position of this tree
+   * @param owner the owner of this tree
+   */
   def mkFor(inits: List[Tree], cond: Expr, steps: List[Expr],
     body: Expr, pos: Option[Position] = None,
     symbol: Option[Symbol] = None): ForApi = {
@@ -98,6 +140,14 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
     res.tpe = VoidType
     res
   }
+
+  /**
+   * Creates a new block of statements
+   *
+   * @param sttmts the statements of the block
+   * @param pos the position of this tree
+   * @param symbol the symbol of this tree
+   */
   def mkBlock(stmts: List[Tree],
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None): BlockApi = {
@@ -116,6 +166,16 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
     res
   }
 
+  /**
+   * Creates a new ternary expression
+   *
+   * @param cond the condition of this tree
+   * @param thenp the then-clause of the tree
+   * @param elsep the else-clause of the tree
+   * @param pos the position of this tree
+   * @param tpe the type-information of this tree
+   * @param owner the owner of this tree
+   */
   def mkTernary(cond: Expr, thenp: Expr, elsep: Expr,
     pos: Option[Position] = None,
     tpe: Option[Type]     = None,
@@ -127,7 +187,14 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
     res
   }
 
-
+  /**
+   * Creates a new function/method application expression
+   *
+   * @param fun the function/method to be applied
+   * @param args the arguments of this application
+   * @param pos the position of this tree
+   * @param owner the owner of this tree
+   */
   def mkApply(fun: Expr, args: List[Expr],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): ApplyApi = {
@@ -144,6 +211,13 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
     res
   }
 
+  /**
+   * Creates a new tree for return statements
+   *
+   * @param expr the expression of this return statement
+   * @param pos the position of this tree
+   * @param owner the owner of this tree
+   */
   def mkReturn(expr: Option[Expr],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): ReturnApi = {
@@ -154,7 +228,16 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
     res
   }
 
-
+  /**
+   * Creates a new tree for method definitions
+   *
+   * @param ret the type-tree for this method's return type
+   * @param name the name of this method
+   * @param params the list of parameters of this method
+   * @param body the body of this method
+   * @param pos the position of this tree
+   * @param symbol the symbol of this tree
+   */
   def mkMethodDef(ret: UseTree,
     name: Name, params: List[ValDefApi],
     body: Expr, pos: Option[Position] = None,
@@ -170,6 +253,16 @@ trait TreeFactories extends sana.calcj.ast.TreeFactories {
     res
   }
 
+  /**
+   * Creates a new tree for variable definitions
+   *
+   * @param mods the modifiers (flags) of this variable
+   * @param tpt the type-tree for this variable's type
+   * @param name the name of this variable
+   * @param body the right-hand side expression of this variable
+   * @param pos the position of this tree
+   * @param symbol the symbol of this tree
+   */
   def mkValDef(mods: Flags, tpt: UseTree, name: Name,
     rhs: Expr, pos: Option[Position] = None,
     symbol: Option[Symbol] = None): ValDefApi = {

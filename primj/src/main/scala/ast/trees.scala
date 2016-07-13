@@ -39,11 +39,13 @@ import tiny.modifiers.Flags
 import primj.types._
 
 
+/** A trait to represent a program */
 trait ProgramApi extends Tree {
-  /**
-    * List of definitions defined in this template.
-    */
+  /** List of definitions defined in this program. */
   def members: List[DefTree]
+  /**
+   * The name of the source file of this program file.
+   * In primj every program consists of a single file, only */
   def sourceName: String
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -55,9 +57,19 @@ trait ProgramApi extends Tree {
 }
 
 // Variable and Method definitions
+// At this stage, methods don't have modifiers (no encapsulation,
+// no final). But ValDefs have, since they can be either params, normal
+// variables or final variables.
+
+/** A trait to represent a method definition */
 trait MethodDefApi extends TermTree {
+  /** The return type-tree of a method */
   def ret: UseTree
+
+  /** A list of parameters of a method */
   def params: List[ValDefApi]
+
+  /** A body of a method */
   def body: Expr
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -70,12 +82,15 @@ trait MethodDefApi extends TermTree {
   }
 }
 
-// At this stage, methods don't have modifiers (no encapsulation,
-// no final). But ValDefs have, since they can be either params, normal
-// variables or final variables.
+/** A trait to represent variable definitions */
 trait ValDefApi extends TermTree {
+  /** The modifiers of a variable, like: static, public and others */
   def mods: Flags
+  /** The type-tree of the variable. {{{int}}} is the type-tree in the following
+   * expression: {{{int v = e}}}.
+   */
   def tpt: UseTree
+  /** The right-hand-side of a variable */
   def rhs: Expr
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -87,8 +102,14 @@ trait ValDefApi extends TermTree {
 
 
 
+/** A tree to represent return statements */
 trait ReturnApi extends Expr {
+  /**
+   * The expression of the return, this can be None to support return
+   * statements without expressions.
+   */
   val expr: Option[Expr]
+  /** Is this a void return? Meaning it has no expression */
   def isVoid: Boolean = expr == None
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -97,7 +118,9 @@ trait ReturnApi extends Expr {
   }
 }
 
+/** A tree to represent a block of a statements. */
 trait BlockApi extends Expr {
+  /** The list of statements in this block */
   def stmts: List[Tree]
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -111,8 +134,11 @@ trait BlockApi extends Expr {
 
 
 
+/** A tree to represent assignment expressions, be it compound or not. */
 trait AssignApi extends Expr {
+  /** the left-hand side expression of this assignment expression */
   def lhs: Expr
+  /** the right-hand side expression of this assignment expression */
   def rhs: Expr
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -122,9 +148,13 @@ trait AssignApi extends Expr {
   }
 }
 
+/** A tree to represent if-else statements */
 trait IfApi extends Expr {
+  /** The condition of if-else */
   def cond: Expr
+  /** The then clause of if-else */
   def thenp: Expr
+  /** The else clause of if-else */
   def elsep: Expr
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -137,9 +167,13 @@ trait IfApi extends Expr {
 }
 
 
+/** A tree to represent while and do-while loops */
 trait WhileApi extends Expr {
+  /** Is this tree a do-while loop? */
   def isDoWhile: Boolean
+  /** The condition of the loop */
   def cond: Expr
+  /** The body of the loop */
   def body: Expr
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -149,10 +183,15 @@ trait WhileApi extends Expr {
   }
 }
 
+/** A tree to represent a for-loop tree */
 trait ForApi extends Expr {
+  /** The initialization statements of the loop */
   def inits: List[Tree]
+  /** The condition expression of the loop */
   def cond: Expr
+  /** The steps expressions of the loop */
   def steps: List[Expr]
+  /** The body of the loop */
   def body: Expr
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -170,9 +209,17 @@ trait ForApi extends Expr {
 }
 
 // Ternary operator
+/**
+ * A tree to represent ternary expressions like {{{cond? thenp: elsep}}}, the
+ * difference ternary expressions and if-else statements is that, ternary
+ * expressions have a value and type, while if-else statements do not.
+ */
 trait TernaryApi extends Expr {
+  /** the condition of this expression */
   def cond: Expr
+  /** the then-clause of this expression */
   def thenp: Expr
+  /** the else-clause of this expression */
   def elsep: Expr
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -184,8 +231,11 @@ trait TernaryApi extends Expr {
 }
 
 // Apply
+/** A tree to represent function/method application */
 trait ApplyApi extends Expr {
+  /** The function/method that is applied */
   def fun: Expr
+  /** The list of arguments of this method application */
   def args: List[Expr]
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {

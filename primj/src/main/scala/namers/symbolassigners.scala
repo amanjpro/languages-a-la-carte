@@ -82,8 +82,20 @@ Literal: DONE
 Unary: DONE
 */
 
+/**
+ * Assigns symbols to definition trees and the trees that introduce a new scope,
+ * and assigns contextual owners to all trees. For understanding contextual owner
+ * please refer to [[tiny.symbols.Symbol.owner]].
+ *
+ * Parent trees communicate with their child trees (i.e. they tell them who their
+ * parents is) using their {{{owner}}} field. This field is added to trees via
+ * [[tiny.ast.augmenters.AugmentedTree.owner]] and
+ * [[tiny.ast.augmenters.AugmentedTree.owner_=]] methods.
+ */
 trait SymbolAssignerComponent extends
   TransformationComponent[Tree, Tree] {
+
+  /** The family (delegate) method of the symbol-assigner components. */
   def assign: Tree => Tree
 }
 
@@ -130,8 +142,12 @@ trait MethodDefSymbolAssignerComponent extends SymbolAssignerComponent {
       params = params, body = body)
   }
 
+  /** Checks against double definition of methods */
   protected def checkDoubleDef(owner: Option[Symbol],
       name: Name, pos: Option[Position]): Unit = owner.foreach { owner =>
+    // This implementation doesn't allow method overloading,
+    // should method overloading be supported, this implementation
+    // should be overridden.
     if(owner.directlyDefinesName(name,
             _.isInstanceOf[MethodSymbol]))
         error(METHOD_ALREADY_DEFINED,
@@ -158,8 +174,13 @@ trait ValDefSymbolAssignerComponent extends SymbolAssignerComponent {
   }
 
 
+  /** Adds the symbol of a variable in its owner's symbol */
   protected def declareSymbol(valdef: ValDefApi,
     symbol: Symbol): Unit = {
+    // only add the symbols of fields to their owner,
+    // the others will be added in a later phase (typer).
+    // This is to better report forward referencing in
+    // local variables.
     if(valdef.mods.isField) {
       valdef.owner.foreach(sym => {
         sym.declare(symbol)
@@ -167,6 +188,7 @@ trait ValDefSymbolAssignerComponent extends SymbolAssignerComponent {
     }
   }
 
+  /** Checks against double definition of methods */
   protected def checkDoubleDef(owner: Option[Symbol],
       name: Name, pos: Option[Position]): Unit =
     if(owner.map(_.directlyDefinesName(name,

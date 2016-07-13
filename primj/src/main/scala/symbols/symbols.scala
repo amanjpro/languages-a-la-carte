@@ -40,6 +40,11 @@ import sana.tiny.names.StdNames.noname
 
 
 
+/**
+ * A symbol for programs. Program symbols are used to store all the standard
+ * names. Eventually every symbol is owned by this either directly or
+ * indirectly.
+ */
 trait ProgramSymbol extends Symbol {
 
   def name: Name = noname
@@ -55,6 +60,8 @@ trait ProgramSymbol extends Symbol {
   override def toString(): String = s"Program symbol"
   override def hashCode(): Int = name.hashCode * 43
 }
+
+case object ProgramSymbol extends ProgramSymbol
 
 object VariableSymbol {
   private class VariableSymbolImpl(var mods: Flags, var name: Name,
@@ -72,19 +79,27 @@ object VariableSymbol {
     }
 }
 
-case object ProgramSymbol extends ProgramSymbol
-
-
+/** A symbol for variables. */
 trait VariableSymbol extends TermSymbol {
   var mods: Flags
   var name: Name
+  /** The symbol of the type of this variable */
   var typeSymbol: Option[Symbol]
   var owner: Option[Symbol]
 
   def tpe: Option[Type] = typeSymbol.flatMap(_.tpe)
   def tpe_=(tpe: Option[Type]): Unit = ???
 
+  /**
+   * [[VariableSymbol]] may not declare members, any call to this method results
+   * in an exception thrown.
+   */
   override def declare(symbol: Symbol): Unit = ???
+
+  /**
+   * [[VariableSymbol]] may not declare members, any call to this method results
+   * in an exception thrown.
+   */
   override def delete(symbol: Symbol): Unit = ???
   override def defines(symbol: Symbol,
     p: Symbol => Boolean): Boolean =
@@ -131,10 +146,13 @@ object MethodSymbol {
     }
 }
 
+/** A symbol for methods. */
 trait MethodSymbol extends TermSymbol {
   var mods: Flags
   var name: Name
+  /* The list of symbols of the parameters of this method */
   var params: List[Symbol]
+  /* The symbol of the return type of this method */
   var ret: Option[Symbol]
   var tpe: Option[Type]
   var owner: Option[Symbol]
@@ -167,6 +185,7 @@ object ScopeSymbol {
   }
 }
 
+/** A symbol for trees that define a new scope. */
 trait ScopeSymbol extends Symbol {
   var owner: Option[Symbol]
   var name: Name = noname
@@ -185,6 +204,7 @@ trait ScopeSymbol extends Symbol {
   override def hashCode(): Int = name.hashCode * 43 + tpe.hashCode
 }
 
+/** A symbol for {{{void}}} "type". */
 trait VoidSymbol extends TypeSymbol {
   def tpe: Option[Type] = Some(VoidType)
   def owner: Option[Symbol] = None
@@ -197,8 +217,16 @@ trait VoidSymbol extends TypeSymbol {
   def name_=(name: Name) = ???
 
 
-
+  /**
+   * [[ScopeSymbol]] may not declare members, any call to this method results
+   * in an exception thrown.
+   */
   override def declare(symbol: Symbol): Unit = ???
+
+  /**
+   * [[ScopeSymbol]] may not declare members, any call to this method results
+   * in an exception thrown.
+   */
   override def delete(symbol: Symbol): Unit = ???
   override def defines(symbol: Symbol,
     p: Symbol => Boolean): Boolean = false

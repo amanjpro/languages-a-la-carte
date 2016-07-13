@@ -33,6 +33,7 @@ import sana.calcj
 import tiny.names.Name
 
 trait StdNames extends calcj.names.StdNames {
+  /** The name of the {{{void}}} "type" */
   val VOID_TYPE_NAME         = Name("void")
 }
 

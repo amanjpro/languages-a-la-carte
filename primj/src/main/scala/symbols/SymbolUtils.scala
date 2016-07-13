@@ -34,6 +34,13 @@ import sana.tiny.names.Name
 import sana.primj.types.VoidType
 
 trait SymbolUtils extends sana.calcj.symbols.SymbolUtils {
+  /**
+   * Given a type, returns the symbol of this type if it is
+   * primitive or void.
+   *
+   * @param t the type that we want to get its symbol
+   * @return if the type is primitive or void, then its symbol or else None.
+   */
   override def getSymbol(t: Type): Option[Symbol] = t match {
     case VoidType              => Some(VoidSymbol)
     case _                     => super.getSymbol(t)
@@ -42,6 +49,9 @@ trait SymbolUtils extends sana.calcj.symbols.SymbolUtils {
   override def standardDefinitions: Set[Symbol] =
     super.standardDefinitions + VoidSymbol
 
+  /**
+   * Given a symbol, returns its enclosing method if exists.
+   */
   def enclosingMethod(symbol: Option[Symbol]): Option[Symbol] =
     symbol.flatMap {
       case sym: MethodSymbol => Some(sym)
@@ -49,6 +59,13 @@ trait SymbolUtils extends sana.calcj.symbols.SymbolUtils {
     }
 
 
+  /**
+   * Checks if a local variable with the same owner is already defined in the given
+   * owner scope and/or its owner scopes.
+   *
+   * @param owner the owner we want to examine.
+   * @param name the potential name of the local variable(s).
+   */
   def alreadyDefinedLocalVarable(owner: Option[Symbol],
     name: Name): Boolean = {
     owner match {

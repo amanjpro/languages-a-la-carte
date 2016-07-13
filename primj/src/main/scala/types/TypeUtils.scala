@@ -40,6 +40,13 @@ import sana.primj.symbols.SymbolUtils
 trait TypeUtils extends sana.tiny.types.TypeUtils {
 
 
+  /**
+   * Checks if a type is assignable to anther.
+   *
+   * @param rtree the tree which has the type {{{rtpe}}}.
+   * @param rtpe  the type of which we want to be assignable
+   * @param ltpe the type of which we want to assign {{{rtpe}}} to
+   */
   def isAssignable(rtree: Tree, rtpe: Type, ltpe: Type): Boolean = {
     (ltpe, rtpe) match {
       case (ShortType, IntType) |
@@ -51,6 +58,15 @@ trait TypeUtils extends sana.tiny.types.TypeUtils {
   }
 
 
+  /**
+   * Unifies the two types of the "then clause" and "else clause" of a ternary
+   * operation.
+   *
+   * @param lhs the {{{thenp}}} expression of a ternary expression
+   * @param rhs the {{{elsep}}} expression of a ternary expression
+   * @return if the two types are unifiable, return the unified type or return
+   *         {{{None}}}. Two types are unifiable if they have a common supertype.
+   */
   def unifyTernaryBranches(lhs: Expr, rhs: Expr): Option[Type] = {
     (lhs.tpe, rhs.tpe) match {
       case (Some(t1), Some(t2)) if t1 =:= t2              =>

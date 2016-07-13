@@ -29,6 +29,7 @@ package ch.usi.inf.l3.sana.primj
 
 
 object PrimjNodes {
+  /** The available trees of {{{Primj}}}. */
   final val nodes =
     """Program,
        MethodDef,

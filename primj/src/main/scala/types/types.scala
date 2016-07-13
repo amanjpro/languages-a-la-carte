@@ -33,8 +33,12 @@ import sana.tiny.types._
 import sana.tiny.types.TypeUtils._
 
 
+/** A type to represent the type of this method. */
 trait MethodTypeApi extends Type {
+  /** The return-type of the method */
   def ret: Type
+
+  /** The types of the parameters of this method */
   def params: List[Type]
 
   def =:=(t: Type): Boolean = t match {
@@ -44,7 +48,6 @@ trait MethodTypeApi extends Type {
     case _                => false
   }
 
-  // TODO: In Java-like languages, method subtyping is not like that!!
   def <:<(t: Type): Boolean = {
     val isEquiv = this =:= t
     lazy val isSub = t match {

@@ -48,7 +48,14 @@ import primj.modifiers.Ops._
 import primj.errors.ErrorCodes._
 
 
+/**
+ * Checks the shape of a tree, for example in Java it disallows statements to appear in
+ * places where expressions are expected. This phase is needed to handle the
+ * over expressiveness of the trees.
+ */
 trait ShapeCheckerComponent extends CheckerComponent[Tree] {
+
+  /** The family (delegate) method of the shape-checker components. */
   def check: Tree => Unit
 }
 
@@ -65,6 +72,7 @@ trait BlockShapeCheckerComponent extends ShapeCheckerComponent {
     }
   }
 
+  /** @see [[primj.ast.TreeUtils.isValidStatement]] */
   protected def isValidStmt(t: Tree): Boolean =
     TreeUtils.isValidStatement(t)
 
@@ -91,9 +99,11 @@ trait IfShapeCheckerComponent extends ShapeCheckerComponent {
     } else ()
   }
 
+  /** @see [[primj.ast.TreeUtils.isValidStatement]] */
   protected def isValidStmt(t: Tree): Boolean =
     TreeUtils.isValidStatement(t)
 
+  /** @see [[primj.ast.TreeUtils.isValidExpression]] */
   protected def isValidExpr(t: Tree): Boolean =
     TreeUtils.isValidExpression(t)
 
@@ -116,9 +126,11 @@ trait WhileShapeCheckerComponent extends ShapeCheckerComponent {
     } else ()
   }
 
+  /** @see [[primj.ast.TreeUtils.isValidStatement]] */
   protected def isValidStmt(t: Tree): Boolean =
     TreeUtils.isValidStatement(t)
 
+  /** @see [[primj.ast.TreeUtils.isValidExpression]] */
   protected def isValidExpr(t: Tree): Boolean =
     TreeUtils.isValidExpression(t)
 
@@ -151,11 +163,23 @@ trait ForShapeCheckerComponent extends ShapeCheckerComponent {
     } else ()
   }
 
+  /**
+   * Returns true if either all the trees in the given list are {{{ValDefApi}}}s or none
+   * of them are, otherwise returns false.
+   *
+   * @param trees the list to be checked
+   */
   protected def allValDefsOrNone(trees: List[Tree]): Boolean = {
     val valdefs = trees.filter(_.isInstanceOf[ValDefApi])
     valdefs.size == trees.size || valdefs.size == 0
   }
 
+  /**
+   * Checks if the initialization statements of a for loop are
+   * valid initialization statements.
+   *
+   * @param forloop the {{{ForApi}}} tree to be checked.
+   */
   protected def isValidInitStatements(forloop: ForApi): Unit = {
     if(!allValDefsOrNone(forloop.inits))
       error(UNEXPECTED_TREE,
@@ -171,12 +195,15 @@ trait ForShapeCheckerComponent extends ShapeCheckerComponent {
   }
 
 
+  /** @see [[primj.ast.TreeUtils.isValDefOrStatementExpression]] */
   protected def isValDefOrStatementExpression(t: Tree): Boolean =
     TreeUtils.isValDefOrStatementExpression(t)
 
+  /** @see [[primj.ast.TreeUtils.isValidStatement]] */
   protected def isValidStmt(t: Tree): Boolean =
     TreeUtils.isValidStatement(t)
 
+  /** @see [[primj.ast.TreeUtils.isValidExpression]] */
   protected def isValidExpr(t: Tree): Boolean =
     TreeUtils.isValidExpression(t)
 
@@ -194,6 +221,7 @@ trait CastShapeCheckerComponent extends ShapeCheckerComponent {
     } else ()
   }
 
+  /** @see [[primj.ast.TreeUtils.isTypeUse]] */
   protected def isTypeUse(t: UseTree): Boolean =
     TreeUtils.isTypeUse(t)
 
@@ -218,6 +246,7 @@ trait MethodDefShapeCheckerComponent extends ShapeCheckerComponent {
     check(meth.body)
   }
 
+  /** @see [[primj.ast.TreeUtils.isTypeUse]] */
   protected def isTypeUse(tree: UseTree): Boolean =
     TreeUtils.isTypeUse(tree)
 }
@@ -240,30 +269,13 @@ trait UnaryShapeCheckerComponent extends ShapeCheckerComponent {
 trait ValDefShapeCheckerComponent extends ShapeCheckerComponent {
   (valdef: ValDefApi) => {
     if(!isTypeUse(valdef.tpt)) {
-      // TODO: Better error message
       error(TYPE_NAME_EXPECTED,
         valdef.tpt.toString, "a type", valdef.tpt.pos)
     } else ()
 
     if(!sensibleParamFlag(valdef.mods, valdef.owner))
-        // TODO: Better error message
         error(PARAM_OWNED_BY_NON_METHOD,
           valdef.toString, "an expression", valdef.pos)
-
-    // val enclMeth = SymbolUtils.enclosingMethod(valdef.symbol)
-    // if(enclMeth != None
-    //   && !(valdef.mods.isLocalVariable || valdef.mods.isParam)) {
-    //   // TODO: Better error message
-    //   error(UNEXPECTED_TREE,
-    //     valdef.toString, "an expression", valdef.pos)
-    // } else ()
-    //
-    // if(enclMeth == None && !valdef.mods.isField) {
-    //   // TODO: Better error message
-    //   error(UNEXPECTED_TREE,
-    //     valdef.toString, "an expression", valdef.pos)
-    // } else ()
-
     if(!isSimpleExpression(valdef.rhs))
       // TODO: Better error message
       error(UNEXPECTED_TREE,
@@ -272,6 +284,13 @@ trait ValDefShapeCheckerComponent extends ShapeCheckerComponent {
     check(valdef.rhs)
   }
 
+  /**
+   * Checks if the flags on a variable is sensible. A sensible flag for a parameter
+   * is to have {{{PARAM}}} flag, and for non-parameter variable is not to have it.
+   *
+   * @param mods the flags of the variable
+   * @param sym the symbol of the variable
+   */
   protected def sensibleParamFlag(mods: Flags,
     sym: Option[Symbol]): Boolean = sym match {
     case Some(_: MethodSymbol) =>
@@ -280,9 +299,11 @@ trait ValDefShapeCheckerComponent extends ShapeCheckerComponent {
       !mods.isParam
   }
 
+  /** @see [[primj.ast.TreeUtils.isTypeUse]] */
   protected def isTypeUse(tree: UseTree): Boolean =
     TreeUtils.isTypeUse(tree)
 
+  /** @see [[primj.ast.TreeUtils.isSimpleExpression]] */
   protected def isSimpleExpression(tree: Tree): Boolean =
     TreeUtils.isSimpleExpression(tree)
 

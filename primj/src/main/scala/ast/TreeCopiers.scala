@@ -41,6 +41,13 @@ import sana.primj.ast._
 
 
 trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
+  /**
+   * Returns a copy of a program tree
+   *
+   * @param template the tree to be copied
+   * @param members the list of the program's definitions
+   * @param sourceName the name of the source file of this program
+   */
   def copyProgram(template: ProgramApi)(members: List[DefTree] =
     template.members,
     sourceName: String = template.sourceName): ProgramApi = {
@@ -49,7 +56,13 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
     res
   }
 
-
+  /**
+   * Returns a copy of an assign tree
+   *
+   * @param template the tree to be copied
+   * @param lhs the left-hand side of this assignment tree
+   * @param rhs the right-hand side of this assignment tree
+   */
   def copyAssign(template: AssignApi)(lhs: Expr = template.lhs,
     rhs: Expr = template.rhs): AssignApi = {
     val res = TreeFactories.mkAssign(lhs, rhs)
@@ -57,7 +70,14 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
     res
   }
 
-
+  /**
+   * Returns a copy of if-else tree
+   *
+   * @param template the tree to be copied
+   * @param cond the condition of this if-else tree
+   * @param thenp the then-clause of this if-else tree
+   * @param elsep the else-clause of this if-else tree
+   */
   def copyIf(template: IfApi)(cond: Expr = template.cond,
     thenp: Expr = template.thenp, elsep: Expr = template.elsep): IfApi = {
     val res = TreeFactories.mkIf(cond, thenp, elsep)
@@ -65,7 +85,15 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
     res
   }
 
-
+  /**
+   * Returns a copy of do/while-loop tree
+   *
+   * @param template the tree to be copied
+   * @param isDoWhile a flag to indicate if this tree is a while or do-while
+   *                  loop
+   * @param cond the condition of this loop
+   * @param body the body of this loop
+   */
   def copyWhile(template: WhileApi)(isDoWhile: Boolean = template.isDoWhile,
     cond: Expr = template.cond, body: Expr = template.body): WhileApi = {
     val res = TreeFactories.mkWhile(isDoWhile, cond, body)
@@ -73,6 +101,15 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
     res
   }
 
+  /**
+   * Returns a copy of for-loop tree
+   *
+   * @param template the tree to be copied
+   * @param inits the initialization statements of this loop
+   * @param cond the condition of this loop
+   * @param steps the step statements of this loop
+   * @param body the body of this loop
+   */
   def copyFor(template: ForApi)(inits: List[Tree] = template.inits,
     cond: Expr = template.cond, steps: List[Expr] = template.steps,
     body: Expr = template.body): ForApi = {
@@ -81,6 +118,12 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
     res
   }
 
+  /**
+   * Returns a copy of block of statements
+   *
+   * @param template the tree to be copied
+   * @param stmts the list statements of this block
+   */
   def copyBlock(template: BlockApi)(stmts: List[Tree] =
     template.stmts): BlockApi = {
     val res = TreeFactories.mkBlock(stmts)
@@ -88,6 +131,14 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
     res
   }
 
+  /**
+   * Returns a copy of a ternary expression
+   *
+   * @param template the tree to be copied
+   * @param cond the condition of this tree
+   * @param thenp the then-clause of this tree
+   * @param elsep the else-clause of this tree
+   */
   def copyTernary(template: TernaryApi)(cond: Expr = template.cond,
     thenp: Expr = template.thenp,
     elsep: Expr = template.elsep): TernaryApi = {
@@ -96,7 +147,13 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
     res
   }
 
-
+  /**
+   * Returns a copy of method/function application
+   *
+   * @param template the tree to be copied
+   * @param fun the function/method to be applied
+   * @param args the list arguments of this function/method application
+   */
   def copyApply(template: ApplyApi)(fun: Expr = template.fun,
     args: List[Expr] = template.args): ApplyApi = {
 
@@ -105,6 +162,12 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
     res
   }
 
+  /**
+   * Returns a copy of return statement
+   *
+   * @param template the tree to be copied
+   * @param expr the expression of this return statement
+   */
   def copyReturn(template: ReturnApi)(expr: Option[Expr] =
       template.expr): ReturnApi = {
     val res = TreeFactories.mkReturn(expr)
@@ -113,6 +176,15 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
   }
 
 
+  /**
+   * Returns a copy of method definition
+   *
+   * @param template the tree to be copied
+   * @param ret the return type-tree of this method/function
+   * @param name the name of this method/function
+   * @param params the list of parameters of this method/function
+   * @param body the body of this method/function
+   */
   def copyMethodDef(template: MethodDefApi)(ret: UseTree = template.ret,
     name: Name = template.name, params: List[ValDefApi]  = template.params,
     body: Expr = template.body): MethodDefApi = {
@@ -121,6 +193,15 @@ trait TreeCopiers extends sana.calcj.ast.TreeCopiers {
     res
   }
 
+  /**
+   * Returns a copy of variable definition
+   *
+   * @param template the tree to be copied
+   * @param mods the modifiers (i.e. flags) of this variable
+   * @param tpt the type-tree of this variable
+   * @param name the name of this variable
+   * @param rhs the right-hand side of this variable
+   */
   def copyValDef(template: ValDefApi)(mods: Flags = template.mods,
     tpt: UseTree = template.tpt, name: Name = template.name,
     rhs: Expr = template.rhs): ValDefApi = {

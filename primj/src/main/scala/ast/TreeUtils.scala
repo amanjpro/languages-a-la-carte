@@ -44,11 +44,13 @@ import primj.symbols.VariableSymbol
 import primj.modifiers.Ops._
 
 trait TreeUtils extends calcj.ast.TreeUtils {
+  /** Does the given tree represent a type-use tree */
   def isTypeUse(tree: UseTree): Boolean = tree match {
     case _: IdentApi                    => false
     case _: TypeUseApi                  => true
   }
 
+  /** Does the given tree represent a variable definition */
   def isVariable(tree: Tree): Boolean = tree match {
     case _: ValDefApi                    => true
     case _                            =>
@@ -83,10 +85,12 @@ trait TreeUtils extends calcj.ast.TreeUtils {
   // }
   //
 
+  /** Does the given tree have {{{FINAL}}} flag */
   def isFinal(tree: Tree): Boolean =
     tree.symbol.map(_.mods.isFinal).getOrElse(false)
 
 
+  /** Is the given tree a valid statement */
   def isValidStatement(e: Tree): Boolean = {
     lazy val isStmt = e match {
       // Statements in primj: if, while, for, block, return, valdef
@@ -98,6 +102,7 @@ trait TreeUtils extends calcj.ast.TreeUtils {
     isValidStatementExpression(e) || isStmt
   }
 
+  /** Is the given tree a valid statement expression */
   def isValidStatementExpression(e: Tree): Boolean = e match {
     case u: UnaryApi  if u.op == Inc || u.op == Dec => true
     case _: ApplyApi                       => true
@@ -107,6 +112,7 @@ trait TreeUtils extends calcj.ast.TreeUtils {
     case _                              => false
   }
 
+  /** Is the given tree a variable definition or a valid statement expression */
   def isValDefOrStatementExpression(v: Tree): Boolean = v match {
     case s: ValDefApi => true
     case e: Expr   => isValidStatementExpression(e)
@@ -114,16 +120,19 @@ trait TreeUtils extends calcj.ast.TreeUtils {
   }
 
   // INFO: Update this to Java as we go
+  /** Is the given tree a valid expression */
   def isValidExpression(e: Tree): Boolean = e match {
     case _: LiteralApi | _: IdentApi | _: BinaryApi | _: UnaryApi |
          _: CastApi | _: AssignApi | _: TernaryApi | _: ApplyApi        => true
     case _                                                              => false
   }
 
+  /** Does the given tree have a return statement in all paths that it can take */
   def allPathsReturn(expr: Tree): Boolean =
     allPathsReturnAux(expr, allPathsReturn)
 
 
+  /** Does the given tree have a return statement in all paths that it can take */
   protected def allPathsReturnAux(expr: Tree,
           recurse: Tree => Boolean): Boolean = expr match {
     case wile: WhileApi                     =>
@@ -155,6 +164,7 @@ trait TreeUtils extends calcj.ast.TreeUtils {
   }
 
 
+  /** Is the given tree a simple expression */
   def isSimpleExpression(tree: Tree): Boolean = tree match {
     case _: WhileApi                 => false
     case _: ForApi                   => false
@@ -168,7 +178,7 @@ trait TreeUtils extends calcj.ast.TreeUtils {
     case _                           => true
   }
 
-
+  /** Is the given tree a constant literal */
   def isConstantLiteral(tree: Tree): Boolean = tree match {
     case lit: LiteralApi              =>
       true

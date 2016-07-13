@@ -38,6 +38,16 @@ import sana.primj.symbols.SymbolUtils
 
 
 trait TypePromotions extends sana.calcj.typechecker.TypePromotions {
+  /**
+   * Given an expression, and its expected type it widens the expression
+   * to the type if possible and needed. It is possible if the expected
+   * type is primitive long, float, or double; and, it is needed is the
+   * type of the expression is a subtype of the expected type but not
+   * equal to it.
+   *
+   * @param expr the expression to be widened
+   * @param otpe the expected type to widen expr to
+   */
   def widenIfNeeded(expr: Expr, otpe: Option[Type]): Expr = {
     val res = for {
       etpe <- expr.tpe

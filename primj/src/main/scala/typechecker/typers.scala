@@ -76,18 +76,24 @@ trait AssignTyperComponent extends TyperComponent {
   }
 
 
+  /** Type-checks the right-hand-side of an assignment tree */
   protected def checkVariableLHS(lhs: Tree): Unit = {
     if(!TreeUtils.isVariable(lhs))
       error(ASSIGNING_NOT_TO_VARIABLE,
         lhs.toString, lhs.toString, lhs.pos)
   }
 
+  /** Checks if there is a reassignment to a final variable */
   protected def checkFinalReassigning(lhs: Tree): Unit = {
     if(TreeUtils.isFinal(lhs))
       error(REASSIGNING_FINAL_VARIABLE,
         lhs.toString, lhs.toString, lhs.pos)
   }
 
+  /**
+   * Checks if the type of the rhs of an assignment is assignable to the one
+   *  of lhs.
+   */
   protected def checkAssignmentTypeCorrectness(lhs: Expr, rhs: Expr,
     assign: AssignApi): AssignApi = {
     (lhs.tpe, rhs.tpe) match {
@@ -108,6 +114,7 @@ trait AssignTyperComponent extends TyperComponent {
   }
 
 
+  /** @see [[primj.typechecker.TypePromotions.widenIfNeeded]] */
   protected def widenIfNeeded(expr: Expr, tpe: Option[Type]): Expr =
     TypePromotions.widenIfNeeded(expr, tpe)
 }
@@ -250,12 +257,15 @@ trait TernaryTyperComponent extends TyperComponent {
     }
   }
 
+  /** @see [[primj.types.TypeUtils.unifyTernaryBranches]] */
   protected def unifyTernaryBranches(lhs: Expr, rhs: Expr): Option[Type] =
     TypeUtils.unifyTernaryBranches(lhs, rhs)
 
+  /** @see [[primj.typechecker.TypePromotions.isNarrawableTo]] */
   protected def isNarrawableTo(e: Tree, t: Type): Boolean =
     TypePromotions.isNarrawableTo(e, t)
 
+  /** @see [[primj.typechecker.TypePromotions.binaryNumericPromotion]] */
   protected def binaryNumericPromotion(t1: NumericType,
     t2: NumericType): PrimitiveType =
     TypePromotions.binaryNumericPromotion(t1, t2)
@@ -296,6 +306,7 @@ trait ApplyTyperComponent extends TyperComponent {
     }
   }
 
+  /** @see [[primj.typechecker.TypePromotions.widenIfNeeded]] */
   protected def widenIfNeeded(expr: Expr, tpe: Option[Type]): Expr =
     TypePromotions.widenIfNeeded(expr, tpe)
 }
@@ -354,6 +365,7 @@ trait ReturnTyperComponent extends TyperComponent {
     }
   }
 
+  /** @see [[primj.typechecker.TypePromotions.widenIfNeeded]] */
   protected def widenIfNeeded(expr: Expr, tpe: Option[Type]): Expr =
     TypePromotions.widenIfNeeded(expr, tpe)
 
@@ -379,9 +391,11 @@ trait UnaryTyperComponent extends calcj.typechecker.UnaryTyperComponent {
   }
 
 
+  /** @see [[primj.ast.TreeUtils.isVariable]] */
   protected def isVariable(tree: Tree): Boolean =
     TreeUtils.isVariable(tree)
 
+  /** @see [[primj.ast.TreeUtils.isFinal]] */
   protected def isFinal(tree: Tree): Boolean =
     TreeUtils.isFinal(tree)
 }
@@ -409,6 +423,12 @@ trait ValDefTyperComponent extends TyperComponent {
   }
 
 
+  /**
+   * Sets the type-symbol of the variable symbol.
+   *
+   * @param valdef the variable which we want to set its symbol's type-symbol
+   * @param tpt the type-checked type-tree of the variable
+   */
   protected def setTypeSymbol(valdef: ValDefApi, tpt: UseTree): Unit = {
     valdef.symbol.foreach(sym => {
       sym match {
@@ -422,6 +442,7 @@ trait ValDefTyperComponent extends TyperComponent {
   }
 
 
+  /** Type-checks the variable */
   protected def checkValDef(valdef: ValDefApi): Boolean = {
     val rtpe   = valdef.rhs.tpe.getOrElse(ErrorType)
     val ttpe   = valdef.tpt.tpe.getOrElse(ErrorType)
@@ -445,12 +466,14 @@ trait ValDefTyperComponent extends TyperComponent {
   }
 
 
+  /** Checks against double definition of variables */
   protected def checkDoubleDef(owner: Option[Symbol],
       name: Name, pos: Option[Position]): Unit =
     if(SymbolUtils.alreadyDefinedLocalVarable(owner, name))
       error(VARIABLE_ALREADY_DEFINED,
           "", "", pos)
 
+  /** @see [[primj.typechecker.TypePromotions.widenIfNeeded]] */
   protected def widenIfNeeded(expr: Expr, tpe: Option[Type]): Expr =
     TypePromotions.widenIfNeeded(expr, tpe)
 }
@@ -496,6 +519,7 @@ trait MethodDefTyperComponent extends TyperComponent {
   }
 
 
+  /** @see [[primj.ast.TreeUtils.allPathsReturn]] */
   protected def allPathsReturn(expr: Tree): Boolean =
     TreeUtils.allPathsReturn(expr)
 }
