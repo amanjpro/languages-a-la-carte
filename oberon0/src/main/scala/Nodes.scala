@@ -49,7 +49,7 @@ object Nodes {
        Select,
        Binary,
        Unary,
-       Literal,
+       Literal
        """
 
 

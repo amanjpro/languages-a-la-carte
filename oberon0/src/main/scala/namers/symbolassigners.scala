@@ -171,13 +171,12 @@ trait ValDefSymbolAssignerComponent
 
 
 @component
-trait IdentSymbolAssignerComponent
-  extends primj.namers.IdentSymbolAssignerComponent {
+trait IdentSymbolAssignerComponent extends SymbolAssignerComponent {
   (id: IdentApi)          => {
     if(id.name == Name("WriteLn")) {
       val tree = TreeFactories.mkApply(id, Nil, id.pos)
       id.owner.foreach(tree.owner = _)
       tree
-    } else super.apply(id)
+    } else id
   }
 }

@@ -47,10 +47,10 @@ trait DcctSymbolAssignerFamilyApi
 
   def components: List[PartialFunction[Tree, Tree]] =
     generateComponents[Tree, Tree](DCCTNodes.nodes,
-      "SymbolAssignerComponent", "assign", "")
+      "SymbolAssignerComponent", "assign", "Ident,Literal,TypeUse")
       // "Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal")
 
-  def assign: Tree => Tree = family 
+  def assign: Tree => Tree = family
 }
 
 case class DcctSymbolAssignerFamily(compiler: CompilerInterface)

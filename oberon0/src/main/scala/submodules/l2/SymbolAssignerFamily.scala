@@ -35,8 +35,7 @@ import sana.tiny.symbols.Symbol
 import sana.tiny.ast.{Tree, NoTree}
 import sana.oberon0.Nodes
 import sana.oberon0.namers._
-import sana.primj.namers.{ValDefSymbolAssignerComponent => _,
-                          IdentSymbolAssignerComponent => _, _}
+import sana.primj.namers.{ValDefSymbolAssignerComponent => _, _}
 import sana.ooj.namers.{TemplateSymbolAssignerComponent,
                         SelectSymbolAssignerComponent}
 import sana.arrayj.namers.{ArrayAccessSymbolAssignerComponent}
@@ -51,7 +50,7 @@ trait SymbolAssignerFamilyApi
   override def default = { case s: Tree => s }
 
   def components: List[PartialFunction[Tree, Tree]] =
-    generateComponents[Tree, Tree]("Program,MethodDef,Binary,Unary,Literal,While,If",
+    generateComponents[Tree, Tree]("Program,MethodDef,Binary,Unary,While,If",
       "SymbolAssignerComponent", "assign", "")
       // "Ident,TypeUse,Assign,Ternary,Apply,Return,Binary,Literal")
 
