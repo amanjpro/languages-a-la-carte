@@ -90,8 +90,6 @@ object PackageSymbol {
 
 /** A trait to represent symbols for packages */
 trait PackageSymbol extends TermSymbol {
-  var name: Name
-  var owner: Option[Symbol]
   def mods: Flags = noflags
   def mods_=(mods: Flags): Unit = ???
 
