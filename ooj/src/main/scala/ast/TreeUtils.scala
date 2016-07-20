@@ -127,8 +127,8 @@ trait TreeUtils extends ast.TreeUtils {
    */
   def isValidClassMember(tree: Tree): Boolean = tree match {
     case _: MethodDefApi                 => true
-    case _: ValDefApi                    => true
-    case _: BlockApi                     => true
+    case f: ValDefApi                    => f.mods.isField
+    case b: BlockApi                     => b.isStaticInit
     case _                               => false
   }
 
