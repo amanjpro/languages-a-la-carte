@@ -27,6 +27,9 @@ class A extends Object {
   Object b2 = new Object();
   Object b3 = new Object();
   public String m(String a) {
+    if("" instanceof String) {
+      System.out.println("");
+    }
     String s = "";
     Object b4 = new Object();
     Object b5 = new Object();
