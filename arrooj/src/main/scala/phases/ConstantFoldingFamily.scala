@@ -47,7 +47,8 @@ trait ConstantFoldingFamilyApi
 
   def components: List[PartialFunction[(Tree, Env), (Tree, Env)]] =
     generateComponents[(Tree, Env), (Tree, Env)](Nodes.nodes,
-      "ConstantFoldingComponent", "constantFold", "")
+      "ConstantFoldingComponent", "constantFold",
+      "Continue,Break,Super,This,Literal")
 
   def constantFold: ((Tree, Env)) => (Tree, Env) = family
 }

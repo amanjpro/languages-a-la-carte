@@ -117,15 +117,15 @@ trait SelectJumpCheckerComponent extends JumpCheckerComponent {
   }
 }
 
-@component(tree, encls)
-trait ThisJumpCheckerComponent extends JumpCheckerComponent {
-  (ths: ThisApi)  => ths
-}
-
-@component(tree, encls)
-trait SuperJumpCheckerComponent extends JumpCheckerComponent {
-  (spr: SuperApi)  => spr
-}
+// @component(tree, encls)
+// trait ThisJumpCheckerComponent extends JumpCheckerComponent {
+//   (ths: ThisApi)  => ths
+// }
+//
+// @component(tree, encls)
+// trait SuperJumpCheckerComponent extends JumpCheckerComponent {
+//   (spr: SuperApi)  => spr
+// }
 
 @component(tree, encls)
 trait MethodDefJumpCheckerComponent extends

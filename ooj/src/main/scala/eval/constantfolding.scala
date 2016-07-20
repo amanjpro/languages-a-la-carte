@@ -59,6 +59,12 @@ import tiny.ast.{TreeCopiers => _, _}
 
 
 
+/**
+ * After performing constant collection, this phase comes and evaluates
+ * the program.
+ *
+ * @see [[ConstantCollectingComponent]]
+ */
 trait ConstantFoldingComponent extends
   TransformationComponent[(Tree, Env), (Tree, Env)] {
   def constantFold: ((Tree, Env)) => (Tree, Env)
@@ -1018,32 +1024,32 @@ trait NewConstantFoldingComponent
   }
 }
 
-@component(tree, env)
-trait SuperConstantFoldingComponent
-  extends ConstantFoldingComponent {
-  (spr: SuperApi) => ((spr, env))
-}
-
-@component(tree, env)
-trait ThisConstantFoldingComponent
-  extends ConstantFoldingComponent {
-  (ths: ThisApi) => ((ths, env))
-}
-
-@component(tree, env)
-trait LiteralConstantFoldingComponent
-  extends ConstantFoldingComponent {
-  (lit: LiteralApi) => ((lit, env))
-}
-
-@component(tree, env)
-trait ContinueConstantFoldingComponent
-  extends ConstantFoldingComponent {
-  (cntnu: ContinueApi) => ((cntnu, env))
-}
-
-@component(tree, env)
-trait BreakConstantFoldingComponent
-  extends ConstantFoldingComponent {
-  (brk: BreakApi) => ((brk, env))
-}
+// @component(tree, env)
+// trait SuperConstantFoldingComponent
+//   extends ConstantFoldingComponent {
+//   (spr: SuperApi) => ((spr, env))
+// }
+//
+// @component(tree, env)
+// trait ThisConstantFoldingComponent
+//   extends ConstantFoldingComponent {
+//   (ths: ThisApi) => ((ths, env))
+// }
+//
+// @component(tree, env)
+// trait LiteralConstantFoldingComponent
+//   extends ConstantFoldingComponent {
+//   (lit: LiteralApi) => ((lit, env))
+// }
+//
+// @component(tree, env)
+// trait ContinueConstantFoldingComponent
+//   extends ConstantFoldingComponent {
+//   (cntnu: ContinueApi) => ((cntnu, env))
+// }
+//
+// @component(tree, env)
+// trait BreakConstantFoldingComponent
+//   extends ConstantFoldingComponent {
+//   (brk: BreakApi) => ((brk, env))
+// }

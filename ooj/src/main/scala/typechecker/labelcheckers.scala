@@ -117,15 +117,15 @@ trait SelectLabelNameCheckerComponent extends LabelNameCheckerComponent {
   }
 }
 
-@component(tree, labelNames)
-trait ThisLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (ths: ThisApi)  => ths
-}
-
-@component(tree, labelNames)
-trait SuperLabelNameCheckerComponent extends LabelNameCheckerComponent {
-  (spr: SuperApi)  => spr
-}
+// @component(tree, labelNames)
+// trait ThisLabelNameCheckerComponent extends LabelNameCheckerComponent {
+  // (ths: ThisApi)  => ths
+// }
+//
+// @component(tree, labelNames)
+// trait SuperLabelNameCheckerComponent extends LabelNameCheckerComponent {
+  // (spr: SuperApi)  => spr
+// }
 
 @component(tree, labelNames)
 trait MethodDefLabelNameCheckerComponent extends

@@ -50,7 +50,7 @@ trait LabelNameCheckerFamilyApi extends CheckerFamily[(Tree, List[LabelApi])] {
   def components: List[PartialFunction[(Tree, List[LabelApi]), Unit]] =
     generateComponents[(Tree, List[LabelApi]), Unit](
       OojNodes.nodes,
-      "LabelNameCheckerComponent", "check", "Literal,Ident,TypeUse")
+      "LabelNameCheckerComponent", "check", "Literal,Ident,TypeUse,Super,This")
 
   def check: ((Tree, List[LabelApi])) => Unit = family
 }
