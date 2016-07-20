@@ -69,8 +69,15 @@ trait BinaryShapeCheckerComponent extends ShapeCheckerComponent {
   }
 
 
-  def isTypeUse(t: Tree): Boolean =
-    TreeUtils.isValidExpression(t)
+  /**
+   * Checks if a tree is a type-use
+   *
+   * @param t the tree to be checked
+   */
+  protected def isTypeUse(t: Tree): Boolean = t match {
+    case use: tiny.ast.UseTree => TreeUtils.isTypeUse(use)
+    case _                     => false
+  }
 
   protected def isValidExpression(t: Tree): Boolean =
     TreeUtils.isValidExpression(t)
