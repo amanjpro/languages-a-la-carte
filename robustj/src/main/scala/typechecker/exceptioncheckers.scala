@@ -410,11 +410,11 @@ trait ArrayAccessExceptionHandlingCheckerComponent
   }
 }
 
-@component(tree, handledExceptions)
-trait ArrayTypeUseExceptionHandlingCheckerComponent
-  extends ExceptionHandlingCheckerComponent {
-  (tuse: ArrayTypeUseApi) => handledExceptions
-}
+// @component(tree, handledExceptions)
+// trait ArrayTypeUseExceptionHandlingCheckerComponent
+//   extends ExceptionHandlingCheckerComponent {
+//   (tuse: ArrayTypeUseApi) => handledExceptions
+// }
 
 @component(tree, handledExceptions)
 trait ArrayInitializerExceptionHandlingCheckerComponent
@@ -425,18 +425,18 @@ trait ArrayInitializerExceptionHandlingCheckerComponent
     }
   }
 }
-@component(tree, handledExceptions)
-trait ContinueExceptionHandlingCheckerComponent
-  extends ExceptionHandlingCheckerComponent {
-  (cont: ContinueApi) => handledExceptions
-}
-
-@component(tree, handledExceptions)
-trait BreakExceptionHandlingCheckerComponent
-  extends ExceptionHandlingCheckerComponent {
-  (break: BreakApi) => handledExceptions
-
-}
+// @component(tree, handledExceptions)
+// trait ContinueExceptionHandlingCheckerComponent
+//   extends ExceptionHandlingCheckerComponent {
+//   (cont: ContinueApi) => handledExceptions
+// }
+//
+// @component(tree, handledExceptions)
+// trait BreakExceptionHandlingCheckerComponent
+//   extends ExceptionHandlingCheckerComponent {
+//   (break: BreakApi) => handledExceptions
+//
+// }
 
 
 @component(tree, handledExceptions)
@@ -580,22 +580,22 @@ trait CaseExceptionHandlingCheckerComponent
 }
 
 // even more boring cases
-@component(tree, handledExceptions)
-trait IdentExceptionHandlingCheckerComponent
-  extends ExceptionHandlingCheckerComponent {
-  (ident: IdentApi) => handledExceptions
-}
-
-@component(tree, handledExceptions)
-trait TypeUseExceptionHandlingCheckerComponent
-  extends ExceptionHandlingCheckerComponent {
-  (tuse: TypeUseApi) => handledExceptions
-}
-
-
-
-@component(tree, handledExceptions)
-trait LiteralExceptionHandlingCheckerComponent
-  extends ExceptionHandlingCheckerComponent {
-  (lit: LiteralApi) => handledExceptions
-}
+// @component(tree, handledExceptions)
+// trait IdentExceptionHandlingCheckerComponent
+//   extends ExceptionHandlingCheckerComponent {
+//   (ident: IdentApi) => handledExceptions
+// }
+//
+// @component(tree, handledExceptions)
+// trait TypeUseExceptionHandlingCheckerComponent
+//   extends ExceptionHandlingCheckerComponent {
+//   (tuse: TypeUseApi) => handledExceptions
+// }
+//
+//
+//
+// @component(tree, handledExceptions)
+// trait LiteralExceptionHandlingCheckerComponent
+//   extends ExceptionHandlingCheckerComponent {
+//   (lit: LiteralApi) => handledExceptions
+// }

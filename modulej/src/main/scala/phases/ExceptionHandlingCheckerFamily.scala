@@ -54,7 +54,8 @@ trait ExceptionHandlingCheckerFamilyApi extends
               List[HandledException]]] =
     generateComponents[(Tree, List[HandledException]), List[HandledException]](
       Nodes.nodes,
-      "ExceptionHandlingCheckerComponent", "check", "Import")
+      "ExceptionHandlingCheckerComponent", "check",
+        "Import,Ident,TypeUse,Literal,Continue,Break,ArrayTypeUse")
 
   def check: ((Tree, List[HandledException])) => List[HandledException] =
     family
