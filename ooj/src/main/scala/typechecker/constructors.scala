@@ -169,7 +169,7 @@ class ConstructorCheckerEnv (private val constructorGraph:
    * @param dest the second constructor
    * @param seen list of all classes that can be reached from `source`
    */
-  private def isThereABackLink(source: Symbol, dest: Symbol,
+  @tailrec private def isThereABackLink(source: Symbol, dest: Symbol,
                    seen: List[Symbol] = Nil): Boolean = {
     constructorGraph.get(dest) match {
       case None                                        =>
