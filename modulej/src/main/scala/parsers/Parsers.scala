@@ -262,6 +262,7 @@ class Parser extends parsers.Parser {
           case "|"             => BOr
           case "&&"            => And
           case "||"            => Or
+          case "instanceof"    => InstanceOf
         }
         TreeFactories.mkBinary(e1, op, e2, pos(ctx))
     }
