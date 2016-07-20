@@ -38,7 +38,20 @@ import primj.ast.{MethodDefApi => PMethodDefApi}
 import ooj.ast.{MethodDefApi => OMethodDefApi}
 import robustj.ast.{MethodDefApi => RMethodDefApi}
 
+/**
+ * A trait to upgrade a tree from an old version to its upgraded version.
+ * A tree is upgraded when it is extended to add new features to it, for
+ * example {{{MethodDefApi}}} in `ooj` didn't have declared exceptions (aka
+ * throws clause), but in `robustj` we added them to it. Which means we
+ * upgraded (extended) it to add this feature to it.
+ */
 trait TreeUpgraders {
+  /**
+   * Upgrades an instance of [[primj.ast.MethodDefApi]], [[ooj.ast.MethodDefApi]] to
+   * [[robustj.ast.MethodDefApi]]
+   *
+   * @param mthd the tree to be upgraded
+   */
   def upgradeMethodDef(mthd: PMethodDefApi): RMethodDefApi = mthd match {
     case mthd: RMethodDefApi             => mthd
     case mthd: OMethodDefApi             =>

@@ -42,7 +42,9 @@ import tiny.modifiers.Flags
 
 /********************* AST Nodes *********************************/
 
+/** A trait to represent `throw` statements */
 trait ThrowApi extends Expr {
+  /** The expression of the `throw` statement */
   def expr: Expr
 
 
@@ -53,9 +55,13 @@ trait ThrowApi extends Expr {
 }
 
 
+/** A trait to represent `try-catch` statements */
 trait TryApi extends Expr {
+  /** The `try` part of `try-catch` statement */
   def tryClause: BlockApi
+  /** The list of all caught exceptions */
   def catches: List[CatchApi]
+  /** The `finally` part of `try-catch` statement */
   def finallyClause: Option[BlockApi]
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -69,8 +75,11 @@ trait TryApi extends Expr {
 }
 
 
+/** A trait to represent `catch` blocks */
 trait CatchApi extends Expr {
+  /** The exception parameter of the `catch` */
   def eparam: ValDefApi
+  /** The body of the `catch` */
   def catchClause: BlockApi
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -80,7 +89,9 @@ trait CatchApi extends Expr {
   }
 }
 
+/** A trait to represent method definition */
 trait MethodDefApi extends ooj.ast.MethodDefApi {
+  /** the list of declared thrown exceptions of this method */
   def throwsClause: List[UseTree]
 }
 

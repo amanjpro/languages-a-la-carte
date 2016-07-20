@@ -105,6 +105,16 @@ Throw: DONE
 
 
 
+/**
+ * A class to represent a handled (caught or declared) exception
+ *
+ * @param tpe the type of this exception
+ * @param pos the position of this exception
+ * @param state the state of this exception, possible states:
+ *              <li> It is declared in the method signature (in the throws clause)
+ *              <li> it is handled by a catch-block and is already thrown
+ *              <li> it is handled by a catch-block and is not thrown yet
+ */
 case class HandledException(tpe: Type, pos: Position, state: State) {
   override def equals(other: Any): Boolean = other match {
     case null                     => false
@@ -116,10 +126,18 @@ case class HandledException(tpe: Type, pos: Position, state: State) {
 }
 
 
+/**
+ * A utility trait for performing different exception-handling related checks
+ */
 trait ExceptionUtils {
-  /** If exception not handled, return none, otherwise indicate
-      which one is caught.
-  */
+  /**
+   * Given a list of handled exceptions and an exception type, updates the first
+   * handled exception that has the same type as `t`, if it has the state
+   * UnusedCaught, it marks it as UsedCaught.
+   *
+   * @param t the type of exception to update
+   * @param he the list of handled exceptions
+   */
   def updateFirstOccurance(t: Type,
     he: List[HandledException]): Option[List[HandledException]] = he match {
       case (h::hs) if t <:< h.tpe          =>
@@ -138,6 +156,11 @@ trait ExceptionUtils {
     }
 
 
+  /**
+   * Given two lists of handled-exceptions, unifies them. In case
+   * the same exception has the state UsedCaught in one list, then in the
+   * resulting list it will have UseCaught too.
+   */
   def unify(fst: List[HandledException],
     snd: List[HandledException]): List[HandledException] = {
       for {
@@ -150,6 +173,11 @@ trait ExceptionUtils {
       }
   }
 
+  /**
+   * Given lists lists of handled-exceptions, unifies them. In case
+   * the same exception has the state UsedCaught in one list, then in the
+   * resulting list it will have UseCaught too.
+   */
   def unify(fst: List[HandledException],
     snd: List[HandledException],
     thrd: List[HandledException]): List[HandledException] = for {
@@ -166,11 +194,19 @@ trait ExceptionUtils {
 
 object ExceptionUtils extends ExceptionUtils
 
+/** The state of an exception */
 trait State
+/** An exception is declared in the method signature (throws clause) */
 case object ThrownClause extends State
+/** An exception is caught by a catch block, and is already thrown */
 case object UsedCaught extends State
+/** An exception is caught by a catch block, and is not thrown yet */
 case object UnusedCaught extends State
 
+/**
+ * This phase makes that all reported "checked" exceptions are declared, and
+ * all declared exceptions are declared.
+ */
 trait ExceptionHandlingCheckerComponent extends
   TransformationComponent[(Tree, List[HandledException]),
                                         List[HandledException]] {
@@ -197,10 +233,16 @@ trait MethodDefExceptionHandlingCheckerComponent
   }
 
 
+  /** @see {{{ExceptionUtils.unify}}} */
   protected def unify(fst: List[HandledException],
                       snd: List[HandledException]): List[HandledException] =
     ExceptionUtils.unify(fst, snd)
 
+  /**
+   * Return all the declared (handled) exception of a method
+   *
+   * @param mthd the method to return its declared (handled) exceptions
+   */
   protected def getHandledExceptions(
         mthd: MethodDefApi): List[HandledException] = {
     mthd.symbol.map {
@@ -226,6 +268,7 @@ trait ThrowExceptionHandlingCheckerComponent
     thrw.expr.tpe.flatMap(updateFirstOccurance(_, he)).getOrElse(he)
   }
 
+  /** @see [[ExceptionUtils.updateFirstOccurance]] */
   protected def updateFirstOccurance(t: Type,
     he: List[HandledException]): Option[List[HandledException]] =
       ExceptionUtils.updateFirstOccurance(t, he)
@@ -242,10 +285,19 @@ trait ApplyExceptionHandlingCheckerComponent
   }
 
 
+  /** @see [[ExceptionUtils.updateFirstOccurance]] */
   protected def updateFirstOccurance(t: Type,
     he: List[HandledException]): Option[List[HandledException]] =
       ExceptionUtils.updateFirstOccurance(t, he)
 
+  /**
+   * Check if all the possible exceptions that may be thrown by this
+   * method/function is handled either by a try-catch statement or
+   * declared by the enclosing method of this expression.
+   *
+   * @param apply the method/function application in question
+   * @param he the exceptions that are handled at this point
+   */
   protected def checkThrownExceptions(apply: ApplyApi,
     he: List[HandledException]): List[HandledException] = {
     val thrownExceptions = apply.fun.symbol match {
@@ -265,6 +317,7 @@ trait ApplyExceptionHandlingCheckerComponent
     }
   }
 
+  /** @see [[robustj.types.TypeUtils.isCheckedException]] */
   protected def isCheckedException(tpe: Option[Type]): Boolean =
     TypeUtils.isCheckedException(tpe)
 }
@@ -286,15 +339,22 @@ trait TryExceptionHandlingCheckerComponent
     unify(he3, he4, he5)
   }
 
+  /** @see {{{ExceptionUtils.unify}}} */
   protected def unify(fst: List[HandledException],
                       snd: List[HandledException]): List[HandledException] =
     ExceptionUtils.unify(fst, snd)
 
+  /** @see {{{ExceptionUtils.unify}}} */
   protected def unify(fst: List[HandledException],
                       snd: List[HandledException],
                       thd: List[HandledException]): List[HandledException] =
     ExceptionUtils.unify(fst, snd, thd)
 
+  /**
+   * Return all the caught (handled) exceptions by this try-catch statement
+   *
+   * @param catches the list of catch-blocks of this try-catch statement
+   */
   protected def getHandledExceptions(catches: List[CatchApi]):
     List[HandledException] = for {
         ctch <- catches
@@ -302,6 +362,12 @@ trait TryExceptionHandlingCheckerComponent
         pos  <- ctch.eparam.pos
       } yield HandledException(tpe, pos, UnusedCaught)
 
+  /**
+   * Checks if all the definitively checked exceptions that are handled
+   * are actually thrown in the body of the method
+   *
+   * @param he the list to be checked
+   */
   protected def checkHandledExceptions(he: List[HandledException]): Unit =
     for {
       handled <- he if isDefinitivelyCheckedException(Some(handled.tpe)) &&
@@ -310,6 +376,7 @@ trait TryExceptionHandlingCheckerComponent
       error(HANDLING_NON_THROWN_EXCEPTION, "", "", Some(handled.pos))
     }
 
+  /** @see [[robustj.types.TypeUtils.isDefinitivelyCheckedException]] */
   protected def isDefinitivelyCheckedException(p: Option[Type]): Boolean =
     TypeUtils.isDefinitivelyCheckedException(p)
 }

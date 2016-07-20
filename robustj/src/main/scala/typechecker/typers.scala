@@ -100,12 +100,19 @@ trait CatchTyperComponent extends TyperComponent {
       catchClause = catchClause)
   }
 
+  /**
+   * Checks if an exception parameter is a subtype of {{{java.lang.Throwable}}}
+   *
+   * @param param the exception parameter in question
+   */
   protected def checkCatchParamType(param: ValDefApi): Unit = {
     param.tpe.foreach { tpe =>
       if(!(tpe <:< throwableClassType))
         error(CATCHING_NON_THROWABLE, "", "", param.pos)
     }
   }
+
+  /** @see [[robustj.types.TypeUtils.throwableClassType]] */
   protected def throwableClassType: Type =
     TypeUtils.throwableClassType
 }
@@ -130,6 +137,7 @@ trait MethodDefTyperComponent
     }
   }
 
+  /** @see [[ooj.typechecker.MethodDefTyperComponent.allPathsReturn]] */
   override def allPathsReturn(expr: Tree): Boolean = {
     enclosingMethod(expr.symbol) match {
       case Some(mthd)                         =>
@@ -139,6 +147,12 @@ trait MethodDefTyperComponent
     }
   }
 
+  /**
+   * Checks if the list of the declared exceptions of a method are subtypes of
+   * {{{java.lang.Throwable}}}
+   *
+   * @param throwsClause the list of declared exceptions
+   */
   protected def checkThrowsClause(throwsClause: List[UseTree]): Unit = for {
     id  <- throwsClause
     tpe <- id.tpe
@@ -148,6 +162,7 @@ trait MethodDefTyperComponent
         throwableClassType.toString, id.pos)
   }
 
+  /** @see [[robustj.types.TypeUtils.throwableClassType]] */
   protected def throwableClassType: Type =
     TypeUtils.throwableClassType
 }

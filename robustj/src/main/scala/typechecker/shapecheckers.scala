@@ -82,6 +82,7 @@ trait ThrowShapeCheckerComponent extends ShapeCheckerComponent {
   }
 
 
+  /** @see [[robustj.ast.TreeUtils.isValidExpression]] */
   def isValidExpression(t: Tree): Boolean =
     TreeUtils.isValidExpression(t)
 }
@@ -91,9 +92,11 @@ trait ThrowShapeCheckerComponent extends ShapeCheckerComponent {
 trait ValDefShapeCheckerComponent
   extends arrooj.typechecker.ValDefShapeCheckerComponent {
 
+  /** @see [[robustj.ast.TreeUtils.isSimpleExpression]] */
   override protected def isSimpleExpression(e: Tree): Boolean =
     TreeUtils.isSimpleExpression(e)
 
+  /** @see [[arrooj.typechecker.ValDefShapeCheckerComponent.sensibleParamFlag]] */
   override protected def sensibleParamFlag(mods: Flags,
     sym: Option[Symbol]): Boolean = sym match {
     case Some(s: ScopeSymbol)   if s.mods.isCatchSymbol  =>
@@ -112,6 +115,7 @@ trait ValDefShapeCheckerComponent
 trait BlockShapeCheckerComponent
   extends primj.typechecker.BlockShapeCheckerComponent {
 
+  /** @see [[robustj.ast.TreeUtils.isValidStatement]] */
   override protected def isValidStmt(t: Tree): Boolean =
     TreeUtils.isValidStatement(t)
 }
@@ -120,9 +124,11 @@ trait BlockShapeCheckerComponent
 trait IfShapeCheckerComponent
   extends primj.typechecker.IfShapeCheckerComponent {
 
+  /** @see [[robustj.ast.TreeUtils.isValidStatement]] */
   override protected def isValidStmt(t: Tree): Boolean =
     TreeUtils.isValidStatement(t)
 
+  /** @see [[robustj.ast.TreeUtils.isValidExpression]] */
   override protected def isValidExpr(t: Tree): Boolean =
     TreeUtils.isValidExpression(t)
 }
@@ -131,9 +137,11 @@ trait IfShapeCheckerComponent
 trait WhileShapeCheckerComponent
   extends primj.typechecker.WhileShapeCheckerComponent {
 
+  /** @see [[robustj.ast.TreeUtils.isValidStatement]] */
   override protected def isValidStmt(t: Tree): Boolean =
     TreeUtils.isValidStatement(t)
 
+  /** @see [[robustj.ast.TreeUtils.isValidExpression]] */
   override protected def isValidExpr(t: Tree): Boolean =
     TreeUtils.isValidExpression(t)
 }
@@ -143,12 +151,15 @@ trait WhileShapeCheckerComponent
 trait ForShapeCheckerComponent
   extends primj.typechecker.ForShapeCheckerComponent {
 
+  /** @see [[robustj.ast.TreeUtils.isValDefOrStatementExpression]] */
   override protected def isValDefOrStatementExpression(t: Tree): Boolean =
     TreeUtils.isValDefOrStatementExpression(t)
 
+  /** @see [[robustj.ast.TreeUtils.isValidStatement]] */
   override protected def isValidStmt(t: Tree): Boolean =
     TreeUtils.isValidStatement(t)
 
+  /** @see [[robustj.ast.TreeUtils.isValidExpression]] */
   override protected def isValidExpr(t: Tree): Boolean =
     TreeUtils.isValidExpression(t)
 }
@@ -156,6 +167,7 @@ trait ForShapeCheckerComponent
 @component
 trait ArrayCreationShapeCheckerComponent
   extends arrooj.typechecker.ArrayCreationShapeCheckerComponent {
+  /** @see [[robustj.ast.TreeUtils.isValidExpression]] */
   override def isValidExpression(e: Tree): Boolean =
     TreeUtils.isValidExpression(e)
 }
@@ -164,7 +176,8 @@ trait ArrayCreationShapeCheckerComponent
 trait ArrayAccessShapeCheckerComponent
   extends arrooj.typechecker.ArrayAccessShapeCheckerComponent {
 
-    override def isValidExpression(e: Tree): Boolean =
+  /** @see [[robustj.ast.TreeUtils.isValidExpression]] */
+  override def isValidExpression(e: Tree): Boolean =
     TreeUtils.isValidExpression(e)
 }
 
@@ -172,6 +185,7 @@ trait ArrayAccessShapeCheckerComponent
 trait LabelShapeCheckerComponent extends
   brokenj.typechecker.LabelShapeCheckerComponent {
 
+  /** @see [[robustj.ast.TreeUtils.canHaveLabel]] */
   override protected def canHaveLabel(stmt: Expr): Boolean =
     TreeUtils.canHaveLabel(stmt)
 }

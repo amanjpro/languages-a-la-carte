@@ -70,6 +70,7 @@ trait MethodDefSymbolAssignerComponent
     }
   }
 
+  /** @see [[ooj.namers.MethodDefSymbolAssignerComponent.createMethodSymbol]] */
   override protected def createMethodSymbol(mthd: ooj.ast.MethodDefApi,
     owner: Option[Symbol]): primj.symbols.MethodSymbol =
     MethodSymbol(mthd.mods, mthd.name, None, Nil, Nil, None, owner)

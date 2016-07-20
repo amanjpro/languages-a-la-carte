@@ -37,21 +37,26 @@ import sana.ooj.modifiers._
 import sana.robustj.names.StdNames
 
 trait SymbolUtils extends sana.arrooj.symbols.SymbolUtils {
+
+  /** The symbol for {{{java.lang.Throwable}}} class */
   lazy val throwableClassSymbol: ClassSymbol = {
     val name    = StdNames.THROWABLE_CLASS_NAME
     langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
   }
 
+  /** The symbol for {{{java.lang.Exception}}} class */
   lazy val exceptionClassSymbol: ClassSymbol = {
     val name    = StdNames.EXCEPTION_CLASS_NAME
     langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
   }
 
+  /** The symbol for {{{java.lang.RuntimeException}}} class */
   lazy val runtimeExceptionClassSymbol: ClassSymbol = {
     val name    = StdNames.RUNTIME_EXCEPTION_CLASS_NAME
     langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]
   }
 
+  /** The symbol for {{{java.lang.Error}}} class */
   lazy val errorClassSymbol: ClassSymbol = {
     val name    = StdNames.ERROR_CLASS_NAME
     langPackageSymbol.getSymbol(name, _ => true).get.asInstanceOf[ClassSymbol]

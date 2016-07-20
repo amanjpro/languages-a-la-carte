@@ -36,21 +36,25 @@ import sana.ooj.types.{ClassTypeApi, ClassType}
 import sana.robustj.names.StdNames
 
 trait TypeUtils extends sana.arrooj.types.TypeUtils {
+  /** The type of {{{java.lang.Throwable}}} */
   lazy val throwableClassType: ClassTypeApi        = {
     val qual            = javaLangPackageName
     val name            = StdNames.THROWABLE_CLASS_NAME
     ClassType(qual, name, Set.empty)
   }
+  /** The type of {{{java.lang.Error}}} */
   lazy val errorClassType: ClassTypeApi            = {
     val qual            = javaLangPackageName
     val name            = StdNames.ERROR_CLASS_NAME
     ClassType(qual, name, Set.empty)
   }
+  /** The type of {{{java.lang.Exception}}} */
   lazy val exceptionClassType: ClassTypeApi        = {
     val qual            = javaLangPackageName
     val name            = StdNames.EXCEPTION_CLASS_NAME
     ClassType(qual, name, Set.empty)
   }
+  /** The type of {{{java.lang.RuntimeException}}} */
   lazy val runtimeExceptionClassType: ClassTypeApi = {
     val qual            = javaLangPackageName
     val name            = StdNames.RUNTIME_EXCEPTION_CLASS_NAME
@@ -58,10 +62,23 @@ trait TypeUtils extends sana.arrooj.types.TypeUtils {
   }
 
 
+  /**
+   * Checks if a type is a subtype of a checked exception. This can include
+   * {{{java.lang.Exception}}}
+   *
+   * @param tpe the type to be checked
+   */
   def isCheckedException(tpe: Option[Type]): Boolean = tpe.map { tpe =>
     !(tpe <:< runtimeExceptionClassType) && tpe <:< exceptionClassType
   }.getOrElse(false)
 
+  /**
+   * Checks if a type is definitively a subtype of a checked exception. This
+   * does not include {{{java.lang.Exception}}}, as it can indicate
+   * {{{java.lang.RuntimeException}}}
+   *
+   * @param tpe the type to be checked
+   */
   def isDefinitivelyCheckedException(p: Option[Type]): Boolean = p.map { tpe =>
     isCheckedException(p) && tpe =/= exceptionClassType
   }.getOrElse(false)

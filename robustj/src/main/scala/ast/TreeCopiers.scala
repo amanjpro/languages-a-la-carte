@@ -45,15 +45,30 @@ import sana.calcj.ast.operators.{BOp, UOp}
 
 trait TreeCopiers {
 
+  /** @see [[sana.arrooj.ast.TreeCopiers.copyProperties]] */
   protected def copyProperties(template: Tree,
       newTree: Tree): Unit = newTree.attributes = template.attributes
 
+  /**
+   * Returns a copy of a "throw" tree
+   *
+   * @param template the tree to be copied
+   * @param expr the expression of this `throw` statement
+   */
   def copyThrow(template: ThrowApi)(expr: Expr = template.expr): ThrowApi = {
     val res = TreeFactories.mkThrow(expr)
     copyProperties(template, res)
     res
   }
 
+  /**
+   * Returns a copy of a "try" tree
+   *
+   * @param template the tree to be copied
+   * @param tryClause the `try` clause of this try-catch statement
+   * @param catches the list of `catch` clauses of this try-catch statement
+   * @param finallyClasue the `finally` clause of this try-catch statement
+   */
   def copyTry(template: TryApi)(tryClause: BlockApi = template.tryClause,
       catches: List[CatchApi] = template.catches,
       finallyClause: Option[BlockApi] = template.finallyClause): TryApi = {
@@ -62,6 +77,13 @@ trait TreeCopiers {
     res
   }
 
+  /**
+   * Returns a copy of a "catch" tree
+   *
+   * @param template the tree to be copied
+   * @param eparam the exception parameter of this catch statement
+   * @param catchClause the body of this "catch" tree
+   */
   def copyCatch(template: CatchApi)(eparam: ValDefApi = template.eparam,
     catchClause: BlockApi = template.catchClause): CatchApi = {
     val res = TreeFactories.mkCatch(eparam, catchClause)
@@ -69,6 +91,17 @@ trait TreeCopiers {
     res
   }
 
+  /**
+   * Returns a copy of a method definition
+   *
+   * @param template the tree to be copied
+   * @param mods the modifiers of this method/function
+   * @param ret the return type-tree of this method/function
+   * @param name the name of this method/function
+   * @param params the list of parameters of this method/function
+   * @param throwsClause the list of declared thrown exceptions of this method/function
+   * @param body the body of this method/function
+   */
   def copyMethodDef(template: MethodDefApi)(mods: Flags = template.mods,
     ret: UseTree = template.ret,
     name: Name = template.name, params: List[ValDefApi]  = template.params,
@@ -81,20 +114,24 @@ trait TreeCopiers {
   }
 
   // arrooj
+  /** @see {{{arrooj.ast.TreeCopiers.copyArrayInitializer}}} */
   def copyArrayInitializer(template: ArrayInitializerApi)(
       elements: List[Expr] = template.elements): ArrayInitializerApi =
     TC.copyArrayInitializer(template)(elements)
 
 
+  /** @see {{{arrooj.ast.TreeCopiers.copyArrayAccess}}} */
   def copyArrayAccess(template: ArrayAccessApi)(
     array: Expr = template.array,
     index: Expr = template.index): ArrayAccessApi =
     TC.copyArrayAccess(template)(array, index)
 
+  /** @see {{{arrooj.ast.TreeCopiers.copyArrayTypeUse}}} */
   def copyArrayTypeUse(template: ArrayTypeUseApi)(
       tpt: UseTree = template.tpt): ArrayTypeUseApi =
     TC.copyArrayTypeUse(template)(tpt)
 
+  /** @see {{{arrooj.ast.TreeCopiers.copyArrayCreation}}} */
   def copyArrayCreation(template: ArrayCreationApi)(
       array: Expr = template.array,
       size: Option[Expr] = template.size): ArrayCreationApi =
@@ -103,23 +140,27 @@ trait TreeCopiers {
 
   // ooj
 
+  /** @see [[arrooj.ast.TreeCopiers.copyProgram]] */
   def copyProgram(template: ProgramApi)(members: List[Tree] =
     template.members): ProgramApi = {
     TC.copyProgram(template)(members)
   }
 
+  /** @see [[arrooj.ast.TreeCopiers.copyCompilationUnit]] */
   def copyCompilationUnit(template: CompilationUnitApi)(
     module: PackageDefApi = template.module,
     sourceName: String = template.sourceName,
     sourcePath: List[String] = template.sourcePath): CompilationUnitApi =
     TC.copyCompilationUnit(template)(module, sourceName, sourcePath)
 
+    /** @see [[arrooj.ast.TreeCopiers.copyPackageDef]] */
   def copyPackageDef(template: PackageDefApi)(
     containingPackages: List[Name] = template.containingPackages,
     name: Name = template.name,
       members: List[Tree] = template.members): PackageDefApi =
     TC.copyPackageDef(template)(containingPackages, name, members)
 
+    /** @see [[arrooj.ast.TreeCopiers.copyClassDef]] */
   def copyClassDef(template: ClassDefApi)(mods: Flags = template.mods,
       name: Name = template.name,
       parents: List[UseTree] = template.parents,
@@ -127,6 +168,7 @@ trait TreeCopiers {
     TC.copyClassDef(template)(mods, name, parents, body)
 
 
+    /** @see [[arrooj.ast.TreeCopiers.copyTemplate]] */
   def copyTemplate(template: TemplateApi)(
       members: List[Tree] = template.members): TemplateApi =
     TC.copyTemplate(template)(members)
@@ -136,28 +178,34 @@ trait TreeCopiers {
     TC.copyNew(template)(app)
 
 
+  /** @see [[arrooj.ast.TreeCopiers.copySelect]] */
   def copySelect(template: SelectApi)(qual: Tree = template.qual,
     tree: SimpleUseTree = template.tree): SelectApi =
     TC.copySelect(template)(qual, tree)
 
+    /** @see [[arrooj.ast.TreeCopiers.copyThis]] */
   def copyThis(template: ThisApi)(): ThisApi =
     TC.copyThis(template)()
 
+  /** @see [[arrooj.ast.TreeCopiers.copySuper]] */
   def copySuper(template: SuperApi)(): SuperApi =
     TC.copySuper(template)()
 
 
   // tiny
+  /** @see [[arrooj.ast.TreeCopiers.copyIdent]] */
   def copyIdent(template: IdentApi)
             (name: Name): IdentApi = {
     TC.copyIdent(template)(name)
   }
 
+  /** @see [[arrooj.ast.TreeCopiers.copyTypeUse]] */
   def copyTypeUse(template: TypeUseApi)(name: Name): TypeUseApi = {
     TC.copyTypeUse(template)(name)
   }
   // calcj
 
+  /** @see [[arrooj.ast.TreeCopiers.copyCast]] */
   def copyCast(template: CastApi)(
       tpt: UseTree = template.tpt,
       expr: Expr = template.expr): CastApi = {
@@ -165,51 +213,60 @@ trait TreeCopiers {
   }
 
 
+  /** @see [[arrooj.ast.TreeCopiers.copyLiteral]] */
   def copyLiteral(template: LiteralApi)
       (constant: Constant): LiteralApi = {
     TC.copyLiteral(template)(constant)
   }
 
 
+  /** @see [[arrooj.ast.TreeCopiers.copyBinary]] */
   def copyBinary(template: BinaryApi)(lhs: Expr = template.lhs,
       op: BOp = template.op, rhs: Expr = template.rhs): BinaryApi = {
     TC.copyBinary(template)(lhs, op, rhs)
   }
 
+  /** @see [[arrooj.ast.TreeCopiers.copyUnary]] */
   def copyUnary(template: UnaryApi)(isPostfix: Boolean = template.isPostfix,
     op: UOp = template.op, expr: Expr = template.expr): UnaryApi = {
     TC.copyUnary(template)(isPostfix, op, expr)
   }
   // primj
 
+  /** @see [[arrooj.ast.TreeCopiers.copyAssign]] */
   def copyAssign(template: AssignApi)(lhs: Expr = template.lhs,
     rhs: Expr = template.rhs): AssignApi = {
     TC.copyAssign(template)(lhs, rhs)
   }
 
 
+  /** @see [[arrooj.ast.TreeCopiers.copyIf]] */
   def copyIf(template: IfApi)(cond: Expr = template.cond,
     thenp: Expr = template.thenp, elsep: Expr = template.elsep): IfApi = {
     TC.copyIf(template)(cond, thenp, elsep)
   }
 
 
+  /** @see [[arrooj.ast.TreeCopiers.copyWhile]] */
   def copyWhile(template: WhileApi)(isDoWhile: Boolean = template.isDoWhile,
     cond: Expr = template.cond, body: Expr = template.body): WhileApi = {
     TC.copyWhile(template)(isDoWhile, cond, body)
   }
 
+  /** @see [[arrooj.ast.TreeCopiers.copyFor]] */
   def copyFor(template: ForApi)(inits: List[Tree] = template.inits,
     cond: Expr = template.cond, steps: List[Expr] = template.steps,
     body: Expr = template.body): ForApi = {
     TC.copyFor(template)(inits, cond, steps, body)
   }
 
+  /** @see [[arrooj.ast.TreeCopiers.copyBlock]] */
   def copyBlock(template: BlockApi)(stmts: List[Tree] =
     template.stmts): BlockApi = {
     TC.copyBlock(template)(stmts)
   }
 
+  /** @see [[arrooj.ast.TreeCopiers.copyTernary]] */
   def copyTernary(template: TernaryApi)(cond: Expr = template.cond,
     thenp: Expr = template.thenp,
     elsep: Expr = template.elsep): TernaryApi = {
@@ -217,17 +274,20 @@ trait TreeCopiers {
   }
 
 
+  /** @see [[arrooj.ast.TreeCopiers.copyApply]] */
   def copyApply(template: ApplyApi)(fun: Expr = template.fun,
     args: List[Expr] = template.args): ApplyApi = {
     TC.copyApply(template)(fun, args)
   }
 
+  /** @see [[arrooj.ast.TreeCopiers.copyReturn]] */
   def copyReturn(template: ReturnApi)(expr: Option[Expr] =
       template.expr): ReturnApi = {
     TC.copyReturn(template)(expr)
   }
 
 
+  /** @see [[arrooj.ast.TreeCopiers.copyValDef]] */
   def copyValDef(template: ValDefApi)(mods: Flags = template.mods,
     tpt: UseTree = template.tpt, name: Name = template.name,
     rhs: Expr = template.rhs): ValDefApi = {
@@ -236,26 +296,31 @@ trait TreeCopiers {
 
   // brokenj
 
+  /** @see [[arrooj.ast.TreeCopiers.copyLabel]] */
   def copyLabel(template: LabelApi)(name: Name = template.name,
     stmt: Expr = template.stmt): LabelApi = {
     TC.copyLabel(template)(name, stmt)
   }
 
+  /** @see [[arrooj.ast.TreeCopiers.copyBreak]] */
   def copyBreak(template: BreakApi)(label:
     Option[Name] = template.label): BreakApi = {
     TC.copyBreak(template)(label)
   }
 
+  /** @see [[arrooj.ast.TreeCopiers.copyContinue]] */
   def copyContinue(template: ContinueApi)(label: Option[Name] =
         template.label): ContinueApi = {
     TC.copyContinue(template)(label)
   }
 
+  /** @see [[arrooj.ast.TreeCopiers.copyCase]] */
   def copyCase(template: CaseApi)(guards: List[Expr] = template.guards,
     body: Tree = template.body): CaseApi = {
     TC.copyCase(template)(guards, body)
   }
 
+  /** @see [[arrooj.ast.TreeCopiers.copySwitch]] */
   def copySwitch(template: SwitchApi)(expr: Expr = template.expr,
     cases: List[CaseApi] = template.cases): SwitchApi = {
       TC.copySwitch(template)(expr, cases)

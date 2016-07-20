@@ -47,6 +47,13 @@ import sana.arrooj.ast.Implicits._
 
 trait TreeFactories {
 
+  /**
+   * Creates a new tree to represent a `throw` statement
+   *
+   * @param expr the expression of this statement
+   * @param pos the position of this tree
+   * @param owner the owner of this tree
+   */
   def mkThrow(expr: Expr,
       pos: Option[Position] = None,
       owner: Option[Symbol] = None): ThrowApi = {
@@ -57,6 +64,15 @@ trait TreeFactories {
     res
   }
 
+  /**
+   * Creates a new tree to represent a `try-catch` statement
+   *
+   * @param tryClause the try-clause of this statement
+   * @param catches the list of catches of this statement
+   * @param finallyClause the finally-clause of this statement
+   * @param pos the position of this tree
+   * @param owner the owner of this tree
+   */
   def mkTry(tryClause: BlockApi,
       catches: List[CatchApi], finallyClause: Option[BlockApi],
       pos: Option[Position] = None,
@@ -67,6 +83,15 @@ trait TreeFactories {
     res
   }
 
+  /**
+   * Creates a new tree to represent a `catch` statement
+   *
+   * @param eparam the exception parameter of this statement
+   * @param catchClause the body of this catch statement
+   * @param pos the position of this tree
+   * @param symbol the symbol of this tree
+   * @param owner the owner of this tree
+   */
   def mkCatch(eparam: ValDefApi, catchClause: BlockApi,
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None,
@@ -78,6 +103,18 @@ trait TreeFactories {
     res
   }
 
+  /**
+   * Creates a new tree to represent a method definition
+   *
+   * @param mods the modifiers of this method
+   * @param ret the type-tree of the return type of this method
+   * @param name the name of this method
+   * @param params the list of the parameters of this method
+   * @param throwsClause the list of declared thrown exceptions of this method/function
+   * @param body the body of this method
+   * @param pos the position of this tree
+   * @param symbol the symbol of this tree
+   */
   def mkMethodDef(mods: Flags, ret: UseTree,
     name: Name, params: List[ValDefApi],
     throwsClause: List[UseTree],
@@ -97,20 +134,24 @@ trait TreeFactories {
 
   // Delegating already working ones to arrooj.ast.TreeFactories
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkProgram]] */
   def mkProgram(members: List[Tree]): ProgramApi =
     TF.mkProgram(members)
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkCompilationUnit]] */
   def mkCompilationUnit(module: PackageDefApi, sourceName: String,
     sourcePath: List[String],
     symbol: Option[Symbol] = None): CompilationUnitApi =
       TF.mkCompilationUnit(module, sourceName, sourcePath, symbol)
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkPackageDef]] */
   def mkPackageDef(containingPackages: List[Name],
     name: Name, members: List[Tree],
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None): PackageDefApi =
       TF.mkPackageDef(containingPackages, name, members, pos, symbol)
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkClassDef]] */
   def mkClassDef(mods: Flags, name: Name,
       parents: List[UseTree], body: TemplateApi,
       pos: Option[Position] = None,
@@ -119,29 +160,34 @@ trait TreeFactories {
     TF.mkClassDef(mods, name, parents, body, pos, symbol, tpe)
 
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkTemplate]] */
   def mkTemplate(members: List[Tree],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): TemplateApi =
       TF.mkTemplate(members, pos, owner)
 
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkNew]] */
   def mkNew(app: ApplyApi,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): NewApi =
       TF.mkNew(app, pos, owner)
 
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkSelect]] */
   def mkSelect(qual: Tree, tree: SimpleUseTree,
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None,
     owner: Option[Symbol] = None): SelectApi =
       TF.mkSelect(qual, tree, pos, symbol, owner)
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkThis]] */
   def mkThis(pos: Option[Position] = None,
       enclosingClassSymbol: Option[Symbol] = None,
       owner: Option[Symbol] = None): ThisApi =
         TF.mkThis(pos, enclosingClassSymbol, owner)
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkSuper]] */
   def mkSuper(pos: Option[Position] = None,
       enclosingClassSymbol: Option[Symbol] = None,
       owner: Option[Symbol] = None): SuperApi =
@@ -149,6 +195,7 @@ trait TreeFactories {
 
 
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkIdent]] */
   def mkIdent(name: Name,
             pos: Option[Position] = None,
             symbol: Option[Symbol] = None,
@@ -156,6 +203,7 @@ trait TreeFactories {
             owner: Option[Symbol] = None): IdentApi =
     TF.mkIdent(name, pos, symbol, enclosing, owner)
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkTypeUse]] */
   def mkTypeUse(name: Name,
             pos: Option[Position] = None,
             symbol: Option[Symbol] = None,
@@ -163,6 +211,7 @@ trait TreeFactories {
             owner: Option[Symbol] = None): TypeUseApi =
     TF.mkTypeUse(name, pos, symbol, enclosing, owner)
 
+  /** @see {{{sana.arrooj.ast.TreeFactories.mkArrayInitializer}}} */
   def mkArrayInitializer(elements: List[Expr],
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None,
@@ -171,6 +220,7 @@ trait TreeFactories {
     TF.mkArrayInitializer(elements, pos, symbol, owner, tpe)
 
 
+  /** @see {{{sana.arrooj.ast.TreeFactories.mkArrayAccess}}} */
   def mkArrayAccess(array: Expr, index: Expr,
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None,
@@ -178,6 +228,7 @@ trait TreeFactories {
     tpe: Option[Type] = None): ArrayAccessApi =
     TF.mkArrayAccess(array, index, pos, symbol, owner, tpe)
 
+  /** @see {{{sana.arrooj.ast.TreeFactories.mkArrayTypeUse}}} */
   def mkArrayTypeUse(tpt: UseTree,
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None,
@@ -185,6 +236,7 @@ trait TreeFactories {
     tpe: Option[Type] = None): ArrayTypeUseApi =
     TF.mkArrayTypeUse(tpt, pos, symbol, owner, tpe)
 
+  /** @see {{{sana.arrooj.ast.TreeFactories.mkArrayCreation}}} */
   def mkArrayCreation(array: Expr,
     size: Option[Expr],
     pos: Option[Position] = None,
@@ -196,12 +248,14 @@ trait TreeFactories {
 
 
   // From calcj
+  /** @see [[sana.arrooj.ast.TreeFactories.mkCast]] */
   def mkCast(tpt: UseTree, expr: Expr,
            pos: Option[Position] = None): CastApi = {
     TF.mkCast(tpt, expr, pos)
   }
 
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkLiteral]] */
   def mkLiteral(constant: Constant,
               pos: Option[Position] = None,
               owner: Option[Symbol] = None): LiteralApi = {
@@ -209,6 +263,7 @@ trait TreeFactories {
   }
 
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkBinary]] */
   def mkBinary(lhs: Expr, op: BOp, rhs: Expr,
               pos: Option[Position] = None,
               tpe: Option[Type]     = None,
@@ -216,6 +271,7 @@ trait TreeFactories {
     TF.mkBinary(lhs, op, rhs, pos, tpe, owner)
   }
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkUnary]] */
   def mkUnary(isPostfix: Boolean, op: UOp, expr: Expr,
               pos: Option[Position] = None,
               tpe: Option[Type]     = None,
@@ -226,6 +282,7 @@ trait TreeFactories {
   // From primj
 
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkAssign]] */
   def mkAssign(lhs: Expr, rhs: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): AssignApi = {
@@ -233,6 +290,7 @@ trait TreeFactories {
   }
 
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkIf]] */
   def mkIf(cond: Expr, thenp: Expr, elsep: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): IfApi = {
@@ -240,24 +298,28 @@ trait TreeFactories {
   }
 
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkWhile]] */
   def mkWhile(isDoWhile: Boolean, cond: Expr, body: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): WhileApi = {
     TF.mkWhile(isDoWhile, cond, body, pos, owner)
   }
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkFor]] */
   def mkFor(inits: List[Tree], cond: Expr, steps: List[Expr],
     body: Expr, pos: Option[Position] = None,
     symbol: Option[Symbol] = None): ForApi = {
     TF.mkFor(inits, cond, steps, body, pos, symbol)
   }
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkBlock]] */
   def mkBlock(stmts: List[Tree],
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None): BlockApi = {
     TF.mkBlock(stmts, pos, symbol)
   }
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkTernary]] */
   def mkTernary(cond: Expr, thenp: Expr, elsep: Expr,
     pos: Option[Position] = None,
     tpe: Option[Type]     = None,
@@ -266,12 +328,14 @@ trait TreeFactories {
   }
 
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkApply]] */
   def mkApply(fun: Expr, args: List[Expr],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): ApplyApi = {
     TF.mkApply(fun, args, pos, owner)
   }
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkReturn]] */
   def mkReturn(expr: Option[Expr],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): ReturnApi = {
@@ -280,6 +344,7 @@ trait TreeFactories {
 
 
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkValDef]] */
   def mkValDef(mods: Flags, tpt: UseTree, name: Name,
     rhs: Expr, pos: Option[Position] = None,
     symbol: Option[Symbol] = None): ValDefApi = {
@@ -288,30 +353,35 @@ trait TreeFactories {
   }
 
   // brokenj
+  /** @see [[sana.arrooj.ast.TreeFactories.mkLabel]] */
   def mkLabel(name: Name, stmt: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): LabelApi = {
     TF.mkLabel(name, stmt, pos, owner)
   }
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkBreak]] */
   def mkBreak(label: Option[Name],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): BreakApi = {
     TF.mkBreak(label, pos, owner)
   }
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkContinue]] */
   def mkContinue(label: Option[Name],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): ContinueApi = {
     TF.mkContinue(label, pos, owner)
   }
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkCase]] */
   def mkCase(guards: List[Expr], body: Tree,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): CaseApi = {
     TF.mkCase(guards, body, pos, owner)
   }
 
+  /** @see [[sana.arrooj.ast.TreeFactories.mkSwitch]] */
   def mkSwitch(expr: Expr, cases: List[CaseApi],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): SwitchApi = {

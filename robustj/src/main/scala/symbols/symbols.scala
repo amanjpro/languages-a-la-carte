@@ -58,7 +58,10 @@ object MethodSymbol {
     }
 }
 
+/** A trait for the symbols of methods */
 trait MethodSymbol extends sana.primj.symbols.MethodSymbol {
+
+  /** The list of all declared thrown exceptions for this method */
   var throwsSymbols: List[Symbol]
 
   override def equals(other: Any): Boolean = other match {
