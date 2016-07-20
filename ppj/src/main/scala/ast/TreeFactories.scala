@@ -38,6 +38,14 @@ import sana.primj.ast.BlockApi
 
 
 trait TreeFactories extends sana.robustj.ast.TreeFactories {
+  /**
+   * Creates a new tree to represent a `synchronized` block
+   *
+   * @param expr the (lock) expression of this block
+   * @param block the body of this block
+   * @param pos the position of this tree
+   * @param owner the owner of this tree
+   */
   def mkSynchronized(expr: Expr, block: BlockApi,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): SynchronizedApi = {

@@ -41,8 +41,11 @@ import primj.ast.{BlockApi}
 /********************* AST Nodes *********************************/
 
 
+/** A trait to represent synchronized blocks */
 trait SynchronizedApi extends Expr {
+  /** the (lock) expression that for this synchronization block */
   def expr:  Expr
+  /** The body of this expression */
   def block: BlockApi
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {

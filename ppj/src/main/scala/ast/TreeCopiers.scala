@@ -38,6 +38,13 @@ import sana.primj.ast.BlockApi
 
 
 trait TreeCopiers extends sana.robustj.ast.TreeCopiers {
+  /**
+   * Returns a copy of a `synchronized` block
+   *
+   * @param template the tree to be copied
+   * @param expr the (lock) expression of this block
+   * @param block the body of this block
+   */
   def copySynchronized(template: SynchronizedApi)(
       expr: Expr = template.expr, block: BlockApi = template.block,
       pos: Option[Position] = template.pos,
