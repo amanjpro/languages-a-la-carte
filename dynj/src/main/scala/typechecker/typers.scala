@@ -109,6 +109,7 @@ trait CastTyperComponent extends TyperComponent {
   }
 
 
+  /** @see [[TypeUtils.objectClassType]] */
   protected def objectClassType: Type =
     TypeUtils.objectClassType
 

@@ -79,6 +79,7 @@ trait BinaryShapeCheckerComponent extends ShapeCheckerComponent {
     case _                     => false
   }
 
+  /** @see [[tiny.ast.TreeUtils.isValidExpression]] */
   protected def isValidExpression(t: Tree): Boolean =
     TreeUtils.isValidExpression(t)
 }
