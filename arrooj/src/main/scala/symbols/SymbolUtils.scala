@@ -37,6 +37,7 @@ import sana.ooj.modifiers._
 import sana.primj.modifiers._
 
 trait SymbolUtils extends sana.ooj.symbols.SymbolUtils {
+  /** Returns a symbol of a field for the `length` field defined in arrays */
   lazy val arrayLengthSymbol: Symbol = {
     val mods   = PUBLIC_ACC | FINAL | FIELD
     val name   = Name("length")
@@ -44,6 +45,12 @@ trait SymbolUtils extends sana.ooj.symbols.SymbolUtils {
     VariableSymbol(mods, name, tpt, None)
   }
 
+
+  /**
+   * Creates an array symbol
+   *
+   * @param componentSymbol the symbol of the component of the array
+   */
   def mkArraySymbol(componentSymbol: Symbol): ArraySymbol =
     new ArraySymbolImpl(componentSymbol,
       objectClassSymbol, List(arrayLengthSymbol))

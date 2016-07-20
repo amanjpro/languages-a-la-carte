@@ -51,18 +51,37 @@ trait TreeUtils extends OTreeUtils {
     case _                   => super.isValidExpression(e)
   }
 
+  /**
+   * Checks if a tree is an array-initialization tree
+   *
+   * @param e the tree to be checked
+   */
   def isArrayInitialization(e: Tree): Boolean =
     ATreeUtils.isArrayInitialization(e)
 
-
+  /**
+   * Checks if a tree is an array-type tree
+   *
+   * @param e the tree to be checked
+   */
   def isArrayTypeUse(e: Tree): Boolean =
     ATreeUtils.isArrayTypeUse(e)
 
+  /**
+   * Checks if a tree is an array-access tree
+   *
+   * @param tree the tree to be checked
+   */
   def isArrayAccess(tree: Tree): Boolean = tree match {
     case ArrayAccess(_, _)            => true
     case _                            => false
   }
 
+  /**
+   * Checks if a tree is either an array-access or variable access tree
+   *
+   * @param tree the tree to be checked
+   */
   def isArrayAccessOrVariableAccess(tree: Tree): Boolean = tree match {
     case ArrayAccess(array, _)        => isArrayAccessOrVariableAccess(array)
     case tree                         => isVariable(tree)

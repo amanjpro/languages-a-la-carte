@@ -36,6 +36,11 @@ import sana.tiny.ast.Implicits._
 import sana.ooj.symbols.SymbolUtils
 
 trait TypeUtils extends sana.ooj.types.TypeUtils {
+  /**
+   * Returns a new instance of {{{ArrayType}}}
+   *
+   * @param componentType the type of the component of the array-type
+   */
   def mkArrayType(componentType: Type): ArrayType =
     new ArrayTypeImpl(componentType, objectClassType)
 }

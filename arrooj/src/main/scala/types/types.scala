@@ -38,11 +38,25 @@ import ooj.types.RefType
 import tiny.names.Name
 import tiny.symbols.Symbol
 
+/**
+ * A type for arrays
+ *
+ * The difference between this and [[sana.arrayj.types.ArrayTypeApi]] is that
+ * the type here has a reference to {{{java.lang.Object}}} type, while the one
+ * in `arrayj` does not need it. And this one is a RefType, while the other one
+ * doesn't.
+ */
 trait ArrayType extends RefType {
+  /** A reference to the {{{java.lang.Object}}} type */
   def objectClassType: Type
+
+  /** The type of the component of this array-type */
   def componentType: Type
 
+  /** @see [[RefType.parents]] */
   def parents: Set[Symbol] = Set.empty
+
+  /** @see [[RefType.name]] */
   def name: Name   = componentType match {
     case ct: RefType =>
       Name(s"[${ct.name.asString}]")

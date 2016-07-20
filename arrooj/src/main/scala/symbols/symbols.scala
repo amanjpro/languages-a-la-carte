@@ -38,9 +38,18 @@ import sana.ooj.symbols.ClassSymbol
 
 
 
+/** A symbol for arrays */
 trait ArraySymbol extends ClassSymbol {
+  /** The symbol of the component of the array */
   var componentSymbol: Symbol
+
+  /** A pointer to the symbol of {{{java.lang.Object}}} class */
   def objectClassSymbol: ClassSymbol
+
+  /**
+   * The symbols of the members of an array. In Java, this only includes
+   * `length` field
+   */
   def members: List[Symbol]
 
 

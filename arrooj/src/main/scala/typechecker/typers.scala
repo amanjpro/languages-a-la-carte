@@ -60,6 +60,7 @@ import arrooj.errors.ErrorCodes._
 trait ArrayAccessTyperComponent
   extends arrayj.typechecker.ArrayAccessTyperComponent {
 
+  /** @see [[arrayj.typechecker.ArrayAccessTyperComponent.typeArrayAccess]] */
   override protected def typeArrayAccess(access: ArrayAccessApi): Unit = {
     access.array.tpe.map {
       case atpe: ArrayType             =>
@@ -85,6 +86,7 @@ trait ArrayAccessTyperComponent
 
 @component
 trait UnaryTyperComponent extends primj.typechecker.UnaryTyperComponent {
+  /** @see [[TreeUtils.isArrayAccessOrVariableAccess]] */
   override protected def isVariable(tree: Tree): Boolean =
     TreeUtils.isArrayAccessOrVariableAccess(tree)
 }
@@ -110,6 +112,7 @@ trait ArrayTypeUseTyperComponent
 trait ArrayInitializerTyperComponent
   extends arrayj.typechecker.ArrayInitializerTyperComponent {
 
+  /** @see [[arrayj.typechecker.ArrayInitializerTyperComponent]] */
   override protected def setComponentTypesIfNeeded(
     init: ArrayInitializerApi): List[Expr]= init.elements.map { elem =>
       (init.componentType, elem) match {
@@ -126,6 +129,7 @@ trait ArrayInitializerTyperComponent
     }
 
 
+  /** @see [[TypeUtils.mkArrayType]] */
   override protected def toArrayType(tpe: Type): Type =
     TypeUtils.mkArrayType(tpe)
 }
@@ -133,6 +137,7 @@ trait ArrayInitializerTyperComponent
 @component
 trait ValDefTyperComponent extends ooj.typechecker.ValDefTyperComponent {
 
+  /** @see [[ooj.typechecker.ValDefTyperComponent.typeRhs]] */
   protected override def typeRhs(valdef: ValDefApi): Expr = {
     if(valdef.mods.isField &&
                     (valdef.mods.isStatic || !valdef.mods.isFinal) &&
@@ -154,6 +159,13 @@ trait ValDefTyperComponent extends ooj.typechecker.ValDefTyperComponent {
       typed(valdef.rhs).asInstanceOf[Expr]
     }
   }
+
+  /**
+   * Given a symbol of a tree that is of type an array, this method
+   * returns its component-type
+   *
+   * @param symbol he symbol of the tree
+   */
   protected def getComponentType(
       symbol: Option[Symbol]): Option[() => Type] =
     symbol.flatMap(_.tpe.flatMap {
@@ -165,6 +177,7 @@ trait ValDefTyperComponent extends ooj.typechecker.ValDefTyperComponent {
 
 @component
 trait SelectTyperComponent extends ooj.typechecker.SelectTyperComponent {
+  /** @see [[ooj.typechecker.SelectTyperComponent.isTypeUse]] */
   override protected def isTypeUse(tree: Tree): Boolean = tree match {
     case t: UseTree => TreeUtils.isTypeUse(t)
     case _          => false
@@ -174,6 +187,7 @@ trait SelectTyperComponent extends ooj.typechecker.SelectTyperComponent {
 trait ArrayCreationTyperComponent
   extends arrayj.typechecker.ArrayCreationTyperComponent {
 
+  /** @see [[TypeUtils.mkArrayType]] */
   override protected def toArrayType(tpe: Type): Type =
     TypeUtils.mkArrayType(tpe)
 }
@@ -181,11 +195,13 @@ trait ArrayCreationTyperComponent
 
 @component
 trait AssignTyperComponent extends ooj.typechecker.AssignTyperComponent {
+  /** @see [[ooj.typechecker.AssignTyperComponent.checkVariableLHS]] */
   override protected def checkVariableLHS(lhs: Tree): Unit = {
     if(!TreeUtils.isArrayAccessOrVariableAccess(lhs))
       error(ASSIGNING_NOT_TO_VARIABLE,
         lhs.toString, lhs.toString, lhs.pos)
   }
+  /** @see [[ooj.typechecker.AssignTyperComponent.checkFinalReassigning]] */
   override protected def checkFinalReassigning(lhs: Tree): Unit = {
     lhs match {
       case _: ArrayAccessApi               => ()

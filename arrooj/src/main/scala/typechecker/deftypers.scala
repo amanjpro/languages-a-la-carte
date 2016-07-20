@@ -74,6 +74,7 @@ trait ArrayTypeUseDefTyperComponent extends DefTyperComponent {
 @component
 trait SelectDefTyperComponent
   extends ooj.typechecker.SelectDefTyperComponent {
+  /** @see [[ooj.typechecker.SelectDefTyperComponent]] */
   override protected def isTypeUse(tree: Tree): Boolean = tree match {
     case t: UseTree => TreeUtils.isTypeUse(t)
     case _          => false
