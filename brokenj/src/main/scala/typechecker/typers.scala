@@ -125,9 +125,9 @@ trait SwitchTyperComponent extends TyperComponent {
    * Check that all the case guards of a switch statement are distinct from
    * each other.
    *
-   * @param l list of all guards of a switch-statement
+   * @param guards list of all guards of a switch-statement
    */
-  def checkDistinctness(l: List[Expr]): Unit = l match {
+  def checkDistinctness(guards: List[Expr]): Unit = guards match {
     case Nil                                =>
       ()
     case (Literal(c1)::tl)                  =>
