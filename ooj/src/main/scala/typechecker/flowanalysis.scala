@@ -207,7 +207,14 @@ class FlowEnv {
   }
 }
 
+/** A trait to represent the status of completion of an expression */
 trait CompletenessStatus {
+
+  /**
+   * Unifies this status with another status
+   *
+   * @param other the other status
+   */
   def unify(other: CompletenessStatus): CompletenessStatus =
     (this, other) match {
       case (I, _)           => I
@@ -230,12 +237,24 @@ trait CompletenessStatus {
     }
 }
 
+/** The supertype of a abrupt statements */
 trait AbruptStatus extends CompletenessStatus
+
+/** A status to represent an infinite loop */
 case object I extends AbruptStatus                // infinite loop
+/** A status to represent a return statement */
 case object R extends AbruptStatus                // for return
+/** A status to represent a continue statement */
 case object C extends AbruptStatus                // for continue
+/** A status to represent a break statement */
 case object B extends AbruptStatus                // for break
+/**
+ * A status to represent a maybe break statements, these are like
+ * when a break is present in a branch of if-else but not in the
+ * other.
+ */
 case object M extends CompletenessStatus          // for uncertain breaks
+/** A normal completion status */
 case object N extends CompletenessStatus          // normal completion
 
 

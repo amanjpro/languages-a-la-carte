@@ -352,8 +352,8 @@ trait IdentNamerComponent extends NamerComponent {
  */
 trait IdentNamer {
   /**
-   * Binds the given identifier to its use. This method handles Java's method
-   * overloading and encapsulation.
+   * Binds the given identifier to its definition. This method handles Java's
+   * method overloading and encapsulation.
    *
    * @param original the identifier to be named
    */
