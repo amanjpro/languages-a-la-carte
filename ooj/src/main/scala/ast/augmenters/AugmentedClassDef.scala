@@ -36,9 +36,14 @@ import sana.ooj.ast.ClassDefApi
 
 trait AugmentedClassDef {
 
+  /** The tree to be augmented */
   def tree: ClassDefApi
 
 
+  /**
+   * Returns the name of the source file that contains the class that is
+   * represented by [[AugmentedClassDef.tree]]
+   */
   def sourceName: Option[String] =
     tree.attributes.get('sourceName)
       .map(_.asInstanceOf[String])

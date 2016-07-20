@@ -73,6 +73,7 @@ import sana.ooj.types.TypeUtils
 //
 // }
 //
+
 object PackageSymbol {
   private class PackageSymbolImpl(var name: Name,
     var owner: Option[Symbol]) extends PackageSymbol
@@ -87,6 +88,7 @@ object PackageSymbol {
   }
 }
 
+/** A trait to represent symbols for packages */
 trait PackageSymbol extends TermSymbol {
   var name: Name
   var owner: Option[Symbol]
@@ -96,6 +98,7 @@ trait PackageSymbol extends TermSymbol {
   def tpe: Option[Type] = None
   def tpe_=(tpe: Option[Type]): Unit = ???
 
+  /** The qualified name of this `package` */
   def qualifiedName: String = {
     qualifiedNameAsList.map(_.asString).mkString(".")
   }
@@ -129,8 +132,10 @@ trait PackageSymbol extends TermSymbol {
   override def hashCode(): Int = qualifiedName.hashCode * 43
 }
 
+/** A trait to represent symbols for classes */
 trait ClassSymbol extends TypeSymbol {
 
+  /** The list of the symbols of the direct super-classes of this symbol */
   var parents: List[ClassSymbol]
 
   override def equals(other: Any): Boolean = other match {
@@ -145,6 +150,7 @@ trait ClassSymbol extends TypeSymbol {
   }
 
 
+  /** All the declarations defined within this class and its parent classes. */
   override def declarations: List[Symbol] = {
     val parentDecls = {
       val res = parents.flatMap(_.declarations).filter { sym =>
@@ -163,6 +169,13 @@ trait ClassSymbol extends TypeSymbol {
     decls ++ parentDecls
   }
 
+  /**
+   * Returns all the symbols that are defined by this symbol, or one of its
+   * parents that have the name `name` and satisfy a predicate.
+   *
+   * @param name the name of the symbol
+   * @param p the predicate that the symbol should satisfy
+   */
   def getAllSymbols(name: Name, p: Symbol => Boolean): List[Symbol] = {
     val newParents = {
       val interfaces = parents.filter(_.mods.isInterface)
@@ -212,8 +225,16 @@ trait ClassSymbol extends TypeSymbol {
     updatedParent ++ fromThis
   }
 
-  // Override this method to look for definitions in the parents too.
-  // First local defs, then parent defs, but never defs in enclosing symbol
+  /**
+   * Returns true if one of the following is true:
+   * <li> Is this the same as the passed `symbol`, and satisfies the predicate? or
+   * <li> Does this symbol, define the passed `symbol`, and satisfies the predicate? or
+   * <li> Does one of the parents of this symbol define the passed `symbol` and satisfies
+   *      the predicate.
+   *
+   * @param symbol the symbol to be checked
+   * @param p the predicate
+   */
   def definesDirectlyOrInherits(symbol: Symbol,
               p: Symbol => Boolean): Boolean = {
       lazy val thisSym         = this == symbol && p(this)
@@ -224,8 +245,18 @@ trait ClassSymbol extends TypeSymbol {
       thisSym || inThis || inParents
   }
 
-  // Override this method to look for definitions in the parents too.
-  // First local defs, then parent defs then defs in enclosing symbol
+  /**
+   * Returns true if one of the following is true:
+   * <li> Does this symbol, define the passed `symbol`, and satisfies the
+   *      predicate? or
+   * <li> Does one of the parents of this symbol define the passed `symbol` and
+   *      satisfies the predicate.
+   * <li> Does the owner of this symbol defines the passed `symbol` and satisfies
+   *      the predicate.
+   *
+   * @param symbol the symbol to be checked
+   * @param p the predicate
+   */
   override def defines(symbol: Symbol,
               p: Symbol => Boolean): Boolean = {
       val inThis          = decls.exists(s => s == symbol && p(s))
@@ -238,9 +269,12 @@ trait ClassSymbol extends TypeSymbol {
   }
 
 
-  // Handling scoping, does this defines a name with a predicate? If
-  // not see if one of the parents defines it, lastly try the owner
-  // of this symbol
+  /**
+   * Handling scoping, does this defines a name with a predicate? If
+   * not see if one of the parents defines it, lastly try the owner
+   * of this symbol
+   * @see [[sana.tiny.symbols.Symbol.getSymbol]]
+   */
   override def getSymbol(name: Name, p: Symbol => Boolean): Option[Symbol] = {
     val thisSym = decls.find { sym =>
       sym.name == name && p(sym)
@@ -267,15 +301,44 @@ trait ClassSymbol extends TypeSymbol {
     }
   }
 
+  /**
+   * Checks if the passed symbol can be accessed from this symbol
+   *
+   * @param sym the symbol to be checked, `sym` may not be
+   *            owned by `this` symbol.
+   */
   protected def canBeAccessedFrom(sym: Symbol): Boolean =
     !(sym.mods.isConstructor || sym.mods.isPrivateAcc)
 
-  protected def canBeInherited(sym: Symbol): Boolean =
-    !(sym.mods.isConstructor || sym.mods.isStatic)
+  /*
+   * Checks if the passed symbol can be inherited from this symbol. The
+   * different between this and `canBeInheritedStrict` is that, the latter one
+   * is more strict in the sense
+   * that it returns false for all private members.
+   *
+   * @param sym the symbol to be checked, `sym` may not be
+   *            owned by `this` symbol.
+   */
+  // protected def canBeInherited(sym: Symbol): Boolean =
+  //   !(sym.mods.isConstructor || sym.mods.isStatic)
+  //
 
+
+  /**
+   * Checks if the passed symbol can be inherited from this symbol.
+   *
+   * @param sym the symbol to be checked, `sym` may not be
+   *            owned by `this` symbol.
+   */
   protected def canBeInheritedStrict(sym: Symbol): Boolean =
     !(sym.mods.isConstructor || sym.mods.isStatic || sym.mods.isPrivateAcc)
 
+  /**
+   * Gets the inherited symbol that has the name `name` and satisfies a predicate.
+   *
+   * @param name the name of the symbol we are looking for
+   * @param p the predicate that the symbol should satisfy
+   */
   def getInheritedSymbol(name: Name,
           p: Symbol => Boolean): Option[Symbol] = {
     parents.flatMap(_.declarations).filter(s => s.name == name && p(s)) match {
@@ -284,6 +347,11 @@ trait ClassSymbol extends TypeSymbol {
     }
   }
 
+  /**
+   * Checks if this symbol defines a member which overrides the given symbol.
+   *
+   * @param sym the symbol to be checked
+   */
   def overrides(sym: Symbol): Boolean = {
     parents.exists { p =>
       (sym, p) match {
@@ -351,9 +419,18 @@ object CompilationUnitSymbol {
 }
 
 
+/**
+ * A symbol to represent the symbol of a compilation unit.
+ * In Java a compilation unit is a source file.
+ */
 trait CompilationUnitSymbol extends Symbol {
+  /**
+   * The symbol of the package that is in this compilation unit.
+   */
   var module: Option[Symbol]
+  /** The name of the source file of this compilation unit */
   var sourceName: String
+  /** The path of the source file of this compilation unit */
   var sourcePath: List[String]
   var owner: Option[Symbol]
 

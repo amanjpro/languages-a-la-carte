@@ -28,6 +28,7 @@
 package ch.usi.inf.l3.sana.ooj.types
 
 import ch.usi.inf.l3.sana
+import sana.primj
 import sana.ooj.names.StdNames
 import sana.calcj.types._
 import sana.tiny.types.Type
@@ -36,59 +37,70 @@ import sana.tiny.ast.Implicits._
 import sana.ooj.symbols.SymbolUtils
 
 trait TypeUtils extends sana.primj.types.TypeUtils {
+  /** Returns the name of the package "java.lang" */
   protected def javaLangPackageName: String = {
     val java = StdNames.JAVA_PACKAGE_NAME.asString
     val lang = StdNames.LANG_PACKAGE_NAME.asString
     s"$java.$lang"
   }
+
+  /** Returns the type of "java.lang.Object" class */
   lazy val objectClassType: ClassTypeApi = {
     val qual            = javaLangPackageName
     val name            = StdNames.OBJECT_TYPE_NAME
     ClassType(qual, name, Set.empty)
   }
 
+  /** Returns the type of "java.lang.String" class */
   lazy val stringClassType: ClassTypeApi = {
     val qual            = javaLangPackageName
     val name            = StdNames.STRING_TYPE_NAME
     ClassType(qual, name, Set(SymbolUtils.objectClassSymbol))
   }
 
+  /** Returns the type of "java.lang.Boolean" class */
   lazy val booleanClassType: ClassTypeApi = {
     val qual            = javaLangPackageName
     val name            = StdNames.BOOLEAN_CLASS_NAME
     ClassType(qual, name, Set(SymbolUtils.objectClassSymbol))
   }
 
+  /** Returns the type of "java.lang.Character" class */
   lazy val characterClassType: ClassTypeApi = {
     val qual            = javaLangPackageName
     val name            = StdNames.CHARACTER_CLASS_NAME
     ClassType(qual, name, Set(SymbolUtils.objectClassSymbol))
   }
 
+  /** Returns the type of "java.lang.Integer" class */
   lazy val integerClassType: ClassTypeApi = {
     val qual            = javaLangPackageName
     val name            = StdNames.INTEGER_CLASS_NAME
     ClassType(qual, name, Set(SymbolUtils.objectClassSymbol))
   }
 
+  /** Returns the type of "java.lang.Long" class */
   lazy val longClassType: ClassTypeApi = {
     val qual            = javaLangPackageName
     val name            = StdNames.LONG_CLASS_NAME
     ClassType(qual, name, Set(SymbolUtils.objectClassSymbol))
   }
 
+  /** Returns the type of "java.lang.Float" class */
   lazy val floatClassType: ClassTypeApi = {
     val qual            = javaLangPackageName
     val name            = StdNames.FLOAT_CLASS_NAME
     ClassType(qual, name, Set(SymbolUtils.objectClassSymbol))
   }
 
+  /** Returns the type of "java.lang.Double" class */
   lazy val doubleClassType: ClassTypeApi = {
     val qual            = javaLangPackageName
     val name            = StdNames.DOUBLE_CLASS_NAME
     ClassType(qual, name, Set(SymbolUtils.objectClassSymbol))
   }
 
+  /** @see [[primj.types.TypeUtils.unifyTernaryBranches]] */
   override def unifyTernaryBranches(lhs: Expr, rhs: Expr): Option[Type] = {
     (lhs.tpe, rhs.tpe) match {
       case (Some(NullType), Some(tpe))                                 =>
@@ -107,6 +119,14 @@ trait TypeUtils extends sana.primj.types.TypeUtils {
     }
   }
 
+  /**
+   * Converts a primitive type to its boxed type. Boxed type is defined
+   * as per Java's specification.
+   *
+   * @param tpe the primitive type to be converted.
+   * @return if `tpe` is a primitive type then, return its boxed-type, otherwise,
+   *         return None.
+   */
   def toBoxedType(tpe: Type): Option[Type] = tpe match {
     case BooleanType            =>
       Some(booleanClassType)

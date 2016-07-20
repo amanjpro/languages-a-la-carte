@@ -56,7 +56,9 @@ import ooj.names.StdNames._
 
 /********************* AST Nodes *********************************/
 
+/** A tree to represent programs in ooj. */
 trait ProgramApi extends Tree {
+  /** A list of members of a program */
   def members: List[Tree]
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
     val r1 = members.foldLeft(z)((z, y) => {
@@ -66,10 +68,19 @@ trait ProgramApi extends Tree {
   }
 }
 
+/**
+ * A tree to represent a compilation unit. In Java a compilation unit is
+ * a single source file.
+ */
 trait CompilationUnitApi extends Tree {
+  /** The package that is in this compilation unit */
   def module: PackageDefApi
+  /** The name of the source file that this compilation unit represents */
   def sourceName: String
-  // the head of the list contains the inner most directory
+  /**
+   * The path of the source file that this compilation unit represents.
+   * The head of the list contains the inner most directory
+   */
   def sourcePath: List[String]
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -78,11 +89,18 @@ trait CompilationUnitApi extends Tree {
   }
 }
 
+/** A tree to represent a package */
 trait PackageDefApi extends TermTree {
+  /** A list of members of this package */
   def members: List[Tree]
 
+  /** The name of this package */
   def name: Name
-  // the head of the list contains the outer most package
+  /**
+   * A list of the package that contains it, if the package is `pkg1.pkg2.pkg3.thisPkg`.
+   * Then the list will be: List(pkg1, pkg2, pkg3) (hence, excluding this packages name).
+   * The head of the list contains the outer most package.
+   */
   def containingPackages: List[Name]
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -94,10 +112,15 @@ trait PackageDefApi extends TermTree {
 }
 
 
+/** A trait to represent classes and interfaces */
 trait ClassDefApi extends TypeTree {
+  /** The modifiers (flags) of this tree */
   def mods: Flags
+  /** The name of this class/interface */
   def name: Name
+  /** A list of parents of this class/interface */
   def parents: List[UseTree]
+  /** The body of this class/interface */
   def body: TemplateApi
 
 
@@ -119,7 +142,9 @@ trait ClassDefApi extends TypeTree {
 }
 
 
+/** A tree to represent the body of a class */
 trait TemplateApi extends Tree {
+  /** The members of the class that this body is part of */
   def members: List[Tree]
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -130,11 +155,28 @@ trait TemplateApi extends Tree {
   }
 }
 
+/** A trait to represent a method definition */
 trait MethodDefApi extends primj.ast.MethodDefApi {
+  /** The modifiers (flags) of this tree */
   def mods: Flags
 }
 
+/** A trait to represent `new` expressions */
 trait NewApi extends Expr {
+  /**
+   * The application part of the new. The expression: {{{new A()}}} translates to:
+   * {{{
+   * new NewApi {
+   *   new ApplyApi {
+   *     def fun = new SelectApi {
+   *       def qual = new TypeUseApi { def name = Name("A") }
+   *       def tree = new IdentApi { def name = Name("<init>") }
+   *     }
+   *     def args = Nil
+   *   }
+   * }
+   * }}}
+   */
   def app: ApplyApi
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -143,12 +185,16 @@ trait NewApi extends Expr {
   }
 }
 
+/** A trait to represent member selection like: {{{qual.name}}} */
 trait SelectApi extends UseTree with Expr {
+  /** The tree which its tree is selected */
   def qual: Tree
+  /** The selected name */
   def tree: SimpleUseTree
 
   // override val name: ContextState[Name] = tree.name
   // def uses: Option[Symbol] = tree.symbol
+  /** The name of this tree, equivalent of the {{{this.tree.name}}} */
   def name: Name           = tree.name
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -158,12 +204,14 @@ trait SelectApi extends UseTree with Expr {
   }
 }
 
+/** A trait to represent `this` */
 trait ThisApi extends Expr {
   // def enclosingClassSymbol: Option[Symbol]
   def bottomUp[R](z: R)(f: (R, Tree) => R): R =
     f(z, this)
 }
 
+/** A trait to represent `super` */
 trait SuperApi extends Expr {
   def bottomUp[R](z: R)(f: (R, Tree) => R): R =
     f(z, this)

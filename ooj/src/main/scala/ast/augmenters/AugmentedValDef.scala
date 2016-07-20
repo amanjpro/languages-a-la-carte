@@ -35,8 +35,12 @@ import sana.primj.ast.ValDefApi
 
 trait AugmentedValDef {
 
+  /** The tree to be augmented */
   def tree: ValDefApi
 
+  /**
+   * Returns true if [[AugmentedValDef.tree]] has a default initialization
+   */
   def hasDefaultInit: Boolean =
     tree.attributes.get('hasDefaultInit)
       .map(_.asInstanceOf[Boolean]).getOrElse(false)

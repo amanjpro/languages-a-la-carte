@@ -138,9 +138,16 @@ trait ValDefTyperComponent extends TyperComponent {
     } else res
   }
 
+  /** @see [[TypePromotions.widenIfNeeded]] */
   protected def widenIfNeeded(expr: Expr, tpe: Option[Type]): Expr =
     TypePromotions.widenIfNeeded(expr, tpe)
 
+  /**
+   * Type-check this ValDef definition. Almost all the type-checking for
+   * variable definition are done in this method.
+   *
+   * @param valdef the variable to be checked
+   */
   protected def checkValDef(valdef: ValDefApi): Boolean = {
     val rhs    = valdef.rhs
     val tpt    = valdef.tpt
@@ -207,6 +214,12 @@ trait ValDefTyperComponent extends TyperComponent {
     chk1 && chk2 && chk3
   }
 
+  /**
+   * Type-checks the right-hand side of a variable definition
+   *
+   * @param valdef the variable of which we want to type-check its
+   *               right-hand side.
+   */
   protected def typeRhs(valdef: ValDefApi): Expr = {
     if(valdef.mods.isField &&
                     (valdef.mods.isStatic || !valdef.mods.isFinal) &&
@@ -219,9 +232,18 @@ trait ValDefTyperComponent extends TyperComponent {
     } else typed(valdef.rhs).asInstanceOf[Expr]
   }
 
+  /** @see [[TreeUtils.getDefaultFieldValue]] */
   protected def getDefaultFieldValue(tpe: Option[Type]): Tree =
     TreeUtils.getDefaultFieldValue(tpe)
 
+  /**
+   * Checks if a varaible name is unique in its context, as per the
+   * specification of Java.
+   *
+   * @param owner the owner of the variable
+   * @param name the name of the variable
+   * @param pos the position of the variable
+   */
   protected def checkDoubleDef(owner: Option[Symbol],
       name: Name, pos: Option[Position]): Unit =
     if(SymbolUtils.alreadyDefinedLocalVarable(owner, name))
@@ -273,9 +295,16 @@ trait ClassDefTyperComponent extends TyperComponent {
     TreeCopiers.copyClassDef(clazz)(body = body, parents = parents)
   }
 
+  /** @param[[SymbolUtils.allAbstractMembers]] */
   def allAbstractMembers(symbol: Option[Symbol]): List[Symbol] =
     SymbolUtils.allAbstractMembers(symbol)
 
+  /**
+   * Giving a list of methods, it raises an error whenever two methods
+   * are detected to have the same signature.
+   *
+   * @param methodsToSee the list of the methods to be checked
+   */
   def reportDuplicateMethods(methodsToSee: List[MethodDefApi]): Unit = {
     methodsToSee match {
       case Nil                                 =>
@@ -305,6 +334,14 @@ trait ClassDefTyperComponent extends TyperComponent {
 
 
 
+  /**
+   * Checks if in the list of parents, only one `class` exists
+   * and it is in the `extends` clause, and any parent in the
+   * `implements` clause is an interface.
+   *
+   * @param parents the list of parents to be checked
+   * @param clazz the class which has the list of parents
+   */
   protected def checkParents(parents: List[UseTree],
       clazz: ClassDefApi): Unit = {
     parents.foreach( p => {
@@ -378,19 +415,32 @@ trait ClassDefTyperComponent extends TyperComponent {
   }
 
 
+  /**
+   * Checks if a given symbol is for an interface
+   *
+   * @param symbol the symbol to be checked
+   */
   protected def isInterface(symbol: Option[Symbol]): Boolean =
     symbol.map(_.mods.isInterface).getOrElse(false)
 
+  /**
+   * Checks if a given symbol is for {{{java.lang.Object}}}
+   *
+   * @param symbol the symbol to be checked
+   */
   protected def isObject(symbol: Option[Symbol]): Boolean =
     symbol.map(_ == SymbolUtils.objectClassSymbol).getOrElse(false)
 
+  /** @see [[SymbolUtils.packageName]] */
   protected def packageName(symbol: ClassSymbol): String =
     SymbolUtils.packageName(symbol)
 
 
+  /** @see [[TreeUtils.isInImplementsClause]] */
   protected def isInImplementsClause(tree: UseTree): Boolean =
     TreeUtils.isInImplementsClause(tree)
 
+  /** @see [[TreeUtils.isInExtendsClause]] */
   protected def isInExtendsClause(tree: UseTree): Boolean =
     TreeUtils.isInExtendsClause(tree)
 }
@@ -530,12 +580,19 @@ trait MethodDefTyperComponent
     }
   }
 
+  /**
+   * Checks if a symbol is for a contructor
+   *
+   * @param symbol the symbol to be checked
+   */
   protected def isConstructor(symbol: Option[Symbol]): Boolean =
     symbol.map(SymbolUtils.isConstructor(_)).getOrElse(false)
 
+  /** @see [[SymbolUtils.enclosingMethod]] */
   protected def enclosingMethod(symbol: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingMethod(symbol)
 
+  /** @see [[SymbolUtils.enclosingClass]] */
   protected def enclosingClass(symbol: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingClass(symbol)
 }
@@ -703,23 +760,36 @@ trait ApplyTyperComponent extends TyperComponent {
     res
   }
 
+  /** @see [[TypePromotions.widenIfNeeded]] */
   protected def widenIfNeeded(expr: Expr, tpe: Option[Type]): Expr =
     TypePromotions.widenIfNeeded(expr, tpe)
 
+  /**
+   * Checks if the given tree is a member of its enclosing class
+   *
+   * @param t the tree to be checked
+   * @param sym the symbol of the owner of the tree `t`
+   */
   protected def definedByEnclosingClass(t: Tree,
                                         sym: Option[Symbol]): Boolean = {
     val r = for {
       encl <- SymbolUtils.enclosingClass(t.owner)
       s    <- sym
     } yield encl.defines(s)
-    r.getOrElse{
+    r.getOrElse {
       false
     }
   }
 
+  /** @see [[TreeUtils.isExplicitConstructorInvocation]] */
   protected def isExplicitConstructorInvocation(tree: Tree): Boolean =
     TreeUtils.isExplicitConstructorInvocation(tree)
 
+  /**
+   * Checks if a given identifier points to a non-static field
+   *
+   * @param id the identifier to be checked
+   */
   protected def pointsToNonStaticField(id: IdentApi): Boolean =
     ! id.isQualified && id.symbol.map(
       sym => sym.mods.isField && !sym.mods.isStatic)
@@ -750,15 +820,26 @@ trait TypeUseTyperComponent
     }
   }
 
+  /** Uses [[TypeUseNamer.nameTypeUse]] to name instance of TypeUseApi */
   protected def nameTypeUse(tuse: TypeUseApi): UseTree =
     typeUseNamer.nameTypeUse(tuse)
 
+  /** An instance of TypeUseNamer for naming TypeUseApi instances */
   private[this] val typeUseNamer = new TypeUseNamer {}
 }
 
 
+/**
+ * A trait to help to `name` type-uses.
+ */
 trait TypeUseNamer {
-  def nameTypeUse(tuse: TypeUseApi): UseTree = {
+  /**
+   * Binds the given type-use to its definition. This method handles Java's
+   * encapsulation.
+   *
+   * @param original the identifier to be named
+   */
+   def nameTypeUse(tuse: TypeUseApi): UseTree = {
     val tuseCopy = TreeCopiers.copyTypeUse(tuse)(name = tuse.name)
     val encl = tuseCopy.isQualified match {
       case true  => tuseCopy.enclosing
@@ -805,6 +886,7 @@ trait TypeUseNamer {
   }
 
 
+  /** @see [[SymbolUtils.isAnAccessibleType]] */
   protected def isAnAccessibleType(sym: Option[Symbol],
     encl: Option[Symbol]): Boolean =
       SymbolUtils.isAnAccessibleType(sym, encl)
@@ -824,12 +906,23 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
     }
   }
 
+  /**
+   * Names an identifier
+   *
+   * @param id the identifier to be named
+   */
   protected def nameIdent(id: IdentApi): UseTree =
     identNamer.nameIdent(id)
 
+  /**
+   * Type-checks and names an identifier
+   *
+   * @param id the identifier to be named and type-checked
+   */
   protected def typeAndNameIdent(id: IdentApi): UseTree =
     identNamer.nameIdent(id, true)
 
+  /** An instance to help naming identifiers */
   private[this] val identNamer =
     new ooj.namers.IdentNamer with ooj.typechecker.IdentNamer {}
 
@@ -852,9 +945,20 @@ trait IdentTyperComponent extends primj.typechecker.IdentTyperComponent {
 }
 
 
+/**
+ * A trait to help to `name` and `type-check` an identifier.
+ */
 trait IdentNamer {
 
-
+  /**
+   * Binds the given identifier to its definition. This method handles Java's
+   * method overloading and encapsulation. It also type-checks the identifier
+   * after naming it.
+   *
+   * @param ident the identifier to be named
+   * @param isInTypeChecker a flag to indicate if this phase a typer, true if
+   *                        it is
+   */
   def nameIdent(ident: IdentApi, isInTypeChecker: Boolean): IdentApi = {
     val id = TreeCopiers.copyIdent(ident)(name = ident.name)
     val tptMods = if(id.isQualified) {
@@ -1005,6 +1109,14 @@ trait IdentNamer {
     }
   }
 
+  /**
+   * Is this a sensible constructor call. It makes sure that abstract
+   * classes and interfaces are not instantiated.
+   *
+   * @param id the identifier of the call, `f` in `f()` or `init` in
+   *           `new A()`
+   * @param mods the modifiers of the function that has been called
+   */
   protected def isGoodCall(id: IdentApi, mods: Flags): Boolean = {
     if(id.name == StdNames.CONSTRUCTOR_NAME) {
       if(mods.isAbstract || mods.isInterface) {
@@ -1013,22 +1125,39 @@ trait IdentNamer {
     } else true
   }
 
+  /**
+   * Is this symbol is owned by a static context: static field, static method,
+   * and static initializer.
+   *
+   * @param symbol the symbol to be checked
+   */
   protected def isInStaticContext(symbol: Option[Symbol]): Boolean = {
     SymbolUtils.enclosingNonLocal(symbol)
       .map(_.mods.isStatic).getOrElse(false)
   }
 
+  /** @see [[SymbolUtils.enclosingNonLocal]] */
   protected def enclosingNonLocal(sym: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingNonLocal(sym)
+  /** @see [[SymbolUtils.enclosingClass]] */
   protected def enclosingClass(sym: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingClass(sym)
 
+  /** @see [[SymbolUtils.isAccessible]] */
   protected def isAccessible(symbol: Symbol, from: Symbol): Boolean =
     SymbolUtils.isAccessible(symbol, from)
 
+  /** @see [[SymbolUtils.mostSpecificMethods]] */
   protected def mostSpecificMethods(symbols: List[Symbol]): List[Symbol] =
     SymbolUtils.mostSpecificMethods(symbols)
 
+  /**
+   * Checks if a method is application using a list of arguments
+   *
+   * @param symbol the symbol of the method to be applied
+   * @param atpes the list of the types of the arguments passed to the
+   *              method
+   */
   protected def applicableMethod(symbol: Symbol,
     atpes: List[Type]): Boolean = symbol match {
     case ms: MethodSymbol    =>
@@ -1067,6 +1196,11 @@ trait SelectTyperComponent extends TyperComponent {
     }
   }
 
+  /**
+   * Checks if a tree is use of a type
+   *
+   * @param tree the tree to be checked
+   */
   protected def isTypeUse(tree: Tree): Boolean = tree match {
     case t: UseTree => TreeUtils.isTypeUse(t)
     case _          => false
@@ -1093,15 +1227,24 @@ trait BinaryTyperComponent extends calcj.typechecker.BinaryTyperComponent {
 
 
 
-  // toString should be called when needed, also all primitives can be
-  // easily promoted to String
-  // in Java spec:
-  // e is boolean               ==> new Boolean(e).toString();
-  // e is char                  ==> new Character(e).toString();
-  // e is byte, short or int    ==> new Integer(e).toString();
-  // e is long                  ==> new Long(e).toString();
-  // e is float                 ==> new Float(e).toString();
-  // e is double                ==> new Double(e).toString();
+  /**
+   * [[caclj.typechecker.BinaryTyperComponent.castIfNeeded]] is overriden
+   * to support potential castings for {{{java.lang.String}}} when
+   * concatenating a String with a non-String.
+   *
+   * The formulae is as follows:
+   * <li> If the non-String side is of a reference type, then its
+   *      {{{toString}}} is called.
+   * <li> If the non-String side is of a primitive type, then its converted to
+   *      its reference type counter part, and then the {{{toString}}} is
+   *      called as follows:
+   * - e is boolean               ==> new java.lang.Boolean(e).toString();
+   * - e is char                  ==> new java.lang.Character(e).toString();
+   * - e is byte, short or int    ==> new java.lang.Integer(e).toString();
+   * - e is long                  ==> new java.lang.Long(e).toString();
+   * - e is float                 ==> new java.lang.Float(e).toString();
+   * - e is double                ==> new java.lang.Double(e).toString();
+   */
   override protected def castIfNeeded(e: Expr, t1: Type, t2: Type): Expr = {
     val strTpe = TypeUtils.stringClassType
     val strSym = SymbolUtils.stringClassSymbol
@@ -1173,6 +1316,12 @@ trait AssignTyperComponent extends primj.typechecker.AssignTyperComponent {
         lhs.toString, lhs.toString, lhs.pos)
   }
 
+  /**
+   * Checks if the left-hand side of an assignment expression points to
+   * a variable name.
+   *
+   * @param lhs the left-hand side of an assignment expression
+   */
   override protected def checkVariableLHS(lhs: Tree): Unit = {
     if(!TreeUtils.isVariable(lhs))
       error(ASSIGNING_NOT_TO_VARIABLE,
@@ -1182,6 +1331,7 @@ trait AssignTyperComponent extends primj.typechecker.AssignTyperComponent {
 
 @component
 trait UnaryTyperComponent extends primj.typechecker.UnaryTyperComponent {
+  /** @see [[TreeUtils.isVariable]] */
   override protected def isVariable(tree: Tree): Boolean =
     TreeUtils.isVariable(tree)
 }
@@ -1190,6 +1340,7 @@ trait UnaryTyperComponent extends primj.typechecker.UnaryTyperComponent {
 trait TernaryTyperComponent extends
   primj.typechecker.TernaryTyperComponent {
 
+  /** @see [[TypeUtils.unifyTernaryBranches]] */
   override protected def unifyTernaryBranches(lhs: Expr,
       rhs: Expr): Option[Type] = TypeUtils.unifyTernaryBranches(lhs, rhs)
 }
@@ -1205,6 +1356,7 @@ trait LiteralTyperComponent extends TyperComponent {
     lit
   }
 
+  /** @see [[SymbolUtils.getSymbol]] */
   protected def getSymbol(t: Type): Option[Symbol] =
     SymbolUtils.getSymbol(t)
 }

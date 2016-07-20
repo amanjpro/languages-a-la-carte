@@ -35,8 +35,13 @@ import sana.primj.ast.MethodDefApi
 
 trait AugmentedMethodDef {
 
+  /** The tree to be augmented */
   def tree: MethodDefApi
 
+  /**
+   * Returns the "return" type of the constructor that is represented by
+   * [[AugmentedMethodDef.tree]].
+   */
   def declaredClassNameForConstructor: Option[Name] =
     tree.attributes.get('declaredClassNameForConstructor)
       .map(_.asInstanceOf[Name])

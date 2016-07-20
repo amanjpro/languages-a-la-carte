@@ -35,8 +35,13 @@ import sana.tiny.symbols.Symbol
 
 trait AugmentedBlock {
 
+  /** The tree to be augmented */
   def tree: BlockApi
 
+  /**
+   * Returns true if [[AugmentedBlock.tree]] is a
+   * static initialization block
+   */
   def isStaticInit: Boolean =
     tree
       .attributes

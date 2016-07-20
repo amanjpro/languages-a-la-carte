@@ -48,6 +48,10 @@ import tiny.core._
 
 
 
+/**
+ * This method checks if a field, or a static initializer forward reference
+ * to a field. If so, it returns an error
+ */
 trait ForwardRefCheckerComponent
   extends CheckerComponent[(Tree, List[Symbol])] {
   def check: ((Tree, List[Symbol])) => Unit
@@ -136,6 +140,7 @@ trait BlockForwardRefCheckerComponent extends ForwardRefCheckerComponent {
     }
   }
 
+  /** @see [[SymbolUtils.enclosingClass]] */
   protected def enclosingClass(sym: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingClass(sym)
 }

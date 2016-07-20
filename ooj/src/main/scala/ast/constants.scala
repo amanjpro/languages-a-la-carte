@@ -39,6 +39,7 @@ import ooj.types.{NullType, TypeUtils}
 import calcj.ast.Constant
 
 
+/** A {{{null}}} constant */
 case object NullConstant extends Constant {
   type Value = Null
 
@@ -50,6 +51,7 @@ case object NullConstant extends Constant {
 
 
 
+/** A constant of type {{{java.lang.String}}} */
 case class StringConstant(value: String) extends Constant {
   type Value = String
 

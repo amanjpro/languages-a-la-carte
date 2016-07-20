@@ -36,8 +36,10 @@ import sana.ooj.ast.SuperApi
 
 trait AugmentedSuper {
 
+  /** The tree to be augmented */
   def tree: SuperApi
 
+  /** Returns the enclosing class of [[AugmentedSuper.tree]] */
   def enclosingClassSymbol: Option[Symbol] =
     tree.attributes.get('enclosingClassSymbol).map(_.asInstanceOf[Symbol])
 

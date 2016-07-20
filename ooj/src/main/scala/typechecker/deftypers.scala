@@ -106,6 +106,12 @@ Super:
 */
 
 
+/**
+ * Type-checks the top-level definitions like classes, fields and
+ * methods. This phase never type-checks the body of a method or
+ * the right-hand side of a variable definitions. We need this phase
+ * to make forward referencing possible.
+ */
 trait DefTyperComponent extends TransformationComponent[Tree, Tree] {
   def typed: Tree => Tree
 }
@@ -145,6 +151,7 @@ trait ClassDefDefTyperComponent extends DefTyperComponent {
   }
 
 
+  /** @see [[SymbolUtils.packageName]] */
   protected def packageName(symbol: ClassSymbol): String =
     SymbolUtils.packageName(symbol)
 }
@@ -225,7 +232,11 @@ trait SelectDefTyperComponent extends DefTyperComponent {
     TreeCopiers.copySelect(select)(qual, tree)
   }
 
-
+  /**
+   * Checks if a tree is use of a type
+   *
+   * @param tree the tree to be checked
+   */
   protected def isTypeUse(tree: Tree): Boolean = tree match {
     case t: UseTree => TreeUtils.isTypeUse(t)
     case _          => false

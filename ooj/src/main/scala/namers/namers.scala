@@ -127,6 +127,12 @@ trait ClassDefNamerComponent extends NamerComponent {
     TreeCopiers.copyClassDef(clazz)(body = body, parents = parents)
   }
 
+  /**
+   * Adds {{{java.lang.Object}}} to the parents list if there was not. Unless
+   * the class in question is {{{java.lang.Object}}} itself.
+   *
+   * @param clazz the class to add {{{java.lang.Object}}} to it.
+   */
   protected def addObjectParentIfNeeded(clazz: ClassDefApi): List[UseTree] = {
 
     def isObjectClass(use: NamedTree): Boolean  = use match {
@@ -159,6 +165,11 @@ trait ClassDefNamerComponent extends NamerComponent {
 
   }
 
+  /**
+   * Returns the enclosing package name of a symbol
+   *
+   * @param symbol the symbol to return its enclosing package name
+   */
   protected def packageName(symbol: Option[Symbol]): String = {
     val res = enclosingPackage(symbol).map { sym =>
       SymbolUtils.packageName(sym)
@@ -166,6 +177,7 @@ trait ClassDefNamerComponent extends NamerComponent {
     res.getOrElse("")
   }
 
+  /** @see [[SymbolUtils.enclosingPackage]] */
   protected def enclosingPackage(sym: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingPackage(sym)
 
@@ -175,6 +187,7 @@ trait ClassDefNamerComponent extends NamerComponent {
   protected def langPackageName: Name =
     StdNames.LANG_PACKAGE_NAME
 
+  /** @see [[SymbolUtils.langPackageName]] */
   protected def langPackageSymbol: PackageSymbol =
     SymbolUtils.langPackageSymbol
 
@@ -242,6 +255,7 @@ trait TypeUseNamerComponent extends NamerComponent {
     tuse
   }
 
+  /** @see [[SymbolUtils.isAnAccessibleType]] */
   protected def isAnAccessibleType(sym: Option[Symbol],
     encl: Option[Symbol]): Boolean =
       SymbolUtils.isAnAccessibleType(sym, encl)
@@ -322,16 +336,27 @@ trait IdentNamerComponent extends NamerComponent {
   }
 
 
+  /** @see [[IdentNamer.identNamer]] */
   protected def nameIdent(id: IdentApi): UseTree =
     identNamer.nameIdent(id)
 
+  /** An instance of `IdentNamer` to name this identifier */
   private[this] val identNamer = new IdentNamer {}
 }
 
 
 
 
+/**
+ * A trait to help to `name` an identifier.
+ */
 trait IdentNamer {
+  /**
+   * Binds the given identifier to its use. This method handles Java's method
+   * overloading and encapsulation.
+   *
+   * @param original the identifier to be named
+   */
   def nameIdent(original: IdentApi): UseTree = {
     val id = TreeCopiers.copyIdent(original)(name = original.name)
     // At the beginning: we treat all (Ident)s as ambiguous names.
@@ -397,6 +422,7 @@ trait IdentNamer {
 
 
 
+  /** @see [[SymbolUtils.isAnAccessibleType]] */
   protected def isAnAccessibleType(sym: Option[Symbol],
     encl: Option[Symbol]): Boolean =
     SymbolUtils.isAnAccessibleType(sym, encl)

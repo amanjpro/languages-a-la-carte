@@ -44,9 +44,23 @@ import sana.ooj.ast.TreeExtractors._
 
 trait TreeFactories {
 
+  /**
+   * Creates a new tree to represent ooj's program
+   *
+   * @param members the members of this program
+   */
   def mkProgram(members: List[Tree]): ProgramApi = {
     new Program(members)
   }
+
+  /**
+   * Creates a new tree to represent a compilation unit
+   *
+   * @param module the package tree in this compilation unit
+   * @param sourceName the name of the source file of this compilation unit
+   * @param sourcePath the path of the source file of this compilation unit
+   * @param symbol the symbol of this tree
+   */
   def mkCompilationUnit(module: PackageDefApi, sourceName: String,
     sourcePath: List[String],
     symbol: Option[Symbol] = None): CompilationUnitApi = {
@@ -55,6 +69,15 @@ trait TreeFactories {
     res
   }
 
+  /**
+   * Creates a new tree to represent a package definition in a source file.
+   *
+   * @param containingPackages the list of the packages that contain this package
+   * @param name the name of this tree
+   * @param members the list of the members of this package
+   * @param pos the position of this tree
+   * @param symbol the symbol of this tree
+   */
   def mkPackageDef(containingPackages: List[Name],
     name: Name, members: List[Tree],
     pos: Option[Position] = None,
@@ -68,6 +91,17 @@ trait TreeFactories {
     res
   }
 
+  /**
+   * Creates a new tree to represent a class definition
+   *
+   * @param mods the modifiers of this class
+   * @param name the name of this class
+   * @param parents the list of the parents of this class
+   * @param body the body of this class
+   * @param pos the position of this tree
+   * @param symbol the symbol of this tree
+   * @param tpe the type of this tree
+   */
   def mkClassDef(mods: Flags, name: Name,
       parents: List[UseTree], body: TemplateApi,
       pos: Option[Position] = None,
@@ -83,7 +117,13 @@ trait TreeFactories {
     res
   }
 
-
+  /**
+   * Creates a new tree to represent the body of a class definition
+   *
+   * @param members the list of the members of this class-body
+   * @param pos the position of this tree
+   * @param owner the owner of this tree
+   */
   def mkTemplate(members: List[Tree],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): TemplateApi = {
@@ -93,7 +133,13 @@ trait TreeFactories {
     res
   }
 
-
+  /**
+   * Creates an instance of a `new` expression
+   *
+   * @param app the method application part of this expression
+   * @param pos the position of this tree
+   * @param owner the owner of this tree
+   */
   def mkNew(app: ApplyApi,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): NewApi = {
@@ -110,6 +156,15 @@ trait TreeFactories {
   }
 
 
+  /**
+   * Creates an instance of a member selection tree
+   *
+   * @param qual the tree that has been selected from
+   * @param tree the tree that has been selected
+   * @param pos the position of this tree
+   * @param symbol the symbol of this tree
+   * @param owner the owner of this tree
+   */
   def mkSelect(qual: Tree, tree: SimpleUseTree,
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None,
@@ -121,6 +176,14 @@ trait TreeFactories {
     res
   }
 
+  /**
+   * Creates an instance of a `this` expression
+   *
+   * @param pos the position of this tree
+   * @param enclosingClassSymbol the symbol of the class that enclosing `this`
+   *                             expression
+   * @param owner the owner of this tree
+   */
   def mkThis(pos: Option[Position] = None,
       enclosingClassSymbol: Option[Symbol] = None,
       owner: Option[Symbol] = None): ThisApi = {
@@ -134,6 +197,14 @@ trait TreeFactories {
     res
   }
 
+  /**
+   * Creates an instance of a `super` expression
+   *
+   * @param pos the position of this tree
+   * @param enclosingClassSymbol the symbol of the class that enclosing this
+   *                             `super` expression
+   * @param owner the owner of this tree
+   */
   def mkSuper(pos: Option[Position] = None,
       enclosingClassSymbol: Option[Symbol] = None,
       owner: Option[Symbol] = None): SuperApi = {
@@ -170,6 +241,7 @@ trait TreeFactories {
 
 
 
+  /** @see [[sana.brokenj.ast.TreeFactories.mkIdent]] */
   def mkIdent(name: Name,
             pos: Option[Position] = None,
             symbol: Option[Symbol] = None,
@@ -180,6 +252,7 @@ trait TreeFactories {
     res
   }
 
+  /** @see [[sana.brokenj.ast.TreeFactories.mkTypeUse]] */
   def mkTypeUse(name: Name,
             pos: Option[Position] = None,
             symbol: Option[Symbol] = None,
@@ -190,6 +263,18 @@ trait TreeFactories {
     res
   }
 
+  /**
+   * Creates a new tree to represent a method definition
+   *
+   * @param mods the modifiers of this method
+   * @param ret the type-tree of the return type of this method
+   * @param name the name of this method
+   * @param params the list of the parameters of this method
+   * @param body the body of this method
+   * @param pos the position of this tree
+   * @param symbol the symbol of this tree
+   * @param tpe the type of this tree
+   */
   def mkMethodDef(mods: Flags, ret: UseTree,
     name: Name, params: List[ValDefApi],
     body: Expr, pos: Option[Position] = None,
@@ -209,12 +294,14 @@ trait TreeFactories {
   // Delegating already working ones to brokenj.ast.TreeFactories
 
   // From calcj
+  /** @see [[sana.brokenj.ast.TreeFactories.mkCast]] */
   def mkCast(tpt: UseTree, expr: Expr,
            pos: Option[Position] = None): CastApi = {
     TF.mkCast(tpt, expr, pos)
   }
 
 
+  /** @see [[sana.brokenj.ast.TreeFactories.mkLiteral]] */
   def mkLiteral(constant: Constant,
               pos: Option[Position] = None,
               owner: Option[Symbol] = None): LiteralApi = {
@@ -222,6 +309,7 @@ trait TreeFactories {
   }
 
 
+  /** @see [[sana.brokenj.ast.TreeFactories.mkBinary]] */
   def mkBinary(lhs: Expr, op: BOp, rhs: Expr,
               pos: Option[Position] = None,
               tpe: Option[Type]     = None,
@@ -229,6 +317,7 @@ trait TreeFactories {
     TF.mkBinary(lhs, op, rhs, pos, tpe, owner)
   }
 
+  /** @see [[sana.brokenj.ast.TreeFactories.mkUnary]] */
   def mkUnary(isPostfix: Boolean, op: UOp, expr: Expr,
               pos: Option[Position] = None,
               tpe: Option[Type]     = None,
@@ -239,6 +328,7 @@ trait TreeFactories {
   // From primj
 
 
+  /** @see [[sana.brokenj.ast.TreeFactories.mkAssign]] */
   def mkAssign(lhs: Expr, rhs: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): AssignApi = {
@@ -246,6 +336,7 @@ trait TreeFactories {
   }
 
 
+  /** @see [[sana.brokenj.ast.TreeFactories.mkIf]] */
   def mkIf(cond: Expr, thenp: Expr, elsep: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): IfApi = {
@@ -253,24 +344,28 @@ trait TreeFactories {
   }
 
 
+  /** @see [[sana.brokenj.ast.TreeFactories.mkWhile]] */
   def mkWhile(isDoWhile: Boolean, cond: Expr, body: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): WhileApi = {
     TF.mkWhile(isDoWhile, cond, body, pos, owner)
   }
 
+  /** @see [[sana.brokenj.ast.TreeFactories.mkFor]] */
   def mkFor(inits: List[Tree], cond: Expr, steps: List[Expr],
     body: Expr, pos: Option[Position] = None,
     symbol: Option[Symbol] = None): ForApi = {
     TF.mkFor(inits, cond, steps, body, pos, symbol)
   }
 
+  /** @see [[sana.brokenj.ast.TreeFactories.mkBlock]] */
   def mkBlock(stmts: List[Tree],
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None): BlockApi = {
     TF.mkBlock(stmts, pos, symbol)
   }
 
+  /** @see [[sana.brokenj.ast.TreeFactories.mkTernary]] */
   def mkTernary(cond: Expr, thenp: Expr, elsep: Expr,
     pos: Option[Position] = None,
     tpe: Option[Type]     = None,
@@ -279,12 +374,14 @@ trait TreeFactories {
   }
 
 
+  /** @see [[sana.brokenj.ast.TreeFactories.mkApply]] */
   def mkApply(fun: Expr, args: List[Expr],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): ApplyApi = {
     TF.mkApply(fun, args, pos, owner)
   }
 
+  /** @see [[sana.brokenj.ast.TreeFactories.mkReturn]] */
   def mkReturn(expr: Option[Expr],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): ReturnApi = {
@@ -293,6 +390,7 @@ trait TreeFactories {
 
 
 
+  /** @see [[sana.brokenj.ast.TreeFactories.mkValDef]] */
   def mkValDef(mods: Flags, tpt: UseTree, name: Name,
     rhs: Expr, pos: Option[Position] = None,
     symbol: Option[Symbol] = None): ValDefApi = {
@@ -301,30 +399,35 @@ trait TreeFactories {
   }
 
   // brokenj
+  /** @see [[sana.brokenj.ast.TreeFactories.mkLabel]] */
   def mkLabel(name: Name, stmt: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): LabelApi = {
     TF.mkLabel(name, stmt, pos, owner)
   }
 
+  /** @see [[sana.brokenj.ast.TreeFactories.mkBreak]] */
   def mkBreak(label: Option[Name],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): BreakApi = {
     TF.mkBreak(label, pos, owner)
   }
 
+  /** @see [[sana.brokenj.ast.TreeFactories.mkContinue]] */
   def mkContinue(label: Option[Name],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): ContinueApi = {
     TF.mkContinue(label, pos, owner)
   }
 
+  /** @see [[sana.brokenj.ast.TreeFactories.mkCase]] */
   def mkCase(guards: List[Expr], body: Tree,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): CaseApi = {
     TF.mkCase(guards, body, pos, owner)
   }
 
+  /** @see [[sana.brokenj.ast.TreeFactories.mkSwitch]] */
   def mkSwitch(expr: Expr, cases: List[CaseApi],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): SwitchApi = {

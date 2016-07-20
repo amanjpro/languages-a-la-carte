@@ -48,48 +48,112 @@ import scala.collection.mutable
 import tiny.dsl._
 import tiny.core._
 
+import scala.annotation.tailrec
 
+/**
+ * An environment for constructor checking
+ * @constructor creates a new environment
+ *
+ * @param constructorGraph the call graph of the constructors (decencies
+ *                         between the different constructors).
+ */
 class ConstructorCheckerEnv (private val constructorGraph:
         mutable.Map[Symbol, Symbol] = mutable.Map.empty) {
 
+  /** The list of all uninitialized final fields */
   private var uninitializedFinalFields: List[Symbol]              = Nil
+
+  /** The list of all the final fields that have a default initialization */
   private var defaultInitFinalFields: List[Symbol]                = Nil
 
 
 
+  /** Returns all uninitialized final fields */
   def getAllUninitializedFields: List[Symbol] = {
     uninitializedFinalFields.diff(defaultInitFinalFields)
   }
 
 
 
+  /**
+   * Checks if a symbol is for a field that has a default initialization
+   *
+   * @param sym the symbol to be checked
+   */
   def hasDefaultInit(sym: Symbol): Boolean =
     defaultInitFinalFields.contains(sym)
 
+  /**
+   * Adds a new final field that has a default initialization
+   *
+   * @param sym the symbol of the field to be added
+   */
   def addDefaultInitFinalField(sym: Symbol): Unit =
     defaultInitFinalFields = sym::defaultInitFinalFields
+
+  /**
+   * Removes the given final field that has a default initialization from
+   * the list of final fields with default-initialization
+   *
+   * @param sym the symbol of the field to be removed
+   */
   def removeDefaultInitFinalField(sym: Symbol): Unit =
     defaultInitFinalFields = defaultInitFinalFields.filter(_ != sym)
 
 
+  /**
+   * Checks if a final field is already initialized
+   *
+   * @param sym the symbol of the final field
+   */
   def isInitialized(sym: Symbol): Boolean = {
     !uninitializedFinalFields.contains(sym)
   }
 
+  /** Marks all the final fields initialized */
   def initializeAllFields(): Unit = uninitializedFinalFields = Nil
 
+  /**
+   * Initializes a final field
+   *
+   * @param sym the symbol of the final field to be initialized
+   */
   def initializeField(sym: Symbol): Unit =
     removeUninitializedFinalField(sym)
 
+  /**
+   * Marks a field as uninitialized
+   *
+   * @param sym the symbol of the final field to be marked
+   */
   def addUninitializedFinalField(sym: Symbol): Unit =
     uninitializedFinalFields = sym::uninitializedFinalFields
+
+  /**
+   * Unmarks a field as uninitialized
+   *
+   * @param sym the symbol of the final field to be unmarked
+   */
   def removeUninitializedFinalField(sym: Symbol): Unit =
     uninitializedFinalFields = uninitializedFinalFields.filter(_ != sym)
 
+  /**
+   * Adds an edge between two constructors. This method is called whenever a
+   * constructor explicitly invokes another constructor
+   *
+   * @param source the symbol of the constructor that calls the other
+   *               constructor
+   * @param dest the symbol of the constructor that is called
+   */
   def connectConstructor(source: Symbol, dest: Symbol): Unit = {
     constructorGraph += (source -> dest)
   }
 
+  /**
+   * Checks if a constructor has a cyclic dependency
+   *
+   * @param source the symbol of the constructor to be used
+   */
   def isCyclic(source: Symbol): Boolean = {
     val r = constructorGraph.get(source).map { dest =>
       isThereABackLink(source, dest, Nil)
@@ -97,6 +161,14 @@ class ConstructorCheckerEnv (private val constructorGraph:
     r.getOrElse(false)
   }
 
+  /**
+   * Checks if two constructors call each other, either directly
+   * or indirectly
+   *
+   * @param source the first constructor
+   * @param dest the second constructor
+   * @param seen list of all classes that can be reached from `source`
+   */
   private def isThereABackLink(source: Symbol, dest: Symbol,
                    seen: List[Symbol] = Nil): Boolean = {
     constructorGraph.get(dest) match {
@@ -114,6 +186,7 @@ class ConstructorCheckerEnv (private val constructorGraph:
   }
 
 
+  /** Returns a copy of this environment */
   def duplicate: ConstructorCheckerEnv = {
     val temp = new ConstructorCheckerEnv(this.constructorGraph)
     temp.uninitializedFinalFields = this.uninitializedFinalFields
@@ -122,6 +195,15 @@ class ConstructorCheckerEnv (private val constructorGraph:
   }
 }
 
+/**
+ * This phase checks the correctness of constructors, by:
+ * <li> Makes sure that all final fields are initialized after all constructors
+ * <li> Makes sure that constructs do not have a circular dependency on each
+ *      other
+ * <li> Makes sure that no field is used before the explicit constructor
+ *      invocation
+ * <li> Makes sure that final fields are not initialized twice.
+ */
 trait ConstructorsCheckerComponent
   extends CheckerComponent[(Tree, ConstructorCheckerEnv)] {
   def check: ((Tree, ConstructorCheckerEnv)) => Unit
@@ -171,6 +253,13 @@ trait TemplateConstructorsCheckerComponent extends
     checkCyclicConstructors(template.members, env)
   }
 
+  /**
+   * Collects all the fields in of a class, and adds them to the given
+   * environment
+   *
+   * @param members the members of the class
+   * @param env the environment of the class
+   */
   protected def collectFields(members: List[Tree],
           env: ConstructorCheckerEnv): Unit = {
     members.foreach { member =>
@@ -187,6 +276,12 @@ trait TemplateConstructorsCheckerComponent extends
     }
   }
 
+  /**
+   * Checks all the static initializers of a class
+   *
+   * @param members the members of the class
+   * @param env the environment of the class
+   */
   protected def collectInits(members: List[Tree],
           env: ConstructorCheckerEnv): Unit = {
     members.foreach { member =>
@@ -199,6 +294,13 @@ trait TemplateConstructorsCheckerComponent extends
     }
   }
 
+  /**
+   * Checks all the constructors of a class, and draws their dependency
+   * diagram in the environment.
+   *
+   * @param members the members of the class
+   * @param env the environment of the class
+   */
   protected def collectConstructors(members: List[Tree],
           env: ConstructorCheckerEnv): Unit = {
     members.foreach { member =>
@@ -211,6 +313,13 @@ trait TemplateConstructorsCheckerComponent extends
     }
   }
 
+  /**
+   * Checks if there is a cyclic dependency between any two constructors
+   * of a class
+   *
+   * @param members the members of the class
+   * @param env the environment of the class
+   */
   protected def checkCyclicConstructors(members: List[Tree],
           env: ConstructorCheckerEnv): Unit = {
     members.foreach { member =>
@@ -271,6 +380,20 @@ trait MethodDefConstructorsCheckerComponent extends
   }
 
 
+  /**
+   * This method performs two actions, first draws an edge between the
+   * constructors represented by `sym`, and the one represented by
+   * `explicitConstructor` if `invokesThis` is true. Then Checks if
+   * in the `stmts` a re-assignment to a final field is done.
+   *
+   * @param sym the symbol of the constructor that explicitly calls
+   *            another constructor
+   * @param explicitConstructor the symbol of the constructor that has
+   *            been invoked explicitly
+   * @param invokesThis true if the invocation is via `this` not `super`
+   * @param env the current environment
+   * @param stmts the statements of the body of the callee constructor
+   */
   protected def checkBody(sym: Option[Symbol],
                           explicitConstructor: Option[Symbol],
                           invokesThis: Boolean,
@@ -315,6 +438,7 @@ trait AssignConstructorsCheckerComponent extends
     }
   }
 
+  /** @see [[SymbolUtils.enclosingNonLocal]] */
   protected def enclosingNonLocal(owner: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingNonLocal(owner)
 }

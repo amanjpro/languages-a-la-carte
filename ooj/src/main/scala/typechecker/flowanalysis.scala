@@ -57,29 +57,56 @@ import tiny.dsl._
 import tiny.core._
 
 
+/**
+ * A trait to indicate if an execution is in the false branch of a boolean
+ * expression, or in the true branch.
+ */
 sealed trait TrackCase
 case object TrueCase extends TrackCase
 case object FalseCase extends TrackCase
 
+/**
+ * An environment used for reachability and definitive assignment analysis
+ */
 class FlowEnv {
+  /** The set of symbols that are initialized in `true` case */
   private var trueCaseSymbols: Set[Symbol]   = Set.empty
+  /** The set of symbols that are initialized in `false` case */
   private var falseCaseSymbols: Set[Symbol]  = Set.empty
 
+  /** Empty both tracks */
   def emptyTracks(): Unit = {
     this.falseCaseSymbols = Set.empty
     this.trueCaseSymbols  = Set.empty
   }
 
+  /**
+   * Add a symbol to both tracks
+   *
+   * @param sym the symbol to be added
+   */
   def add(sym: Symbol): Unit = {
     trueCaseSymbols = trueCaseSymbols + sym
     falseCaseSymbols = falseCaseSymbols + sym
   }
 
 
+  /**
+   * Check if a symbol is definitely assigned
+   *
+   * @param sym the symbol to be checked
+   */
   def isDefinitelyAssigned(sym: Symbol): Boolean = {
     trueCaseSymbols.exists(_ == sym) || falseCaseSymbols.exists(_ == sym)
   }
 
+  /**
+   * Add a track from an environment to the same track of this environment.
+   * By track we mean false and true branches.
+   *
+   * @param env the environment to be added
+   * @param lane the branch to be added
+   */
   def batchAdd(env: FlowEnv,
         lane: TrackCase): Unit = lane match {
     case TrueCase               =>
@@ -88,6 +115,12 @@ class FlowEnv {
       falseCaseSymbols  = falseCaseSymbols.union(env.falseCaseSymbols)
   }
 
+  /**
+   * Merges two environments to this one.
+   *
+   * @param env1 the first environment
+   * @param env2 the second environment
+   */
   def mergeIn(env1: FlowEnv,
               env2: FlowEnv): Unit = {
 
@@ -100,14 +133,33 @@ class FlowEnv {
     batchAdd(temp, FalseCase)
   }
 
+  /**
+   * Performs union operation between an environment and this one
+   *
+   * @param env the environment to be merged with this
+   */
   def union(env: FlowEnv): Unit = {
     trueCaseSymbols  = this.trueCaseSymbols.union(env.trueCaseSymbols)
     falseCaseSymbols = this.falseCaseSymbols.union(env.falseCaseSymbols)
   }
+
+  /**
+   * Unify an environment and this one. The difference between this and
+   * [[union]] is that, this method performs intersection between the
+   * lanes of this environment and the passed environment.
+   *
+   * @param env the environment to be unified with this one
+   */
   def unify(env: FlowEnv): Unit = {
     trueCaseSymbols  = this.trueCaseSymbols.intersect(env.trueCaseSymbols)
     falseCaseSymbols = this.falseCaseSymbols.intersect(env.falseCaseSymbols)
   }
+
+  /**
+   * Removes all the definitions in a branch (lane).
+   *
+   * @param lane the branch to be wiped
+   */
   def mask(lane: TrackCase): Unit = lane match {
     case TrueCase                  =>
       this.trueCaseSymbols = Set.empty
@@ -116,6 +168,12 @@ class FlowEnv {
   }
 
 
+  /**
+   * Returns an environment which contains all the definitions of this
+   * environment that is in the given branch.
+   *
+   * @param lane the branch to include
+   */
   def getTrack(lane: TrackCase): FlowEnv = lane match {
     case TrueCase                  =>
       val temp = duplicate
@@ -128,16 +186,19 @@ class FlowEnv {
   }
 
 
+  /** Performs union on the two branches of environment */
   def unionTracks(): Unit = {
     trueCaseSymbols  = trueCaseSymbols.union(falseCaseSymbols)
     falseCaseSymbols = trueCaseSymbols
   }
 
+  /** Performs intersection on the two branches of environment */
   def intersectTracks(): Unit = {
     trueCaseSymbols  = trueCaseSymbols.intersect(falseCaseSymbols)
     falseCaseSymbols = trueCaseSymbols
   }
 
+  /** Returns a duplicated copy of this environment */
   def duplicate: FlowEnv = {
     val temp = new FlowEnv
     temp.trueCaseSymbols   = this.trueCaseSymbols

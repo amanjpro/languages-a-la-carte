@@ -36,8 +36,10 @@ import sana.tiny.ast.IdentApi
 
 trait AugmentedIdent {
 
+  /** The tree to be augmented */
   def tree: IdentApi
 
+  /** Returns true if [[AugmentedIdent.tree]] points to a method */
   def isMethodIdent: Boolean =
     tree.attributes.get('isMethod).map(_.asInstanceOf[Boolean]).getOrElse(false)
 
@@ -45,12 +47,17 @@ trait AugmentedIdent {
     tree.attributes = tree.attributes + ('isMethod -> flag)
 
 
+  /**
+   * Returns the types of the arguments of the method that is pointed by
+   * [[AugmentedIdent.tree]]
+   */
   def argumentTypes: Option[List[Type]] =
     tree.attributes.get('argumentTypes).map(_.asInstanceOf[List[Type]])
 
   def argumentTypes_=(argTypes: List[Type]): Unit =
     tree.attributes = tree.attributes + ('argumentTypes -> argTypes)
 
+  /** Returns true if [[AugmentedIdent.tree]] points to a constructor */
   def isConstructorIdent: Boolean =
     tree.attributes.get('isConstructorIdent)
       .map(_.asInstanceOf[Boolean]).getOrElse(false)
@@ -59,6 +66,10 @@ trait AugmentedIdent {
     tree.attributes = tree.attributes + ('isConstructorIdent -> flag)
 
 
+  /**
+   * Returns true if [[AugmentedIdent.tree]] points to an explicit constructor
+   * invocation
+   */
   def isExplicitConstructorInvocation: Boolean =
     tree.attributes.get('isExplicitConstructorInvocation)
       .map(_.asInstanceOf[Boolean]).getOrElse(false)

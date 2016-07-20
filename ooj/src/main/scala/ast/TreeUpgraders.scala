@@ -36,7 +36,20 @@ import tiny.modifiers.Ops._
 import primj.ast.{MethodDefApi => PMethodDefApi}
 import ooj.ast.{MethodDefApi => OMethodDefApi}
 
+/**
+ * A trait to upgrade a tree from an old version to its upgraded version.
+ * A tree is upgraded when it is extended to add new features to it, for
+ * example {{{MethodDefApi}}} in `primj` didn't have modifiers, but in
+ * `ooj` we added modifiers to it. Which means we upgraded (extended) it
+ * to add modifiers to it.
+ */
 trait TreeUpgraders {
+  /**
+   * Upgrades an instance of [[primj.ast.MethodDefApi]] to
+   * [[ooj.ast.MethodDefApi]]
+   *
+   * @param mthd the tree to be upgraded
+   */
   def upgradeMethodDef(mthd: PMethodDefApi): OMethodDefApi = mthd match {
     case mthd: OMethodDefApi             => mthd
     case _                               =>

@@ -33,30 +33,62 @@ import sana.tiny.symbols.Symbol
 import sana.tiny.ast.Expr
 import sana.calcj.ast.LiteralApi
 
+/** A representation of compile time values */
 trait Value
+/** An expression value (non-constant expression) */
 case class ExprValue(value: Expr) extends Value
+/** A literal (constant) value (constant expression) */
 case class LiteralValue(value: LiteralApi) extends Value
 
+/** This environment is used for constant folding */
 trait Env {
+  /** A map between symbols to their values */
   protected val bindings: Map[Symbol, Value]
 
+  /**
+   * Binds a symbol to a value
+   *
+   * @param symbol the symbol to bound
+   * @param value the value of the symbol
+   */
   def bind(symbol: Symbol, value: Value): Env = {
     val newBindings = bindings + (symbol -> value)
     create(newBindings)
   }
 
 
+  /**
+   * Checks if a symbol is already bound in the current environment
+   *
+   * @param symbol the symbol to be checked
+   */
   protected def defines(symbol: Symbol): Boolean =
     bindings.contains(symbol)
 
+  /**
+   * Returns the bound value of a symbol
+   *
+   * @param symbol the symbol to return its bound value
+   */
   def getValue(symbol: Symbol): Option[Value] =
     bindings.get(symbol)
 
+
+  /**
+   * Unbinds a symbol to a value
+   *
+   * @param symbol the symbol to unbound
+   */
   def unbind(symbol: Symbol): Env = {
     val newBindings = bindings - symbol
     create(newBindings)
   }
 
+  /**
+   * Creates a new instance of environment
+   *
+   * @param bindings the initial bindings of the new environment
+   */
   protected def create(bindings: Map[Symbol, Value]): Env
 
 
@@ -82,6 +114,7 @@ object Env {
   def apply(bindings: Map[Symbol, Value]): Env =
     new EnvImpl(bindings)
 
+  /** Returns an empty environment */
   def emptyEnv: Env =
     apply(Map.empty)
 }

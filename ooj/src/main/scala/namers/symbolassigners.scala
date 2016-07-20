@@ -84,6 +84,15 @@ trait ProgramSymbolAssignerComponent extends SymbolAssignerComponent {
 
 @component
 trait CompilationUnitSymbolAssignerComponent extends SymbolAssignerComponent {
+  /**
+   * The owner relationship between compilation unit and package definition is
+   * quite funny. Even though, technically a compilation unit contains a
+   * package definition, but the symbol of a compilation unit is actually
+   * owned by the symbol of the package it contains. This is useful to
+   * support open packages (in Java you can attach more classes to a package
+   * by simply adding yet another compilation unit that defines new classes
+   * and contains the package we want to add classes to.
+   */
   (cunit: CompilationUnitApi) => {
     // val owner   = cunit.owner
     // val sym     = CompilationUnitSymbol(None, cunit.sourceName,
@@ -117,6 +126,15 @@ trait CompilationUnitSymbolAssignerComponent extends SymbolAssignerComponent {
 
 @component
 trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
+  /**
+   * The owner relationship between compilation unit and package definition is
+   * quite funny. Even though, technically a compilation unit contains a
+   * package definition, but the symbol of a compilation unit is actually
+   * owned by the symbol of the package it contains. This is useful to
+   * support open packages (in Java you can attach more classes to a package
+   * by simply adding yet another compilation unit that defines new classes
+   * and contains the package we want to add classes to.
+   */
   (pkg: PackageDefApi) => {
     val owner = pkg.owner
     val sym     = createSymbol(pkg.containingPackages,
@@ -138,6 +156,18 @@ trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
   }
 
 
+  /**
+   * Creates a symbol for this package.
+   *
+   * @param names the fully qualified name of this package, the outer
+   *              this package (excluding the name of this package itself).
+   * @param name  the unqualified name of this package.  If the fully qualified
+   *              name is: `pkg1.pkg2.pkg3.thisPkg` then this `names` list will
+   *              be: List(pkg1, pkg2, pkg3) and `name` will be: thisPkg
+   * @param owner the owner of this package (usually the package that contains
+   *              this package, if none was found then the symbol of the
+   *              program.
+   */
   protected def createSymbol(names: List[Name], name: Name,
     owner: Option[Symbol]): Symbol = {
     names match {
@@ -158,6 +188,7 @@ trait PackageDefSymbolAssignerComponent extends SymbolAssignerComponent {
     }
   }
 
+  /** Return the symbol of the program */
   protected def programSymbol: Symbol = ProgramSymbol
 }
 
@@ -183,6 +214,14 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
   }
 
 
+  /**
+   * Creates a symbol for the class that we are assigning a symbol to it.
+   * If the class is owned by a compilation unit, and it is a public class
+   * then we shall add it to its containing package too.
+   *
+   * @param clazz the class to create a symbol for
+   * @param owner the owner of the class
+   */
   protected def createClassSymbol(clazz: ClassDefApi,
     owner: Option[Symbol]): ClassSymbol = owner match {
       case Some(cunit: CompilationUnitSymbol)                             =>
@@ -194,6 +233,13 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
         ClassSymbol(clazz.mods, clazz.name, Nil, owner, None)
     }
 
+  /**
+   * Checks if the name of a class is not unique in its context.
+   *
+   * @param owner the owner of the class
+   * @param name the name of the class
+   * @param pos the position of the class in the source file
+   */
   protected def classDoubleDefCheck(owner: Option[Symbol],
     name: Name, pos: Option[Position]): Unit = owner match {
     case Some(owner) if owner.directlyDefinesName(name,
@@ -204,6 +250,13 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
       ()
   }
 
+  /**
+   * In case there is no constructor defined in a class, add the default
+   * constructor to it as per Java.
+   *
+   * @param clazz the class that we want to possibly add a constructor to.
+   * @param sym the symbol of the class
+   */
   protected def addDefaultConstructor(clazz: ClassDefApi, sym: ClassSymbol ): TemplateApi = {
       val shouldCreateConstructor =
         !(clazz.body.members.exists(isConstructor(_))) &&
@@ -238,16 +291,26 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
       }
     }
 
+  /** Returns the name of the constructor */
   protected def constructorName: Name       = StdNames.CONSTRUCTOR_NAME
+  /** Returns the symbol of void */
   protected def voidSymbol: Option[Symbol]  = Some(VoidSymbol)
 
+  /** @see [[TreeUtils.isConstructor]] */
   protected def isConstructor(tree: Tree): Boolean =
     TreeUtils.isConstructor(tree)
+  /** @see [[SymbolUtils.enclosingPackage]] */
   protected def enclosingPackage(sym: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingPackage(sym)
 
+  /** @see [[SymbolUtils.langPackageSymbol]] */
   protected def langPackageSymbol: Symbol = SymbolUtils.langPackageSymbol
 
+  /**
+   * Checks if a symbol is for {{{java.lang.Object}}}
+   *
+   * @param sym the symbol to be checked
+   */
   protected def isObjectClass(sym: Symbol): Boolean = {
     sym.name == StdNames.OBJECT_TYPE_NAME &&
         enclosingPackage(sym.owner) == Some(langPackageSymbol)
@@ -318,6 +381,7 @@ trait ThisSymbolAssignerComponent extends SymbolAssignerComponent {
     ths
   }
 
+  /** @see [[SymbolUtils.enclosingClass]] */
   def enclosingClass(owner: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingClass(owner)
 }
@@ -404,10 +468,21 @@ trait MethodDefSymbolAssignerComponent
     }
   }
 
+  /**
+   * Creates a symbol for the method that we are assigning symbol to it.
+   *
+   * @param mthd the method that we assign symbol to it
+   * @param owner the owner of the method
+   */
   protected def createMethodSymbol(mthd: MethodDefApi,
     owner: Option[Symbol]): MethodSymbol =
     MethodSymbol(mthd.mods, mthd.name, None, Nil, None, owner)
 
+  /**
+   * Creates a tree to represent an explicit constructor invocation
+   *
+   * @param pos the position of the constructor invocation
+   */
   protected def constructorCall(pos: Option[Position]): Expr = {
     val id = TreeFactories.mkIdent(constructorName, pos)
     id.isConstructorIdent = true
@@ -418,12 +493,22 @@ trait MethodDefSymbolAssignerComponent
   }
 
 
+  /**
+   * Checks if a symbol is for {{{java.lang.Object}}}
+   *
+   * @param sym the symbol to be checked
+   */
   protected def isObjectClass(owner: Option[Symbol]): Boolean = {
     val res = owner.map(sym => sym.name == StdNames.OBJECT_TYPE_NAME &&
               enclosingPackage(sym.owner) == Some(langPackageSymbol) )
     res.getOrElse(false)
   }
 
+  /**
+   * Return the name of a {{{UseTree}}}
+   *
+   * @param use the UseTree that we want its name
+   */
   protected def useName(use: UseTree): Name = use match {
     case id: IdentApi      => id.name
     case tuse: TypeUseApi  => tuse.name
@@ -432,7 +517,9 @@ trait MethodDefSymbolAssignerComponent
 
   protected def voidName: Name              = StdNames.VOID_TYPE_NAME
   protected val constructorName: Name       = StdNames.CONSTRUCTOR_NAME
+  /** @see [[SymbolUtils.langPackageSymbol]] */
   protected val langPackageSymbol: Symbol   = SymbolUtils.langPackageSymbol
+  /** @see [[SymbolUtils.enclosingPackage]] */
   protected def enclosingPackage(sym: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingPackage(sym)
 }
@@ -459,6 +546,7 @@ trait ValDefSymbolAssignerComponent
     }
   }
 
+  /** @see [[SymbolUtils.enclosingClass]] */
   protected def enclosingClass(symbol: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingClass(symbol)
 }

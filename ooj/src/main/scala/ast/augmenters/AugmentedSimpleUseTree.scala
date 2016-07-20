@@ -36,12 +36,32 @@ import sana.tiny.symbols.Symbol
 trait AugmentedSimpleUseTree
   extends sana.primj.ast.augmenters.AugmentedSimpleUseTree {
 
+  /**
+   * Returns the enclosing symbol of [[AugmentedSimpleUseTree.tree]].
+   * SimpleUseTrees can have owner that are not enclosing them, for example
+   * the owner of `id` in the expression `this.id` in the following example is
+   * class `A`, but it is enclosed by method `m`.
+   *
+   * {{{
+   * class A {
+   *   int id = 1;
+   *   void m() {
+   *     this.id = 0;
+   *   }
+   * }
+   * }}}
+   */
   def enclosing: Option[Symbol] =
     tree.attributes.get('enclosing).map(_.asInstanceOf[Symbol])
 
   def enclosing_=(enclosing: Symbol): Unit =
     tree.attributes = tree.attributes + ('enclosing -> enclosing)
 
+  /**
+   * Returns true if [[AugmentedSimpleUseTree.tree]] is expected to be a static
+   * tree. A tree is expected to be static if it is a part of a `SelectApi`,
+   * and the `qual` part of the `SelectApi` points is a `TypeUseApi`.
+   */
   def shouldBeStatic: Boolean =
     tree.attributes.get('shouldBeStatic)
       .map(_.asInstanceOf[Boolean]).getOrElse(false)
@@ -50,6 +70,10 @@ trait AugmentedSimpleUseTree
     tree.attributes = tree.attributes + ('shouldBeStatic -> shouldBeStatic)
 
 
+  /**
+   * Returns true if [[AugmentedSimpleUseTree.tree]] is part of a select
+   * expression
+   */
   def isQualified: Boolean =
     tree.attributes.get('isQualified)
       .map(_.asInstanceOf[Boolean]).getOrElse(false)

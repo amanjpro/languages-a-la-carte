@@ -180,6 +180,16 @@ trait ValDefConstantFoldingComponent
     }
   }
 
+  /**
+   * Constant-folds the right-hand side of a variable definition
+   *
+   * @param valdef the variable to constant-fold its right-hand side
+   * @param expr The expression to constant-fold (the type-checked right-hand
+   *             side of `valdef`
+   * @param env the current enviroment
+   * @param sym the symbol of the `valdef`
+   * @param tpe the type of the `valdef`, after type-checking
+   */
   protected def foldRhs(valdef: ValDefApi,
         expr: Expr, env: Env, sym: Symbol,
         tpe: Option[Type]): (ValDefApi, Env) = {
@@ -201,6 +211,12 @@ trait ValDefConstantFoldingComponent
     }
   }
 
+  /**
+   * Widens or narrows a literal, from a primitive type to another
+   *
+   * @param lit the original literal value
+   * @param tpe the type we want to convert `lit` to
+   */
   protected def updateLiteral(lit: LiteralApi, tpe: Type): LiteralApi = {
     if(isNarrawableTo(lit, tpe)) {
       narrowDown(lit, tpe)
@@ -211,14 +227,24 @@ trait ValDefConstantFoldingComponent
     }
   }
 
+  /**
+   * Replace the right-hand side of a variable with another expression
+   *
+   * @param valdef the variable we want to update its right-hand side
+   *               expression
+   * @param rhs the new right-hand side expression
+   */
   protected def updateRhs(valdef: ValDefApi, rhs: Expr): ValDefApi = {
     TreeCopiers.copyValDef(valdef)(rhs = rhs)
   }
 
+  /** @see [[TreeUtils.narrowDown]] */
   protected def narrowDown(lit: LiteralApi, tpe: Type): LiteralApi =
     TreeUtils.narrowDown(lit, tpe)
+  /** @see [[TreeUtils.widen]] */
   protected def widen(lit: LiteralApi, tpe: Type): LiteralApi =
     TreeUtils.widen(lit, tpe)
+  /** @see [[TypePromotions.narrowDown]] */
   protected def isNarrawableTo(e: Tree, t: Type): Boolean =
     TypePromotions.isNarrawableTo(e, t)
 
@@ -312,17 +338,34 @@ trait SelectConstantFoldingComponent
     } else (slct, env)
   }
 
+  /** @see [[TreeUtils.isConstantLiteral]] */
   protected def isConstantLiteral(tree: Tree): Boolean =
     TreeUtils.isConstantLiteral(tree)
 
+  /**
+   * Checks if a symbol is for a package
+   *
+   * @param sym the symbol to be checked
+   */
   protected def isPackageSymbol(sym: Option[Symbol]): Boolean =
     sym.map(_.isInstanceOf[PackageSymbol]).getOrElse(false)
 
+  /**
+   * Checks if a symbol is for {{{java.lang.String}}}
+   *
+   * @param sym the symbol to be checked
+   */
   protected val stringClassType: Type = TypeUtils.stringClassType
 
+  /** @see [[SymbolUtils.isTypeSymbol]] */
   def isTypeSymbol(sym: Option[Symbol]): Boolean =
     SymbolUtils.isTypeSymbol(sym)
 
+  /**
+   * Checks if a symbol is for a static-final field
+   *
+   * @param sym the symbol to be checked
+   */
   def isStaticFinal(sym: Option[Symbol]): Boolean = sym.map { s =>
     s.mods.isStatic && s.mods.isFinal
   }.getOrElse(false)
@@ -335,9 +378,11 @@ trait TypeUseConstantFoldingComponent
     (nameTypeUse(tuse), env)
   }
 
+  /** Uses [[TypeUseNamer.nameTypeUse]] to name instance of TypeUseApi */
   protected def nameTypeUse(tuse: TypeUseApi): UseTree =
     typeUseNamer.nameTypeUse(tuse)
 
+  /** An instance of TypeUseNamer for naming TypeUseApi instances */
   private[this] val typeUseNamer = new ooj.typechecker.TypeUseNamer {}
 
 }
@@ -375,12 +420,23 @@ trait IdentConstantFoldingComponent
     }
   }
 
+  /**
+   * Names an identifier
+   *
+   * @param id the identifier to be named
+   */
   protected def nameIdent(id: IdentApi): UseTree =
     identNamer.nameIdent(id)
 
+  /**
+   * Type-checks and names an identifier
+   *
+   * @param id the identifier to be named and type-checked
+   */
   protected def typeAndNameIdent(id: IdentApi): UseTree =
     identNamer.nameIdent(id, false)
 
+  /** An instance to help naming identifiers */
   private[this] val identNamer =
     new ooj.namers.IdentNamer with ooj.typechecker.IdentNamer {}
 
@@ -661,26 +717,50 @@ trait BinaryConstantFoldingComponent
     }
   }
 
+  /**
+   * Converts a value to integer
+   *
+   * @param value the value to be converted
+   */
   protected def toInt(value: Any): Int = value match {
     case ch: Char            => ch.toInt
     case _                   => value.toString.toInt
   }
 
+  /**
+   * Converts a value to float
+   *
+   * @param value the value to be converted
+   */
   protected def toFloat(value: Any): Float = value match {
     case ch: Char            => ch.toFloat
     case _                   => value.toString.toFloat
   }
 
+  /**
+   * Converts a value to long
+   *
+   * @param value the value to be converted
+   */
   protected def toLong(value: Any): Long = value match {
     case ch: Char            => ch.toLong
     case _                   => value.toString.toLong
   }
 
+  /**
+   * Converts a value to double
+   *
+   * @param value the value to be converted
+   */
   protected def toDouble(value: Any): Double = value match {
     case ch: Char            => ch.toDouble
     case _                   => value.toString.toDouble
   }
 
+  /**
+   * Converts a binary operation to its equivalent Int operation
+   * @param the operator to be converted
+   */
   protected def bop2BinaryInt(op: BOp): (Int, Int) => Int = op match {
     case Add     => _ + _
     case Sub     => _ - _
@@ -689,6 +769,11 @@ trait BinaryConstantFoldingComponent
     case Mod     => _ % _
   }
 
+  /**
+   * Converts a binary operation to its equivalent Long operation
+   *
+   * @param the operator to be converted
+   */
   protected def bop2BinaryLong(op: BOp): (Long, Long) => Long = op match {
     case Add     => _ + _
     case Sub     => _ - _
@@ -697,6 +782,11 @@ trait BinaryConstantFoldingComponent
     case Mod     => _ % _
   }
 
+  /**
+   * Converts a binary operation to its equivalent Float operation
+   *
+   * @param the operator to be converted
+   */
   protected def bop2BinaryFloat(op: BOp): (Float, Float) => Float = op match {
     case Add     => _ + _
     case Sub     => _ - _
@@ -705,6 +795,11 @@ trait BinaryConstantFoldingComponent
     case Mod     => _ % _
   }
 
+  /**
+   * Converts a binary operation to its equivalent Double operation
+   *
+   * @param the operator to be converted
+   */
   protected def bop2BinaryDouble(op: BOp
         ): (Double, Double) => Double = op match {
     case Add     => _ + _
@@ -714,6 +809,7 @@ trait BinaryConstantFoldingComponent
     case Mod     => _ % _
   }
 
+  /** @see [[TypeUtils.stringClassType]] */
   protected val stringClassType: Type = TypeUtils.stringClassType
 }
 
@@ -770,21 +866,41 @@ trait UnaryConstantFoldingComponent
   }
 
 
+  /**
+   * Converts a value to Int
+   *
+   * @param value the value to be converted
+   */
   protected def toInt(value: Any): Int = value match {
     case ch: Char            => ch.toInt
     case _                   => value.toString.toInt
   }
 
+  /**
+   * Converts a value to Float
+   *
+   * @param value the value to be converted
+   */
   protected def toFloat(value: Any): Float = value match {
     case ch: Char            => ch.toFloat
     case _                   => value.toString.toFloat
   }
 
+  /**
+   * Converts a value to Long
+   *
+   * @param value the value to be converted
+   */
   protected def toLong(value: Any): Long = value match {
     case ch: Char            => ch.toLong
     case _                   => value.toString.toLong
   }
 
+  /**
+   * Converts a value to Double
+   *
+   * @param value the value to be converted
+   */
   protected def toDouble(value: Any): Double = value match {
     case ch: Char            => ch.toDouble
     case _                   => value.toString.toDouble
@@ -821,9 +937,11 @@ trait TernaryConstantFoldingComponent
     (res, env3)
   }
 
+  /** @see [[TreeUtils.isConstantLiteral]] */
   protected def isConstantLiteral(tree: Tree): Boolean =
     TreeUtils.isConstantLiteral(tree)
 
+  /** @see [[TypeUtils.unifyTernaryBranches]] */
   protected def unifyTernaryBranches(lhs: Expr, rhs: Expr): Option[Type] =
     TypeUtils.unifyTernaryBranches(lhs, rhs)
 }
@@ -862,11 +980,18 @@ trait CastConstantFoldingComponent
     (newTree, newEnv)
   }
 
+  /** @see [[TreeUtils.narrowDown]] */
   protected def narrowDown(lit: LiteralApi, tpe: Type): LiteralApi =
     TreeUtils.narrowDown(lit, tpe)
+
+  /** @see [[TreeUtils.widen]] */
   protected def widen(lit: LiteralApi, tpe: Type): LiteralApi =
     TreeUtils.widen(lit, tpe)
+
+  /** @see [[TypeUtils..stringClassType]] */
   protected val stringClassType: Type = TypeUtils.stringClassType
+
+  /** @see [[TypePromotions.isNarrawableTo]] */
   protected def isNarrawableTo(e: Tree, t: Type): Boolean =
     TypePromotions.isNarrawableTo(e, t)
 }

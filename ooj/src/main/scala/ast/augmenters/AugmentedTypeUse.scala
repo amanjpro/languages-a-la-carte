@@ -36,8 +36,10 @@ import sana.tiny.ast.TypeUseApi
 
 trait AugmentedTypeUse {
 
+  /** The tree to be augmented */
   def tree: TypeUseApi
 
+  /** Returns true if [[AugmentedSuper.tree]] is in the `extends` clause */
   def isInExtendsClause: Boolean =
     tree.attributes.get('isInExtendsClause)
       .map(_.asInstanceOf[Boolean]).getOrElse(false)
@@ -45,6 +47,7 @@ trait AugmentedTypeUse {
   def isInExtendsClause_=(flag: Boolean): Unit =
     tree.attributes = tree.attributes + ('isInExtendsClause -> flag)
 
+  /** Returns true if [[AugmentedSuper.tree]] is in the `implements` clause */
   def isInImplementsClause: Boolean =
     tree.attributes.get('isInImplementsClause)
       .map(_.asInstanceOf[Boolean]).getOrElse(false)

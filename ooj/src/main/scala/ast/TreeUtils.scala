@@ -50,6 +50,12 @@ import ooj.ast.TreeExtractors._
 
 
 trait TreeUtils extends ast.TreeUtils {
+  /**
+   * Checks if a tree represents a constructor. A constructor tree is a {{{MethodDefApi}}}
+   * that has the flag {{{CONSTRUCTOR}}} set.
+   *
+   * @param tree the tree to be checked.
+   */
   def isConstructor(tree: Tree): Boolean =
     tree.symbol.map(SymbolUtils.isConstructor(_)) match {
       case Some(v)                                  => v
@@ -63,6 +69,11 @@ trait TreeUtils extends ast.TreeUtils {
     }
 
 
+  /**
+   * Is this {{{UseTree}}} in the `extends` clause.
+   *
+   * @param tree the tree to be checked
+   */
   def isInExtendsClause(tree: UseTree): Boolean = {
     tree match {
       case Select(_, tuse: TypeUseApi) =>
@@ -74,6 +85,11 @@ trait TreeUtils extends ast.TreeUtils {
     }
   }
 
+  /**
+   * Is this {{{UseTree}}} in the `implemented` clause.
+   *
+   * @param tree the tree to be checked
+   */
   def isInImplementsClause(tree: UseTree): Boolean = {
     tree match {
       case Select(_, tuse: TypeUseApi) =>
@@ -85,6 +101,11 @@ trait TreeUtils extends ast.TreeUtils {
     }
   }
 
+  /**
+   * Does this {{{UseTree}}} point a type or a term
+   *
+   * @param tree the tree to be checked
+   */
   override def isTypeUse(tree: UseTree): Boolean = tree match {
     case _: IdentApi                    => false
     case _: TypeUseApi                  => true
@@ -97,6 +118,13 @@ trait TreeUtils extends ast.TreeUtils {
   //   case _                               => false
   // }
 
+  /**
+   * Checks if a tree is a valid class member.
+   * As of Java 1.0, valid class members are: methods, fields and static
+   * initializers (blocks)
+   *
+   * @param tree the tree to be checked
+   */
   def isValidClassMember(tree: Tree): Boolean = tree match {
     case _: MethodDefApi                 => true
     case _: ValDefApi                    => true
@@ -131,6 +159,11 @@ trait TreeUtils extends ast.TreeUtils {
   }
 
 
+  /**
+   * Checks whether this tree represent an explicit constructor invocation
+   *
+   * @param tree the tree to be checked
+   */
   def isExplicitConstructorInvocation(tree: Tree): Boolean = tree match {
     case Apply(Select(_: ThisApi, id: IdentApi), _)
           if id.name == CONSTRUCTOR_NAME                   =>
@@ -188,8 +221,10 @@ trait TreeUtils extends ast.TreeUtils {
     case _                                   =>
       super.allPathsReturnAux(expr, recurse)
   }
-  /** Checks if this is an access to a field of the current
-   *  instance
+  /**
+   * Checks if this is an access to a field of the current instance
+   *
+   * @param tree the tree to be checked
    */
   def isThisFieldAccess(tree: Tree): Boolean = tree match {
     case id: IdentApi             =>
@@ -213,6 +248,12 @@ trait TreeUtils extends ast.TreeUtils {
   }
 
 
+  /**
+   * Returns the default value of a field, based on its type. The default
+   * value is returned as per Java specification.
+   *
+   * @param tpe the type of the field of which we want its default value.
+   */
   def getDefaultFieldValue(tpe: Option[Type]): Tree = tpe match {
     case Some(ByteType)    =>
       TreeFactories.mkLiteral(ByteConstant(0))

@@ -52,6 +52,18 @@ import tiny.ast.{TreeCopiers => _, _}
 
 
 
+/**
+ * This phase together with [[ConstantFoldingComponent]] perform
+ * constant-folding constant expressions. This step is useful to be done before
+ * type-checking takes place for case-guard distinctness and assignment
+ * conversion checking. Constant expression is defined as per Java 1
+ * specification.
+ *
+ * This phase is run first, and feeds an environment with the final fields of
+ * the entire program and binds them to their right-hand side expression.
+ * Then, [[ConstantFoldingComponent]] phase comes and evaluates the entire
+ * program using the resulting environment, as per usual.
+ */
 trait ConstantCollectingComponent
   extends TransformationComponent[(Tree, Env), Env] {
   def collect: ((Tree, Env)) => Env

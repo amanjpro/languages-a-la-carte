@@ -42,15 +42,47 @@ import ooj.names.StdNames._
 import scala.collection.immutable.Set
 
 
+/**
+ * The supertype of all reference types. A reference type as per Java is
+ * a type that is any type that is not a primitive type and/or void.
+ */
 trait RefType extends Type {
+  /** The name of this type */
   def name: Name
 }
 
+/**
+ * A trait to represent class types.
+ */
 trait ClassTypeApi extends RefType {
+  /**
+   * The qualified part of the name of this type. If the fully qualified name of
+   * a class name is: {{{pkg1.pkg2.A}}}, the `qual` will be: {{{pkg1.pkg2}}}.
+   */
   def qual: String
+
+  /**
+   * The direct parents (supertypes) of this class type. In the following example:
+   * {{{
+   * class A extends Object {}
+   * class B extends A {}
+   * class C extends B {}
+   * }}}
+   * On the class-type of class {{{C}}}, {{{parents}}} will return: `B`.
+   */
   def parents: Set[Symbol]
 
   def qualifiedName: String = s"$qual.${name.asString}"
+
+  /**
+   * Returns a set of direct and indirect parents of this class, in the following example:
+   * {{{
+   * class A extends Object {}
+   * class B extends A {}
+   * class C extends B {}
+   * }}}
+   * On the class-type of class {{{C}}}, {{{allParents}}} will return: `B, A, Object`.
+   */
   def allParents: Set[Type] = parents.flatMap { parent =>
     parent.tpe match {
       case Some(ctpe: ClassTypeApi)  => ctpe.allParents
@@ -58,6 +90,10 @@ trait ClassTypeApi extends RefType {
     }
   }
 
+  /**
+   * Returns the types of the direct parents of this class-type.
+   * @see [[ClassTypeApi.parents]].
+   */
   def parentTypes: Set[Type] = parents.flatMap(_.tpe)
 
   def =:=(t: Type): Boolean = t match {
@@ -124,6 +160,10 @@ case class ClassType(qual: String, name: Name, parents: Set[Symbol])
 //   def name: Name = OBJECT_TYPE_NAME
 // }
 
+/**
+ * Represents the type for null. This type is the bottom type of all
+ * instances of `RefType`
+ */
 case object NullType extends RefType {
   def =:=(t: Type): Boolean = this == t
   def <:<(t: Type): Boolean = t match {
