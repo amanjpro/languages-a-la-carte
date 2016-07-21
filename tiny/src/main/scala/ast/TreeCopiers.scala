@@ -39,6 +39,12 @@ import Implicits._
 /** A copier for trees */
 trait TreeCopiers {
 
+  /**
+   * Copies the properties (attributes) of a tree to another
+   *
+   * @param template the tree to copy its attributes
+   * @param newTree the tree to copy the attributes to
+   */
   protected def copyProperties(template: Tree,
       newTree: Tree): Unit = newTree.attributes = template.attributes
 
