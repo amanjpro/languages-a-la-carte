@@ -51,9 +51,24 @@ import sana.calcj.ast.operators.{BOp, UOp}
 
 trait TreeCopiers {
 
+  /**
+   * Copies the properties (attributes) of a tree to another
+   *
+   * @param template the tree to copy its attributes
+   * @param newTree the tree to copy the attributes to
+   */
   protected def copyProperties(template: Tree,
       newTree: Tree): Unit = newTree.attributes = template.attributes
 
+  /**
+   * Returns a copy of an "import" statement
+   *
+   * @param template the tree to be copied
+   * @param qual the fully qualified imported name
+   * @param isOnDemand is this import an on-demand statement
+   * @param pos the position of this tree
+   * @param owner the owner of this tree
+   */
   def copyImport(template: ImportApi)(
       qual: UseTree = template.qual,
       isOnDemand: Boolean = template.isOnDemand,
@@ -64,6 +79,15 @@ trait TreeCopiers {
     res
   }
 
+  /**
+   * Returns a copy of a "compilation-unit" tree
+   *
+   * @param template the tree to be copied
+   * @param imports the list of imports defined in this compilation unit
+   * @param module the package in this compilation unit
+   * @param sourceName the name of the source file of this compilation unit
+   * @param sorucePath the path of the source file of this compilation unit
+   */
   def copyCompilationUnit(template: CompilationUnitApi)(
     imports: List[ImportApi] = template.imports,
     module: PackageDefApi = template.module,
@@ -76,210 +100,247 @@ trait TreeCopiers {
   }
 
   // ppj
+  /** @see [[sana.ppj.ast.TreeCopiers.copySynchronized]] */
   def copySynchronized(template: SynchronizedApi)(
       expr: Expr = template.expr, block: BlockApi = template.block,
       pos: Option[Position] = template.pos,
       owner: Option[Symbol]  = template.owner): SynchronizedApi =
-    TC.copySynchronized(template)(expr, block, pos, owner)
+    sana.ppj.ast.TreeCopiers.copySynchronized(template)(expr, block, pos, owner)
 
   // arrooj
+  /** @see [[sana.ppj.ast.TreeCopiers.copyArrayInitializer]] */
   def copyArrayInitializer(template: ArrayInitializerApi)(
       elements: List[Expr] = template.elements): ArrayInitializerApi =
-    TC.copyArrayInitializer(template)(elements)
+    sana.ppj.ast.TreeCopiers.copyArrayInitializer(template)(elements)
 
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyArrayAccess]] */
   def copyArrayAccess(template: ArrayAccessApi)(
     array: Expr = template.array,
     index: Expr = template.index): ArrayAccessApi =
-    TC.copyArrayAccess(template)(array, index)
+    sana.ppj.ast.TreeCopiers.copyArrayAccess(template)(array, index)
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyArrayTypeUse]] */
   def copyArrayTypeUse(template: ArrayTypeUseApi)(
       tpt: UseTree = template.tpt): ArrayTypeUseApi =
-    TC.copyArrayTypeUse(template)(tpt)
+    sana.ppj.ast.TreeCopiers.copyArrayTypeUse(template)(tpt)
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyArrayCreation]] */
   def copyArrayCreation(template: ArrayCreationApi)(
       array: Expr = template.array,
       size: Option[Expr] = template.size): ArrayCreationApi =
-    TC.copyArrayCreation(template)(array, size)
+    sana.ppj.ast.TreeCopiers.copyArrayCreation(template)(array, size)
 
 
   // robustj
+  /** @see [[sana.ppj.ast.TreeCopiers.copyThrow]] */
   def copyThrow(template: ThrowApi)(expr: Expr = template.expr): ThrowApi = {
-    TC.copyThrow(template)(expr)
+    sana.ppj.ast.TreeCopiers.copyThrow(template)(expr)
   }
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyTry]] */
   def copyTry(template: TryApi)(tryClause: BlockApi = template.tryClause,
       catches: List[CatchApi] = template.catches,
       finallyClause: Option[BlockApi] = template.finallyClause): TryApi = {
-    TC.copyTry(template)(tryClause, catches, finallyClause)
+    sana.ppj.ast.TreeCopiers.copyTry(template)(tryClause, catches, finallyClause)
   }
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyCatch]] */
   def copyCatch(template: CatchApi)(eparam: ValDefApi = template.eparam,
     catchClause: BlockApi = template.catchClause): CatchApi = {
-    TC.copyCatch(template)(eparam, catchClause)
+    sana.ppj.ast.TreeCopiers.copyCatch(template)(eparam, catchClause)
   }
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyMethodDef]] */
   def copyMethodDef(template: MethodDefApi)(mods: Flags = template.mods,
     ret: UseTree = template.ret,
     name: Name = template.name, params: List[ValDefApi]  = template.params,
     throwsClause: List[UseTree] = template.throwsClause,
     body: Expr = template.body): MethodDefApi = {
-    TC.copyMethodDef(template)(mods, ret, name, params, throwsClause, body)
+    sana.ppj.ast.TreeCopiers.copyMethodDef(template)(mods, ret, name, params, throwsClause, body)
   }
 
 
   // ooj
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyProgram]] */
   def copyProgram(template: ProgramApi)(members: List[Tree] =
     template.members): ProgramApi = {
-    TC.copyProgram(template)(members)
+    sana.ppj.ast.TreeCopiers.copyProgram(template)(members)
   }
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyPackageDef]] */
   def copyPackageDef(template: PackageDefApi)(
     containingPackages: List[Name] = template.containingPackages,
     name: Name = template.name,
       members: List[Tree] = template.members): PackageDefApi =
-    TC.copyPackageDef(template)(containingPackages, name, members)
+    sana.ppj.ast.TreeCopiers.copyPackageDef(template)(containingPackages, name, members)
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyClassDef]] */
   def copyClassDef(template: ClassDefApi)(mods: Flags = template.mods,
       name: Name = template.name,
       parents: List[UseTree] = template.parents,
       body: TemplateApi = template.body): ClassDefApi =
-    TC.copyClassDef(template)(mods, name, parents, body)
+    sana.ppj.ast.TreeCopiers.copyClassDef(template)(mods, name, parents, body)
 
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyTemplate]] */
   def copyTemplate(template: TemplateApi)(
       members: List[Tree] = template.members): TemplateApi =
-    TC.copyTemplate(template)(members)
+    sana.ppj.ast.TreeCopiers.copyTemplate(template)(members)
 
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyNew]] */
   def copyNew(template: NewApi)(app: ApplyApi = template.app): NewApi =
-    TC.copyNew(template)(app)
+    sana.ppj.ast.TreeCopiers.copyNew(template)(app)
 
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copySelect]] */
   def copySelect(template: SelectApi)(qual: Tree = template.qual,
     tree: SimpleUseTree = template.tree): SelectApi =
-    TC.copySelect(template)(qual, tree)
+    sana.ppj.ast.TreeCopiers.copySelect(template)(qual, tree)
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyThis]] */
   def copyThis(template: ThisApi)(): ThisApi =
-    TC.copyThis(template)()
+    sana.ppj.ast.TreeCopiers.copyThis(template)()
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copySuper]] */
   def copySuper(template: SuperApi)(): SuperApi =
-    TC.copySuper(template)()
+    sana.ppj.ast.TreeCopiers.copySuper(template)()
 
 
   // tiny
+  /** @see [[sana.ppj.ast.TreeCopiers.copyIdent]] */
   def copyIdent(template: IdentApi)
             (name: Name): IdentApi = {
-    TC.copyIdent(template)(name)
+    sana.ppj.ast.TreeCopiers.copyIdent(template)(name)
   }
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyTypeUse]] */
   def copyTypeUse(template: TypeUseApi)(name: Name): TypeUseApi = {
-    TC.copyTypeUse(template)(name)
+    sana.ppj.ast.TreeCopiers.copyTypeUse(template)(name)
   }
   // calcj
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyCast]] */
   def copyCast(template: CastApi)(
       tpt: UseTree = template.tpt,
       expr: Expr = template.expr): CastApi = {
-    TC.copyCast(template)(tpt, expr)
+    sana.ppj.ast.TreeCopiers.copyCast(template)(tpt, expr)
   }
 
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyLiteral]] */
   def copyLiteral(template: LiteralApi)
       (constant: Constant): LiteralApi = {
-    TC.copyLiteral(template)(constant)
+    sana.ppj.ast.TreeCopiers.copyLiteral(template)(constant)
   }
 
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyBinary]] */
   def copyBinary(template: BinaryApi)(lhs: Expr = template.lhs,
       op: BOp = template.op, rhs: Expr = template.rhs): BinaryApi = {
-    TC.copyBinary(template)(lhs, op, rhs)
+    sana.ppj.ast.TreeCopiers.copyBinary(template)(lhs, op, rhs)
   }
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyUnary]] */
   def copyUnary(template: UnaryApi)(isPostfix: Boolean = template.isPostfix,
     op: UOp = template.op, expr: Expr = template.expr): UnaryApi = {
-    TC.copyUnary(template)(isPostfix, op, expr)
+    sana.ppj.ast.TreeCopiers.copyUnary(template)(isPostfix, op, expr)
   }
   // primj
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyAssign]] */
   def copyAssign(template: AssignApi)(lhs: Expr = template.lhs,
     rhs: Expr = template.rhs): AssignApi = {
-    TC.copyAssign(template)(lhs, rhs)
+    sana.ppj.ast.TreeCopiers.copyAssign(template)(lhs, rhs)
   }
 
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyIf]] */
   def copyIf(template: IfApi)(cond: Expr = template.cond,
     thenp: Expr = template.thenp, elsep: Expr = template.elsep): IfApi = {
-    TC.copyIf(template)(cond, thenp, elsep)
+    sana.ppj.ast.TreeCopiers.copyIf(template)(cond, thenp, elsep)
   }
 
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyWhile]] */
   def copyWhile(template: WhileApi)(isDoWhile: Boolean = template.isDoWhile,
     cond: Expr = template.cond, body: Expr = template.body): WhileApi = {
-    TC.copyWhile(template)(isDoWhile, cond, body)
+    sana.ppj.ast.TreeCopiers.copyWhile(template)(isDoWhile, cond, body)
   }
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyFor]] */
   def copyFor(template: ForApi)(inits: List[Tree] = template.inits,
     cond: Expr = template.cond, steps: List[Expr] = template.steps,
     body: Expr = template.body): ForApi = {
-    TC.copyFor(template)(inits, cond, steps, body)
+    sana.ppj.ast.TreeCopiers.copyFor(template)(inits, cond, steps, body)
   }
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyBlock]] */
   def copyBlock(template: BlockApi)(stmts: List[Tree] =
     template.stmts): BlockApi = {
-    TC.copyBlock(template)(stmts)
+    sana.ppj.ast.TreeCopiers.copyBlock(template)(stmts)
   }
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyTernary]] */
   def copyTernary(template: TernaryApi)(cond: Expr = template.cond,
     thenp: Expr = template.thenp,
     elsep: Expr = template.elsep): TernaryApi = {
-    TC.copyTernary(template)(cond, thenp, elsep)
+    sana.ppj.ast.TreeCopiers.copyTernary(template)(cond, thenp, elsep)
   }
 
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyApply]] */
   def copyApply(template: ApplyApi)(fun: Expr = template.fun,
     args: List[Expr] = template.args): ApplyApi = {
-    TC.copyApply(template)(fun, args)
+    sana.ppj.ast.TreeCopiers.copyApply(template)(fun, args)
   }
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyReturn]] */
   def copyReturn(template: ReturnApi)(expr: Option[Expr] =
       template.expr): ReturnApi = {
-    TC.copyReturn(template)(expr)
+    sana.ppj.ast.TreeCopiers.copyReturn(template)(expr)
   }
 
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyValDef]] */
   def copyValDef(template: ValDefApi)(mods: Flags = template.mods,
     tpt: UseTree = template.tpt, name: Name = template.name,
     rhs: Expr = template.rhs): ValDefApi = {
-    TC.copyValDef(template)(mods, tpt, name, rhs)
+    sana.ppj.ast.TreeCopiers.copyValDef(template)(mods, tpt, name, rhs)
   }
 
   // brokenj
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyLabel]] */
   def copyLabel(template: LabelApi)(name: Name = template.name,
     stmt: Expr = template.stmt): LabelApi = {
-    TC.copyLabel(template)(name, stmt)
+    sana.ppj.ast.TreeCopiers.copyLabel(template)(name, stmt)
   }
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyBreak]] */
   def copyBreak(template: BreakApi)(label:
     Option[Name] = template.label): BreakApi = {
-    TC.copyBreak(template)(label)
+    sana.ppj.ast.TreeCopiers.copyBreak(template)(label)
   }
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyContinue]] */
   def copyContinue(template: ContinueApi)(label: Option[Name] =
         template.label): ContinueApi = {
-    TC.copyContinue(template)(label)
+    sana.ppj.ast.TreeCopiers.copyContinue(template)(label)
   }
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copyCase]] */
   def copyCase(template: CaseApi)(guards: List[Expr] = template.guards,
     body: Tree = template.body): CaseApi = {
-    TC.copyCase(template)(guards, body)
+    sana.ppj.ast.TreeCopiers.copyCase(template)(guards, body)
   }
 
+  /** @see [[sana.ppj.ast.TreeCopiers.copySwitch]] */
   def copySwitch(template: SwitchApi)(expr: Expr = template.expr,
     cases: List[CaseApi] = template.cases): SwitchApi = {
-      TC.copySwitch(template)(expr, cases)
+      sana.ppj.ast.TreeCopiers.copySwitch(template)(expr, cases)
   }
 }
 

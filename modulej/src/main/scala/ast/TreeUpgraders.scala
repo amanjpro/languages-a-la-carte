@@ -39,6 +39,13 @@ import ooj.ast.{CompilationUnitApi => OCompilationUnitApi}
 import modulej.ast.{CompilationUnitApi => MCompilationUnitApi}
 
 trait TreeUpgraders extends robustj.ast.TreeUpgraders {
+  /**
+   * Upgrades an instance of [[ooj.ast.CompilationUnitApi]] to
+   * [[modulej.ast.CompilationUnitApi]] which adds the list of imports to it
+   *
+   * @param cunit the tree to be upgraded
+   */
+
   def upgradeCompilationUnit(
     cunit: OCompilationUnitApi): MCompilationUnitApi =
     cunit match {

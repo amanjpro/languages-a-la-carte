@@ -34,9 +34,11 @@ import sana.tiny.ast.UseTree
 
 trait AugmentedUseTree {
 
+  /** The tree to be augmented */
   def tree: UseTree
 
 
+  /** Is this [[AugmentedUseTree.tree]] in an import statement */
   def isImportQual: Boolean =
     tree.attributes.get('isImportQual)
       .map(_.asInstanceOf[Boolean]).getOrElse(false)
@@ -44,6 +46,7 @@ trait AugmentedUseTree {
   def isImportQual_=(flag: Boolean): Unit =
     tree.attributes = tree.attributes + ('isImportQual -> flag)
 
+  /** Is this [[AugmentedUseTree.tree]] an imported name */
   def isImported: Boolean =
     tree.attributes.get('isImported)
       .map(_.asInstanceOf[Boolean]).getOrElse(false)
@@ -51,6 +54,7 @@ trait AugmentedUseTree {
   def isImported_=(flag: Boolean): Unit =
     tree.attributes = tree.attributes + ('isImported -> flag)
 
+  /** Returns the fully qualified name of [[AugmentedUseTree.tree]] */
   def fullyQualifiedName: Option[String] =
     tree.attributes.get('fullyQualifiedName).map(_.asInstanceOf[String])
 

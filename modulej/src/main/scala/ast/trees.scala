@@ -41,7 +41,9 @@ import ooj.ast.PackageDefApi
 
 /********************* AST Nodes *********************************/
 
+/** A tree to represent a compilation unit */
 trait CompilationUnitApi extends ooj.ast.CompilationUnitApi {
+  /** List of all import statements defined in this compilation tree */
   def imports: List[ImportApi]
 
   override def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -53,8 +55,15 @@ trait CompilationUnitApi extends ooj.ast.CompilationUnitApi {
   }
 }
 
+/** A tree to represent an import statement */
 trait ImportApi extends Tree {
+  /** The qualified name (url) which is imported */
   def qual: UseTree
+
+  /**
+   * A flag to indicate if this import statement is an on-demand import
+   * statement
+   */
   def isOnDemand: Boolean
 
 

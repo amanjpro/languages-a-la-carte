@@ -91,9 +91,11 @@ trait ImportConstantFoldingComponent extends
 trait TypeUseConstantFoldingComponent
   extends ooj.eval.TypeUseConstantFoldingComponent {
 
+  /** @see [[ooj.eval.TypeUseConstantFoldingComponent.nameTypeUse]] */
   override protected def nameTypeUse(tuse: TypeUseApi): UseTree =
     typeUseNamer.nameTypeUse(tuse)
 
+  /** An instance to help to name type-use trees */
   private[this] val typeUseNamer = {
     val comp = this
     new modulej.namers.TypeUseNamer {
@@ -127,12 +129,15 @@ trait IdentConstantFoldingComponent
     }
   }
 
+  /** @see [[ooj.eval.IdentConstantFoldingComponent.nameIdent]] */
   override protected def nameIdent(id: IdentApi): UseTree =
     identNamer.nameIdent(id)
 
+  /** @see [[ooj.eval.IdentConstantFoldingComponent.typeAndNameIdent]] */
   override protected def typeAndNameIdent(id: IdentApi): UseTree =
     identNamer.nameIdent(id, false)
 
+  /** An instance to help to name identifiers */
   private[this] val identNamer = {
     val comp = this
     new modulej.namers.IdentNamer with ooj.typechecker.IdentNamer {

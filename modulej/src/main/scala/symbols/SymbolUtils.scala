@@ -41,10 +41,14 @@ import sana.ooj.symbols.PackageSymbol
 
 trait SymbolUtils extends sana.robustj.symbols.SymbolUtils {
   /**
-   * Return the fully qualified symbols for all qualified packages of
-   * this symbol. The top-most package is the head of the list.
+   * Returns the fully qualified symbols for all qualified packages of
+   * this symbol. The top-most package is the head of the list. The result is
+   * guaranteed to be none-empty
    *
-   * The result is guaranteed to be none-empty
+   * For example for package: `pkg1.pkg2.pkg3` the result will be:
+   * List(symbol of pkg1, symbol of pkg2, symbol of pkg3)
+   *
+   * @param pkg the package in question
    */
   def fullyQualifiedSymbolList(pkg: PackageSymbol): List[PackageSymbol] =
     pkg.owner match {
@@ -53,6 +57,10 @@ trait SymbolUtils extends sana.robustj.symbols.SymbolUtils {
       case _                          => List(pkg)
     }
 
+  /**
+   * Returns the symbol that is the direct or indirect owner of any other
+   * symbol. Namely, the program symbol
+   */
   def rootSymbol: Option[Symbol] =
     Some(ProgramSymbol)
 }

@@ -54,11 +54,23 @@ import tiny.source.Position
 import ooj.symbols.PackageSymbol
 
 trait TreeUtils extends ppj.ast.TreeUtils {
+  /**
+   * Given a package symbol, it returns a fully qualified tree of it.
+   *
+   * @param sym the package symbol
+   * @param pos the position for the newly created tree
+   */
   def toFullyQualifiedTree(sym: PackageSymbol,
           pos: Option[Position]): UseTree = {
     fromQualifiedString(sym.qualifiedName)
   }
 
+  /**
+   * Given a fully qualified name (dot separated names) it returns a fully
+   * qualified tree representing it
+   *
+   * @param name the fully qualified name
+   */
   def fromQualifiedString(name: String): UseTree = {
     def helper(names: List[String]): UseTree = names match {
       case (n::Nil)                          =>
@@ -73,6 +85,12 @@ trait TreeUtils extends ppj.ast.TreeUtils {
     helper(name.split("[.]").toList.reverse)
   }
 
+  /**
+   * Given a UseTree, it returns a fully qualified name that represents it
+   * (i.e. dot separated names)
+   *
+   * @param use the tree in question
+   */
   def toQualifiedString(use: UseTree): String = use match {
     case Select(qual: UseTree, t)           =>
       s"${toQualifiedString(qual)}.${t.name.asString}"
@@ -84,6 +102,17 @@ trait TreeUtils extends ppj.ast.TreeUtils {
       ""
   }
 
+  /**
+   * Having a use tree, it attaches the fully qualified name to all
+   * the selected trees recursively.
+   * For example for the select tree that represents:
+   * `nme1.nme2.slctd`
+   * `nme1` will have `nme1` as its fully qualified name
+   * `nme2` will have `nme1.nme2` as its fully qualified name
+   * `slctd` will have `nme1.nme2.slctd` as its fully qualified name
+   *
+   * @param use the tree to recursively attach fully qualified attribute to
+   */
   def attachQualifiedNameAttribute(use: UseTree): Unit = {
     def helper(use: UseTree): Unit = {
       use match {
@@ -109,13 +138,25 @@ trait TreeUtils extends ppj.ast.TreeUtils {
     }
   }
 
-  /** Takes a list of package names and turns them into a hierarchy of
-    * packages. The head of the list is the outer most package,
-    * and the tail is the inner ones.
-    */
+  /**
+   * Takes a list of package names and turns them into a hierarchy of
+   * packages. The head of the list is the outer most package,
+   * and the tail is the inner ones.
+   *
+   * @param names the list of the names to be turned into the heirarchy
+   *              of packages
+   */
   def toPackage(names: List[String]): PackageDefApi =
     toPackageAux(names.reverse)
 
+  /**
+   * Takes a list of package names and turns them into a hierarchy of
+   * packages. The head of the list is the outer most package,
+   * and the tail is the inner ones.
+   *
+   * @param names the list of the names to be turned into the heirarchy
+   *              of packages
+   */
   protected def toPackageAux(names: List[String]): PackageDefApi =
     names match {
       case (x::xs)                  =>

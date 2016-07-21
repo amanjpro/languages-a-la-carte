@@ -56,6 +56,7 @@ import modulej.ast.Implicits._
 @component
 trait ClassDefNamerComponent extends ooj.namers.ClassDefNamerComponent {
 
+  /** @see [[ooj.namers.ClassDefNamerComponent.addObjectParentIfNeeded]] */
   override protected def addObjectParentIfNeeded(
     clazz: ClassDefApi): List[UseTree] = {
     if(clazz.name == objectClassName &&
@@ -110,9 +111,11 @@ trait CompilationUnitNamerComponent extends NamerComponent {
     }
   }
 
+  /** @see [[TreeUtils.toQualifiedString]] */
   protected def toQualifiedString(use: UseTree): String =
     TreeUtils.toQualifiedString(use)
 
+  /** @see [[SymbolUtils.langPackageSymbol]] */
   protected def langPackageSymbol: PackageSymbol =
     SymbolUtils.langPackageSymbol
 }
@@ -147,13 +150,20 @@ trait TypeUseNamerComponent extends NamerComponent {
     }
   }
 
+  /** @see [[SymbolUtils.isAnAccessibleType]] */
   protected def isAnAccessibleType(sym: Option[Symbol],
     encl: Option[Symbol]): Boolean =
       SymbolUtils.isAnAccessibleType(sym, encl)
 
+  /**
+   * Binds a name use to its definition
+   *
+   * @param tuse the tree to be bound
+   */
   protected def nameTypeUse(tuse: TypeUseApi): UseTree =
     identNamer.nameTypeUse(tuse)
 
+  /** An instance of an TypeUseNamer */
   private[this] val identNamer = {
     val comp = this
     new TypeUseNamer {
@@ -162,6 +172,8 @@ trait TypeUseNamerComponent extends NamerComponent {
         comp.name(use).asInstanceOf[UseTree]
     }
   }
+
+  /** @see [[TreeUtils.attachQualifiedNameAttribute]] */
   protected def attachQualifiedNameAttribute(use: UseTree): Unit =
     TreeUtils.attachQualifiedNameAttribute(use)
 }
@@ -173,9 +185,15 @@ trait IdentNamerComponent extends ooj.namers.IdentNamerComponent {
     super.apply(id)
   }
 
+  /**
+   * Binds a name use to its definition
+   *
+   * @param id the tree to be bound
+   */
   override protected def nameIdent(id: IdentApi): UseTree =
     identNamer.nameIdent(id)
 
+  /** An instance of an IdentNamer */
   private[this] val identNamer = {
     val comp = this
     new IdentNamer {
@@ -185,12 +203,19 @@ trait IdentNamerComponent extends ooj.namers.IdentNamerComponent {
     }
   }
 
+  /** @see [[TreeUtils.attachQualifiedNameAttribute]] */
   protected def attachQualifiedNameAttribute(use: UseTree): Unit =
     TreeUtils.attachQualifiedNameAttribute(use)
 }
 
+/**
+ * This trait is used to name type-uses, the difference between this
+ * and `ooj.typechecker.TypeUseNamer` is that, this one takes the list
+ * of `import` statements into account when naming.
+ */
 trait TypeUseNamer extends SimpleUseNamer with ooj.typechecker.TypeUseNamer {
 
+  /** @see [[ooj.typechecker.TypeUseNamer.nameTypeUse]] */
   override def nameTypeUse(tuse: TypeUseApi): UseTree = {
     val imports = enclosingCompilationUnit(tuse.owner) match {
       case Some(sym: CompilationUnitSymbol) =>
@@ -227,7 +252,13 @@ trait TypeUseNamer extends SimpleUseNamer with ooj.typechecker.TypeUseNamer {
   }
 }
 
+/**
+ * This trait is used to name identifiers, the difference between this
+ * and `ooj.namers.IdentNamer` is that, this one takes the list
+ * of `import` statements into account when naming.
+ */
 trait IdentNamer extends ooj.namers.IdentNamer with SimpleUseNamer {
+  /** [[ooj.namers.IdentNamer.nameIdent]] */
   override def nameIdent(id: IdentApi): UseTree = {
     val res = super.nameIdent(id)
     res.symbol match {
@@ -257,9 +288,19 @@ trait IdentNamer extends ooj.namers.IdentNamer with SimpleUseNamer {
   }
 }
 
+/**
+ * A trait to help naming instances of `SimpleUseTree`s. This trait takes the
+ * import statements into account while performing naming
+ */
 trait SimpleUseNamer {
+  /** A reference to the compiler interface */
   protected val compiler: CompilerInterface
 
+  /**
+   * Names a tree as if it is a type-use.
+   *
+   * @param use the tree to be named
+   */
   protected def nameAsTypeUse(use: UseTree): Option[UseTree] = {
     // id toString (using TreeUtils) and it should go
     // all the way up until it is no longer qualified
@@ -274,6 +315,12 @@ trait SimpleUseNamer {
     }
   }
 
+  /**
+   * Names a tree as if it is a type-use using a list of import statements
+   *
+   * @param use the tree to be named
+   * @param imports a list of import statements to be used for naming
+   */
   protected def nameAsTypeUse(use: SimpleUseTree,
                     imports: List[(Symbol, String)]): Option[UseTree] = {
     val z: Option[UseTree] = None
@@ -330,6 +377,11 @@ trait SimpleUseNamer {
   //     ()
   // }
 
+  /**
+   * Names a tree as if it is an identifier.
+   *
+   * @param use the tree to be named
+   */
   protected def nameAsTermUse(use: UseTree): Option[UseTree] = {
     // id toString (using TreeUtils) and it should go
     // all the way up until it is no longer qualified
@@ -348,23 +400,48 @@ trait SimpleUseNamer {
   }
 
 
+  /** @see [[SymbolUtils.enclosingCompilationUnit]] */
   protected def enclosingCompilationUnit(sym:
       Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingCompilationUnit(sym)
+
   /**
-    * Finalizes naming/typing this tree, by running the family method
-    * on this tree. If in namer then it should call name, and if in
-    * typer it should call typed
-    */
+   * Finalizes naming/typing the given tree, by running the family method on
+   * the tree. If in namer then it should call name, and if in typer it should
+   * call typed.
+   *
+   * @param use the tree to be named/typed
+   */
   def family(use: UseTree): UseTree
 
+  /**
+   * Shall import information be used while naming the given tree. Import
+   * information cannot be used if:
+   * <li> the tree is `selected` part of a select statement
+   * <li> the tree is itself an import statement
+   *
+   * @param use the tree to be checked
+   */
   def shallUseImports(use: SimpleUseTree): Boolean =
     !(use.isImportQual || use.isQualified || use.isImported)
 
 
+  /** @see [[TreeUtils.toQualifiedString]] */
   protected def toQualifiedString(use: UseTree): String =
     TreeUtils.toQualifiedString(use)
 
+  /**
+   * Given a fully-qualified name and a SimpleUseTree, it returns
+   * a fully qualified tree of which resembles the fully qualified
+   * name but with all the attributes of the instance of the
+   * SimpleUseTree. This is useful if we have an unqualified but
+   * fully named SimpleUseTree and want to convert it to a
+   * fully qualified tree but still retaining its attributes.
+   *
+   * @param name the fully qualified name of the tree of the resulted
+   *             tree
+   * @param use the SimpleUseTree to borrow its attributes
+   */
   protected def fromQualifiedString(name: String,
         use: SimpleUseTree): UseTree =
     TreeUtils.fromQualifiedString(name) match {
@@ -378,9 +455,11 @@ trait SimpleUseNamer {
         tree
     }
 
+  /** @see [[TreeUtils.toPackage]] */
   protected def toPackage(names: List[String]): PackageDefApi =
     TreeUtils.toPackage(names)
 
+  /** @see [[SymbolUtils.rootSymbol]] */
   protected def rootSymbol: Option[Symbol] =
     SymbolUtils.rootSymbol
 
@@ -394,6 +473,7 @@ trait SelectNamerComponent extends ooj.namers.SelectNamerComponent {
     super.apply(slct)
   }
 
+  /** @see [[TreeUtils.attachQualifiedNameAttribute]] */
   protected def attachQualifiedNameAttribute(use: UseTree): Unit =
     TreeUtils.attachQualifiedNameAttribute(use)
 }

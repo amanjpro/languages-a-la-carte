@@ -35,9 +35,20 @@ import sana.calcj.ast.LiteralApi
 
 trait AugmentedVariableSymbol {
 
+  /** The symbol to be augmented */
   def symbol: VariableSymbol
 
 
+  /**
+   * When loading a class file, we need to keep the value of the static final
+   * fields that have a constant expression at their right-hand side, so we
+   * can perform constant-folding, assignment conversion and case-guard
+   * distinctness correctly. We store these in the symbol of the variable to
+   * avoid re-running constant-folding phase every time we load a new class.
+   *
+   * This method returns the right-hand side value of a static final field,
+   * if it is constant-expression, or else it returns None.
+   */
   def compiledRHSLiteral: Option[LiteralApi] =
     symbol.attributes.get('compiledRHSLiteral)
       .map(_.asInstanceOf[LiteralApi])

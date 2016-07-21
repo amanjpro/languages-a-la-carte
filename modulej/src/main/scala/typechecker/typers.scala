@@ -92,13 +92,16 @@ trait IdentTyperComponent extends ooj.typechecker.IdentTyperComponent {
     attachQualifiedNameAttribute(id)
     super.apply(id)
   }
+  /** @see [[ooj.typechecker.IdentTyperComponent.nameIdent]] */
   override protected def nameIdent(id: IdentApi): UseTree =
     identNamer.nameIdent(id)
 
+  /** @see [[ooj.typechecker.IdentTyperComponent.typeAndNameIdent]] */
   override protected def typeAndNameIdent(id: IdentApi): UseTree =
     identNamer.nameIdent(id, true)
 
 
+  /** @see [[ooj.typechecker.IdentTyperComponent.identNamer]] */
   private[this] val identNamer = {
     val comp = this
     new modulej.namers.IdentNamer with ooj.typechecker.IdentNamer {
@@ -106,6 +109,8 @@ trait IdentTyperComponent extends ooj.typechecker.IdentTyperComponent {
       def family(use: UseTree): UseTree = comp.typed(use).asInstanceOf[UseTree]
     }
   }
+
+  /** @see [[TreeUtils.attachQualifiedNameAttribute]] */
   protected def attachQualifiedNameAttribute(use: UseTree): Unit =
     TreeUtils.attachQualifiedNameAttribute(use)
 }
@@ -126,9 +131,11 @@ trait TypeUseTyperComponent
     }
   }
 
+  /** @see [[ooj.typechecker.TypeUseTyperComponent.nameTypeUse]] */
   override protected def nameTypeUse(tuse: TypeUseApi): UseTree =
     typeUseNamer.nameTypeUse(tuse)
 
+  /** @see [[ooj.typechecker.TypeUseTyperComponent.typeUseNamer]] */
   private[this] val typeUseNamer = {
     val comp = this
     new modulej.namers.TypeUseNamer {
@@ -137,6 +144,8 @@ trait TypeUseTyperComponent
         comp.typed(use).asInstanceOf[UseTree]
     }
   }
+
+  /** @see [[TreeUtils.attachQualifiedNameAttribute]] */
   protected def attachQualifiedNameAttribute(use: UseTree): Unit =
     TreeUtils.attachQualifiedNameAttribute(use)
 }
@@ -149,6 +158,7 @@ trait SelectTyperComponent extends arrooj.typechecker.SelectTyperComponent {
     super.apply(slct)
   }
 
+  /** @see [[TreeUtils.attachQualifiedNameAttribute]] */
   protected def attachQualifiedNameAttribute(use: UseTree): Unit =
     TreeUtils.attachQualifiedNameAttribute(use)
 }
@@ -177,6 +187,7 @@ trait MethodDefTyperComponent extends
     mthd2
   }
 
+  /** @see [[ppj.typechecker.MethodDefTyperComponent.allPathsReturn]] */
   override def allPathsReturn(expr: Tree): Boolean = {
     enclosingMethod(expr.symbol) match {
       case Some(mthd)                         =>
