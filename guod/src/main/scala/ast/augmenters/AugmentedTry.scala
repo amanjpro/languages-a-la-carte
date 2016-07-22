@@ -34,8 +34,10 @@ import sana.guod.ast.TryApi
 
 trait AugmentedTry {
 
+  /** The tree to be augmented */
   def tree: TryApi
 
+  /** Returns the index of the finally parameter of [[AugmentedValDef.tree]] */
   def finallyParamIndex: Option[Int] =
     tree.attributes.get('finallyParamIndex).map(_.asInstanceOf[Int])
 

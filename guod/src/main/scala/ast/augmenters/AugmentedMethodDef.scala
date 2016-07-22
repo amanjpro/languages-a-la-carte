@@ -32,6 +32,10 @@ import ch.usi.inf.l3.sana
 
 trait AugmentedMethodDef extends sana.ooj.ast.augmenters.AugmentedMethodDef {
 
+  /**
+   * Returns the number of all local variables that are defined directly
+   * or indirectly inside this method.
+   */
   def locals: Int =
     tree.attributes.get('locals).map(_.asInstanceOf[Int]).getOrElse(Int.MaxValue)
 

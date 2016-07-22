@@ -54,6 +54,14 @@ import guod.symbols.SymbolUtils
 import guod.ast.Implicits._
 import ooj.modifiers.Ops._
 
+/**
+ * This phase lowers the AST by eliminating all static initializers and
+ * introducing a `clinit`. Then it move all the field initializers that are not
+ * static and literal to their respective initializer methods (namely either
+ * constructors or clinit). Initializers will not be added to the constructors
+ * that explicitly invoke another local constructor (not super constructor),
+ * this way we avoid accidentally initializing a field twice.
+ */
 trait InitializerComponent extends
   TransformationComponent[Tree, Tree] {
   def inline: Tree => Tree
@@ -187,6 +195,7 @@ trait TemplateInitializerComponent extends InitializerComponent {
 
   }
 
+  /** @see [[SymbolUtils.enclosingClass]] */
   protected def enclosingClass(owner: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingClass(owner)
 }

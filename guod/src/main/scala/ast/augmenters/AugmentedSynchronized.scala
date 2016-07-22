@@ -36,8 +36,15 @@ import sana.guod.ast.SynchronizedApi
 
 trait AugmentedSynchronized {
 
+  /** The tree to be augmented */
   def tree: SynchronizedApi
 
+  /**
+   * When synchronized blocks are translated to JVM, there is a local variable
+   * before entering the block, and another one after exiting it. As per JVM
+   * these should be accessed via their indices, this function returns their
+   * indices.
+   */
   def identifierIndices: Option[(Int, Int)] =
     tree.attributes.get('identifierIndices).map(_.asInstanceOf[(Int, Int)])
 

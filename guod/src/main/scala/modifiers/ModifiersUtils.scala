@@ -48,9 +48,20 @@ import ppj.modifiers._
 import org.objectweb.asm.Opcodes
 
 trait ModifiersUtils {
+  /**
+   * Translates Sana's modifiers to JVM's modifiers
+   *
+   * @param flags Sana's modifiers
+   */
   def modifiersToBytecode(flags: Flags): Int = {
     modifiersToBytecodeAux(flags.flagsAsSet.toList)
   }
+
+  /**
+   * Translates Sana's modifiers to JVM's modifiers
+   *
+   * @param flags Sana's modifiers
+   */
   protected def modifiersToBytecodeAux(flags: List[Flag]): Int = flags match {
     case (f::fs)                  =>
       f match {

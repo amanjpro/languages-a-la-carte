@@ -55,6 +55,10 @@ import guod.symbols.SymbolUtils
 import guod.ast.Implicits._
 import ooj.modifiers.Ops._
 
+/**
+ * This phase turns all non-fully qualified names (identifiers, type-uses,
+ * array type-uses) in to fully qualified names
+ */
 trait QualifierComponent extends
   TransformationComponent[Tree, Tree] {
   def fullyqualify: Tree => Tree
@@ -191,6 +195,7 @@ trait IdentQualifierComponent extends QualifierComponent {
     }
   }
 
+  /** @see [[SymbolUtils.enclosingClass]] */
   protected def enclosingClass(owner: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingClass(owner)
 }
@@ -474,9 +479,11 @@ trait TypeUseQualifierComponent extends QualifierComponent {
     }
   }
 
+  /** @see [[TreeUtils.fromQualifiedString]] */
   protected def fromQualifiedString(name: String): UseTree =
     TreeUtils.fromQualifiedString(name)
 
+  /** @see [[SymbolUtils.toFullyQualifiedTypeName]] */
   protected def toFullyQualifiedTypeName(symbol: Option[Symbol]): String =
     SymbolUtils.toFullyQualifiedTypeName(symbol)
 }

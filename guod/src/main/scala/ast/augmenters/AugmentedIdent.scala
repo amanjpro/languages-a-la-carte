@@ -36,6 +36,11 @@ import sana.tiny.ast.IdentApi
 
 trait AugmentedIdent extends sana.ooj.ast.augmenters.AugmentedIdent {
 
+  /**
+   * JVM uses indices to address local variables, this method returns the index
+   * of the local variable that [[AugmentedIdent.tree]] uses. In case the tree
+   * does not point to a local variable, None is returned.
+   */
   def identifierIndex: Option[Int] =
     tree.attributes.get('identifierIndex).map(_.asInstanceOf[Int])
 

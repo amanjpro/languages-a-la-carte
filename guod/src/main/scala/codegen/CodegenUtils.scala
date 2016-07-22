@@ -49,7 +49,17 @@ import primj.types.VoidType
 
 import org.objectweb.asm.{Opcodes, MethodVisitor}
 
+/** This trait provides utility methods for code-generation */
 trait CodegenUtils {
+  /**
+   * Given a possibly fully qualified type name, it returns its representation
+   * in the bytecode. The type may be primitive or reference.
+   *
+   * @param fulName the name of the type
+   * @param addSemicolon in some context, bytecode types end with a semicolon,
+   *                     in other don't. This flag is to indicate weather the
+   *                     bytecode representation should end with it or not.
+   */
   def toInternalTypeRepresentation(fullName: String,
         addSemicolon: Boolean): String = fullName match {
     case "boolean"                => "Z"
@@ -69,6 +79,11 @@ trait CodegenUtils {
   }
 
 
+  /**
+   * Checks whether a bytecode type represents a primitive type
+   *
+   * @param tpe the bytecode type
+   */
   def isNotPrimitiveTypeArray(tpe: String): Boolean = {
     val elemTpe = tpe.filter(_ != '[')
     elemTpe != "Z" &&
@@ -81,6 +96,12 @@ trait CodegenUtils {
                   elemTpe != "D"
   }
 
+  /**
+   * Converts an element type of an array, to is bytecode representation.
+   * This takes into account that the type is used as an array element type.
+   *
+   * @param etpe the element type of the array
+   */
   def elementTypeToOpcode(etpe: Option[Type]): Either[String, Int] =
     etpe match {
       case Some(BooleanType)         => Right(Opcodes.T_BOOLEAN)
@@ -97,6 +118,11 @@ trait CodegenUtils {
     }
 
 
+  /**
+   * Returns the proper duplication code for a given expression
+   *
+   * @param expr the expression to return duplication bytecode for
+   */
   def duplicateCode(expr: Expr): Int = expr.tpe match {
     case Some(LongType) | Some(DoubleType)           =>
       Opcodes.DUP2
@@ -108,6 +134,15 @@ trait CodegenUtils {
       Opcodes.DUP
   }
 
+   /**
+   * Given a type, it returns its representation in the bytecode. The type may
+   * be primitive or reference.
+   *
+   * @param tpe the type in question
+   * @param addSemicolon in some context, bytecode types end with a semicolon,
+   *                     in other don't. This flag is to indicate weather the
+   *                     bytecode representation should end with it or not.
+   */
   def toInternalTypeRepresentation(tpe: Type,
           addSemicolon: Boolean): String = {
     if(tpe.isInstanceOf[PrimitiveType]) {
@@ -135,13 +170,29 @@ trait CodegenUtils {
       }
     }
   }
+
+  /** The version of the target bytecode */
   var targetVersion: Int = Opcodes.V1_5
 
 
+  /**
+   * Given a fully qualified name, this method translates it to its internal
+   * name representation. Namely by replacing all file `.` with `/`.
+   *
+   * @param fullName the fully qualified name
+   */
   def fullNameToInternalName(fullName: String): String =
     fullName.replaceAll("[.]", "/")
 
-
+  /**
+   * Given a use trees, it returns its representation in the bytecode. The use
+   * tree might point to a primitive or reference type.
+   *
+   * @param use the use tree to be translated
+   * @param addSemicolon in some context, bytecode types end with a semicolon,
+   *                     in other don't. This flag is to indicate weather the
+   *                     bytecode representation should end with it or not.
+   */
   def useTreeToInternalType(use: UseTree,
             addSemicolon: Boolean): String        = use match {
     case tuse: ArrayTypeUseApi                           =>
@@ -151,73 +202,15 @@ trait CodegenUtils {
         addSemicolon)
   }
 
-
-  def storeToLocalVariable(tpe: Option[Type],
-        index: Int,
-        mv: MethodVisitor,
-        isArray: Boolean): Unit = {
-    val opcode = storingToLocalVariableOpcode(tpe, isArray)
-    if(isArray)
-      mv.visitInsn(opcode)
-    else
-      mv.visitVarInsn(opcode, index)
-  }
-
-
-  def storingToLocalVariableOpcode(tpe: Option[Type],
-          isArray: Boolean): Int = tpe match {
-    case Some(BooleanType)         =>
-      if(isArray) Opcodes.BASTORE else Opcodes.ISTORE
-    case Some(ByteType)            =>
-      if(isArray) Opcodes.BASTORE else Opcodes.ISTORE
-    case Some(ShortType)           =>
-      if(isArray) Opcodes.SASTORE else Opcodes.ISTORE
-    case Some(CharType)            =>
-      if(isArray) Opcodes.CASTORE else Opcodes.ISTORE
-    case Some(IntType)             =>
-      if(isArray) Opcodes.IASTORE else Opcodes.ISTORE
-    case Some(LongType)            =>
-      if(isArray) Opcodes.LASTORE else Opcodes.LSTORE
-    case Some(FloatType)           =>
-      if(isArray) Opcodes.FASTORE else Opcodes.FSTORE
-    case Some(DoubleType)          =>
-      if(isArray) Opcodes.DASTORE else Opcodes.DSTORE
-    case _                         =>
-      if(isArray) Opcodes.AASTORE else Opcodes.ASTORE
-  }
-
-  def getField(id: IdentApi, mv: MethodVisitor): Unit = {
-    val isStatic  = id.symbol.map(_.mods.isStatic).getOrElse(false)
-    val className = SymbolUtils.toFullyQualifiedTypeName(
-      SymbolUtils.enclosingClass(id.owner)).replaceAll("[.]", "/")
-    val tpe       = id.tpe.map(tpe =>
-      toInternalTypeRepresentation(tpe, true)).getOrElse("")
-
-    if(isStatic)
-      mv.visitFieldInsn(Opcodes.GETSTATIC,
-        className, id.name.asString, tpe)
-    else
-      mv.visitFieldInsn(Opcodes.GETFIELD, className,
-        id.name.asString, tpe)
-  }
-
-  def putField(id: IdentApi, mv: MethodVisitor): Unit = {
-    val isStatic  = id.symbol.map(_.mods.isStatic).getOrElse(false)
-    val className = SymbolUtils.toFullyQualifiedTypeName(
-      SymbolUtils.enclosingClass(id.owner)).replaceAll("[.]", "/")
-    val tpe       = id.tpe.map(tpe =>
-      toInternalTypeRepresentation(tpe, true)).getOrElse("")
-
-    if(isStatic)
-      mv.visitFieldInsn(Opcodes.PUTSTATIC,
-        className, id.name.asString, tpe)
-    else
-      mv.visitFieldInsn(Opcodes.PUTFIELD, className,
-        id.name.asString, tpe)
-  }
-
-
-
+  /**
+   * Generates code for loading the value of a local variable and pushes it to
+   * a method visitor.
+   *
+   * @param tpe the type of the local variable
+   * @param index the index of the local variable
+   * @param mv the method visitor to write to
+   * @param isArray a flag to indicate is this local variable an array variable
+   */
   def loadFromLocalVariable(tpe: Option[Type],
         index: Int,
         mv: MethodVisitor,
@@ -248,9 +241,117 @@ trait CodegenUtils {
       mv.visitVarInsn(opcode, index)
   }
 
+
+  /**
+   * Generates code for storing to local variable and pushes it to
+   * a method visitor.
+   *
+   * @param tpe the type of the local variable
+   * @param index the index of the local variable
+   * @param mv the method visitor to write to
+   * @param isArray a flag to indicate is this local variable an array variable
+   */
+  def storeToLocalVariable(tpe: Option[Type],
+        index: Int,
+        mv: MethodVisitor,
+        isArray: Boolean): Unit = {
+    val opcode = storingToLocalVariableOpcode(tpe, isArray)
+    if(isArray)
+      mv.visitInsn(opcode)
+    else
+      mv.visitVarInsn(opcode, index)
+  }
+
+  /**
+   * Returns the opcode for local variables
+   *
+   * @param tpe the type of the local variable
+   * @param isArray a flag to indicate is this local variable an array variable
+   */
+  def storingToLocalVariableOpcode(tpe: Option[Type],
+          isArray: Boolean): Int = tpe match {
+    case Some(BooleanType)         =>
+      if(isArray) Opcodes.BASTORE else Opcodes.ISTORE
+    case Some(ByteType)            =>
+      if(isArray) Opcodes.BASTORE else Opcodes.ISTORE
+    case Some(ShortType)           =>
+      if(isArray) Opcodes.SASTORE else Opcodes.ISTORE
+    case Some(CharType)            =>
+      if(isArray) Opcodes.CASTORE else Opcodes.ISTORE
+    case Some(IntType)             =>
+      if(isArray) Opcodes.IASTORE else Opcodes.ISTORE
+    case Some(LongType)            =>
+      if(isArray) Opcodes.LASTORE else Opcodes.LSTORE
+    case Some(FloatType)           =>
+      if(isArray) Opcodes.FASTORE else Opcodes.FSTORE
+    case Some(DoubleType)          =>
+      if(isArray) Opcodes.DASTORE else Opcodes.DSTORE
+    case _                         =>
+      if(isArray) Opcodes.AASTORE else Opcodes.ASTORE
+  }
+
+  /**
+   * Generates code for loading the value of a field and pushes it to a method
+   * visitor.
+   *
+   * @param id the identifier that accesses the field
+   * @param mv the method visitor to write to
+   */
+  def getField(id: IdentApi, mv: MethodVisitor): Unit = {
+    val isStatic  = id.symbol.map(_.mods.isStatic).getOrElse(false)
+    val className = SymbolUtils.toFullyQualifiedTypeName(
+      SymbolUtils.enclosingClass(id.owner)).replaceAll("[.]", "/")
+    val tpe       = id.tpe.map(tpe =>
+      toInternalTypeRepresentation(tpe, true)).getOrElse("")
+
+    if(isStatic)
+      mv.visitFieldInsn(Opcodes.GETSTATIC,
+        className, id.name.asString, tpe)
+    else
+      mv.visitFieldInsn(Opcodes.GETFIELD, className,
+        id.name.asString, tpe)
+  }
+
+  /**
+   * Generates code for storing value into a field and pushes it to a method
+   * visitor.
+   *
+   * @param id the identifier that accesses the field
+   * @param mv the method visitor to write to
+   */
+  def putField(id: IdentApi, mv: MethodVisitor): Unit = {
+    val isStatic  = id.symbol.map(_.mods.isStatic).getOrElse(false)
+    val className = SymbolUtils.toFullyQualifiedTypeName(
+      SymbolUtils.enclosingClass(id.owner)).replaceAll("[.]", "/")
+    val tpe       = id.tpe.map(tpe =>
+      toInternalTypeRepresentation(tpe, true)).getOrElse("")
+
+    if(isStatic)
+      mv.visitFieldInsn(Opcodes.PUTSTATIC,
+        className, id.name.asString, tpe)
+    else
+      mv.visitFieldInsn(Opcodes.PUTFIELD, className,
+        id.name.asString, tpe)
+  }
+
+
+
+  /**
+   * Checks if a value with the given type needs two words or one. In JVM
+   * only double and long values need two words.
+   *
+   * @param tpe the type of the value
+   */
   def isDoubleWord(tpe: Option[Type]): Boolean =
     tpe.map(tpe => tpe =:= LongType || tpe =:= DoubleType).getOrElse(false)
 
+  /**
+   * Pops a value from the stack if it was necessary. Only void expressions
+   * (statements) are not popped after calling this method.
+   *
+   * @param tree the last expression that has been translated
+   * @param mv the current method visitor
+   */
   def popIfNeeded(tree: Tree, mv: MethodVisitor): Unit = {
     if(TreeUtils.isValidStatementExpression(tree)) {
       tree.tpe match {

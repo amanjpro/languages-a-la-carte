@@ -51,31 +51,62 @@ import guod.symbols.SymbolUtils
 import guod.ast.Implicits._
 import ooj.modifiers.Ops._
 
+/** An environment used for assigning local variables a unique index */
 class Env {
-  var env: Map[Symbol, Int] = Map.empty
+  /** Maps local variables to their indices */
+  private var env: Map[Symbol, Int] = Map.empty
+  /** The current index to provide */
   protected var current: Int          = -1
+  /** The maximum index that has been provided so far */
   protected var max: Int              = -1
 
+  /**
+   * Advance the index by two places, needed for long and double typed
+   * variables
+   */
   protected def advanceTwice(): Unit  = {
     current = current + 2
     this.max = max.max(current)
   }
 
+  /**
+   * Advance the index by one place, needed for any local variables that
+   * are not of type long or double
+   */
   def advanceOnce(): Unit             = {
     current = current + 1
     this.max = max.max(current)
   }
 
 
+  /**
+   * Sets a new [[Env.max]]
+   *
+   * @param max the new max
+   */
   def newMax(max: Int): Unit = this.max = current.max(max)
+
+  /** Returns the current [[Env.max]] */
   def getMax(): Int          = this.max.max(current)
 
+  /**
+   * Sets a new [[Env.current]]
+   *
+   * @param current the new current index
+   */
   def newCurrentIndex(current: Int): Unit   = {
     this.current   = current
   }
 
+  /** Returns the current [[Env.current]] */
   def currentIndex: Int  = current
 
+  /**
+   * Adds a new symbol of a local variable to this environment and
+   * assigns it an index
+   *
+   * @param symbol the symbol of the local variable to be added
+   */
   def add(symbol: Symbol): Unit = {
     val index = current
     symbol.tpe match {
@@ -88,9 +119,20 @@ class Env {
   }
 
 
+  /**
+   * Returns the index of a local variable
+   *
+   * @param symbol the symbol of the local variable
+   */
   def getIndex(symbol: Symbol): Option[Int] =
     env.get(symbol)
 
+  /**
+   * Enters a new method. Whenever entering a new method, the
+   * [[Env.env]], [[Env.current]] and [[Env.max]] is reset
+   *
+   * @param symbol the symbol of the new method
+   */
   def newMethod(symbol: Symbol): Unit = {
     env  = Map.empty
     current = if(symbol.mods.isStatic) 0 else 1
@@ -98,6 +140,7 @@ class Env {
   }
 
 
+  /** Returns an instance of [[Env]] which is identical to this */
   def duplicate: Env = {
     val temp            = new Env
     temp.env            = this.env
@@ -107,6 +150,10 @@ class Env {
   }
 }
 
+/**
+ * This phase assigns an index to each local variable that will appear in the
+ * bytecode. The indices are all unique in respect to their scopes.
+ */
 trait LocalVariablesComponent extends
   TransformationComponent[(Tree, Env), Unit] {
   def subst: ((Tree, Env)) => Unit

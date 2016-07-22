@@ -34,6 +34,10 @@ import sana.guod.ast.ValDefApi
 
 trait AugmentedValDef extends sana.ooj.ast.augmenters.AugmentedValDef {
 
+  /**
+   * In case [[AugmentedValDef.tree]] is a local variable, returns its
+   * index. Otherwise, returns None.
+   */
   def variableIndex: Option[Int] =
     tree.attributes.get('variableIndex).map(_.asInstanceOf[Int])
 

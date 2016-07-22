@@ -109,6 +109,18 @@ import java.io.{FileOutputStream, BufferedOutputStream, File}
 // Synchronized: DONE
 // CompilationUnit: DONE
 
+/**
+ * A class for instances of bytecode writers
+ *
+ * @param destination the file to write the bytecode to
+ * @param classWriter the class-writer for this bytecode writer
+ * @param methodVisitor the method-writer for this bytecode writer
+ * @param breakTarget The label of what a break statement if any
+ * @param continueTarget The label of what a break statement if any
+ * @param labels An environment of all labels in the scope
+ * @param isRhs A flag to indicate whether the expression being written
+ *              represents a right-hand side of an assignment expression
+ */
 case class ByteCodeWriter(destination: String,
           classWriter: Option[ClassWriter] = None,
           methodVisitor: Option[MethodVisitor] = None,
@@ -117,6 +129,9 @@ case class ByteCodeWriter(destination: String,
           labels: Map[Name, Label] = Map.empty,
           isRhs: Boolean = false)
 
+/**
+ * A phase to write bytecode of an AST using the ASM library.
+ */
 trait CodeGenComponent extends
   TransformationComponent[(Tree, ByteCodeWriter), Unit] {
   def codegen: ((Tree, ByteCodeWriter)) => Unit
@@ -199,17 +214,24 @@ trait ClassDefCodeGenComponent extends CodeGenComponent {
     bos.close()
   }
 
+  /** @see [[SymbolUtils.objectClassSymbol]] */
   protected def objectClassSymbol: Symbol =
     SymbolUtils.objectClassSymbol
+
+  /** @see [[CodgenUtils.fullNameToInternalName]] */
   protected def fullNameToInternalName(fullName: String): String =
     CodegenUtils.fullNameToInternalName(fullName)
+  /** @see [[CodgenUtils.targetVersion]] */
   protected def targetVersion: Int =
     CodegenUtils.targetVersion
+  /** @see [[CodgenUtils.modifiersToBytecode]] */
   protected def modifiersToBytecode(flags: Flags): Int = {
     ModifiersUtils.modifiersToBytecode(flags)
   }
+  /** @see [[TreeUtils.toQualifiedString]] */
   protected def toQualifiedString(use: UseTree): String =
     TreeUtils.toQualifiedString(use)
+  /** @see [[TreeUtils.toFullyQualifiedTypeName]] */
   protected def toFullyQualifiedTypeName(symbol: Option[Symbol]): String =
     SymbolUtils.toFullyQualifiedTypeName(symbol)
 }
@@ -274,13 +296,16 @@ trait ValDefCodeGenComponent extends CodeGenComponent {
     }
   }
 
+  /** @see [[CodegenUtils.storeToLocalVariable]] */
   protected def storeToLocalVariable(tpe: Option[Type], index: Int,
         mv: MethodVisitor): Unit =
         CodegenUtils.storeToLocalVariable(tpe, index, mv, false)
 
+  /** @see [[CodegenUtils.useTreeToInternalType]] */
   protected def useTreeToInternalType(use: UseTree): String =
     CodegenUtils.useTreeToInternalType(use, true)
 
+  /** @see [[ModifiersUtils.modifiersToBytecode]] */
   protected def modifiersToBytecode(flags: Flags): Int = {
     ModifiersUtils.modifiersToBytecode(flags)
   }
@@ -315,10 +340,12 @@ trait MethodDefCodeGenComponent extends CodeGenComponent {
   }
 
 
+  /** @see [[CodegenUtils.useTreeToInternalType]] */
   protected def useTreeToInternalType(use: UseTree,
           addSemicolon: Boolean): String =
     CodegenUtils.useTreeToInternalType(use, addSemicolon)
 
+  /** @see [[ModifiersUtils.modifiersToBytecode]] */
   protected def modifiersToBytecode(flags: Flags): Int = {
     ModifiersUtils.modifiersToBytecode(flags)
   }
@@ -403,9 +430,11 @@ trait CastCodeGenComponent extends CodeGenComponent {
     }
   }
 
+  /** @see [[CodegenUtils.duplicateCode]] */
   protected def duplicateCode(lhs: Expr): Int =
     CodegenUtils.duplicateCode(lhs)
 
+  /** @see [[CodegenUtils.useTreeToInternalType]] */
   protected def useTreeToInternalType(use: UseTree): String =
     CodegenUtils.useTreeToInternalType(use, false)
 }
@@ -456,12 +485,21 @@ trait BinaryCodeGenComponent extends CodeGenComponent {
     }
   }
 
+  /** @see [[CodegenUtils.duplicateCode]] */
   protected def duplicateCode(lhs: Expr): Int =
     CodegenUtils.duplicateCode(lhs)
 
+  /** @see [[CodegenUtils.useTreeToInternalType]] */
   protected def useTreeToInternalType(use: UseTree): String =
     CodegenUtils.useTreeToInternalType(use, false)
 
+  /**
+   * Generates code for arithmetic operations and pushes it to a
+   * method visitor
+   *
+   * @param bin the binary expression to be written
+   * @param bw the instance of bytecode-writer to use its method visitor
+   */
   def codegenArith(bin: BinaryApi, bw: ByteCodeWriter): Unit = {
     val mv = bw.methodVisitor
     if(!bin.isCompoundBinary)
@@ -788,18 +826,27 @@ trait UnaryCodeGenComponent extends CodeGenComponent {
     }
   }
 
+  /**
+   * Checks if a symbol is static
+   *
+   * @param symbol the symbol to be checked
+   */
   protected def isStatic(symbol: Option[Symbol]): Boolean =
     symbol.map(_.mods.isStatic).getOrElse(false)
 
+  /** @see [[CodegenUtils.isDoubleWord]] */
   protected def isDoubleWord(tpe: Option[Type]): Boolean =
     CodegenUtils.isDoubleWord(tpe)
 
+  /** @see [[CodegenUtils.getField]] */
   protected def getField(id: IdentApi, mv: MethodVisitor): Unit =
     CodegenUtils.getField(id, mv)
 
+  /** @see [[CodegenUtils.putField]] */
   protected def putField(id: IdentApi, mv: MethodVisitor): Unit =
     CodegenUtils.putField(id, mv)
 
+  /** @see [[CodegenUtils.loadFromLocalVariable]] */
   protected def loadFromLocalVariable(tpe: Option[Type],
         index: Int,
         mv: MethodVisitor,
@@ -807,6 +854,12 @@ trait UnaryCodeGenComponent extends CodeGenComponent {
     CodegenUtils.loadFromLocalVariable(tpe, index, mv, isArray)
 
 
+  /**
+   * Translates an operator of a unary operation to bytecode opcode
+   *
+   * @param tpe the type of the unary operation
+   * @param uop the operator of the unary operation
+   */
   protected def translateOp(tpe: Option[Type], uop: Op): Int = {
     val res = tpe.map { tpe =>
       tpe match {
@@ -824,25 +877,39 @@ trait UnaryCodeGenComponent extends CodeGenComponent {
   }
 
 
+  /**
+   * Returns the proper duplication code for a given expression
+   *
+   * @param expr the expression to return duplication bytecode for
+   */
   protected def duplicateCode(expr: Expr): Int = expr match {
     case _: ArrayAccessApi      => DUP2
     case _                      => CodegenUtils.duplicateCode(expr)
   }
 
+  /** @param [[CodegenUtils.storeToLocalVariable]] */
   protected def storeToLocalVariable(tpe: Option[Type],
         mv: MethodVisitor): Unit =
         CodegenUtils.storeToLocalVariable(tpe, -1, mv, true)
 
+  /** @param [[SymbolUtils.enclosingClass]] */
   protected def enclosingClass(owner: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingClass(owner)
 
+  /** @param [[SymbolUtils.toFullyQualifiedTypeName]] */
   protected def toFullyQualifiedTypeName(symbol: Option[Symbol]): String =
     SymbolUtils.toFullyQualifiedTypeName(symbol)
 
+  /** @param [[CodegenUtils.toInternalTypeRepresentation]] */
   protected def toInternalTypeRepresentation(tpe: Type): String =
     CodegenUtils.toInternalTypeRepresentation(tpe, true)
 
 
+  /**
+   * Returns an expression that represents `1` that has a given type
+   *
+   * @param tpe the type of the expression
+   */
   protected def one(tpe: Option[Type]): Expr = tpe match {
     case Some(tpe)    if tpe <:< IntType        =>
       TreeFactories.mkLiteral(IntConstant(1))
@@ -942,6 +1009,7 @@ trait ForCodeGenComponent extends CodeGenComponent {
     mv.foreach(mv => mv.visitLabel(next))
   }
 
+  /** @see [[CodegenUtils.popIfNeeded]] */
   protected def popIfNeeded(tree: Tree, mv: MethodVisitor): Unit =
     CodegenUtils.popIfNeeded(tree, mv)
 }
@@ -1085,6 +1153,7 @@ trait BlockCodeGenComponent extends CodeGenComponent {
       bw.methodVisitor.foreach(mv => popIfNeeded(stmt, mv))
     }
   }
+  /** @see [[CodegenUtils.popIfNeeded]] */
   protected def popIfNeeded(tree: Tree, mv: MethodVisitor): Unit =
     CodegenUtils.popIfNeeded(tree, mv)
 }
@@ -1104,6 +1173,7 @@ trait ArrayCreationCodeGenComponent extends CodeGenComponent {
     }
   }
 
+  /** @see [[CodegenUtils.elementTypeToOpcode]] */
   protected def elementTypeToOpcode(etpe: Option[Type]): Either[String, Int] =
     CodegenUtils.elementTypeToOpcode(etpe)
 
@@ -1132,14 +1202,17 @@ trait ArrayInitializerCodeGenComponent extends CodeGenComponent {
     }
   }
 
+  /** @see [[CodegenUtils.duplicateCode]] */
   protected def duplicateCode(lhs: Expr): Int = {
     CodegenUtils.duplicateCode(lhs)
   }
 
+  /** @see [[CodegenUtils.storeToLocalVariable]] */
   protected def storeToLocalVariable(tpe: Option[Type],
         mv: MethodVisitor): Unit =
         CodegenUtils.storeToLocalVariable(tpe, -1, mv, true)
 
+  /** @see [[CodegenUtils.elementTypeToOpcode]] */
   protected def elementTypeToOpcode(etpe: Option[Type]): Either[String, Int] =
     CodegenUtils.elementTypeToOpcode(etpe)
 }
@@ -1158,10 +1231,12 @@ trait ArrayAccessCodeGenComponent extends CodeGenComponent {
     }
   }
 
+  /** @see [[CodegenUtils.storeToLocalVariable]] */
   protected def storeToLocalVariable(tpe: Option[Type],
         mv: MethodVisitor): Unit =
         CodegenUtils.storeToLocalVariable(tpe, -1, mv, true)
 
+  /** @see [[CodegenUtils.loadFromLocalVariable]] */
   protected def loadFromLocalVariable(tpe: Option[Type],
         mv: MethodVisitor): Unit =
         CodegenUtils.loadFromLocalVariable(tpe, -1, mv, true)
@@ -1223,40 +1298,57 @@ trait AssignCodeGenComponent extends CodeGenComponent {
     }
   }
 
+  /**
+   * Checks if a symbol is static
+   *
+   * @param symbol the symbol to be checked
+   */
   protected def isStatic(symbol: Option[Symbol]): Boolean =
     symbol.map(_.mods.isStatic).getOrElse(false)
 
+  /** @see [[CodegenUtils.isDoubleWord]] */
   protected def isDoubleWord(tpe: Option[Type]): Boolean =
     CodegenUtils.isDoubleWord(tpe)
 
+  /** @see [[CodegenUtils.getField]] */
   protected def getField(id: IdentApi, mv: MethodVisitor): Unit =
     CodegenUtils.getField(id, mv)
 
+  /** @see [[CodegenUtils.putField]] */
   protected def putField(id: IdentApi, mv: MethodVisitor): Unit =
     CodegenUtils.putField(id, mv)
 
 
 
+  /**
+   * Checks if a binary tree is a compound binary expression
+   *
+   * @param expr the expression in question
+   */
   protected def isCompoundBinary(expr: Expr): Boolean = expr match {
     case Cast(_, bin: BinaryApi)  => bin.isCompoundBinary
     case bin: BinaryApi           => bin.isCompoundBinary
     case _                        => false
   }
 
+  /** @see [[CodegenUtils.duplicateCode]] */
   protected def duplicateCode(lhs: Expr): Int = {
     CodegenUtils.duplicateCode(lhs)
   }
 
+  /** @see [[CodegenUtils.loadFromLocalVariable]] */
   protected def loadFromLocalVariable(tpe: Option[Type],
         index: Int,
         mv: MethodVisitor,
         isArray: Boolean): Unit =
     CodegenUtils.loadFromLocalVariable(tpe, index, mv, isArray)
 
+  /** @see [[CodegenUtils.storeToLocalVariable]] */
   protected def storeToLocalVariable(tpe: Option[Type],
         mv: MethodVisitor): Unit =
         CodegenUtils.storeToLocalVariable(tpe, -1, mv, true)
 
+  /** @see [[SymbolUtils.toFullyQualifiedTypeName]] */
   protected def toFullyQualifiedTypeName(symbol: Option[Symbol]): String =
     SymbolUtils.toFullyQualifiedTypeName(symbol)
 }
@@ -1305,9 +1397,11 @@ trait ApplyCodeGenComponent extends CodeGenComponent {
     }
   }
 
+  /** @see [[SymbolUtils.toFullyQualifiedTypeName]] */
   protected def toFullyQualifiedTypeName(symbol: Option[Symbol]): String =
     SymbolUtils.toFullyQualifiedTypeName(symbol)
 
+  /** @see [[CodegenUtils.toInternalTypeRepresentation]] */
   protected def toInternalTypeRepresentation(tpe: Type): String =
     CodegenUtils.toInternalTypeRepresentation(tpe, true)
 }
@@ -1322,6 +1416,7 @@ trait NewCodeGenComponent extends CodeGenComponent {
     codegen((nw.app, bw))
   }
 
+  /** @see [[CodegenUtils.toInternalTypeRepresentation]] */
   protected def toInternalTypeRepresentation(tpe: Type): String =
     CodegenUtils.toInternalTypeRepresentation(tpe, false)
 }
@@ -1373,6 +1468,7 @@ trait SynchronizedCodeGenComponent extends CodeGenComponent {
     }
   }
 
+  /** @see [[CodegenUtils.duplicateCode]] */
   protected def duplicateCode(lhs: Expr): Int = {
     CodegenUtils.duplicateCode(lhs)
   }
@@ -1426,16 +1522,20 @@ trait IdentCodeGenComponent extends CodeGenComponent {
     }
   }
 
+  /** @see [[CodegenUtils.getField]] */
   def getField(id: IdentApi, mv: MethodVisitor): Unit =
     CodegenUtils.getField(id, mv)
 
+  /** @see [[CodegenUtils.putField]] */
   def putField(id: IdentApi, mv: MethodVisitor): Unit =
     CodegenUtils.putField(id, mv)
 
+  /** @see [[CodegenUtils.storeToLocalVariable]] */
   protected def storeToLocalVariable(tpe: Option[Type], index: Int,
         mv: MethodVisitor): Unit =
         CodegenUtils.storeToLocalVariable(tpe, index, mv, false)
 
+  /** @see [[CodegenUtils.loadFromLocalVariable]] */
   protected def loadFromLocalVariable(tpe: Option[Type], index: Int,
         mv: MethodVisitor): Unit =
         CodegenUtils.loadFromLocalVariable(tpe, index, mv, false)
@@ -1522,6 +1622,7 @@ trait TryCodeGenComponent extends CodeGenComponent {
     }
   }
 
+  /** @see [[CodegenUtils.toInternalTypeRepresentation]] */
   protected def toInternalTypeRepresentation(tpe: Type): String =
     CodegenUtils.toInternalTypeRepresentation(tpe, false)
 }

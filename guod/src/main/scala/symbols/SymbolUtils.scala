@@ -41,6 +41,12 @@ import sana.robustj.names.StdNames
 import sana.ooj.symbols.PackageSymbol
 
 trait SymbolUtils extends sana.modulej.symbols.SymbolUtils {
+  /**
+   * Given a symbol of a type, this method returns its fully qualified name.
+   * Should the symbol not represent a type symbol, an empty string is returned
+   *
+   * @param symbol the symbol to return its fully qualified name
+   */
   def toFullyQualifiedTypeName(symbol: Option[Symbol]): String = symbol match {
     case Some(vsym: VariableSymbol)         =>
       toFullyQualifiedTypeName(vsym.typeSymbol)
