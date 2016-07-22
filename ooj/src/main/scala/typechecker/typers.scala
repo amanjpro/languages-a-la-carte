@@ -237,7 +237,7 @@ trait ValDefTyperComponent extends TyperComponent {
     TreeUtils.getDefaultFieldValue(tpe)
 
   /**
-   * Checks if a varaible name is unique in its context, as per the
+   * Checks if a variable name is unique in its context, as per the
    * specification of Java.
    *
    * @param owner the owner of the variable
