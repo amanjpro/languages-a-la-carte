@@ -53,6 +53,7 @@ object CloudIntSymbol extends CloudIntSymbol
 
 // TODO maybe there is a better base class to extend.
 // TODO I am not sure about this overriding
+/** A symbol for cloud strings */
 trait CloudStringSymbol extends TypeSymbol {
   override def tpe: Option[Type] = Some(CIntType)
   override def owner: Option[Symbol] = None
@@ -75,6 +76,7 @@ trait CloudStringSymbol extends TypeSymbol {
 object CloudStringSymbol extends CloudStringSymbol
 
 // Will desugar to a java set later on I guess
+/** A symbol for cloud sets */
 trait CloudSetSymbol extends ClassSymbol {
   override def name: Name = Name("CSet")
   override def parents = ???
@@ -92,6 +94,7 @@ trait CloudSetSymbol extends ClassSymbol {
 object CloudSetSymbol extends CloudSetSymbol
 
 
+/** A symbol for arrays */
 trait ArraySymbol extends TypeSymbol {
   // TODO add suitable types.
   override def tpe: Option[Type] = None
