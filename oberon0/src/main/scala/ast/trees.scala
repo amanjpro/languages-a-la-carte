@@ -37,9 +37,13 @@ import tiny.ast.{Tree, DefTree, TypeTree, TermTree, UseTree, Expr}
 import primj.ast.{BlockApi}
 import tiny.names.Name
 
+/** A trait to represent module definitions */
 trait ModuleDefApi extends TermTree {
+  /** The name of the module */
   def name: Name
+  /** The list of members defined in this module */
   def declarations: List[DefTree]
+  /** The body of this module */
   def block: Option[BlockApi]
 
 
@@ -52,7 +56,9 @@ trait ModuleDefApi extends TermTree {
   }
 }
 
+/** A trait to represent array type uses */
 trait ArrayTypeUseApi extends arrayj.ast.ArrayTypeUseApi {
+  /** An expression to represent the size of the array */
   def size: Expr
 
   override def bottomUp[R](z: R)(f: (R, Tree) => R): R = {
@@ -62,8 +68,11 @@ trait ArrayTypeUseApi extends arrayj.ast.ArrayTypeUseApi {
   }
 }
 
+/** A trait to represent type alias trees */
 trait TypeDefApi extends TypeTree {
+  /** The type-alias name */
   def name: Name
+  /** The type use of the type which this alias refers to */
   def tpt: Tree
 
   def bottomUp[R](z: R)(f: (R, Tree) => R): R = {

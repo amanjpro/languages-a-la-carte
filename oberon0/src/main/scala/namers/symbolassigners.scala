@@ -86,7 +86,12 @@ trait ModuleDefSymbolAssignerComponent extends SymbolAssignerComponent {
     TreeCopiers.copyModuleDef(module)(declarations = declarations, block = block)
   }
 
-
+  /**
+   * Checks if a module name is unique in its context
+   *
+   * @param module the module to check
+   * @param owner the owner of the module
+   */
   def checkDoubleDef(module: ModuleDefApi, owner: Option[Symbol]): Unit = {
     owner.foreach { owner =>
       owner.directlyDefinesName(module.name,
@@ -133,6 +138,13 @@ trait TypeDefSymbolAssignerComponent
     TreeCopiers.copyTypeDef(tdef)(tpt = tpt)
   }
 
+  /**
+   * Checks if a type-alias name is unique in its context
+   *
+   * @param owner the owner of the type-alias
+   * @param name the name of the type-alias
+   * @param pos the position of the type-alias
+   */
   protected def doubleDefCheck(owner: Option[Symbol],
     name: Name, pos: Option[Position]): Unit = owner match {
     case Some(owner) if owner.directlyDefinesName(name,

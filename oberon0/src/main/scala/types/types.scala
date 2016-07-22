@@ -45,7 +45,9 @@ import tiny.names.Name
 import ooj.types.RefType
 import tiny.ast.Expr
 
+/** A trait to represent record types in oberon-0 */
 trait RecordTypeApi extends RefType {
+  /** An environment to map field names to their types */
   def fields: Map[Name, Type]
 
 
@@ -77,8 +79,9 @@ trait RecordTypeApi extends RefType {
 
 
 
+/** A trait to represent array types in oberon-0 */
 trait ArrayTypeApi extends arrayj.types.ArrayTypeApi {
-  def componentType: Type
+  /** The size of the array. In oberon-0 size is part of the array type */
   def size: Expr
 
   def name: Name = Name("<Array type>")

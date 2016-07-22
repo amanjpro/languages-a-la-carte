@@ -70,8 +70,11 @@ object ModuleSymbol {
   }
 }
 
+/** A symbol for array types */
 trait ArraySymbol extends TypeSymbol {
+  /** The symbol of the element of the array */
   def elementSymbol: Symbol
+  /** The expression of that represents size of the array */
   def size: Expr
 
   def mods_=(mods: Flags): Unit = ???
@@ -100,6 +103,7 @@ object ArraySymbol {
   }
 }
 
+/** A symbol for modules */
 trait ModuleSymbol extends PackageSymbol {
   override def qualifiedName: String = name.asString
 
@@ -118,11 +122,14 @@ trait ModuleSymbol extends PackageSymbol {
 }
 
 
+/** A symbol for TypeDef type aliases trees */
 trait TypeDefSymbol extends TypeSymbol {
   def mods: Flags = noflags
   def mods_=(flags: Flags): Unit = ???
 
+  /** The name of this type alias */
   var name: Name
+  /** The symbol of the type that this symbol is alias for */
   var typeSymbol: Option[Symbol]
   var owner: Option[Symbol]
 

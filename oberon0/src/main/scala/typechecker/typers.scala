@@ -120,6 +120,11 @@ trait ValDefTyperComponent extends primj.typechecker.ValDefTyperComponent {
     res
   }
 
+  /**
+   * Given a type, returns a type use around it
+   *
+   * @param tpe the type to return a type use for it
+   */
   protected def typeToTypeUse(tpe: Option[Type]): UseTree = tpe match {
     case Some(t: ArrayType)      =>
       TreeFactories.mkArrayTypeUse(typeToTypeUse(tpe), t.size)

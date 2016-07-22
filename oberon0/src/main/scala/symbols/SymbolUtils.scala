@@ -44,6 +44,11 @@ import sana.primj.symbols.{ProgramSymbol, MethodSymbol,
 
 trait SymbolUtils extends sana.arrooj.symbols.SymbolUtils {
 
+  /**
+   * Returns the enclosing module of a given symbol
+   *
+   * @param symbol the symbol to return its enclosing module
+   */
   def enclosingModule(symbol: Option[Symbol]): Option[Symbol] =
     symbol.flatMap {
       case sym: ModuleSymbol  => Some(sym)
@@ -51,6 +56,7 @@ trait SymbolUtils extends sana.arrooj.symbols.SymbolUtils {
     }
 
 
+  /** @param [[sana.arrooj.symbols.SymbolUtils]] */
   override def getSymbol(t: Type): Option[Symbol] = t match {
     case BooleanType           => Some(BooleanSymbol)
     case IntType               => Some(IntSymbol)
@@ -59,6 +65,7 @@ trait SymbolUtils extends sana.arrooj.symbols.SymbolUtils {
   }
 
 
+  /** @param [[sana.arrooj.symbols.standardDefinitions]] */
   override def standardDefinitions: Set[Symbol] = Set(
       VoidSymbol,
       BooleanSymbol,

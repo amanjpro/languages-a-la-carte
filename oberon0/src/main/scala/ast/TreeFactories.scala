@@ -48,7 +48,16 @@ import ooj.ast.{TreeFactories => OTreeFactories, _}
 
 
 trait TreeFactories extends primj.ast.TreeFactories {
-
+  /**
+   * Creates a new tree to represent a module definition in a source file.
+   *
+   * @param name the name of this module
+   * @param declarations the list of the members of this module
+   * @param block the body of this module
+   * @param pos the position of this module
+   * @param symbol the symbol of this module
+   * @param owner the owner of this module
+   */
   def mkModuleDef(name: Name, declarations: List[DefTree],
     block: Option[BlockApi], pos: Option[Position] = None,
     symbol: Option[Symbol] = None,
@@ -62,6 +71,15 @@ trait TreeFactories extends primj.ast.TreeFactories {
   }
 
 
+  /**
+   * Creates a new tree for array-type-use expressions
+   *
+   * @param name the name of this type-alias
+   * @param tpt the type tree that this alias points to
+   * @param pos the position of this type-alias
+   * @param symbol the symbol of this type-alias
+   * @param owner the owner of this type-alias
+   */
   def mkTypeDef(name: Name, tpt: Tree,
     pos: Option[Position] = None, symbol: Option[Symbol] = None,
     owner: Option[Symbol] = None): TypeDefApi = {
@@ -76,7 +94,16 @@ trait TreeFactories extends primj.ast.TreeFactories {
     res
   }
 
-
+  /**
+   * Creates a new tree for array-type-use expressions
+   *
+   * @param tpt the type-tree of this array type tree
+   * @param size the size of this array type tree
+   * @param pos the position of this array type tree
+   * @param symbol the symbol of this array type tree
+   * @param owner the owner of this array type tree
+   * @param tpe the type-information of this array type tree
+   */
   def mkArrayTypeUse(tpt: UseTree,
     size: Expr,
     pos: Option[Position] = None,
@@ -94,24 +121,57 @@ trait TreeFactories extends primj.ast.TreeFactories {
 
 
 
-
+  /**
+   * Creates a new tree to represent a record definition
+   *
+   * @param body the body of this class
+   * @param pos the position of this tree
+   * @param symbol the symbol of this tree
+   * @param tpe the type of this tree
+   */
   def mkRecordDef(body: TemplateApi,
       pos: Option[Position] = None,
       symbol: Option[Symbol] = None,
       tpe: Option[Type] = None): ClassDefApi =
     OTreeFactories.mkClassDef(noflags, noname, Nil, body, pos, symbol, tpe)
 
+  /**
+   * Creates a new tree to represent the body of a record definition
+   *
+   * @param members the list of the members of this class-body
+   * @param pos the position of this tree
+   * @param owner the owner of this tree
+   */
   def mkTemplate(members: List[Tree],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): TemplateApi =
     OTreeFactories.mkTemplate(members, pos, owner)
 
+  /**
+   * Creates an instance of a member selection tree
+   *
+   * @param qual the tree that has been selected from
+   * @param tree the tree that has been selected
+   * @param pos the position of this tree
+   * @param symbol the symbol of this tree
+   * @param owner the owner of this tree
+   */
   def mkSelect(qual: Tree, tree: SimpleUseTree,
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None,
     owner: Option[Symbol] = None): SelectApi =
     OTreeFactories.mkSelect(qual, tree, pos, symbol, owner)
 
+  /**
+   * Creates a new tree for array-access expressions
+   *
+   * @param array the array to be accessed
+   * @param index the index of the element that is accessed
+   * @param pos the position of this tree
+   * @param symbol the symbol of this tree
+   * @param owner the owner of this tree
+   * @param tpe the type-information of this tree
+   */
   def mkArrayAccess(array: Expr, index: Expr,
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None,

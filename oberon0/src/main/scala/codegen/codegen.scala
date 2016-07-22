@@ -79,6 +79,9 @@ import oberon0.symbols._
 
 
 
+/**
+ * This phase translates the AST to Scala source code
+ */
 trait CodeGenComponent extends TransformationComponent[(Tree, Int), String] {
   def codegen: ((Tree, Int)) => String
 }
