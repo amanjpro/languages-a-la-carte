@@ -35,7 +35,8 @@ import sana.tiny.names.Name
 
 trait AugmentedTree extends sana.tiny.ast.augmenters.AugmentedTree {
 
-  @deprecated("This is not used and should not be used in the compiler.")
+  @deprecated("This is not used and should not be used in the compiler.",
+    "1.1")
   def endName: Option[Name] = {
     tree.attributes.get('endName).map(_.asInstanceOf[Name])
   }
