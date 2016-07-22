@@ -79,23 +79,46 @@ import java.io.{IOException, ByteArrayOutputStream,
 
 import scala.collection.mutable
 
+/**
+ * This trait is used to load and parse class files from the classpath.
+ */
 trait ClassPathLoaderApi {
 
+  /** The list of all available classpaths, as a list of {{{java.lang.File}}} */
   protected def classPaths: List[JFile]
+
+  /** The list of all available classpaths, as a list of {{{java.net.URL}} */
   private[this] lazy val urls: Array[URL] =
     classPaths.map(_.toURI.toURL).toArray
+
+  /** An instance of class-file loader */
   private[this] lazy val classLoader: SanaClassLoader =
     new SanaClassLoader(urls)
 
   type Path     = String
   type FullName = String
 
+  /** A list of all loaded classes, we keep track of them not to load a class twice */
   private[this] var loadedClasses: List[FullName] = Nil
 
+  /** The platform dependent file separator */
   private[this] val sep = JFile.separator
+
+  /**
+   * The language (and platform) dependent class file extension, `.class` in
+   * terms of JVM
+   */
   val binaryFileExtension: String = ".class"
 
 
+  /**
+   * Checks if a class or a package with a given fully qualified name is in
+   * in the claspath.
+   *
+   * @param fullyQualifiedName the fully qualified name to be searched for
+   * @param isClass true if looking for a class or interface, false if looking
+   *                for a package
+   */
   def defines(fullyQualifiedName: FullName, isClass: Boolean): Boolean = {
     val fname = fullyQualifiedName.replaceAll("[.]", "/")
     classPaths.foldLeft(false)((z, y) => {
@@ -105,6 +128,12 @@ trait ClassPathLoaderApi {
     })
   }
 
+  /**
+   * Loads a class and all its dependencies, in case if it is not already loaded.
+   * Should it be already loaded, return the already loaded one.
+   *
+   * @param fullyQualifiedName the fully qualified name to be searched for
+   */
   def load(fullyQualifiedName: FullName): Option[Tree] = {
     val cname = findPath(fullyQualifiedName, true)
     val res = cname.map(loadClass(_,
@@ -113,6 +142,13 @@ trait ClassPathLoaderApi {
     res.map(TreeFactories.mkProgram(_))
   }
 
+  /**
+   * Finds a path of a class/interface or package in the classpath.
+   *
+   * @param fullyQualifiedName the fully qualified name to be searched for
+   * @param isClass true if looking for a class or interface, false if looking
+   *                for a package
+   */
   protected def findPath(fullyQualifiedName: FullName,
           isClass: Boolean): Option[Path] = {
     val z: Option[String] = None
@@ -145,6 +181,15 @@ trait ClassPathLoaderApi {
       }
     })
   }
+
+  /**
+   * Loads a class and all its dependencies, in case if it is not already loaded.
+   * Should it be already loaded, return the already loaded one.
+   *
+   * @param url the path to the directory that contains the class
+   * @param pkgs the list of all enclosing packages of the class
+   * @param fullName the fully qualified name of the class
+   */
   protected def loadClass(url: Path, pkgs: List[String],
           fullName: FullName): List[Tree] = {
     val (res, queue)      = loadClassAux(url, pkgs, fullName)
@@ -162,6 +207,17 @@ trait ClassPathLoaderApi {
     res.toList ++ queuedClasses
   }
 
+  /**
+   * Loads a class and all its dependencies, in case if it is not already
+   * loaded. Should it be already loaded, return the already loaded one.
+   * A long side this class in question, this method also returns the list
+   * of all classes that need to be loaded (the ones that the class in question
+   * depends on and not loaded yet).
+   *
+   * @param url the path to the directory that contains the class
+   * @param pkgs the list of all enclosing packages of the class
+   * @param fullName the fully qualified name of the class
+   */
   protected def loadClassAux(url: Path,
           pkgs: List[String],
           fullName: FullName): (Option[Tree], List[FullName]) = {
@@ -213,8 +269,15 @@ trait ClassPathLoaderApi {
   }
 
 
+  /**
+   * A class to load class-files
+   *
+   * @param classpath the classpath of this class-loader
+   */
   class SanaClassLoader(classpath: Array[URL])
     extends URLClassLoader(classpath, null) {
+
+    /** the list of all loaded classes by this class-loader */
     private[this] val classes: mutable.Map[String, JClass[_]] =
       mutable.Map.empty
 
@@ -239,6 +302,11 @@ trait ClassPathLoaderApi {
     override def getResourceAsStream(name: String): InputStream =
       new java.io.FileInputStream(name)
 
+    /**
+     * Load a class as an array of byte
+     *
+     * @param name the fully qualified name of the class
+     */
     private def loadClassData(name: String): Array[Byte] = {
       val in: BufferedInputStream =
         new BufferedInputStream(getResourceAsStream(name))
@@ -269,13 +337,28 @@ trait ClassPathLoaderApi {
     }
   }
 
+  /**
+   * A class file parser
+   *
+   * @param version the version of ASM
+   * @param className the class name to load
+   */
   protected class ClassFileParser private(version: Int,
     val className: String) extends ClassVisitor(version) with Opcodes {
 
+    /**
+     * Instantiates a class file parser using ASM4 version
+     *
+     * @param className the class name to load
+     */
     def this(className: String) = this(Opcodes.ASM4, className)
+
+    /** The class name in the bytecode format */
     private[this] val bytecodeClassName = {
       className.replaceAll("[.]", "/")
     }
+
+    /** The class name in the bytecode format */
     private[this] val simpleClassName   = bytecodeClassName
       // className.split("[.]").toList.last
     // }
