@@ -33,24 +33,31 @@ import sana.ooj.types._
 import sana.tiny.names.Name
 import sana.tiny.symbols.Symbol
 
+/** The supertype of all cloud-types */
 trait CloudType extends Type {
   def =:=(other: Type): Boolean = this == other
   def <:<(other: Type): Boolean = this =:= other
 }
 
 
+/** A type to represent entity types */
 case class EntityType(val name: Name) extends ClassTypeApi {
+  /** Entities are not fully qualified */
   def qual: String = ""
+  /** Entities have no parents */
   def parents: Set[Symbol] = Set.empty
   override def <:<(t: Type): Boolean = this =:= t
-} 
+}
 
-case object CIntType extends CloudType 
+/** A type for cloud-int */
+case object CIntType extends CloudType
 
-case object CStringType extends CloudType 
+/** A type for cloud-String */
+case object CStringType extends CloudType
 
-case object CSetType extends CloudType 
+/** A type for cloud-set */
+case object CSetType extends CloudType
 
 /*
- * I use the same string as in ooj 
+ * I use the same string as in ooj
  */
