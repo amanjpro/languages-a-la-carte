@@ -1,0 +1,554 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>typechecker - Sana Compiler Framework - ch.usi.inf.l3.sana.primj.typechecker</title>
+          <meta name="description" content="typechecker - Sana Compiler Framework - ch.usi.inf.l3.sana.primj.typechecker" />
+          <meta name="keywords" content="typechecker Sana Compiler Framework ch.usi.inf.l3.sana.primj.typechecker" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../../../../lib/tools.tooltip.js"></script>
+      <script type="text/javascript" src="../../../../../../../lib/modernizr.custom.js"></script><script type="text/javascript" src="../../../../../../../lib/diagrams.js" id="diagrams-js"></script>
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../../../index.html';
+            var hash = 'ch.usi.inf.l3.sana.primj.typechecker.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../../../../package.html" class="extype" name="ch">ch</a>.<a href="../../../../../package.html" class="extype" name="ch.usi">usi</a>.<a href="../../../../package.html" class="extype" name="ch.usi.inf">inf</a>.<a href="../../../package.html" class="extype" name="ch.usi.inf.l3">l3</a>.<a href="../../package.html" class="extype" name="ch.usi.inf.l3.sana">sana</a>.<a href="../package.html" class="extype" name="ch.usi.inf.l3.sana.primj">primj</a></p>
+        <h1>typechecker</h1><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">typechecker</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block diagram-container" id="content-diagram-container">
+                <span class="toggle diagram-link">Content Hierarchy</span>
+                <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#diagrams" target="_blank" class="diagram-help">Learn more about scaladoc diagrams</a>
+                <div class="diagram" id="content-diagram"><svg class="package-diagram" id="graph1" viewBox="0.00 0.00 1983.50 94.00" height="94pt" width="1984pt" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g transform="scale(1 1) rotate(0) translate(4 90)" class="graph" id="graph0"><polygon points="-4,4 -4,-90 1979.5,-90 1979.5,4 -4,4" stroke="none" fill="white"></polygon><!-- node0 --><g class="node trait" id="graph1_0"><g id="a_trait|graph1_0"><a xlink:title="ch.usi.inf.l3.sana.primj.typechecker.ValDefShapeCheckerComponent" xlink:href="ValDefShapeCheckerComponent.html#inheritance-diagram"><polygon points="192,-25 0,-25 0,-0 192,-0 192,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="10" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="31" text-anchor="start">ValDefShapeCheckerComponent</text></a></g></g><!-- node1 --><g class="node trait" id="graph1_1"><g id="a_trait|graph1_1"><a xlink:title="ch.usi.inf.l3.sana.primj.typechecker.UnaryShapeCheckerComponent" xlink:href="UnaryShapeCheckerComponent.html#inheritance-diagram"><polygon points="399.5,-25 210.5,-25 210.5,-0 399.5,-0 399.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="221" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="242" text-anchor="start">UnaryShapeCheckerComponent</text></a></g></g><!-- node2 --><g class="node trait" id="graph1_2"><g id="a_trait|graph1_2"><a xlink:title="ch.usi.inf.l3.sana.primj.typechecker.MethodDefShapeCheckerComponent" xlink:href="MethodDefShapeCheckerComponent.html#inheritance-diagram"><polygon points="628.5,-25 417.5,-25 417.5,-0 628.5,-0 628.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="428" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="449" text-anchor="start">MethodDefShapeCheckerComponent</text></a></g></g><!-- node3 --><g class="node trait" id="graph1_3"><g id="a_trait|graph1_3"><a xlink:title="ch.usi.inf.l3.sana.primj.typechecker.ProgramShapeCheckerComponent" xlink:href="ProgramShapeCheckerComponent.html#inheritance-diagram"><polygon points="847,-25 647,-25 647,-0 847,-0 847,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="657" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="678" text-anchor="start">ProgramShapeCheckerComponent</text></a></g></g><!-- node4 --><g class="node trait" id="graph1_4"><g id="a_trait|graph1_4"><a xlink:title="ch.usi.inf.l3.sana.primj.typechecker.CastShapeCheckerComponent" xlink:href="CastShapeCheckerComponent.html#inheritance-diagram"><polygon points="1048.5,-25 865.5,-25 865.5,-0 1048.5,-0 1048.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="876" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="897" text-anchor="start">CastShapeCheckerComponent</text></a></g></g><!-- node5 --><g class="node trait" id="graph1_5"><g id="a_trait|graph1_5"><a xlink:title="ch.usi.inf.l3.sana.primj.typechecker.ForShapeCheckerComponent" xlink:href="ForShapeCheckerComponent.html#inheritance-diagram"><polygon points="1243.5,-25 1066.5,-25 1066.5,-0 1243.5,-0 1243.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="1077" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="1098" text-anchor="start">ForShapeCheckerComponent</text></a></g></g><!-- node6 --><g class="node trait" id="graph1_6"><g id="a_trait|graph1_6"><a xlink:title="ch.usi.inf.l3.sana.primj.typechecker.WhileShapeCheckerComponent" xlink:href="WhileShapeCheckerComponent.html#inheritance-diagram"><polygon points="1448.5,-25 1261.5,-25 1261.5,-0 1448.5,-0 1448.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="1272" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="1293" text-anchor="start">WhileShapeCheckerComponent</text></a></g></g><!-- node7 --><g class="node trait" id="graph1_7"><g id="a_trait|graph1_7"><a xlink:title="ch.usi.inf.l3.sana.primj.typechecker.IfShapeCheckerComponent" xlink:href="IfShapeCheckerComponent.html#inheritance-diagram"><polygon points="1635,-25 1467,-25 1467,-0 1635,-0 1635,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="1477" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="1498" text-anchor="start">IfShapeCheckerComponent</text></a></g></g><!-- node8 --><g class="node trait" id="graph1_8"><g id="a_trait|graph1_8"><a xlink:title="ch.usi.inf.l3.sana.primj.typechecker.BlockShapeCheckerComponent" xlink:href="BlockShapeCheckerComponent.html#inheritance-diagram"><polygon points="1840.5,-25 1653.5,-25 1653.5,-0 1840.5,-0 1840.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="1664" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="1685" text-anchor="start">BlockShapeCheckerComponent</text></a></g></g><!-- node9 --><g class="node trait" id="graph1_9"><g id="a_trait|graph1_9"><a xlink:title="ch.usi.inf.l3.sana.primj.typechecker.ShapeCheckerComponent" xlink:href="ShapeCheckerComponent.html#inheritance-diagram"><polygon points="1038,-86 876,-86 876,-61 1038,-61 1038,-86" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-80.5" x="886" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-70.5" x="907" text-anchor="start">ShapeCheckerComponent</text></a></g></g><!-- node9&#45;&gt;node0 --><g class="edge inheritance" id="graph1_9_0"><g id="a_inheritance|graph1_9_0"><a xlink:title="ValDefShapeCheckerComponent is a subtype of ShapeCheckerComponent"><path d="M870.447,-68.3688C729.866,-61.3652 443.227,-45.8632 201,-25 198.077,-24.7482 195.109,-24.483 192.113,-24.207" stroke="#d4d4d4" fill="none"></path><polygon points="870.716,-70.1343 875.797,-68.6348 870.89,-66.6386 870.716,-70.1343" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node9&#45;&gt;node1 --><g class="edge inheritance" id="graph1_9_1"><g id="a_inheritance|graph1_9_1"><a xlink:title="UnaryShapeCheckerComponent is a subtype of ShapeCheckerComponent"><path d="M870.462,-65.682C762.235,-57.0011 571.298,-41.178 408,-25 405.225,-24.725 402.408,-24.4412 399.565,-24.1506" stroke="#d4d4d4" fill="none"></path><polygon points="870.429,-67.4349 875.552,-66.09 870.708,-63.9461 870.429,-67.4349" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node9&#45;&gt;node2 --><g class="edge inheritance" id="graph1_9_2"><g id="a_inheritance|graph1_9_2"><a xlink:title="MethodDefShapeCheckerComponent is a subtype of ShapeCheckerComponent"><path d="M870.9,-60.7951C794.569,-50.4184 683.737,-35.3514 607.801,-25.0283" stroke="#d4d4d4" fill="none"></path><polygon points="870.687,-62.5322 875.877,-61.4718 871.158,-59.0641 870.687,-62.5322" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node9&#45;&gt;node3 --><g class="edge inheritance" id="graph1_9_3"><g id="a_inheritance|graph1_9_3"><a xlink:title="ProgramShapeCheckerComponent is a subtype of ShapeCheckerComponent"><path d="M911.165,-59.6226C874.525,-49.3286 823.617,-35.0257 788.244,-25.0875" stroke="#d4d4d4" fill="none"></path><polygon points="910.724,-61.3164 916.011,-60.9841 911.671,-57.9469 910.724,-61.3164" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node9&#45;&gt;node4 --><g class="edge inheritance" id="graph1_9_4"><g id="a_inheritance|graph1_9_4"><a xlink:title="CastShapeCheckerComponent is a subtype of ShapeCheckerComponent"><path d="M957,-55.6874C957,-45.9173 957,-33.8534 957,-25.1323" stroke="#d4d4d4" fill="none"></path><polygon points="955.25,-55.8435 957,-60.8435 958.75,-55.8435 955.25,-55.8435" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node9&#45;&gt;node5 --><g class="edge inheritance" id="graph1_9_5"><g id="a_inheritance|graph1_9_5"><a xlink:title="ForShapeCheckerComponent is a subtype of ShapeCheckerComponent"><path d="M1000.64,-59.4964C1035.15,-49.2119 1082.9,-34.9851 1116.11,-25.0875" stroke="#d4d4d4" fill="none"></path><polygon points="999.938,-57.8791 995.646,-60.9841 1000.94,-61.2333 999.938,-57.8791" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node9&#45;&gt;node6 --><g class="edge inheritance" id="graph1_9_6"><g id="a_inheritance|graph1_9_6"><a xlink:title="WhileShapeCheckerComponent is a subtype of ShapeCheckerComponent"><path d="M1039.66,-60.2466C1109.48,-49.8959 1208.76,-35.1794 1277.17,-25.0371" stroke="#d4d4d4" fill="none"></path><polygon points="1039.37,-58.5198 1034.68,-60.9841 1039.89,-61.9819 1039.37,-58.5198" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node9&#45;&gt;node7 --><g class="edge inheritance" id="graph1_9_7"><g id="a_inheritance|graph1_9_7"><a xlink:title="IfShapeCheckerComponent is a subtype of ShapeCheckerComponent"><path d="M1043.03,-65.0388C1142.71,-56.2284 1311.87,-40.7687 1457,-25 1460.27,-24.6448 1463.6,-24.275 1466.97,-23.8949" stroke="#d4d4d4" fill="none"></path><polygon points="1042.87,-63.2962 1038.04,-65.4793 1043.17,-66.7826 1042.87,-63.2962" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node9&#45;&gt;node8 --><g class="edge inheritance" id="graph1_9_8"><g id="a_inheritance|graph1_9_8"><a xlink:title="BlockShapeCheckerComponent is a subtype of ShapeCheckerComponent"><path d="M1043.61,-67.6864C1173.97,-60.1748 1428.35,-44.4855 1644,-25 1647.05,-24.7247 1650.14,-24.4353 1653.27,-24.1349" stroke="#d4d4d4" fill="none"></path><polygon points="1043.15,-65.9598 1038.26,-67.9941 1043.35,-69.454 1043.15,-65.9598" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node10 --><g class="node object" id="graph1_10"><g id="a_object|graph1_10"><a xlink:title="ch.usi.inf.l3.sana.primj.typechecker.TypePromotions" xlink:href="TypePromotions$.html#inheritance-diagram"><polygon points="1975.5,-25 1858.5,-25 1858.5,-0 1975.5,-0 1975.5,-25" stroke="#102966" fill="#3556a7"></polygon><image xlink:href="../../../../../../../lib/object_diagram.png" y="-19.5" x="1869" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="1890" text-anchor="start">TypePromotions</text></a></g></g><!-- node11 --><g class="node trait" id="graph1_11"><g id="a_trait|graph1_11"><a xlink:title="ch.usi.inf.l3.sana.primj.typechecker.TypePromotions" xlink:href="TypePromotions.html#inheritance-diagram"><polygon points="1975.5,-86 1858.5,-86 1858.5,-61 1975.5,-61 1975.5,-86" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-80.5" x="1869" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-70.5" x="1890" text-anchor="start">TypePromotions</text></a></g></g><!-- node11&#45;&gt;node10 --><g class="edge inheritance" id="graph1_11_10"><g id="a_inheritance|graph1_11_10"><a xlink:title="TypePromotions is a subtype of TypePromotions"><path d="M1917,-55.6874C1917,-45.9173 1917,-33.8534 1917,-25.1323" stroke="#d4d4d4" fill="none"></path><polygon points="1915.25,-55.8435 1917,-60.8435 1918.75,-55.8435 1915.25,-55.8435" stroke="#d4d4d4" fill="none"></polygon></a></g></g></g></svg></div>
+              </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="ch.usi.inf.l3.sana.primj.typechecker.ApplyTyperComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ApplyTyperComponentextendsTyperComponent"></a>
+      <a id="ApplyTyperComponent:ApplyTyperComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ApplyTyperComponent.html"><span class="name">ApplyTyperComponent</span></a><span class="result"> extends <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.calcj.typechecker.TyperComponent" class="extype" target="_top">TyperComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@ApplyTyperComponentextendsTyperComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.AssignTyperComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="AssignTyperComponentextendsTyperComponent"></a>
+      <a id="AssignTyperComponent:AssignTyperComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="AssignTyperComponent.html"><span class="name">AssignTyperComponent</span></a><span class="result"> extends <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.calcj.typechecker.TyperComponent" class="extype" target="_top">TyperComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@AssignTyperComponentextendsTyperComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.BlockShapeCheckerComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="BlockShapeCheckerComponentextendsShapeCheckerComponent"></a>
+      <a id="BlockShapeCheckerComponent:BlockShapeCheckerComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="BlockShapeCheckerComponent.html"><span class="name">BlockShapeCheckerComponent</span></a><span class="result"> extends <a href="ShapeCheckerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.typechecker.ShapeCheckerComponent">ShapeCheckerComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@BlockShapeCheckerComponentextendsShapeCheckerComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.BlockTyperComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="BlockTyperComponentextendsTyperComponent"></a>
+      <a id="BlockTyperComponent:BlockTyperComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="BlockTyperComponent.html"><span class="name">BlockTyperComponent</span></a><span class="result"> extends <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.calcj.typechecker.TyperComponent" class="extype" target="_top">TyperComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@BlockTyperComponentextendsTyperComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.CastShapeCheckerComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="CastShapeCheckerComponentextendsShapeCheckerComponent"></a>
+      <a id="CastShapeCheckerComponent:CastShapeCheckerComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="CastShapeCheckerComponent.html"><span class="name">CastShapeCheckerComponent</span></a><span class="result"> extends <a href="ShapeCheckerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.typechecker.ShapeCheckerComponent">ShapeCheckerComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@CastShapeCheckerComponentextendsShapeCheckerComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.ForShapeCheckerComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ForShapeCheckerComponentextendsShapeCheckerComponent"></a>
+      <a id="ForShapeCheckerComponent:ForShapeCheckerComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ForShapeCheckerComponent.html"><span class="name">ForShapeCheckerComponent</span></a><span class="result"> extends <a href="ShapeCheckerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.typechecker.ShapeCheckerComponent">ShapeCheckerComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@ForShapeCheckerComponentextendsShapeCheckerComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.ForTyperComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ForTyperComponentextendsTyperComponent"></a>
+      <a id="ForTyperComponent:ForTyperComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ForTyperComponent.html"><span class="name">ForTyperComponent</span></a><span class="result"> extends <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.calcj.typechecker.TyperComponent" class="extype" target="_top">TyperComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@ForTyperComponentextendsTyperComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.IdentTyperComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="IdentTyperComponentextendsTyperComponent"></a>
+      <a id="IdentTyperComponent:IdentTyperComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="IdentTyperComponent.html"><span class="name">IdentTyperComponent</span></a><span class="result"> extends <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.calcj.typechecker.TyperComponent" class="extype" target="_top">TyperComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@IdentTyperComponentextendsTyperComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.IfShapeCheckerComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="IfShapeCheckerComponentextendsShapeCheckerComponent"></a>
+      <a id="IfShapeCheckerComponent:IfShapeCheckerComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="IfShapeCheckerComponent.html"><span class="name">IfShapeCheckerComponent</span></a><span class="result"> extends <a href="ShapeCheckerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.typechecker.ShapeCheckerComponent">ShapeCheckerComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@IfShapeCheckerComponentextendsShapeCheckerComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.IfTyperComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="IfTyperComponentextendsTyperComponent"></a>
+      <a id="IfTyperComponent:IfTyperComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="IfTyperComponent.html"><span class="name">IfTyperComponent</span></a><span class="result"> extends <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.calcj.typechecker.TyperComponent" class="extype" target="_top">TyperComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@IfTyperComponentextendsTyperComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.MethodDefShapeCheckerComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="MethodDefShapeCheckerComponentextendsShapeCheckerComponent"></a>
+      <a id="MethodDefShapeCheckerComponent:MethodDefShapeCheckerComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="MethodDefShapeCheckerComponent.html"><span class="name">MethodDefShapeCheckerComponent</span></a><span class="result"> extends <a href="ShapeCheckerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.typechecker.ShapeCheckerComponent">ShapeCheckerComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@MethodDefShapeCheckerComponentextendsShapeCheckerComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.MethodDefTyperComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="MethodDefTyperComponentextendsTyperComponent"></a>
+      <a id="MethodDefTyperComponent:MethodDefTyperComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="MethodDefTyperComponent.html"><span class="name">MethodDefTyperComponent</span></a><span class="result"> extends <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.calcj.typechecker.TyperComponent" class="extype" target="_top">TyperComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@MethodDefTyperComponentextendsTyperComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.ProgramShapeCheckerComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ProgramShapeCheckerComponentextendsShapeCheckerComponent"></a>
+      <a id="ProgramShapeCheckerComponent:ProgramShapeCheckerComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ProgramShapeCheckerComponent.html"><span class="name">ProgramShapeCheckerComponent</span></a><span class="result"> extends <a href="ShapeCheckerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.typechecker.ShapeCheckerComponent">ShapeCheckerComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@ProgramShapeCheckerComponentextendsShapeCheckerComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.ProgramTyperComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ProgramTyperComponentextendsTyperComponent"></a>
+      <a id="ProgramTyperComponent:ProgramTyperComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ProgramTyperComponent.html"><span class="name">ProgramTyperComponent</span></a><span class="result"> extends <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.calcj.typechecker.TyperComponent" class="extype" target="_top">TyperComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@ProgramTyperComponentextendsTyperComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.ReturnTyperComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ReturnTyperComponentextendsTyperComponent"></a>
+      <a id="ReturnTyperComponent:ReturnTyperComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ReturnTyperComponent.html"><span class="name">ReturnTyperComponent</span></a><span class="result"> extends <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.calcj.typechecker.TyperComponent" class="extype" target="_top">TyperComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@ReturnTyperComponentextendsTyperComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.ShapeCheckerComponent" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ShapeCheckerComponentextendsCheckerComponent[ch.usi.inf.l3.sana.tiny.ast.Tree]"></a>
+      <a id="ShapeCheckerComponent:ShapeCheckerComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ShapeCheckerComponent.html"><span class="name">ShapeCheckerComponent</span></a><span class="result"> extends <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.core.CheckerComponent" class="extype" target="_top">CheckerComponent</a>[<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@ShapeCheckerComponentextendsCheckerComponent[ch.usi.inf.l3.sana.tiny.ast.Tree]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Checks the shape of a tree, for example in Java it disallows statements to appear in
+places where expressions are expected.</p><div class="fullcomment"><div class="comment cmt"><p>Checks the shape of a tree, for example in Java it disallows statements to appear in
+places where expressions are expected. This phase is needed to handle the
+over expressiveness of the trees.
+</p></div></div>
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.TernaryTyperComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TernaryTyperComponentextendsTyperComponent"></a>
+      <a id="TernaryTyperComponent:TernaryTyperComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TernaryTyperComponent.html"><span class="name">TernaryTyperComponent</span></a><span class="result"> extends <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.calcj.typechecker.TyperComponent" class="extype" target="_top">TyperComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@TernaryTyperComponentextendsTyperComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.TypePromotions" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TypePromotionsextendsTypePromotions"></a>
+      <a id="TypePromotions:TypePromotions"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TypePromotions.html"><span class="name">TypePromotions</span></a><span class="result"> extends <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.calcj.typechecker.TypePromotions" class="extype" target="_top">calcj.typechecker.TypePromotions</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@TypePromotionsextendsTypePromotions" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.TypeUseTyperComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TypeUseTyperComponentextendsTyperComponent"></a>
+      <a id="TypeUseTyperComponent:TypeUseTyperComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TypeUseTyperComponent.html"><span class="name">TypeUseTyperComponent</span></a><span class="result"> extends <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.calcj.typechecker.TyperComponent" class="extype" target="_top">TyperComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@TypeUseTyperComponentextendsTyperComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.UnaryShapeCheckerComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="UnaryShapeCheckerComponentextendsShapeCheckerComponent"></a>
+      <a id="UnaryShapeCheckerComponent:UnaryShapeCheckerComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="UnaryShapeCheckerComponent.html"><span class="name">UnaryShapeCheckerComponent</span></a><span class="result"> extends <a href="ShapeCheckerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.typechecker.ShapeCheckerComponent">ShapeCheckerComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@UnaryShapeCheckerComponentextendsShapeCheckerComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.UnaryTyperComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="UnaryTyperComponentextendsUnaryTyperComponent"></a>
+      <a id="UnaryTyperComponent:UnaryTyperComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="UnaryTyperComponent.html"><span class="name">UnaryTyperComponent</span></a><span class="result"> extends <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.calcj.typechecker.UnaryTyperComponent" class="extype" target="_top">calcj.typechecker.UnaryTyperComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@UnaryTyperComponentextendsUnaryTyperComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.ValDefShapeCheckerComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ValDefShapeCheckerComponentextendsShapeCheckerComponent"></a>
+      <a id="ValDefShapeCheckerComponent:ValDefShapeCheckerComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ValDefShapeCheckerComponent.html"><span class="name">ValDefShapeCheckerComponent</span></a><span class="result"> extends <a href="ShapeCheckerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.typechecker.ShapeCheckerComponent">ShapeCheckerComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@ValDefShapeCheckerComponentextendsShapeCheckerComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.ValDefTyperComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ValDefTyperComponentextendsTyperComponent"></a>
+      <a id="ValDefTyperComponent:ValDefTyperComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ValDefTyperComponent.html"><span class="name">ValDefTyperComponent</span></a><span class="result"> extends <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.calcj.typechecker.TyperComponent" class="extype" target="_top">TyperComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@ValDefTyperComponentextendsTyperComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.WhileShapeCheckerComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="WhileShapeCheckerComponentextendsShapeCheckerComponent"></a>
+      <a id="WhileShapeCheckerComponent:WhileShapeCheckerComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="WhileShapeCheckerComponent.html"><span class="name">WhileShapeCheckerComponent</span></a><span class="result"> extends <a href="ShapeCheckerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.typechecker.ShapeCheckerComponent">ShapeCheckerComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@WhileShapeCheckerComponentextendsShapeCheckerComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.primj.typechecker.WhileTyperComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="WhileTyperComponentextendsTyperComponent"></a>
+      <a id="WhileTyperComponent:WhileTyperComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="WhileTyperComponent.html"><span class="name">WhileTyperComponent</span></a><span class="result"> extends <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.calcj.typechecker.TyperComponent" class="extype" target="_top">TyperComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@WhileTyperComponentextendsTyperComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="ch.usi.inf.l3.sana.primj.typechecker.TypePromotions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TypePromotions"></a>
+      <a id="TypePromotions:TypePromotions"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="TypePromotions$.html"><span class="name">TypePromotions</span></a><span class="result"> extends <a href="TypePromotions.html" class="extype" name="ch.usi.inf.l3.sana.primj.typechecker.TypePromotions">TypePromotions</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.typechecker.package@TypePromotions" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>
