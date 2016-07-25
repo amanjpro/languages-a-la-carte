@@ -1,0 +1,800 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>eval - Sana Compiler Framework - ch.usi.inf.l3.sana.ooj.eval</title>
+          <meta name="description" content="eval - Sana Compiler Framework - ch.usi.inf.l3.sana.ooj.eval" />
+          <meta name="keywords" content="eval Sana Compiler Framework ch.usi.inf.l3.sana.ooj.eval" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../../../../lib/tools.tooltip.js"></script>
+      <script type="text/javascript" src="../../../../../../../lib/modernizr.custom.js"></script><script type="text/javascript" src="../../../../../../../lib/diagrams.js" id="diagrams-js"></script>
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../../../index.html';
+            var hash = 'ch.usi.inf.l3.sana.ooj.eval.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../../../../package.html" class="extype" name="ch">ch</a>.<a href="../../../../../package.html" class="extype" name="ch.usi">usi</a>.<a href="../../../../package.html" class="extype" name="ch.usi.inf">inf</a>.<a href="../../../package.html" class="extype" name="ch.usi.inf.l3">l3</a>.<a href="../../package.html" class="extype" name="ch.usi.inf.l3.sana">sana</a>.<a href="../package.html" class="extype" name="ch.usi.inf.l3.sana.ooj">ooj</a></p>
+        <h1>eval</h1><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eval</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block diagram-container" id="content-diagram-container">
+                <span class="toggle diagram-link">Content Hierarchy</span>
+                <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#diagrams" target="_blank" class="diagram-help">Learn more about scaladoc diagrams</a>
+                <div class="diagram" id="content-diagram"><svg class="package-diagram" id="graph1" viewBox="0.00 0.00 7594.50 94.00" height="94pt" width="7595pt" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g transform="scale(1 1) rotate(0) translate(4 90)" class="graph" id="graph0"><polygon points="-4,4 -4,-90 7590.5,-90 7590.5,4 -4,4" stroke="none" fill="white"></polygon><!-- node0 --><g class="node class" id="graph1_0"><g id="a_class|graph1_0"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.LiteralValue" xlink:href="LiteralValue.html#inheritance-diagram"><polygon points="97,-25 0,-25 0,-0 97,-0 97,-25" stroke="#115f3b" fill="#0a955b"></polygon><image xlink:href="../../../../../../../lib/class_diagram.png" y="-19.5" x="10.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="31.5" text-anchor="start">LiteralValue</text></a></g></g><!-- node1 --><g class="node class" id="graph1_1"><g id="a_class|graph1_1"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.ExprValue" xlink:href="ExprValue.html#inheritance-diagram"><polygon points="205.5,-25 115.5,-25 115.5,-0 205.5,-0 205.5,-25" stroke="#115f3b" fill="#0a955b"></polygon><image xlink:href="../../../../../../../lib/class_diagram.png" y="-19.5" x="125.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="146.5" text-anchor="start">ExprValue</text></a></g></g><!-- node2 --><g class="node trait" id="graph1_2"><g id="a_trait|graph1_2"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.Value" xlink:href="Value.html#inheritance-diagram"><polygon points="139.5,-86 69.5,-86 69.5,-61 139.5,-61 139.5,-86" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-80.5" x="79.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-70.5" x="100.5" text-anchor="start">Value</text></a></g></g><!-- node2&#45;&gt;node0 --><g class="edge inheritance" id="graph1_2_0"><g id="a_inheritance|graph1_2_0"><a xlink:title="LiteralValue is a subtype of Value"><path d="M89.8157,-57.0291C80.336,-47.0415 68.2017,-34.2572 59.5408,-25.1323" stroke="#d4d4d4" fill="none"></path><polygon points="88.7247,-58.4217 93.4362,-60.8435 91.2633,-56.0122 88.7247,-58.4217" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node2&#45;&gt;node1 --><g class="edge inheritance" id="graph1_2_1"><g id="a_inheritance|graph1_2_1"><a xlink:title="ExprValue is a subtype of Value"><path d="M119.184,-57.0291C128.664,-47.0415 140.798,-34.2572 149.459,-25.1323" stroke="#d4d4d4" fill="none"></path><polygon points="117.737,-56.0122 115.564,-60.8435 120.275,-58.4217 117.737,-56.0122" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node3 --><g class="node trait" id="graph1_3"><g id="a_trait|graph1_3"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.NewConstantFoldingComponent" xlink:href="NewConstantFoldingComponent.html#inheritance-diagram"><polygon points="413,-25 224,-25 224,-0 413,-0 413,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="234.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="255.5" text-anchor="start">NewConstantFoldingComponent</text></a></g></g><!-- node4 --><g class="node trait" id="graph1_4"><g id="a_trait|graph1_4"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.LabelConstantFoldingComponent" xlink:href="LabelConstantFoldingComponent.html#inheritance-diagram"><polygon points="624,-25 431,-25 431,-0 624,-0 624,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="441.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="462.5" text-anchor="start">LabelConstantFoldingComponent</text></a></g></g><!-- node5 --><g class="node trait" id="graph1_5"><g id="a_trait|graph1_5"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.ReturnConstantFoldingComponent" xlink:href="ReturnConstantFoldingComponent.html#inheritance-diagram"><polygon points="841,-25 642,-25 642,-0 841,-0 841,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="652.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="673.5" text-anchor="start">ReturnConstantFoldingComponent</text></a></g></g><!-- node6 --><g class="node trait" id="graph1_6"><g id="a_trait|graph1_6"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.CaseConstantFoldingComponent" xlink:href="CaseConstantFoldingComponent.html#inheritance-diagram"><polygon points="1051.5,-25 859.5,-25 859.5,-0 1051.5,-0 1051.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="869.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="890.5" text-anchor="start">CaseConstantFoldingComponent</text></a></g></g><!-- node7 --><g class="node trait" id="graph1_7"><g id="a_trait|graph1_7"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.SwitchConstantFoldingComponent" xlink:href="SwitchConstantFoldingComponent.html#inheritance-diagram"><polygon points="1267.5,-25 1069.5,-25 1069.5,-0 1267.5,-0 1267.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="1079.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="1100.5" text-anchor="start">SwitchConstantFoldingComponent</text></a></g></g><!-- node8 --><g class="node trait" id="graph1_8"><g id="a_trait|graph1_8"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.WhileConstantFoldingComponent" xlink:href="WhileConstantFoldingComponent.html#inheritance-diagram"><polygon points="1479.5,-25 1285.5,-25 1285.5,-0 1479.5,-0 1479.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="1295.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="1316.5" text-anchor="start">WhileConstantFoldingComponent</text></a></g></g><!-- node9 --><g class="node trait" id="graph1_9"><g id="a_trait|graph1_9"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.IfConstantFoldingComponent" xlink:href="IfConstantFoldingComponent.html#inheritance-diagram"><polygon points="1671.5,-25 1497.5,-25 1497.5,-0 1671.5,-0 1671.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="1507.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="1528.5" text-anchor="start">IfConstantFoldingComponent</text></a></g></g><!-- node10 --><g class="node trait" id="graph1_10"><g id="a_trait|graph1_10"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.ApplyConstantFoldingComponent" xlink:href="ApplyConstantFoldingComponent.html#inheritance-diagram"><polygon points="1883.5,-25 1689.5,-25 1689.5,-0 1883.5,-0 1883.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="1699.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="1720.5" text-anchor="start">ApplyConstantFoldingComponent</text></a></g></g><!-- node11 --><g class="node trait" id="graph1_11"><g id="a_trait|graph1_11"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.ForConstantFoldingComponent" xlink:href="ForConstantFoldingComponent.html#inheritance-diagram"><polygon points="2085.5,-25 1901.5,-25 1901.5,-0 2085.5,-0 2085.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="1911.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="1932.5" text-anchor="start">ForConstantFoldingComponent</text></a></g></g><!-- node12 --><g class="node trait" id="graph1_12"><g id="a_trait|graph1_12"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.AssignConstantFoldingComponent" xlink:href="AssignConstantFoldingComponent.html#inheritance-diagram"><polygon points="2303,-25 2104,-25 2104,-0 2303,-0 2303,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="2114.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="2135.5" text-anchor="start">AssignConstantFoldingComponent</text></a></g></g><!-- node13 --><g class="node trait" id="graph1_13"><g id="a_trait|graph1_13"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.CastConstantFoldingComponent" xlink:href="CastConstantFoldingComponent.html#inheritance-diagram"><polygon points="2510,-25 2321,-25 2321,-0 2510,-0 2510,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="2331.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="2352.5" text-anchor="start">CastConstantFoldingComponent</text></a></g></g><!-- node14 --><g class="node trait" id="graph1_14"><g id="a_trait|graph1_14"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.TernaryConstantFoldingComponent" xlink:href="TernaryConstantFoldingComponent.html#inheritance-diagram"><polygon points="2731,-25 2528,-25 2528,-0 2731,-0 2731,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="2538.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="2559.5" text-anchor="start">TernaryConstantFoldingComponent</text></a></g></g><!-- node15 --><g class="node trait" id="graph1_15"><g id="a_trait|graph1_15"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.UnaryConstantFoldingComponent" xlink:href="UnaryConstantFoldingComponent.html#inheritance-diagram"><polygon points="2944,-25 2749,-25 2749,-0 2944,-0 2944,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="2759.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="2780.5" text-anchor="start">UnaryConstantFoldingComponent</text></a></g></g><!-- node16 --><g class="node trait" id="graph1_16"><g id="a_trait|graph1_16"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.BinaryConstantFoldingComponent" xlink:href="BinaryConstantFoldingComponent.html#inheritance-diagram"><polygon points="3159,-25 2962,-25 2962,-0 3159,-0 3159,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="2972.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="2993.5" text-anchor="start">BinaryConstantFoldingComponent</text></a></g></g><!-- node17 --><g class="node trait" id="graph1_17"><g id="a_trait|graph1_17"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.IdentConstantFoldingComponent" xlink:href="IdentConstantFoldingComponent.html#inheritance-diagram"><polygon points="3368,-25 3177,-25 3177,-0 3368,-0 3368,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="3187.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="3208.5" text-anchor="start">IdentConstantFoldingComponent</text></a></g></g><!-- node18 --><g class="node trait" id="graph1_18"><g id="a_trait|graph1_18"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.TypeUseConstantFoldingComponent" xlink:href="TypeUseConstantFoldingComponent.html#inheritance-diagram"><polygon points="3595,-25 3386,-25 3386,-0 3595,-0 3595,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="3396.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="3417.5" text-anchor="start">TypeUseConstantFoldingComponent</text></a></g></g><!-- node19 --><g class="node trait" id="graph1_19"><g id="a_trait|graph1_19"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.SelectConstantFoldingComponent" xlink:href="SelectConstantFoldingComponent.html#inheritance-diagram"><polygon points="3810,-25 3613,-25 3613,-0 3810,-0 3810,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="3623.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="3644.5" text-anchor="start">SelectConstantFoldingComponent</text></a></g></g><!-- node20 --><g class="node trait" id="graph1_20"><g id="a_trait|graph1_20"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.BlockConstantFoldingComponent" xlink:href="BlockConstantFoldingComponent.html#inheritance-diagram"><polygon points="4021,-25 3828,-25 3828,-0 4021,-0 4021,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="3838.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="3859.5" text-anchor="start">BlockConstantFoldingComponent</text></a></g></g><!-- node21 --><g class="node trait" id="graph1_21"><g id="a_trait|graph1_21"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.MethodDefConstantFoldingComponent" xlink:href="MethodDefConstantFoldingComponent.html#inheritance-diagram"><polygon points="4257.5,-25 4039.5,-25 4039.5,-0 4257.5,-0 4257.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="4049.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="4070.5" text-anchor="start">MethodDefConstantFoldingComponent</text></a></g></g><!-- node22 --><g class="node trait" id="graph1_22"><g id="a_trait|graph1_22"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.ValDefConstantFoldingComponent" xlink:href="ValDefConstantFoldingComponent.html#inheritance-diagram"><polygon points="4475,-25 4276,-25 4276,-0 4475,-0 4475,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="4286.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="4307.5" text-anchor="start">ValDefConstantFoldingComponent</text></a></g></g><!-- node23 --><g class="node trait" id="graph1_23"><g id="a_trait|graph1_23"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.TemplateConstantFoldingComponent" xlink:href="TemplateConstantFoldingComponent.html#inheritance-diagram"><polygon points="4703.5,-25 4493.5,-25 4493.5,-0 4703.5,-0 4703.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="4503.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="4524.5" text-anchor="start">TemplateConstantFoldingComponent</text></a></g></g><!-- node24 --><g class="node trait" id="graph1_24"><g id="a_trait|graph1_24"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.ClassDefConstantFoldingComponent" xlink:href="ClassDefConstantFoldingComponent.html#inheritance-diagram"><polygon points="4931,-25 4722,-25 4722,-0 4931,-0 4931,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="4732.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="4753.5" text-anchor="start">ClassDefConstantFoldingComponent</text></a></g></g><!-- node25 --><g class="node trait" id="graph1_25"><g id="a_trait|graph1_25"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.PackageDefConstantFoldingComponent" xlink:href="PackageDefConstantFoldingComponent.html#inheritance-diagram"><polygon points="5172,-25 4949,-25 4949,-0 5172,-0 5172,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="4959.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="4980.5" text-anchor="start">PackageDefConstantFoldingComponent</text></a></g></g><!-- node26 --><g class="node trait" id="graph1_26"><g id="a_trait|graph1_26"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.CompilationUnitConstantFoldingComponent" xlink:href="CompilationUnitConstantFoldingComponent.html#inheritance-diagram"><polygon points="5429,-25 5190,-25 5190,-0 5429,-0 5429,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="5200.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="5221.5" text-anchor="start">CompilationUnitConstantFoldingComponent</text></a></g></g><!-- node27 --><g class="node trait" id="graph1_27"><g id="a_trait|graph1_27"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.ProgramConstantFoldingComponent" xlink:href="ProgramConstantFoldingComponent.html#inheritance-diagram"><polygon points="5654,-25 5447,-25 5447,-0 5654,-0 5654,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="5457.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="5478.5" text-anchor="start">ProgramConstantFoldingComponent</text></a></g></g><!-- node28 --><g class="node trait" id="graph1_28"><g id="a_trait|graph1_28"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent" xlink:href="ConstantFoldingComponent.html#inheritance-diagram"><polygon points="2931,-86 2762,-86 2762,-61 2931,-61 2931,-86" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-80.5" x="2772.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-70.5" x="2793.5" text-anchor="start">ConstantFoldingComponent</text></a></g></g><!-- node28&#45;&gt;node3 --><g class="edge inheritance" id="graph1_28_3"><g id="a_inheritance|graph1_28_3"><a xlink:title="NewConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2756.62,-71.8437C2375.21,-68.8885 888.882,-55.6046 421.5,-25 418.717,-24.8178 415.893,-24.6154 413.044,-24.3961" stroke="#d4d4d4" fill="none"></path><polygon points="2756.86,-73.5956 2761.88,-71.8844 2756.89,-70.0957 2756.86,-73.5956" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node4 --><g class="edge inheritance" id="graph1_28_4"><g id="a_inheritance|graph1_28_4"><a xlink:title="LabelConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2756.72,-71.6257C2396.64,-67.9561 1056.15,-52.6908 632.5,-25 629.755,-24.8206 626.971,-24.6227 624.163,-24.4092" stroke="#d4d4d4" fill="none"></path><polygon points="2756.93,-73.3779 2761.95,-71.6789 2756.97,-69.878 2756.93,-73.3779" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node5 --><g class="edge inheritance" id="graph1_28_5"><g id="a_inheritance|graph1_28_5"><a xlink:title="ReturnConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2756.44,-72.9625C2474.71,-73.8507 1585.18,-72.4191 850.5,-25 847.462,-24.8039 844.377,-24.5874 841.265,-24.3538" stroke="#d4d4d4" fill="none"></path><polygon points="2756.77,-74.7115 2761.76,-72.9452 2756.76,-71.2115 2756.77,-74.7115" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node6 --><g class="edge inheritance" id="graph1_28_6"><g id="a_inheritance|graph1_28_6"><a xlink:title="CaseConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2756.45,-72.7274C2494.42,-72.8247 1709.78,-69.1142 1060.5,-25 1057.57,-24.8011 1054.6,-24.5821 1051.6,-24.3464" stroke="#d4d4d4" fill="none"></path><polygon points="2756.79,-74.4774 2761.79,-72.7249 2756.79,-70.9774 2756.79,-74.4774" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node7 --><g class="edge inheritance" id="graph1_28_7"><g id="a_inheritance|graph1_28_7"><a xlink:title="SwitchConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2756.47,-72.163C2515.97,-70.7462 1838.58,-63.3728 1276.5,-25 1273.58,-24.8009 1270.63,-24.5838 1267.64,-24.3516" stroke="#d4d4d4" fill="none"></path><polygon points="2756.71,-73.9144 2761.72,-72.1934 2756.73,-70.4144 2756.71,-73.9144" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node8 --><g class="edge inheritance" id="graph1_28_8"><g id="a_inheritance|graph1_28_8"><a xlink:title="WhileConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2756.69,-71.6268C2538.94,-69.0154 1965.65,-59.1819 1488.5,-25 1485.55,-24.7884 1482.55,-24.5583 1479.52,-24.3128" stroke="#d4d4d4" fill="none"></path><polygon points="2756.75,-73.3775 2761.77,-71.6871 2756.79,-69.8777 2756.75,-73.3775" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node9 --><g class="edge inheritance" id="graph1_28_9"><g id="a_inheritance|graph1_28_9"><a xlink:title="IfConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2756.73,-71.2431C2560.97,-67.9754 2081.1,-57.1043 1680.5,-25 1677.57,-24.7653 1674.6,-24.509 1671.59,-24.2351" stroke="#d4d4d4" fill="none"></path><polygon points="2756.84,-72.9951 2761.87,-71.3282 2756.9,-69.4955 2756.84,-72.9951" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node10 --><g class="edge inheritance" id="graph1_28_10"><g id="a_inheritance|graph1_28_10"><a xlink:title="ApplyConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2756.65,-69.7742C2587.38,-64.251 2209.72,-50.0832 1892.5,-25 1889.55,-24.7665 1886.55,-24.5173 1883.52,-24.2553" stroke="#d4d4d4" fill="none"></path><polygon points="2756.79,-71.5296 2761.85,-69.9431 2756.9,-68.0315 2756.79,-71.5296" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node11 --><g class="edge inheritance" id="graph1_28_11"><g id="a_inheritance|graph1_28_11"><a xlink:title="ForConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2756.44,-68.2777C2615.22,-61.3266 2333.15,-46.1103 2094.5,-25 2091.6,-24.7434 2088.65,-24.4721 2085.68,-24.1891" stroke="#d4d4d4" fill="none"></path><polygon points="2756.73,-70.0443 2761.81,-68.5417 2756.9,-66.5485 2756.73,-70.0443" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node12 --><g class="edge inheritance" id="graph1_28_12"><g id="a_inheritance|graph1_28_12"><a xlink:title="AssignConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2756.67,-65.0082C2650.34,-56.0285 2467.95,-40.2733 2311.5,-25 2308.78,-24.7343 2306.02,-24.4619 2303.23,-24.1843" stroke="#d4d4d4" fill="none"></path><polygon points="2756.54,-66.7539 2761.67,-65.4307 2756.84,-63.2663 2756.54,-66.7539" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node13 --><g class="edge inheritance" id="graph1_28_13"><g id="a_inheritance|graph1_28_13"><a xlink:title="CastConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2756.99,-60.2466C2681.38,-49.8959 2573.87,-35.1794 2499.78,-25.0371" stroke="#d4d4d4" fill="none"></path><polygon points="2757.18,-62.0398 2762.38,-60.9841 2757.66,-58.5721 2757.18,-62.0398" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node14 --><g class="edge inheritance" id="graph1_28_14"><g id="a_inheritance|graph1_28_14"><a xlink:title="TernaryConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2799.14,-59.6226C2761.28,-49.3286 2708.67,-35.0257 2672.12,-25.0875" stroke="#d4d4d4" fill="none"></path><polygon points="2798.86,-61.3609 2804.15,-60.9841 2799.78,-57.9836 2798.86,-61.3609" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node15 --><g class="edge inheritance" id="graph1_28_15"><g id="a_inheritance|graph1_28_15"><a xlink:title="UnaryConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2846.5,-55.6874C2846.5,-45.9173 2846.5,-33.8534 2846.5,-25.1323" stroke="#d4d4d4" fill="none"></path><polygon points="2844.75,-55.8435 2846.5,-60.8435 2848.25,-55.8435 2844.75,-55.8435" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node16 --><g class="edge inheritance" id="graph1_28_16"><g id="a_inheritance|graph1_28_16"><a xlink:title="BinaryConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2893.21,-59.6226C2930.55,-49.3286 2982.42,-35.0257 3018.47,-25.0875" stroke="#d4d4d4" fill="none"></path><polygon points="2892.62,-57.9681 2888.27,-60.9841 2893.55,-61.3422 2892.62,-57.9681" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node17 --><g class="edge inheritance" id="graph1_28_17"><g id="a_inheritance|graph1_28_17"><a xlink:title="IdentConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2934.97,-60.2466C3009.71,-49.8959 3115.97,-35.1794 3189.2,-25.0371" stroke="#d4d4d4" fill="none"></path><polygon points="2934.36,-58.5647 2929.65,-60.9841 2934.84,-62.0316 2934.36,-58.5647" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node18 --><g class="edge inheritance" id="graph1_28_18"><g id="a_inheritance|graph1_28_18"><a xlink:title="TypeUseConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2936.71,-64.7233C3042.21,-55.5578 3222.07,-39.7086 3376.5,-25 3379.57,-24.7077 3382.69,-24.4085 3385.83,-24.1046" stroke="#d4d4d4" fill="none"></path><polygon points="2936.27,-63.0056 2931.44,-65.1817 2936.57,-66.4924 2936.27,-63.0056" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node19 --><g class="edge inheritance" id="graph1_28_19"><g id="a_inheritance|graph1_28_19"><a xlink:title="SelectConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2936.57,-68.1158C3078.51,-60.9211 3362.86,-45.3516 3603.5,-25 3606.6,-24.7378 3609.75,-24.4616 3612.93,-24.1744" stroke="#d4d4d4" fill="none"></path><polygon points="2936.07,-66.3887 2931.17,-68.3891 2936.25,-69.8842 2936.07,-66.3887" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node20 --><g class="edge inheritance" id="graph1_28_20"><g id="a_inheritance|graph1_28_20"><a xlink:title="BlockConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2936.13,-69.8952C3107.65,-64.5171 3494.1,-50.5011 3818.5,-25 3821.54,-24.7606 3824.64,-24.5044 3827.76,-24.2343" stroke="#d4d4d4" fill="none"></path><polygon points="2936.06,-68.1464 2931.12,-70.0518 2936.17,-71.6447 2936.06,-68.1464" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node21 --><g class="edge inheritance" id="graph1_28_21"><g id="a_inheritance|graph1_28_21"><a xlink:title="MethodDefConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2936.42,-70.6141C3134.22,-66.087 3621.95,-52.8524 4029.5,-25 4032.71,-24.7806 4035.97,-24.5457 4039.25,-24.2978" stroke="#d4d4d4" fill="none"></path><polygon points="2936.18,-68.8689 2931.22,-70.7325 2936.26,-72.368 2936.18,-68.8689" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node22 --><g class="edge inheritance" id="graph1_28_22"><g id="a_inheritance|graph1_28_22"><a xlink:title="ValDefConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2936.27,-71.7288C3160.74,-69.3153 3764.46,-59.8353 4266.5,-25 4269.54,-24.7892 4272.62,-24.5599 4275.73,-24.3152" stroke="#d4d4d4" fill="none"></path><polygon points="2936.02,-69.9813 2931.04,-71.7845 2936.05,-73.4811 2936.02,-69.9813" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node23 --><g class="edge inheritance" id="graph1_28_23"><g id="a_inheritance|graph1_28_23"><a xlink:title="TemplateConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2936.41,-72.12C3183.6,-70.5937 3894.2,-62.9671 4483.5,-25 4486.7,-24.7936 4489.96,-24.5681 4493.24,-24.3266" stroke="#d4d4d4" fill="none"></path><polygon points="2936.36,-70.3702 2931.37,-72.1507 2936.38,-73.8701 2936.36,-70.3702" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node24 --><g class="edge inheritance" id="graph1_28_24"><g id="a_inheritance|graph1_28_24"><a xlink:title="ClassDefConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2936.32,-72.6027C3205.71,-72.3974 4030.4,-68.025 4712.5,-25 4715.58,-24.8059 4718.7,-24.5931 4721.85,-24.3647" stroke="#d4d4d4" fill="none"></path><polygon points="2936.22,-70.8527 2931.22,-72.6062 2936.22,-74.3527 2936.22,-70.8527" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node25 --><g class="edge inheritance" id="graph1_28_25"><g id="a_inheritance|graph1_28_25"><a xlink:title="PackageDefConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2936.39,-72.7729C3226.62,-73.1591 4164.88,-70.5411 4939.5,-25 4942.55,-24.8204 4945.65,-24.6243 4948.78,-24.4141" stroke="#d4d4d4" fill="none"></path><polygon points="2936.32,-71.0229 2931.32,-72.7658 2936.32,-74.5229 2936.32,-71.0229" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node26 --><g class="edge inheritance" id="graph1_28_26"><g id="a_inheritance|graph1_28_26"><a xlink:title="CompilationUnitConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2936.52,-72.887C3247.78,-73.752 4307.22,-72.755 5180.5,-25 5183.53,-24.8343 5186.6,-24.654 5189.7,-24.4613" stroke="#d4d4d4" fill="none"></path><polygon points="2936.1,-71.1359 2931.1,-72.8715 2936.09,-74.6359 2936.1,-71.1359" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node28&#45;&gt;node27 --><g class="edge inheritance" id="graph1_28_27"><g id="a_inheritance|graph1_28_27"><a xlink:title="ProgramConstantFoldingComponent is a subtype of ConstantFoldingComponent"><path d="M2936.51,-71.8554C3334.1,-68.8532 4935.47,-55.0956 5437.5,-25 5440.55,-24.8171 5443.65,-24.6142 5446.77,-24.3944" stroke="#d4d4d4" fill="none"></path><polygon points="2936.3,-70.1068 2931.31,-71.8945 2936.32,-73.6067 2936.3,-70.1068" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node29 --><g class="node trait" id="graph1_29"><g id="a_trait|graph1_29"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.BlockConstantCollectingComponent" xlink:href="BlockConstantCollectingComponent.html#inheritance-diagram"><polygon points="5876.5,-25 5672.5,-25 5672.5,-0 5876.5,-0 5876.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="5682.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="5703.5" text-anchor="start">BlockConstantCollectingComponent</text></a></g></g><!-- node30 --><g class="node trait" id="graph1_30"><g id="a_trait|graph1_30"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.MethodDefConstantCollectingComponent" xlink:href="MethodDefConstantCollectingComponent.html#inheritance-diagram"><polygon points="6124,-25 5895,-25 5895,-0 6124,-0 6124,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="5905.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="5926.5" text-anchor="start">MethodDefConstantCollectingComponent</text></a></g></g><!-- node31 --><g class="node trait" id="graph1_31"><g id="a_trait|graph1_31"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.ValDefConstantCollectingComponent" xlink:href="ValDefConstantCollectingComponent.html#inheritance-diagram"><polygon points="6352.5,-25 6142.5,-25 6142.5,-0 6352.5,-0 6352.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="6152.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="6173.5" text-anchor="start">ValDefConstantCollectingComponent</text></a></g></g><!-- node32 --><g class="node trait" id="graph1_32"><g id="a_trait|graph1_32"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.TemplateConstantCollectingComponent" xlink:href="TemplateConstantCollectingComponent.html#inheritance-diagram"><polygon points="6592.5,-25 6370.5,-25 6370.5,-0 6592.5,-0 6592.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="6380.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="6401.5" text-anchor="start">TemplateConstantCollectingComponent</text></a></g></g><!-- node33 --><g class="node trait" id="graph1_33"><g id="a_trait|graph1_33"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.ClassDefConstantCollectingComponent" xlink:href="ClassDefConstantCollectingComponent.html#inheritance-diagram"><polygon points="6830.5,-25 6610.5,-25 6610.5,-0 6830.5,-0 6830.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="6620.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="6641.5" text-anchor="start">ClassDefConstantCollectingComponent</text></a></g></g><!-- node34 --><g class="node trait" id="graph1_34"><g id="a_trait|graph1_34"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.PackageDefConstantCollectingComponent" xlink:href="PackageDefConstantCollectingComponent.html#inheritance-diagram"><polygon points="7082.5,-25 6848.5,-25 6848.5,-0 7082.5,-0 7082.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="6858.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="6879.5" text-anchor="start">PackageDefConstantCollectingComponent</text></a></g></g><!-- node35 --><g class="node trait" id="graph1_35"><g id="a_trait|graph1_35"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.CompilationUnitConstantCollectingComponent" xlink:href="CompilationUnitConstantCollectingComponent.html#inheritance-diagram"><polygon points="7350.5,-25 7100.5,-25 7100.5,-0 7350.5,-0 7350.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="7110.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="7131.5" text-anchor="start">CompilationUnitConstantCollectingComponent</text></a></g></g><!-- node36 --><g class="node trait" id="graph1_36"><g id="a_trait|graph1_36"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.ProgramConstantCollectingComponent" xlink:href="ProgramConstantCollectingComponent.html#inheritance-diagram"><polygon points="7586.5,-25 7368.5,-25 7368.5,-0 7586.5,-0 7586.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="7378.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="7399.5" text-anchor="start">ProgramConstantCollectingComponent</text></a></g></g><!-- node37 --><g class="node trait" id="graph1_37"><g id="a_trait|graph1_37"><a xlink:title="ch.usi.inf.l3.sana.ooj.eval.ConstantCollectingComponent" xlink:href="ConstantCollectingComponent.html#inheritance-diagram"><polygon points="6690.5,-86 6510.5,-86 6510.5,-61 6690.5,-61 6690.5,-86" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-80.5" x="6520.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-70.5" x="6541.5" text-anchor="start">ConstantCollectingComponent</text></a></g></g><!-- node37&#45;&gt;node29 --><g class="edge inheritance" id="graph1_37_29"><g id="a_inheritance|graph1_37_29"><a xlink:title="BlockConstantCollectingComponent is a subtype of ConstantCollectingComponent"><path d="M6505.18,-67.2888C6368.04,-59.5367 6107.17,-43.8396 5885.5,-25 5882.6,-24.7539 5879.67,-24.4972 5876.7,-24.2319" stroke="#d4d4d4" fill="none"></path><polygon points="6505.31,-69.0492 6510.4,-67.5838 6505.51,-65.5548 6505.31,-69.0492" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node37&#45;&gt;node30 --><g class="edge inheritance" id="graph1_37_30"><g id="a_inheritance|graph1_37_30"><a xlink:title="MethodDefConstantCollectingComponent is a subtype of ConstantCollectingComponent"><path d="M6505.21,-62.9871C6401.31,-52.6143 6235.06,-36.0175 6124.11,-24.9413" stroke="#d4d4d4" fill="none"></path><polygon points="6505.27,-64.7517 6510.42,-63.5071 6505.62,-61.269 6505.27,-64.7517" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node37&#45;&gt;node31 --><g class="edge inheritance" id="graph1_37_31"><g id="a_inheritance|graph1_37_31"><a xlink:title="ValDefConstantCollectingComponent is a subtype of ConstantCollectingComponent"><path d="M6526.44,-60.1222C6464.55,-49.7783 6376.97,-35.1388 6316.53,-25.0371" stroke="#d4d4d4" fill="none"></path><polygon points="6526.38,-61.8859 6531.6,-60.9841 6526.96,-58.4337 6526.38,-61.8859" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node37&#45;&gt;node32 --><g class="edge inheritance" id="graph1_37_32"><g id="a_inheritance|graph1_37_32"><a xlink:title="TemplateConstantCollectingComponent is a subtype of ConstantCollectingComponent"><path d="M6572.74,-58.7381C6552.21,-48.5571 6524.54,-34.8399 6505.08,-25.1884" stroke="#d4d4d4" fill="none"></path><polygon points="6572.02,-60.331 6577.27,-60.9841 6573.57,-57.1952 6572.02,-60.331" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node37&#45;&gt;node33 --><g class="edge inheritance" id="graph1_37_33"><g id="a_inheritance|graph1_37_33"><a xlink:title="ClassDefConstantCollectingComponent is a subtype of ConstantCollectingComponent"><path d="M6628.49,-58.7381C6649.2,-48.5571 6677.1,-34.8399 6696.73,-25.1884" stroke="#d4d4d4" fill="none"></path><polygon points="6627.64,-57.2075 6623.92,-60.9841 6629.18,-60.3484 6627.64,-57.2075" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node37&#45;&gt;node34 --><g class="edge inheritance" id="graph1_37_34"><g id="a_inheritance|graph1_37_34"><a xlink:title="PackageDefConstantCollectingComponent is a subtype of ConstantCollectingComponent"><path d="M6676.69,-60.1844C6740.7,-49.8371 6831.51,-35.1591 6894.13,-25.0371" stroke="#d4d4d4" fill="none"></path><polygon points="6676.4,-58.4586 6671.74,-60.9841 6676.96,-61.9138 6676.4,-58.4586" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node37&#45;&gt;node35 --><g class="edge inheritance" id="graph1_37_35"><g id="a_inheritance|graph1_37_35"><a xlink:title="CompilationUnitConstantCollectingComponent is a subtype of ConstantCollectingComponent"><path d="M6695.86,-63.4979C6805.1,-53.1856 6984.35,-36.2649 7103.63,-25.0048" stroke="#d4d4d4" fill="none"></path><polygon points="6695.53,-61.7717 6690.71,-63.9839 6695.86,-65.2562 6695.53,-61.7717" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node37&#45;&gt;node36 --><g class="edge inheritance" id="graph1_37_36"><g id="a_inheritance|graph1_37_36"><a xlink:title="ProgramConstantCollectingComponent is a subtype of ConstantCollectingComponent"><path d="M6695.59,-67.609C6839.42,-59.9717 7120.83,-44.0927 7359.5,-25 7362.37,-24.7702 7365.28,-24.5312 7368.22,-24.2846" stroke="#d4d4d4" fill="none"></path><polygon points="6695.44,-65.8648 6690.54,-67.8772 6695.62,-69.3599 6695.44,-65.8648" stroke="#d4d4d4" fill="none"></polygon></a></g></g></g></svg></div>
+              </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="ch.usi.inf.l3.sana.ooj.eval.ApplyConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ApplyConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="ApplyConstantFoldingComponent:ApplyConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ApplyConstantFoldingComponent.html"><span class="name">ApplyConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@ApplyConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.AssignConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="AssignConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="AssignConstantFoldingComponent:AssignConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="AssignConstantFoldingComponent.html"><span class="name">AssignConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@AssignConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.BinaryConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="BinaryConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="BinaryConstantFoldingComponent:BinaryConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="BinaryConstantFoldingComponent.html"><span class="name">BinaryConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@BinaryConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.BlockConstantCollectingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="BlockConstantCollectingComponentextendsConstantCollectingComponent"></a>
+      <a id="BlockConstantCollectingComponent:BlockConstantCollectingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="BlockConstantCollectingComponent.html"><span class="name">BlockConstantCollectingComponent</span></a><span class="result"> extends <a href="ConstantCollectingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantCollectingComponent">ConstantCollectingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@BlockConstantCollectingComponentextendsConstantCollectingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.BlockConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="BlockConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="BlockConstantFoldingComponent:BlockConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="BlockConstantFoldingComponent.html"><span class="name">BlockConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@BlockConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.CaseConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="CaseConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="CaseConstantFoldingComponent:CaseConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="CaseConstantFoldingComponent.html"><span class="name">CaseConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@CaseConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.CastConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="CastConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="CastConstantFoldingComponent:CastConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="CastConstantFoldingComponent.html"><span class="name">CastConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@CastConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.ClassDefConstantCollectingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ClassDefConstantCollectingComponentextendsConstantCollectingComponent"></a>
+      <a id="ClassDefConstantCollectingComponent:ClassDefConstantCollectingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ClassDefConstantCollectingComponent.html"><span class="name">ClassDefConstantCollectingComponent</span></a><span class="result"> extends <a href="ConstantCollectingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantCollectingComponent">ConstantCollectingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@ClassDefConstantCollectingComponentextendsConstantCollectingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.ClassDefConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ClassDefConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="ClassDefConstantFoldingComponent:ClassDefConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ClassDefConstantFoldingComponent.html"><span class="name">ClassDefConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@ClassDefConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.CompilationUnitConstantCollectingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="CompilationUnitConstantCollectingComponentextendsConstantCollectingComponent"></a>
+      <a id="CompilationUnitConstantCollectingComponent:CompilationUnitConstantCollectingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="CompilationUnitConstantCollectingComponent.html"><span class="name">CompilationUnitConstantCollectingComponent</span></a><span class="result"> extends <a href="ConstantCollectingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantCollectingComponent">ConstantCollectingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@CompilationUnitConstantCollectingComponentextendsConstantCollectingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.CompilationUnitConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="CompilationUnitConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="CompilationUnitConstantFoldingComponent:CompilationUnitConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="CompilationUnitConstantFoldingComponent.html"><span class="name">CompilationUnitConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@CompilationUnitConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.ConstantCollectingComponent" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ConstantCollectingComponentextendsTransformationComponent[(ch.usi.inf.l3.sana.tiny.ast.Tree,ch.usi.inf.l3.sana.ooj.eval.Env),ch.usi.inf.l3.sana.ooj.eval.Env]"></a>
+      <a id="ConstantCollectingComponent:ConstantCollectingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ConstantCollectingComponent.html"><span class="name">ConstantCollectingComponent</span></a><span class="result"> extends <a href="http://amanjpro.github.io/languages-a-la-carte/web/api/tiny/index.html#ch.usi.inf.l3.sana.tiny.core.TransformationComponent" class="extype" target="_top">TransformationComponent</a>[(<a href="http://amanjpro.github.io/languages-a-la-carte/web/api/tiny/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>, <a href="Env.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.Env">Env</a>), <a href="Env.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.Env">Env</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@ConstantCollectingComponentextendsTransformationComponent[(ch.usi.inf.l3.sana.tiny.ast.Tree,ch.usi.inf.l3.sana.ooj.eval.Env),ch.usi.inf.l3.sana.ooj.eval.Env]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">This phase together with <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a> perform
+constant-folding constant expressions.</p><div class="fullcomment"><div class="comment cmt"><p>This phase together with <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a> perform
+constant-folding constant expressions. This step is useful to be done before
+type-checking takes place for case-guard distinctness and assignment
+conversion checking. Constant expression is defined as per Java 1
+specification.</p><p>This phase is run first, and feeds an environment with the final fields of
+the entire program and binds them to their right-hand side expression.
+Then, <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a> phase comes and evaluates the entire
+program using the resulting environment, as per usual.
+</p></div></div>
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ConstantFoldingComponentextendsTransformationComponent[(ch.usi.inf.l3.sana.tiny.ast.Tree,ch.usi.inf.l3.sana.ooj.eval.Env),(ch.usi.inf.l3.sana.tiny.ast.Tree,ch.usi.inf.l3.sana.ooj.eval.Env)]"></a>
+      <a id="ConstantFoldingComponent:ConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ConstantFoldingComponent.html"><span class="name">ConstantFoldingComponent</span></a><span class="result"> extends <a href="http://amanjpro.github.io/languages-a-la-carte/web/api/tiny/index.html#ch.usi.inf.l3.sana.tiny.core.TransformationComponent" class="extype" target="_top">TransformationComponent</a>[(<a href="http://amanjpro.github.io/languages-a-la-carte/web/api/tiny/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>, <a href="Env.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.Env">Env</a>), (<a href="http://amanjpro.github.io/languages-a-la-carte/web/api/tiny/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>, <a href="Env.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.Env">Env</a>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@ConstantFoldingComponentextendsTransformationComponent[(ch.usi.inf.l3.sana.tiny.ast.Tree,ch.usi.inf.l3.sana.ooj.eval.Env),(ch.usi.inf.l3.sana.tiny.ast.Tree,ch.usi.inf.l3.sana.ooj.eval.Env)]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">After performing constant collection, this phase comes and evaluates
+the program.</p><div class="fullcomment"><div class="comment cmt"><p>After performing constant collection, this phase comes and evaluates
+the program.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p></p><pre>ConstantCollectingComponent</pre></span></dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.Env" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="EnvextendsAnyRef"></a>
+      <a id="Env:Env"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Env.html"><span class="name">Env</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@EnvextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">This environment is used for constant folding</p>
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.ExprValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ExprValueextendsValuewithProductwithSerializable"></a>
+      <a id="ExprValue:ExprValue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ExprValue.html"><span class="name">ExprValue</span></a><span class="params">(<span name="value">value: <a href="http://amanjpro.github.io/languages-a-la-carte/web/api/tiny/index.html#ch.usi.inf.l3.sana.tiny.ast.Expr" class="extype" target="_top">Expr</a></span>)</span><span class="result"> extends <a href="Value.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.Value">Value</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@ExprValueextendsValuewithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An expression value (non-constant expression)</p>
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.ForConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ForConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="ForConstantFoldingComponent:ForConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ForConstantFoldingComponent.html"><span class="name">ForConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@ForConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.IdentConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="IdentConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="IdentConstantFoldingComponent:IdentConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="IdentConstantFoldingComponent.html"><span class="name">IdentConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@IdentConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.IfConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="IfConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="IfConstantFoldingComponent:IfConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="IfConstantFoldingComponent.html"><span class="name">IfConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@IfConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.LabelConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="LabelConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="LabelConstantFoldingComponent:LabelConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="LabelConstantFoldingComponent.html"><span class="name">LabelConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@LabelConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.LiteralValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LiteralValueextendsValuewithProductwithSerializable"></a>
+      <a id="LiteralValue:LiteralValue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="LiteralValue.html"><span class="name">LiteralValue</span></a><span class="params">(<span name="value">value: <a href="http://amanjpro.github.io/languages-a-la-carte/web/api/calcj/index.html#ch.usi.inf.l3.sana.calcj.ast.LiteralApi" class="extype" target="_top">LiteralApi</a></span>)</span><span class="result"> extends <a href="Value.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.Value">Value</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@LiteralValueextendsValuewithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A literal (constant) value (constant expression)</p>
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.MethodDefConstantCollectingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="MethodDefConstantCollectingComponentextendsConstantCollectingComponent"></a>
+      <a id="MethodDefConstantCollectingComponent:MethodDefConstantCollectingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="MethodDefConstantCollectingComponent.html"><span class="name">MethodDefConstantCollectingComponent</span></a><span class="result"> extends <a href="ConstantCollectingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantCollectingComponent">ConstantCollectingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@MethodDefConstantCollectingComponentextendsConstantCollectingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.MethodDefConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="MethodDefConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="MethodDefConstantFoldingComponent:MethodDefConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="MethodDefConstantFoldingComponent.html"><span class="name">MethodDefConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@MethodDefConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.NewConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="NewConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="NewConstantFoldingComponent:NewConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="NewConstantFoldingComponent.html"><span class="name">NewConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@NewConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.PackageDefConstantCollectingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="PackageDefConstantCollectingComponentextendsConstantCollectingComponent"></a>
+      <a id="PackageDefConstantCollectingComponent:PackageDefConstantCollectingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="PackageDefConstantCollectingComponent.html"><span class="name">PackageDefConstantCollectingComponent</span></a><span class="result"> extends <a href="ConstantCollectingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantCollectingComponent">ConstantCollectingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@PackageDefConstantCollectingComponentextendsConstantCollectingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.PackageDefConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="PackageDefConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="PackageDefConstantFoldingComponent:PackageDefConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="PackageDefConstantFoldingComponent.html"><span class="name">PackageDefConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@PackageDefConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.ProgramConstantCollectingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ProgramConstantCollectingComponentextendsConstantCollectingComponent"></a>
+      <a id="ProgramConstantCollectingComponent:ProgramConstantCollectingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ProgramConstantCollectingComponent.html"><span class="name">ProgramConstantCollectingComponent</span></a><span class="result"> extends <a href="ConstantCollectingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantCollectingComponent">ConstantCollectingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@ProgramConstantCollectingComponentextendsConstantCollectingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.ProgramConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ProgramConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="ProgramConstantFoldingComponent:ProgramConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ProgramConstantFoldingComponent.html"><span class="name">ProgramConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@ProgramConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.ReturnConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ReturnConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="ReturnConstantFoldingComponent:ReturnConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ReturnConstantFoldingComponent.html"><span class="name">ReturnConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@ReturnConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.SelectConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SelectConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="SelectConstantFoldingComponent:SelectConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="SelectConstantFoldingComponent.html"><span class="name">SelectConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@SelectConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.SwitchConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SwitchConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="SwitchConstantFoldingComponent:SwitchConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="SwitchConstantFoldingComponent.html"><span class="name">SwitchConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@SwitchConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.TemplateConstantCollectingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TemplateConstantCollectingComponentextendsConstantCollectingComponent"></a>
+      <a id="TemplateConstantCollectingComponent:TemplateConstantCollectingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TemplateConstantCollectingComponent.html"><span class="name">TemplateConstantCollectingComponent</span></a><span class="result"> extends <a href="ConstantCollectingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantCollectingComponent">ConstantCollectingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@TemplateConstantCollectingComponentextendsConstantCollectingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.TemplateConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TemplateConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="TemplateConstantFoldingComponent:TemplateConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TemplateConstantFoldingComponent.html"><span class="name">TemplateConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@TemplateConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.TernaryConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TernaryConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="TernaryConstantFoldingComponent:TernaryConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TernaryConstantFoldingComponent.html"><span class="name">TernaryConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@TernaryConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.TypeUseConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TypeUseConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="TypeUseConstantFoldingComponent:TypeUseConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TypeUseConstantFoldingComponent.html"><span class="name">TypeUseConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@TypeUseConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.UnaryConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="UnaryConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="UnaryConstantFoldingComponent:UnaryConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="UnaryConstantFoldingComponent.html"><span class="name">UnaryConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@UnaryConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.ValDefConstantCollectingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ValDefConstantCollectingComponentextendsConstantCollectingComponent"></a>
+      <a id="ValDefConstantCollectingComponent:ValDefConstantCollectingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ValDefConstantCollectingComponent.html"><span class="name">ValDefConstantCollectingComponent</span></a><span class="result"> extends <a href="ConstantCollectingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantCollectingComponent">ConstantCollectingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@ValDefConstantCollectingComponentextendsConstantCollectingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.ValDefConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ValDefConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="ValDefConstantFoldingComponent:ValDefConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ValDefConstantFoldingComponent.html"><span class="name">ValDefConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@ValDefConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.Value" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ValueextendsAnyRef"></a>
+      <a id="Value:Value"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Value.html"><span class="name">Value</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@ValueextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A representation of compile time values</p>
+    </li><li name="ch.usi.inf.l3.sana.ooj.eval.WhileConstantFoldingComponent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="WhileConstantFoldingComponentextendsConstantFoldingComponent"></a>
+      <a id="WhileConstantFoldingComponent:WhileConstantFoldingComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="WhileConstantFoldingComponent.html"><span class="name">WhileConstantFoldingComponent</span></a><span class="result"> extends <a href="ConstantFoldingComponent.html" class="extype" name="ch.usi.inf.l3.sana.ooj.eval.ConstantFoldingComponent">ConstantFoldingComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@WhileConstantFoldingComponentextendsConstantFoldingComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="ch.usi.inf.l3.sana.ooj.eval.Env" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Env"></a>
+      <a id="Env:Env"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Env$.html"><span class="name">Env</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.ooj.eval.package@Env" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>
