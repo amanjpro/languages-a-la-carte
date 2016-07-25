@@ -1,0 +1,965 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>SymbolAssignerComponent - Sana Compiler Framework - ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent</title>
+          <meta name="description" content="SymbolAssignerComponent - Sana Compiler Framework - ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent" />
+          <meta name="keywords" content="SymbolAssignerComponent Sana Compiler Framework ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../../../../lib/tools.tooltip.js"></script>
+      <script type="text/javascript" src="../../../../../../../lib/modernizr.custom.js"></script><script type="text/javascript" src="../../../../../../../lib/diagrams.js" id="diagrams-js"></script>
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../../../index.html';
+            var hash = 'ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="type">
+      <div id="definition">
+        <img alt="Trait" src="../../../../../../../lib/trait_big.png" />
+        <p id="owner"><a href="../../../../../../package.html" class="extype" name="ch">ch</a>.<a href="../../../../../package.html" class="extype" name="ch.usi">usi</a>.<a href="../../../../package.html" class="extype" name="ch.usi.inf">inf</a>.<a href="../../../package.html" class="extype" name="ch.usi.inf.l3">l3</a>.<a href="../../package.html" class="extype" name="ch.usi.inf.l3.sana">sana</a>.<a href="../package.html" class="extype" name="ch.usi.inf.l3.sana.primj">primj</a>.<a href="package.html" class="extype" name="ch.usi.inf.l3.sana.primj.namers">namers</a></p>
+        <h1>SymbolAssignerComponent</h1><h3><span class="morelinks"><div>Related Doc:
+            <a href="package.html" class="extype" name="ch.usi.inf.l3.sana.primj.namers">package namers</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <span class="name">SymbolAssignerComponent</span><span class="result"> extends <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.core.TransformationComponent" class="extype" target="_top">TransformationComponent</a>[<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>, <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>]</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Assigns symbols to definition trees and the trees that introduce a new scope,
+and assigns contextual owners to all trees. For understanding contextual owner
+please refer to <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.symbols.Symbol@owner:Option[ch.usi.inf.l3.sana.tiny.symbols.Symbol]" class="extype" target="_top">tiny.symbols.Symbol.owner</a>.</p><p>Parent trees communicate with their child trees (i.e. they tell them who their
+parents is) using their </p><pre>owner</pre><p> field. This field is added to trees via
+<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.augmenters.AugmentedTree@owner:Option[ch.usi.inf.l3.sana.tiny.symbols.Symbol]" class="extype" target="_top">tiny.ast.augmenters.AugmentedTree.owner</a> and
+<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.augmenters.AugmentedTree@owner_=(owner:ch.usi.inf.l3.sana.tiny.symbols.Symbol):Unit" class="extype" target="_top">tiny.ast.augmenters.AugmentedTree.owner_=</a> methods.</p><p>owner
+}}}
+<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.augmenters.AugmentedTree@owner:Option[ch.usi.inf.l3.sana.tiny.symbols.Symbol]" class="extype" target="_top">tiny.ast.augmenters.AugmentedTree.owner</a> and
+<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.augmenters.AugmentedTree@owner_=(owner:ch.usi.inf.l3.sana.tiny.symbols.Symbol):Unit" class="extype" target="_top">tiny.ast.augmenters.AugmentedTree.owner_=</a> methods.
+</p></div><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.core.TransformationComponent" class="extype" target="_top">TransformationComponent</a>[<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>, <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>], <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.core.PhaseComponent" class="extype" target="_top">PhaseComponent</a>[<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>, <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>], <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>, <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>], (<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>) ⇒ <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>, <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+        </div><div class="toggleContainer block">
+            <span class="toggle">Known Subclasses</span>
+            <div class="subClasses hiddenContent"><a href="ApplySymbolAssignerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.namers.ApplySymbolAssignerComponent">ApplySymbolAssignerComponent</a>, <a href="AssignSymbolAssignerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.namers.AssignSymbolAssignerComponent">AssignSymbolAssignerComponent</a>, <a href="BinarySymbolAssignerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.namers.BinarySymbolAssignerComponent">BinarySymbolAssignerComponent</a>, <a href="BlockSymbolAssignerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.namers.BlockSymbolAssignerComponent">BlockSymbolAssignerComponent</a>, <a href="CastSymbolAssignerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.namers.CastSymbolAssignerComponent">CastSymbolAssignerComponent</a>, <a href="ForSymbolAssignerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.namers.ForSymbolAssignerComponent">ForSymbolAssignerComponent</a>, <a href="IfSymbolAssignerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.namers.IfSymbolAssignerComponent">IfSymbolAssignerComponent</a>, <a href="MethodDefSymbolAssignerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.namers.MethodDefSymbolAssignerComponent">MethodDefSymbolAssignerComponent</a>, <a href="ProgramSymbolAssignerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.namers.ProgramSymbolAssignerComponent">ProgramSymbolAssignerComponent</a>, <a href="ReturnSymbolAssignerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.namers.ReturnSymbolAssignerComponent">ReturnSymbolAssignerComponent</a>, <a href="TernarySymbolAssignerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.namers.TernarySymbolAssignerComponent">TernarySymbolAssignerComponent</a>, <a href="UnarySymbolAssignerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.namers.UnarySymbolAssignerComponent">UnarySymbolAssignerComponent</a>, <a href="ValDefSymbolAssignerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.namers.ValDefSymbolAssignerComponent">ValDefSymbolAssignerComponent</a>, <a href="WhileSymbolAssignerComponent.html" class="extype" name="ch.usi.inf.l3.sana.primj.namers.WhileSymbolAssignerComponent">WhileSymbolAssignerComponent</a></div>
+          </div><div class="toggleContainer block diagram-container" id="inheritance-diagram-container">
+                <span class="toggle diagram-link">Type Hierarchy</span>
+                <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#diagrams" target="_blank" class="diagram-help">Learn more about scaladoc diagrams</a>
+                <div class="diagram" id="inheritance-diagram"><svg class="class-diagram" id="graph1" viewBox="0.00 0.00 2984.00 155.00" height="155pt" width="2984pt" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g transform="scale(1 1) rotate(0) translate(4 151)" class="graph" id="graph0"><polygon points="-4,4 -4,-151 2980,-151 2980,4 -4,4" stroke="none" fill="white"></polygon><g class="cluster" id="clust1"></g><g class="cluster" id="clust2"></g><!-- node0 --><g class="node this trait" id="graph1_0"><g id="a_this trait|graph1_0"><a xlink:title="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent (this trait)" xlink:href="#inheritance-diagram"><polygon points="1540.5,-86 1372.5,-86 1372.5,-61 1540.5,-61 1540.5,-86" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-80.5" x="1382.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-70.5" x="1403.5" text-anchor="start">SymbolAssignerComponent</text></a></g></g><!-- node1 --><g class="node trait" id="graph1_1"><g id="a_trait|graph1_1"><a xlink:title="ch.usi.inf.l3.sana.primj.namers.ApplySymbolAssignerComponent" xlink:href="ApplySymbolAssignerComponent.html#inheritance-diagram"><polygon points="193,-25 0,-25 0,-0 193,-0 193,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="10.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="31.5" text-anchor="start">ApplySymbolAssignerComponent</text></a></g></g><!-- node0&#45;&gt;node1 --><g class="edge inheritance" id="graph1_0_1"><g id="a_inheritance|graph1_0_1"><a xlink:title="ApplySymbolAssignerComponent is a subtype of SymbolAssignerComponent"><path d="M1367.27,-71.2701C1161.63,-67.9657 638.58,-56.8749 202.5,-25 199.454,-24.7773 196.36,-24.5356 193.237,-24.2782" stroke="#d4d4d4" fill="none"></path><polygon points="1367.34,-73.0214 1372.36,-71.3515 1367.39,-69.5218 1367.34,-73.0214" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node2 --><g class="node trait" id="graph1_2"><g id="a_trait|graph1_2"><a xlink:title="ch.usi.inf.l3.sana.primj.namers.AssignSymbolAssignerComponent" xlink:href="AssignSymbolAssignerComponent.html#inheritance-diagram"><polygon points="409.5,-25 211.5,-25 211.5,-0 409.5,-0 409.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="221.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="242.5" text-anchor="start">AssignSymbolAssignerComponent</text></a></g></g><!-- node0&#45;&gt;node2 --><g class="edge inheritance" id="graph1_0_2"><g id="a_inheritance|graph1_0_2"><a xlink:title="AssignSymbolAssignerComponent is a subtype of SymbolAssignerComponent"><path d="M1367.05,-70.2251C1187.19,-65.2491 768.953,-51.6525 418.5,-25 415.586,-24.7784 412.628,-24.5414 409.644,-24.2918" stroke="#d4d4d4" fill="none"></path><polygon points="1367.26,-71.9813 1372.3,-70.3698 1367.35,-68.4827 1367.26,-71.9813" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node3 --><g class="node trait" id="graph1_3"><g id="a_trait|graph1_3"><a xlink:title="ch.usi.inf.l3.sana.primj.namers.BinarySymbolAssignerComponent" xlink:href="BinarySymbolAssignerComponent.html#inheritance-diagram"><polygon points="625,-25 428,-25 428,-0 625,-0 625,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="438.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="459.5" text-anchor="start">BinarySymbolAssignerComponent</text></a></g></g><!-- node0&#45;&gt;node3 --><g class="edge inheritance" id="graph1_0_3"><g id="a_inheritance|graph1_0_3"><a xlink:title="BinarySymbolAssignerComponent is a subtype of SymbolAssignerComponent"><path d="M1366.97,-68.7836C1215.7,-62.1789 899.92,-46.9918 633.5,-25 630.707,-24.7695 627.874,-24.5264 625.015,-24.2732" stroke="#d4d4d4" fill="none"></path><polygon points="1367.21,-70.5457 1372.29,-69.0149 1367.37,-67.049 1367.21,-70.5457" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node4 --><g class="node trait" id="graph1_4"><g id="a_trait|graph1_4"><a xlink:title="ch.usi.inf.l3.sana.primj.namers.BlockSymbolAssignerComponent" xlink:href="BlockSymbolAssignerComponent.html#inheritance-diagram"><polygon points="836,-25 643,-25 643,-0 836,-0 836,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="653.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="674.5" text-anchor="start">BlockSymbolAssignerComponent</text></a></g></g><!-- node0&#45;&gt;node4 --><g class="edge inheritance" id="graph1_0_4"><g id="a_inheritance|graph1_0_4"><a xlink:title="BlockSymbolAssignerComponent is a subtype of SymbolAssignerComponent"><path d="M1367.03,-66.4459C1247.74,-58.1707 1030.08,-42.3602 844.5,-25 841.761,-24.7438 838.983,-24.4781 836.179,-24.205" stroke="#d4d4d4" fill="none"></path><polygon points="1367.17,-68.21 1372.28,-66.8099 1367.42,-64.7184 1367.17,-68.21" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node5 --><g class="node trait" id="graph1_5"><g id="a_trait|graph1_5"><a xlink:title="ch.usi.inf.l3.sana.primj.namers.CastSymbolAssignerComponent" xlink:href="CastSymbolAssignerComponent.html#inheritance-diagram"><polygon points="1043,-25 854,-25 854,-0 1043,-0 1043,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="864.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="885.5" text-anchor="start">CastSymbolAssignerComponent</text></a></g></g><!-- node0&#45;&gt;node5 --><g class="edge inheritance" id="graph1_0_5"><g id="a_inheritance|graph1_0_5"><a xlink:title="CastSymbolAssignerComponent is a subtype of SymbolAssignerComponent"><path d="M1367.23,-62.1319C1276.35,-51.5773 1136,-35.2768 1043.21,-24.4997" stroke="#d4d4d4" fill="none"></path><polygon points="1367.16,-63.8857 1372.33,-62.7243 1367.56,-60.409 1367.16,-63.8857" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node6 --><g class="node trait" id="graph1_6"><g id="a_trait|graph1_6"><a xlink:title="ch.usi.inf.l3.sana.primj.namers.ForSymbolAssignerComponent" xlink:href="ForSymbolAssignerComponent.html#inheritance-diagram"><polygon points="1244,-25 1061,-25 1061,-0 1244,-0 1244,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="1071.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="1092.5" text-anchor="start">ForSymbolAssignerComponent</text></a></g></g><!-- node0&#45;&gt;node6 --><g class="edge inheritance" id="graph1_0_6"><g id="a_inheritance|graph1_0_6"><a xlink:title="ForSymbolAssignerComponent is a subtype of SymbolAssignerComponent"><path d="M1392.08,-59.9973C1338.82,-49.6608 1263.79,-35.0983 1211.95,-25.0371" stroke="#d4d4d4" fill="none"></path><polygon points="1391.92,-61.7494 1397.16,-60.9841 1392.59,-58.3135 1391.92,-61.7494" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node7 --><g class="node trait" id="graph1_7"><g id="a_trait|graph1_7"><a xlink:title="ch.usi.inf.l3.sana.primj.namers.IfSymbolAssignerComponent" xlink:href="IfSymbolAssignerComponent.html#inheritance-diagram"><polygon points="1436.5,-25 1262.5,-25 1262.5,-0 1436.5,-0 1436.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="1272.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="1293.5" text-anchor="start">IfSymbolAssignerComponent</text></a></g></g><!-- node0&#45;&gt;node7 --><g class="edge inheritance" id="graph1_0_7"><g id="a_inheritance|graph1_0_7"><a xlink:title="IfSymbolAssignerComponent is a subtype of SymbolAssignerComponent"><path d="M1431.08,-58.4807C1412.66,-48.3269 1388.05,-34.7588 1370.7,-25.1884" stroke="#d4d4d4" fill="none"></path><polygon points="1430.39,-60.1023 1435.62,-60.9841 1432.08,-57.0373 1430.39,-60.1023" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node8 --><g class="node trait" id="graph1_8"><g id="a_trait|graph1_8"><a xlink:title="ch.usi.inf.l3.sana.primj.namers.MethodDefSymbolAssignerComponent" xlink:href="MethodDefSymbolAssignerComponent.html#inheritance-diagram"><polygon points="1672,-25 1455,-25 1455,-0 1672,-0 1672,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="1465.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="1486.5" text-anchor="start">MethodDefSymbolAssignerComponent</text></a></g></g><!-- node0&#45;&gt;node8 --><g class="edge inheritance" id="graph1_0_8"><g id="a_inheritance|graph1_0_8"><a xlink:title="MethodDefSymbolAssignerComponent is a subtype of SymbolAssignerComponent"><path d="M1481.92,-58.4807C1500.34,-48.3269 1524.95,-34.7588 1542.3,-25.1884" stroke="#d4d4d4" fill="none"></path><polygon points="1480.92,-57.0373 1477.38,-60.9841 1482.61,-60.1023 1480.92,-57.0373" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node9 --><g class="node trait" id="graph1_9"><g id="a_trait|graph1_9"><a xlink:title="ch.usi.inf.l3.sana.primj.namers.ProgramSymbolAssignerComponent" xlink:href="ProgramSymbolAssignerComponent.html#inheritance-diagram"><polygon points="1897,-25 1690,-25 1690,-0 1897,-0 1897,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="1700.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="1721.5" text-anchor="start">ProgramSymbolAssignerComponent</text></a></g></g><!-- node0&#45;&gt;node9 --><g class="edge inheritance" id="graph1_0_9"><g id="a_inheritance|graph1_0_9"><a xlink:title="ProgramSymbolAssignerComponent is a subtype of SymbolAssignerComponent"><path d="M1527.56,-60.0598C1586.62,-49.7195 1670.02,-35.1186 1727.6,-25.0371" stroke="#d4d4d4" fill="none"></path><polygon points="1526.9,-58.398 1522.28,-60.9841 1527.5,-61.8456 1526.9,-58.398" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node10 --><g class="node trait" id="graph1_10"><g id="a_trait|graph1_10"><a xlink:title="ch.usi.inf.l3.sana.primj.namers.ReturnSymbolAssignerComponent" xlink:href="ReturnSymbolAssignerComponent.html#inheritance-diagram"><polygon points="2113.5,-25 1915.5,-25 1915.5,-0 2113.5,-0 2113.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="1925.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="1946.5" text-anchor="start">ReturnSymbolAssignerComponent</text></a></g></g><!-- node0&#45;&gt;node10 --><g class="edge inheritance" id="graph1_0_10"><g id="a_inheritance|graph1_0_10"><a xlink:title="ReturnSymbolAssignerComponent is a subtype of SymbolAssignerComponent"><path d="M1545.78,-63.1009C1636.57,-53.5355 1781.33,-38.27 1906.5,-25 1909.41,-24.6919 1912.36,-24.3789 1915.34,-24.0628" stroke="#d4d4d4" fill="none"></path><polygon points="1545.47,-61.3729 1540.68,-63.6372 1545.84,-64.8537 1545.47,-61.3729" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node11 --><g class="node trait" id="graph1_11"><g id="a_trait|graph1_11"><a xlink:title="ch.usi.inf.l3.sana.primj.namers.TernarySymbolAssignerComponent" xlink:href="TernarySymbolAssignerComponent.html#inheritance-diagram"><polygon points="2335,-25 2132,-25 2132,-0 2335,-0 2335,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="2142.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="2163.5" text-anchor="start">TernarySymbolAssignerComponent</text></a></g></g><!-- node0&#45;&gt;node11 --><g class="edge inheritance" id="graph1_0_11"><g id="a_inheritance|graph1_0_11"><a xlink:title="TernarySymbolAssignerComponent is a subtype of SymbolAssignerComponent"><path d="M1545.93,-67.0349C1673.83,-59.0109 1916.34,-43.0264 2122.5,-25 2125.59,-24.73 2128.72,-24.4488 2131.89,-24.1589" stroke="#d4d4d4" fill="none"></path><polygon points="1545.56,-65.3047 1540.68,-67.364 1545.78,-68.7978 1545.56,-65.3047" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node12 --><g class="node trait" id="graph1_12"><g id="a_trait|graph1_12"><a xlink:title="ch.usi.inf.l3.sana.primj.namers.UnarySymbolAssignerComponent" xlink:href="UnarySymbolAssignerComponent.html#inheritance-diagram"><polygon points="2548,-25 2353,-25 2353,-0 2548,-0 2548,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="2363.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="2384.5" text-anchor="start">UnarySymbolAssignerComponent</text></a></g></g><!-- node0&#45;&gt;node12 --><g class="edge inheritance" id="graph1_0_12"><g id="a_inheritance|graph1_0_12"><a xlink:title="UnarySymbolAssignerComponent is a subtype of SymbolAssignerComponent"><path d="M1545.93,-69.3334C1706.18,-63.2987 2052.79,-48.6083 2344.5,-25 2347.27,-24.776 2350.07,-24.5388 2352.91,-24.2907" stroke="#d4d4d4" fill="none"></path><polygon points="1545.71,-67.5904 1540.78,-69.5269 1545.84,-71.088 1545.71,-67.5904" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node13 --><g class="node trait" id="graph1_13"><g id="a_trait|graph1_13"><a xlink:title="ch.usi.inf.l3.sana.primj.namers.ValDefSymbolAssignerComponent" xlink:href="ValDefSymbolAssignerComponent.html#inheritance-diagram"><polygon points="2764.5,-25 2566.5,-25 2566.5,-0 2764.5,-0 2764.5,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="2576.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="2597.5" text-anchor="start">ValDefSymbolAssignerComponent</text></a></g></g><!-- node0&#45;&gt;node13 --><g class="edge inheritance" id="graph1_0_13"><g id="a_inheritance|graph1_0_13"><a xlink:title="ValDefSymbolAssignerComponent is a subtype of SymbolAssignerComponent"><path d="M1545.72,-70.5552C1733.26,-66.0478 2182.06,-53.0597 2557.5,-25 2560.41,-24.7822 2563.37,-24.5486 2566.36,-24.3019" stroke="#d4d4d4" fill="none"></path><polygon points="1545.47,-68.8104 1540.52,-70.6796 1545.56,-72.3094 1545.47,-68.8104" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node14 --><g class="node trait" id="graph1_14"><g id="a_trait|graph1_14"><a xlink:title="ch.usi.inf.l3.sana.primj.namers.WhileSymbolAssignerComponent" xlink:href="WhileSymbolAssignerComponent.html#inheritance-diagram"><polygon points="2976,-25 2783,-25 2783,-0 2976,-0 2976,-25" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-19.5" x="2793.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-9.5" x="2814.5" text-anchor="start">WhileSymbolAssignerComponent</text></a></g></g><!-- node0&#45;&gt;node14 --><g class="edge inheritance" id="graph1_0_14"><g id="a_inheritance|graph1_0_14"><a xlink:title="WhileSymbolAssignerComponent is a subtype of SymbolAssignerComponent"><path d="M1545.86,-71.4953C1758.72,-68.6182 2312.4,-58.2842 2773.5,-25 2776.55,-24.7801 2779.64,-24.5408 2782.76,-24.2854" stroke="#d4d4d4" fill="none"></path><polygon points="1545.56,-69.749 1540.59,-71.566 1545.61,-73.2487 1545.56,-69.749" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node15 --><g class="node trait" id="graph1_15"><g id="a_trait|graph1_15"><a xlink:title="ch.usi.inf.l3.sana.tiny.core.TransformationComponent"><polygon points="1564,-147 1349,-147 1349,-122 1564,-122 1564,-147" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../../../../lib/trait_diagram.png" y="-141.5" x="1359.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-131.5" x="1380.5" text-anchor="start">TransformationComponent[Tree, Tree]</text></a></g></g><!-- node15&#45;&gt;node0 --><g class="edge inheritance" id="graph1_15_0"><g id="a_inheritance|graph1_15_0"><a xlink:title="SymbolAssignerComponent is a subtype of TransformationComponent[Tree, Tree]"><path d="M1456.5,-116.687C1456.5,-106.917 1456.5,-94.8534 1456.5,-86.1323" stroke="#d4d4d4" fill="none"></path><polygon points="1454.75,-116.843 1456.5,-121.843 1458.25,-116.844 1454.75,-116.843" stroke="#d4d4d4" fill="none"></polygon></a></g></g></g></svg></div>
+              </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent"><span>SymbolAssignerComponent</span></li><li class="in" name="ch.usi.inf.l3.sana.tiny.core.TransformationComponent"><span>TransformationComponent</span></li><li class="in" name="ch.usi.inf.l3.sana.tiny.core.PhaseComponent"><span>PhaseComponent</span></li><li class="in" name="scala.PartialFunction"><span>PartialFunction</span></li><li class="in" name="scala.Function1"><span>Function1</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+                <span class="filtertype">Implicitly<br />
+                </span>
+                <ol id="implicits"> <li class="in" name="scala.Predef.any2stringadd" data-hidden="true"><span>by any2stringadd</span></li><li class="in" name="scala.Predef.StringFormat" data-hidden="true"><span>by StringFormat</span></li><li class="in" name="scala.Predef.Ensuring" data-hidden="true"><span>by Ensuring</span></li><li class="in" name="scala.Predef.ArrowAssoc" data-hidden="true"><span>by ArrowAssoc</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li>
+            </ol>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="ch.usi.inf.l3.sana.tiny.core.PhaseComponent.Input" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Input=P"></a>
+      <a id="Input:Input"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Input</span><span class="result"> = <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@Input=P" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PhaseComponent</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.tiny.core.PhaseComponent.Output" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Output=R"></a>
+      <a id="Output:Output"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Output</span><span class="result"> = <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@Output=R" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PhaseComponent</dd></dl></div>
+    </li></ol>
+            </div>
+
+        <div id="values" class="values members">
+              <h3>Abstract Value Members</h3>
+              <ol><li name="scala.Function1#apply" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="apply(v1:T1):R"></a>
+      <a id="apply(Tree):Tree"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">apply</span><span class="params">(<span name="v1">v1: <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a></span>)</span><span class="result">: <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@apply(v1:T1):R" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Function1</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent#assign" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="assign:ch.usi.inf.l3.sana.tiny.ast.Tree=&gt;ch.usi.inf.l3.sana.tiny.ast.Tree"></a>
+      <a id="assign:(Tree)⇒Tree"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">assign</span><span class="result">: (<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>) ⇒ <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@assign:ch.usi.inf.l3.sana.tiny.ast.Tree=&gt;ch.usi.inf.l3.sana.tiny.ast.Tree" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The family (delegate) method of the symbol-assigner components.</p>
+    </li><li name="ch.usi.inf.l3.sana.tiny.core.PhaseComponent#compiler" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="compiler:ch.usi.inf.l3.sana.tiny.core.CompilerInterface"></a>
+      <a id="compiler:CompilerInterface"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">compiler</span><span class="result">: <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.core.CompilerInterface" class="extype" target="_top">CompilerInterface</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@compiler:ch.usi.inf.l3.sana.tiny.core.CompilerInterface" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PhaseComponent</dd></dl></div>
+    </li><li name="scala.PartialFunction#isDefinedAt" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="isDefinedAt(x:A):Boolean"></a>
+      <a id="isDefinedAt(Tree):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isDefinedAt</span><span class="params">(<span name="x">x: <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@isDefinedAt(x:A):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PartialFunction</dd></dl></div>
+    </li></ol>
+            </div>
+
+        <div id="values" class="values members">
+              <h3>Concrete Value Members</h3>
+              <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a>
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="##():Int"></a>
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@##():Int" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.Predef.any2stringadd#+" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="+(other:String):String"></a>
+      <a id="+(String):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $plus" class="implicit">+</span><span class="params">(<span name="other">other: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@+(other:String):String" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a> to
+            <span class="extype" name="scala.Predef.any2stringadd">any2stringadd</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a>] performed by method any2stringadd in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>any2stringadd</dd></dl></div>
+    </li><li name="scala.Predef.ArrowAssoc#-&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="-&gt;[B](y:B):(A,B)"></a>
+      <a id="-&gt;[B](B):(SymbolAssignerComponent,B)"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $minus$greater" class="implicit">-&gt;</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="y">y: <span class="extype" name="scala.Predef.ArrowAssoc.-&gt;.B">B</span></span>)</span><span class="result">: (<a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a>, <span class="extype" name="scala.Predef.ArrowAssoc.-&gt;.B">B</span>)</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@-&gt;[B](y:B):(A,B)" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a> to
+            <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a>] performed by method ArrowAssoc in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>ArrowAssoc</dd><dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a>
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.PartialFunction#andThen" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="andThen[C](k:B=&gt;C):PartialFunction[A,C]"></a>
+      <a id="andThen[C]((Tree)⇒C):PartialFunction[Tree,C]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">andThen</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">(<span name="k">k: (<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>) ⇒ <span class="extype" name="scala.PartialFunction.andThen.C">C</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>, <span class="extype" name="scala.PartialFunction.andThen.C">C</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@andThen[C](k:B=&gt;C):PartialFunction[A,C]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PartialFunction → Function1</dd></dl></div>
+    </li><li name="scala.PartialFunction#applyOrElse" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="applyOrElse[A1&lt;:A,B1&gt;:B](x:A1,default:A1=&gt;B1):B1"></a>
+      <a id="applyOrElse[A1&lt;:Tree,B1&gt;:Tree](A1,(A1)⇒B1):B1"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">applyOrElse</span><span class="tparams">[<span name="A1">A1 &lt;: <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a></span>, <span name="B1">B1 &gt;: <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a></span>]</span><span class="params">(<span name="x">x: <span class="extype" name="scala.PartialFunction.applyOrElse.A1">A1</span></span>, <span name="default">default: (<span class="extype" name="scala.PartialFunction.applyOrElse.A1">A1</span>) ⇒ <span class="extype" name="scala.PartialFunction.applyOrElse.B1">B1</span></span>)</span><span class="result">: <span class="extype" name="scala.PartialFunction.applyOrElse.B1">B1</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@applyOrElse[A1&lt;:A,B1&gt;:B](x:A1,default:A1=&gt;B1):B1" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PartialFunction</dd></dl></div>
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a>
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@clone():Object" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.Function1#compose" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="compose[A](g:A=&gt;T1):A=&gt;R"></a>
+      <a id="compose[A]((A)⇒Tree):(A)⇒Tree"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">compose</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="g">g: (<span class="extype" name="scala.Function1.compose.A">A</span>) ⇒ <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a></span>)</span><span class="result">: (<span class="extype" name="scala.Function1.compose.A">A</span>) ⇒ <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@compose[A](g:A=&gt;T1):A=&gt;R" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Function1</dd><dt>Annotations</dt><dd>
+                <span class="name">@unspecialized</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.Predef.Ensuring#ensuring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensuring(cond:A=&gt;Boolean,msg:=&gt;Any):A"></a>
+      <a id="ensuring((SymbolAssignerComponent)⇒Boolean,⇒Any):SymbolAssignerComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: (<a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>, <span name="msg">msg: ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@ensuring(cond:A=&gt;Boolean,msg:=&gt;Any):A" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a> to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a>] performed by method Ensuring in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
+    </li><li name="scala.Predef.Ensuring#ensuring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensuring(cond:A=&gt;Boolean):A"></a>
+      <a id="ensuring((SymbolAssignerComponent)⇒Boolean):SymbolAssignerComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: (<a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@ensuring(cond:A=&gt;Boolean):A" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a> to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a>] performed by method Ensuring in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
+    </li><li name="scala.Predef.Ensuring#ensuring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensuring(cond:Boolean,msg:=&gt;Any):A"></a>
+      <a id="ensuring(Boolean,⇒Any):SymbolAssignerComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>, <span name="msg">msg: ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@ensuring(cond:Boolean,msg:=&gt;Any):A" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a> to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a>] performed by method Ensuring in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
+    </li><li name="scala.Predef.Ensuring#ensuring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensuring(cond:Boolean):A"></a>
+      <a id="ensuring(Boolean):SymbolAssignerComponent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@ensuring(cond:Boolean):A" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a> to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a>] performed by method Ensuring in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
+    </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a>
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(x$1:Any):Boolean"></a>
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finalize():Unit"></a>
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.lang.Throwable]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.tiny.core.PhaseComponent#flatMap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="flatMap[T](other:R=&gt;ch.usi.inf.l3.sana.tiny.core.PhaseComponent[P,T]):ch.usi.inf.l3.sana.tiny.core.PhaseComponent[P,T]"></a>
+      <a id="flatMap[T]((Tree)⇒PhaseComponent[Tree,T]):PhaseComponent[Tree,T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">flatMap</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="other">other: (<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>) ⇒ <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.core.PhaseComponent" class="extype" target="_top">PhaseComponent</a>[<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>, <span class="extype" name="ch.usi.inf.l3.sana.tiny.core.PhaseComponent.flatMap.T">T</span>]</span>)</span><span class="result">: <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.core.PhaseComponent" class="extype" target="_top">PhaseComponent</a>[<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>, <span class="extype" name="ch.usi.inf.l3.sana.tiny.core.PhaseComponent.flatMap.T">T</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@flatMap[T](other:R=&gt;ch.usi.inf.l3.sana.tiny.core.PhaseComponent[P,T]):ch.usi.inf.l3.sana.tiny.core.PhaseComponent[P,T]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PhaseComponent</dd></dl></div>
+    </li><li name="scala.Predef.StringFormat#formatted" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="formatted(fmtstr:String):String"></a>
+      <a id="formatted(String):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">formatted</span><span class="params">(<span name="fmtstr">fmtstr: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@formatted(fmtstr:String):String" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a> to
+            <span class="extype" name="scala.Predef.StringFormat">StringFormat</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a>] performed by method StringFormat in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>StringFormat</dd><dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getClass():Class[_]"></a>
+      <a id="getClass():Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="hashCode():Int"></a>
+      <a id="hashCode():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="scala.PartialFunction#lift" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="lift:A=&gt;Option[B]"></a>
+      <a id="lift:(Tree)⇒Option[Tree]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">lift</span><span class="result">: (<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@lift:A=&gt;Option[B]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PartialFunction</dd></dl></div>
+    </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a>
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notify():Unit"></a>
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.PartialFunction#orElse" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="orElse[A1&lt;:A,B1&gt;:B](that:PartialFunction[A1,B1]):PartialFunction[A1,B1]"></a>
+      <a id="orElse[A1&lt;:Tree,B1&gt;:Tree](PartialFunction[A1,B1]):PartialFunction[A1,B1]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">orElse</span><span class="tparams">[<span name="A1">A1 &lt;: <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a></span>, <span name="B1">B1 &gt;: <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a></span>]</span><span class="params">(<span name="that">that: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<span class="extype" name="scala.PartialFunction.orElse.A1">A1</span>, <span class="extype" name="scala.PartialFunction.orElse.B1">B1</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<span class="extype" name="scala.PartialFunction.orElse.A1">A1</span>, <span class="extype" name="scala.PartialFunction.orElse.B1">B1</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@orElse[A1&lt;:A,B1&gt;:B](that:PartialFunction[A1,B1]):PartialFunction[A1,B1]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PartialFunction</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.tiny.core.PhaseComponent#point" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="point(r:R):ch.usi.inf.l3.sana.tiny.core.PhaseComponent[P,R]"></a>
+      <a id="point(Tree):PhaseComponent[Tree,Tree]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">point</span><span class="params">(<span name="r">r: <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a></span>)</span><span class="result">: <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.core.PhaseComponent" class="extype" target="_top">PhaseComponent</a>[<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>, <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@point(r:R):ch.usi.inf.l3.sana.tiny.core.PhaseComponent[P,R]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PhaseComponent</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.tiny.core.PhaseComponent#run" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="run(p:P):R"></a>
+      <a id="run(Tree):Tree"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">run</span><span class="params">(<span name="p">p: <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a></span>)</span><span class="result">: <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@run(p:P):R" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PhaseComponent</dd></dl></div>
+    </li><li name="scala.PartialFunction#runWith" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="runWith[U](action:B=&gt;U):A=&gt;Boolean"></a>
+      <a id="runWith[U]((Tree)⇒U):(Tree)⇒Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">runWith</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="action">action: (<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>) ⇒ <span class="extype" name="scala.PartialFunction.runWith.U">U</span></span>)</span><span class="result">: (<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@runWith[U](action:B=&gt;U):A=&gt;Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PartialFunction</dd></dl></div>
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
+      <a id="synchronized[T0](⇒T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.Function1#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toString():String"></a>
+      <a id="toString():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@toString():String" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Function1 → AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a>
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a>
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.Predef.ArrowAssoc#→" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="→[B](y:B):(A,B)"></a>
+      <a id="→[B](B):(SymbolAssignerComponent,B)"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $u2192" class="implicit">→</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="y">y: <span class="extype" name="scala.Predef.ArrowAssoc.→.B">B</span></span>)</span><span class="result">: (<a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a>, <span class="extype" name="scala.Predef.ArrowAssoc.→.B">B</span>)</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent@→[B](y:B):(A,B)" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a> to
+            <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a>] performed by method ArrowAssoc in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>ArrowAssoc</dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="ch.usi.inf.l3.sana.tiny.core.TransformationComponent">
+              <h3>Inherited from <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.core.TransformationComponent" class="extype" target="_top">TransformationComponent</a>[<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>, <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>]</h3>
+            </div><div class="parent" name="ch.usi.inf.l3.sana.tiny.core.PhaseComponent">
+              <h3>Inherited from <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.core.PhaseComponent" class="extype" target="_top">PhaseComponent</a>[<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>, <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>]</h3>
+            </div><div class="parent" name="scala.PartialFunction">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>, <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>]</h3>
+            </div><div class="parent" name="scala.Function1">
+              <h3>Inherited from (<a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a>) ⇒ <a href="http://sana.github.io/index.html#ch.usi.inf.l3.sana.tiny.ast.Tree" class="extype" target="_top">Tree</a></h3>
+            </div><div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+            </div>
+        <div class="conversion" name="scala.Predef.any2stringadd">
+              <h3>Inherited by implicit conversion any2stringadd from
+                <a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a> to <span class="extype" name="scala.Predef.any2stringadd">any2stringadd</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a>]
+              </h3>
+            </div><div class="conversion" name="scala.Predef.StringFormat">
+              <h3>Inherited by implicit conversion StringFormat from
+                <a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a> to <span class="extype" name="scala.Predef.StringFormat">StringFormat</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a>]
+              </h3>
+            </div><div class="conversion" name="scala.Predef.Ensuring">
+              <h3>Inherited by implicit conversion Ensuring from
+                <a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a> to <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a>]
+              </h3>
+            </div><div class="conversion" name="scala.Predef.ArrowAssoc">
+              <h3>Inherited by implicit conversion ArrowAssoc from
+                <a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a> to <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.primj.namers.SymbolAssignerComponent">SymbolAssignerComponent</a>]
+              </h3>
+            </div>
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>
