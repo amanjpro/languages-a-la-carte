@@ -6,7 +6,7 @@ statements, ternary (conditional) expressions, return statements, assign
 statements and function application. This is the first language which
 introduces mutability and defines and uses names. Names are defined by both
 MethodDef and ValDef and used by Ident and TypeUse. AST types in this language
-module that can define a new symbol are: MethodDef, ValDef, Block are For. The
+module that can define a new symbol are: MethodDef, ValDef, Block and For. The
 reason Block and For define their own symbols is because they define new
 lexical scopes.
 

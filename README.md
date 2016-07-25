@@ -56,7 +56,7 @@ Please refer to the [wiki](https://github.com/amanjpro/languages-a-la-carte/wiki
 ## Contributing
 
 1. Fork it!
-2. Join us on `freenode`: #sanacompiler
+2. Join us: (https://groups.google.com/d/forum/sana-compiler-framework)
 3. Experiment with the module system of Sana
 4. Play with Sana more and implement a language feature on top of an
    existing language.
@@ -66,6 +66,8 @@ Please refer to the [wiki](https://github.com/amanjpro/languages-a-la-carte/wiki
 ## Q/A Forum
 [here](https://groups.google.com/d/forum/sana-compiler-framework)
 
+## Scaladoc and Website
+[here](https://groups.google.com/d/forum/sana-compiler-framework)
 
 [](## History)
 
