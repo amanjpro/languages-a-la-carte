@@ -1,0 +1,2467 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>DcctParser - Sana Compiler Framework - ch.usi.inf.l3.sana.dcct.antlr.DcctParser</title>
+          <meta name="description" content="DcctParser - Sana Compiler Framework - ch.usi.inf.l3.sana.dcct.antlr.DcctParser" />
+          <meta name="keywords" content="DcctParser Sana Compiler Framework ch.usi.inf.l3.sana.dcct.antlr.DcctParser" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../../../../lib/tools.tooltip.js"></script>
+      <script type="text/javascript" src="../../../../../../../lib/modernizr.custom.js"></script><script type="text/javascript" src="../../../../../../../lib/diagrams.js" id="diagrams-js"></script>
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../../../index.html';
+            var hash = 'ch.usi.inf.l3.sana.dcct.antlr.DcctParser';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="type">
+      <div id="definition">
+        <img alt="Class" src="../../../../../../../lib/class_big.png" />
+        <p id="owner"><a href="../../../../../../package.html" class="extype" name="ch">ch</a>.<a href="../../../../../package.html" class="extype" name="ch.usi">usi</a>.<a href="../../../../package.html" class="extype" name="ch.usi.inf">inf</a>.<a href="../../../package.html" class="extype" name="ch.usi.inf.l3">l3</a>.<a href="../../package.html" class="extype" name="ch.usi.inf.l3.sana">sana</a>.<a href="../package.html" class="extype" name="ch.usi.inf.l3.sana.dcct">dcct</a>.<a href="package.html" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr">antlr</a></p>
+        <h1>DcctParser</h1><h3><span class="morelinks"><div>Related Doc:
+            <a href="package.html" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr">package antlr</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <span class="name">DcctParser</span><span class="result"> extends <span class="extype" name="org.antlr.v4.runtime.Parser">Parser</span></span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/amanjpro/languages-a-la-carte/blob/master/dcct/src/main/java/ch/usi/inf/l3/sana/dcct/antlr/DcctParser.java.scala#L1" target="_blank">DcctParser.java</a></dd></dl><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><span class="extype" name="org.antlr.v4.runtime.Parser">Parser</span>, <span class="extype" name="org.antlr.v4.runtime.Recognizer">Recognizer</span>[<span class="extype" name="org.antlr.v4.runtime.Token">Token</span>, <span class="extype" name="org.antlr.v4.runtime.atn.ParserATNSimulator">ParserATNSimulator</span>], <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+        </div><div class="toggleContainer block diagram-container" id="inheritance-diagram-container">
+                <span class="toggle diagram-link">Type Hierarchy</span>
+                <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#diagrams" target="_blank" class="diagram-help">Learn more about scaladoc diagrams</a>
+                <div class="diagram" id="inheritance-diagram"><svg class="class-diagram" id="graph1" viewBox="0.00 0.00 150.00 118.00" height="118pt" width="150pt" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g transform="scale(1 1) rotate(0) translate(4 114)" class="graph" id="graph0"><polygon points="-4,4 -4,-114 146,-114 146,4 -4,4" stroke="none" fill="white"></polygon><g class="cluster" id="clust1"></g><g class="cluster" id="clust2"></g><!-- node0 --><g class="node this class" id="graph1_0"><g id="a_this class|graph1_0"><a xlink:title="ch.usi.inf.l3.sana.dcct.antlr.DcctParser (this class)" xlink:href="#inheritance-diagram"><polygon points="118,-49 24,-49 24,-24 118,-24 118,-49" stroke="#115f3b" fill="#0a955b"></polygon><image xlink:href="../../../../../../../lib/class_diagram.png" y="-43.5" x="34" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-33.5" x="55" text-anchor="start">DcctParser</text></a></g></g><!-- node1 --><g class="node class" id="graph1_1"><g id="a_class|graph1_1"><a xlink:title="org.antlr.v4.runtime.Parser"><polygon points="108,-110 34,-110 34,-85 108,-85 108,-110" stroke="#115f3b" fill="#0a955b"></polygon><image xlink:href="../../../../../../../lib/class_diagram.png" y="-104.5" x="44" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-94.5" x="65" text-anchor="start">Parser</text></a></g></g><!-- node1&#45;&gt;node0 --><g class="edge inheritance" id="graph1_1_0"><g id="a_inheritance|graph1_1_0"><a xlink:title="DcctParser is a subtype of Parser"><path d="M71,-79.6874C71,-69.9173 71,-57.8534 71,-49.1323" stroke="#d4d4d4" fill="none"></path><polygon points="69.2501,-79.8435 71,-84.8435 72.7501,-79.8435 69.2501,-79.8435" stroke="#d4d4d4" fill="none"></polygon></a></g></g></g></svg></div>
+              </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser"><span>DcctParser</span></li><li class="in" name="org.antlr.v4.runtime.Parser"><span>Parser</span></li><li class="in" name="org.antlr.v4.runtime.Recognizer"><span>Recognizer</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+                <span class="filtertype">Implicitly<br />
+                </span>
+                <ol id="implicits"> <li class="in" name="scala.Predef.any2stringadd" data-hidden="true"><span>by any2stringadd</span></li><li class="in" name="scala.Predef.StringFormat" data-hidden="true"><span>by StringFormat</span></li><li class="in" name="scala.Predef.Ensuring" data-hidden="true"><span>by Ensuring</span></li><li class="in" name="scala.Predef.ArrowAssoc" data-hidden="true"><span>by ArrowAssoc</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li>
+            </ol>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        <div id="constructors" class="members">
+              <h3>Instance Constructors</h3>
+              <ol><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(input:org.antlr.v4.runtime.TokenStream):ch.usi.inf.l3.sana.dcct.antlr.DcctParser"></a>
+      <a id="&lt;init&gt;:DcctParser"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">DcctParser</span><span class="params">(<span name="input">input: <span class="extype" name="org.antlr.v4.runtime.TokenStream">TokenStream</span></span>)</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@&lt;init&gt;(input:org.antlr.v4.runtime.TokenStream):ch.usi.inf.l3.sana.dcct.antlr.DcctParser" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="org.antlr.v4.runtime.Parser.TraceListener" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="TraceListenerextendsParseTreeListener"></a>
+      <a id="TraceListener:TraceListener"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <span class="name">TraceListener</span><span class="result"> extends <span class="extype" name="org.antlr.v4.runtime.tree.ParseTreeListener">ParseTreeListener</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@TraceListenerextendsParseTreeListener" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a>
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="##():Int"></a>
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@##():Int" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.Predef.any2stringadd#+" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="+(other:String):String"></a>
+      <a id="+(String):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $plus" class="implicit">+</span><span class="params">(<span name="other">other: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@+(other:String):String" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a> to
+            <span class="extype" name="scala.Predef.any2stringadd">any2stringadd</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a>] performed by method any2stringadd in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>any2stringadd</dd></dl></div>
+    </li><li name="scala.Predef.ArrowAssoc#-&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="-&gt;[B](y:B):(A,B)"></a>
+      <a id="-&gt;[B](B):(DcctParser,B)"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $minus$greater" class="implicit">-&gt;</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="y">y: <span class="extype" name="scala.Predef.ArrowAssoc.-&gt;.B">B</span></span>)</span><span class="result">: (<a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a>, <span class="extype" name="scala.Predef.ArrowAssoc.-&gt;.B">B</span>)</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@-&gt;[B](y:B):(A,B)" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a> to
+            <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a>] performed by method ArrowAssoc in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>ArrowAssoc</dd><dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a>
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#action" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="action(x$1:org.antlr.v4.runtime.RuleContext,x$2:Int,x$3:Int):Unit"></a>
+      <a id="action(RuleContext,Int,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">action</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.RuleContext">RuleContext</span></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="arg2">arg2: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@action(x$1:org.antlr.v4.runtime.RuleContext,x$2:Int,x$3:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#actionDeclaration" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="actionDeclaration():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ActionDeclarationContext"></a>
+      <a id="actionDeclaration():ActionDeclarationContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">actionDeclaration</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ActionDeclarationContext">ActionDeclarationContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@actionDeclaration():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ActionDeclarationContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="org.antlr.v4.runtime.Parser#addContextToParseTree" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="addContextToParseTree():Unit"></a>
+      <a id="addContextToParseTree():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addContextToParseTree</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@addContextToParseTree():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../../../org$antlr$v4$runtime.html" class="extype" name="org.antlr.v4.runtime">org.antlr.v4.runtime</a>] </dd><dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#addErrorListener" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="addErrorListener(x$1:org.antlr.v4.runtime.ANTLRErrorListener):Unit"></a>
+      <a id="addErrorListener(ANTLRErrorListener):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addErrorListener</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.ANTLRErrorListener">ANTLRErrorListener</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@addErrorListener(x$1:org.antlr.v4.runtime.ANTLRErrorListener):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#addParseListener" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="addParseListener(x$1:org.antlr.v4.runtime.tree.ParseTreeListener):Unit"></a>
+      <a id="addParseListener(ParseTreeListener):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addParseListener</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.tree.ParseTreeListener">ParseTreeListener</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@addParseListener(x$1:org.antlr.v4.runtime.tree.ParseTreeListener):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#annotationType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="annotationType():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.AnnotationTypeContext"></a>
+      <a id="annotationType():AnnotationTypeContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">annotationType</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.AnnotationTypeContext">AnnotationTypeContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@annotationType():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.AnnotationTypeContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#arrayDecl" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="arrayDecl():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ArrayDeclContext"></a>
+      <a id="arrayDecl():ArrayDeclContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">arrayDecl</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ArrayDeclContext">ArrayDeclContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@arrayDecl():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ArrayDeclContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#block" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="block():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.BlockContext"></a>
+      <a id="block():BlockContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">block</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.BlockContext">BlockContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@block():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.BlockContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a>
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@clone():Object" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#cloudDataDecl" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="cloudDataDecl():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.CloudDataDeclContext"></a>
+      <a id="cloudDataDecl():CloudDataDeclContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">cloudDataDecl</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.CloudDataDeclContext">CloudDataDeclContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@cloudDataDecl():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.CloudDataDeclContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#cloudPrimType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="cloudPrimType():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.CloudPrimTypeContext"></a>
+      <a id="cloudPrimType():CloudPrimTypeContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">cloudPrimType</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.CloudPrimTypeContext">CloudPrimTypeContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@cloudPrimType():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.CloudPrimTypeContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#cloudSetType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="cloudSetType():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.CloudSetTypeContext"></a>
+      <a id="cloudSetType():CloudSetTypeContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">cloudSetType</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.CloudSetTypeContext">CloudSetTypeContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@cloudSetType():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.CloudSetTypeContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#cloudType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="cloudType():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.CloudTypeContext"></a>
+      <a id="cloudType():CloudTypeContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">cloudType</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.CloudTypeContext">CloudTypeContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@cloudType():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.CloudTypeContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="org.antlr.v4.runtime.Parser#compileParseTreePattern" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="compileParseTreePattern(x$1:String,x$2:Int,x$3:org.antlr.v4.runtime.Lexer):org.antlr.v4.runtime.tree.pattern.ParseTreePattern"></a>
+      <a id="compileParseTreePattern(String,Int,Lexer):ParseTreePattern"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">compileParseTreePattern</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="arg2">arg2: <span class="extype" name="org.antlr.v4.runtime.Lexer">Lexer</span></span>)</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.tree.pattern.ParseTreePattern">ParseTreePattern</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@compileParseTreePattern(x$1:String,x$2:Int,x$3:org.antlr.v4.runtime.Lexer):org.antlr.v4.runtime.tree.pattern.ParseTreePattern" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#compileParseTreePattern" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="compileParseTreePattern(x$1:String,x$2:Int):org.antlr.v4.runtime.tree.pattern.ParseTreePattern"></a>
+      <a id="compileParseTreePattern(String,Int):ParseTreePattern"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">compileParseTreePattern</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.tree.pattern.ParseTreePattern">ParseTreePattern</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@compileParseTreePattern(x$1:String,x$2:Int):org.antlr.v4.runtime.tree.pattern.ParseTreePattern" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#consume" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="consume():org.antlr.v4.runtime.Token"></a>
+      <a id="consume():Token"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">consume</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.Token">Token</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@consume():org.antlr.v4.runtime.Token" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#dumpDFA" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="dumpDFA():Unit"></a>
+      <a id="dumpDFA():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dumpDFA</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@dumpDFA():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#element" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="element():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ElementContext"></a>
+      <a id="element():ElementContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">element</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ElementContext">ElementContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@element():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ElementContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#elements" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="elements():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ElementsContext"></a>
+      <a id="elements():ElementsContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">elements</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ElementsContext">ElementsContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@elements():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ElementsContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.Predef.Ensuring#ensuring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensuring(cond:A=&gt;Boolean,msg:=&gt;Any):A"></a>
+      <a id="ensuring((DcctParser)⇒Boolean,⇒Any):DcctParser"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: (<a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>, <span name="msg">msg: ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@ensuring(cond:A=&gt;Boolean,msg:=&gt;Any):A" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a> to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a>] performed by method Ensuring in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
+    </li><li name="scala.Predef.Ensuring#ensuring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensuring(cond:A=&gt;Boolean):A"></a>
+      <a id="ensuring((DcctParser)⇒Boolean):DcctParser"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: (<a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@ensuring(cond:A=&gt;Boolean):A" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a> to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a>] performed by method Ensuring in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
+    </li><li name="scala.Predef.Ensuring#ensuring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensuring(cond:Boolean,msg:=&gt;Any):A"></a>
+      <a id="ensuring(Boolean,⇒Any):DcctParser"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>, <span name="msg">msg: ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@ensuring(cond:Boolean,msg:=&gt;Any):A" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a> to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a>] performed by method Ensuring in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
+    </li><li name="scala.Predef.Ensuring#ensuring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensuring(cond:Boolean):A"></a>
+      <a id="ensuring(Boolean):DcctParser"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@ensuring(cond:Boolean):A" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a> to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a>] performed by method Ensuring in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#enterOuterAlt" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="enterOuterAlt(x$1:org.antlr.v4.runtime.ParserRuleContext,x$2:Int):Unit"></a>
+      <a id="enterOuterAlt(ParserRuleContext,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">enterOuterAlt</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.ParserRuleContext">ParserRuleContext</span></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@enterOuterAlt(x$1:org.antlr.v4.runtime.ParserRuleContext,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#enterRecursionRule" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="enterRecursionRule(x$1:org.antlr.v4.runtime.ParserRuleContext,x$2:Int,x$3:Int,x$4:Int):Unit"></a>
+      <a id="enterRecursionRule(ParserRuleContext,Int,Int,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">enterRecursionRule</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.ParserRuleContext">ParserRuleContext</span></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="arg2">arg2: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="arg3">arg3: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@enterRecursionRule(x$1:org.antlr.v4.runtime.ParserRuleContext,x$2:Int,x$3:Int,x$4:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#enterRule" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="enterRule(x$1:org.antlr.v4.runtime.ParserRuleContext,x$2:Int,x$3:Int):Unit"></a>
+      <a id="enterRule(ParserRuleContext,Int,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">enterRule</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.ParserRuleContext">ParserRuleContext</span></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="arg2">arg2: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@enterRule(x$1:org.antlr.v4.runtime.ParserRuleContext,x$2:Int,x$3:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#entityDecl" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="entityDecl():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.EntityDeclContext"></a>
+      <a id="entityDecl():EntityDeclContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">entityDecl</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.EntityDeclContext">EntityDeclContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@entityDecl():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.EntityDeclContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a>
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(x$1:Any):Boolean"></a>
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#exitRule" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="exitRule():Unit"></a>
+      <a id="exitRule():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">exitRule</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@exitRule():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#expression" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="expression():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ExpressionContext"></a>
+      <a id="expression():ExpressionContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">expression</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ExpressionContext">ExpressionContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@expression():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ExpressionContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#expressionArgs" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="expressionArgs():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ExpressionArgsContext"></a>
+      <a id="expressionArgs():ExpressionArgsContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">expressionArgs</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ExpressionArgsContext">ExpressionArgsContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@expressionArgs():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ExpressionArgsContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#expressionType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="expressionType():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ExpressionTypeContext"></a>
+      <a id="expressionType():ExpressionTypeContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">expressionType</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ExpressionTypeContext">ExpressionTypeContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@expressionType():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ExpressionTypeContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#expressions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="expressions():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ExpressionsContext"></a>
+      <a id="expressions():ExpressionsContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">expressions</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ExpressionsContext">ExpressionsContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@expressions():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ExpressionsContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finalize():Unit"></a>
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.lang.Throwable]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#foreach" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="foreach():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ForeachContext"></a>
+      <a id="foreach():ForeachContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">foreach</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ForeachContext">ForeachContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@foreach():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ForeachContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.Predef.StringFormat#formatted" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="formatted(fmtstr:String):String"></a>
+      <a id="formatted(String):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">formatted</span><span class="params">(<span name="fmtstr">fmtstr: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@formatted(fmtstr:String):String" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a> to
+            <span class="extype" name="scala.Predef.StringFormat">StringFormat</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a>] performed by method StringFormat in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>StringFormat</dd><dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#getATN" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getATN():org.antlr.v4.runtime.atn.ATN"></a>
+      <a id="getATN():ATN"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getATN</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.atn.ATN">ATN</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getATN():org.antlr.v4.runtime.atn.ATN" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a> → Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getATNWithBypassAlts" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getATNWithBypassAlts():org.antlr.v4.runtime.atn.ATN"></a>
+      <a id="getATNWithBypassAlts():ATN"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getATNWithBypassAlts</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.atn.ATN">ATN</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getATNWithBypassAlts():org.antlr.v4.runtime.atn.ATN" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getBuildParseTree" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getBuildParseTree():Boolean"></a>
+      <a id="getBuildParseTree():Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getBuildParseTree</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getBuildParseTree():Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getClass():Class[_]"></a>
+      <a id="getClass():Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getContext" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getContext():org.antlr.v4.runtime.ParserRuleContext"></a>
+      <a id="getContext():ParserRuleContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getContext</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.ParserRuleContext">ParserRuleContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getContext():org.antlr.v4.runtime.ParserRuleContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getCurrentToken" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getCurrentToken():org.antlr.v4.runtime.Token"></a>
+      <a id="getCurrentToken():Token"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getCurrentToken</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.Token">Token</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getCurrentToken():org.antlr.v4.runtime.Token" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getDFAStrings" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getDFAStrings():java.util.List[String]"></a>
+      <a id="getDFAStrings():List[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getDFAStrings</span><span class="params">()</span><span class="result">: <span class="extype" name="java.util.List">List</span>[<span class="extype" name="java.lang.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getDFAStrings():java.util.List[String]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getErrorHandler" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getErrorHandler():org.antlr.v4.runtime.ANTLRErrorStrategy"></a>
+      <a id="getErrorHandler():ANTLRErrorStrategy"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getErrorHandler</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.ANTLRErrorStrategy">ANTLRErrorStrategy</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getErrorHandler():org.antlr.v4.runtime.ANTLRErrorStrategy" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#getErrorHeader" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getErrorHeader(x$1:org.antlr.v4.runtime.RecognitionException):String"></a>
+      <a id="getErrorHeader(RecognitionException):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getErrorHeader</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.RecognitionException">RecognitionException</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getErrorHeader(x$1:org.antlr.v4.runtime.RecognitionException):String" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#getErrorListenerDispatch" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getErrorListenerDispatch():org.antlr.v4.runtime.ANTLRErrorListener"></a>
+      <a id="getErrorListenerDispatch():ANTLRErrorListener"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getErrorListenerDispatch</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.ANTLRErrorListener">ANTLRErrorListener</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getErrorListenerDispatch():org.antlr.v4.runtime.ANTLRErrorListener" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#getErrorListeners" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getErrorListeners():java.util.List[_&lt;:org.antlr.v4.runtime.ANTLRErrorListener]"></a>
+      <a id="getErrorListeners():List[_&lt;:ANTLRErrorListener]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getErrorListeners</span><span class="params">()</span><span class="result">: <span class="extype" name="java.util.List">List</span>[_ &lt;: <span class="extype" name="org.antlr.v4.runtime.ANTLRErrorListener">ANTLRErrorListener</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getErrorListeners():java.util.List[_&lt;:org.antlr.v4.runtime.ANTLRErrorListener]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getExpectedTokens" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getExpectedTokens():org.antlr.v4.runtime.misc.IntervalSet"></a>
+      <a id="getExpectedTokens():IntervalSet"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getExpectedTokens</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.misc.IntervalSet">IntervalSet</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getExpectedTokens():org.antlr.v4.runtime.misc.IntervalSet" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getExpectedTokensWithinCurrentRule" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getExpectedTokensWithinCurrentRule():org.antlr.v4.runtime.misc.IntervalSet"></a>
+      <a id="getExpectedTokensWithinCurrentRule():IntervalSet"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getExpectedTokensWithinCurrentRule</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.misc.IntervalSet">IntervalSet</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getExpectedTokensWithinCurrentRule():org.antlr.v4.runtime.misc.IntervalSet" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#getGrammarFileName" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getGrammarFileName():String"></a>
+      <a id="getGrammarFileName():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getGrammarFileName</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getGrammarFileName():String" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a> → Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getInputStream" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getInputStream():org.antlr.v4.runtime.TokenStream"></a>
+      <a id="getInputStream():TokenStream"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getInputStream</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.TokenStream">TokenStream</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getInputStream():org.antlr.v4.runtime.TokenStream" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser → Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#getInterpreter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getInterpreter():ATNInterpreter"></a>
+      <a id="getInterpreter():ParserATNSimulator"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getInterpreter</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.atn.ParserATNSimulator">ParserATNSimulator</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getInterpreter():ATNInterpreter" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getInvokingContext" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getInvokingContext(x$1:Int):org.antlr.v4.runtime.ParserRuleContext"></a>
+      <a id="getInvokingContext(Int):ParserRuleContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getInvokingContext</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.ParserRuleContext">ParserRuleContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getInvokingContext(x$1:Int):org.antlr.v4.runtime.ParserRuleContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getNumberOfSyntaxErrors" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getNumberOfSyntaxErrors():Int"></a>
+      <a id="getNumberOfSyntaxErrors():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getNumberOfSyntaxErrors</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getNumberOfSyntaxErrors():Int" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getParseInfo" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getParseInfo():org.antlr.v4.runtime.atn.ParseInfo"></a>
+      <a id="getParseInfo():ParseInfo"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getParseInfo</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.atn.ParseInfo">ParseInfo</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getParseInfo():org.antlr.v4.runtime.atn.ParseInfo" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser → Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getParseListeners" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getParseListeners():java.util.List[org.antlr.v4.runtime.tree.ParseTreeListener]"></a>
+      <a id="getParseListeners():List[ParseTreeListener]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getParseListeners</span><span class="params">()</span><span class="result">: <span class="extype" name="java.util.List">List</span>[<span class="extype" name="org.antlr.v4.runtime.tree.ParseTreeListener">ParseTreeListener</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getParseListeners():java.util.List[org.antlr.v4.runtime.tree.ParseTreeListener]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getPrecedence" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getPrecedence():Int"></a>
+      <a id="getPrecedence():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getPrecedence</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getPrecedence():Int" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getRuleContext" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getRuleContext():org.antlr.v4.runtime.ParserRuleContext"></a>
+      <a id="getRuleContext():ParserRuleContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getRuleContext</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.ParserRuleContext">ParserRuleContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getRuleContext():org.antlr.v4.runtime.ParserRuleContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getRuleIndex" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getRuleIndex(x$1:String):Int"></a>
+      <a id="getRuleIndex(String):Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getRuleIndex</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getRuleIndex(x$1:String):Int" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#getRuleIndexMap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getRuleIndexMap():java.util.Map[String,Integer]"></a>
+      <a id="getRuleIndexMap():Map[String,Integer]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getRuleIndexMap</span><span class="params">()</span><span class="result">: <span class="extype" name="java.util.Map">Map</span>[<span class="extype" name="java.lang.String">String</span>, <span class="extype" name="java.lang.Integer">Integer</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getRuleIndexMap():java.util.Map[String,Integer]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getRuleInvocationStack" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getRuleInvocationStack(x$1:org.antlr.v4.runtime.RuleContext):java.util.List[String]"></a>
+      <a id="getRuleInvocationStack(RuleContext):List[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getRuleInvocationStack</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.RuleContext">RuleContext</span></span>)</span><span class="result">: <span class="extype" name="java.util.List">List</span>[<span class="extype" name="java.lang.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getRuleInvocationStack(x$1:org.antlr.v4.runtime.RuleContext):java.util.List[String]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getRuleInvocationStack" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getRuleInvocationStack():java.util.List[String]"></a>
+      <a id="getRuleInvocationStack():List[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getRuleInvocationStack</span><span class="params">()</span><span class="result">: <span class="extype" name="java.util.List">List</span>[<span class="extype" name="java.lang.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getRuleInvocationStack():java.util.List[String]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#getRuleNames" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getRuleNames():Array[String]"></a>
+      <a id="getRuleNames():Array[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getRuleNames</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Array" class="extype" target="_top">Array</a>[<span class="extype" name="java.lang.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getRuleNames():Array[String]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a> → Recognizer</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#getSerializedATN" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getSerializedATN():String"></a>
+      <a id="getSerializedATN():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getSerializedATN</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getSerializedATN():String" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a> → Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getSourceName" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getSourceName():String"></a>
+      <a id="getSourceName():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getSourceName</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getSourceName():String" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#getState" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getState():Int"></a>
+      <a id="getState():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getState</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getState():Int" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getTokenFactory" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getTokenFactory():org.antlr.v4.runtime.TokenFactory[_]"></a>
+      <a id="getTokenFactory():TokenFactory[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getTokenFactory</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.TokenFactory">TokenFactory</span>[_]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getTokenFactory():org.antlr.v4.runtime.TokenFactory[_]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser → Recognizer</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#getTokenNames" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getTokenNames():Array[String]"></a>
+      <a id="getTokenNames():Array[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getTokenNames</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Array" class="extype" target="_top">Array</a>[<span class="extype" name="java.lang.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getTokenNames():Array[String]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a> → Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getTokenStream" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getTokenStream():org.antlr.v4.runtime.TokenStream"></a>
+      <a id="getTokenStream():TokenStream"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getTokenStream</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.TokenStream">TokenStream</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getTokenStream():org.antlr.v4.runtime.TokenStream" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#getTokenType" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getTokenType(x$1:String):Int"></a>
+      <a id="getTokenType(String):Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getTokenType</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getTokenType(x$1:String):Int" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#getTokenTypeMap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getTokenTypeMap():java.util.Map[String,Integer]"></a>
+      <a id="getTokenTypeMap():Map[String,Integer]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getTokenTypeMap</span><span class="params">()</span><span class="result">: <span class="extype" name="java.util.Map">Map</span>[<span class="extype" name="java.lang.String">String</span>, <span class="extype" name="java.lang.Integer">Integer</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getTokenTypeMap():java.util.Map[String,Integer]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getTrimParseTree" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getTrimParseTree():Boolean"></a>
+      <a id="getTrimParseTree():Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getTrimParseTree</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getTrimParseTree():Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#getVocabulary" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getVocabulary():org.antlr.v4.runtime.Vocabulary"></a>
+      <a id="getVocabulary():Vocabulary"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getVocabulary</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.Vocabulary">Vocabulary</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getVocabulary():org.antlr.v4.runtime.Vocabulary" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a> → Recognizer</dd></dl></div>
+    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="hashCode():Int"></a>
+      <a id="hashCode():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#inContext" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="inContext(x$1:String):Boolean"></a>
+      <a id="inContext(String):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">inContext</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@inContext(x$1:String):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#indexType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="indexType():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.IndexTypeContext"></a>
+      <a id="indexType():IndexTypeContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">indexType</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.IndexTypeContext">IndexTypeContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@indexType():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.IndexTypeContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="org.antlr.v4.runtime.Parser#isExpectedToken" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isExpectedToken(x$1:Int):Boolean"></a>
+      <a id="isExpectedToken(Int):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isExpectedToken</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@isExpectedToken(x$1:Int):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#isTrace" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isTrace():Boolean"></a>
+      <a id="isTrace():Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isTrace</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@isTrace():Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#literals" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="literals():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.LiteralsContext"></a>
+      <a id="literals():LiteralsContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">literals</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.LiteralsContext">LiteralsContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@literals():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.LiteralsContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="org.antlr.v4.runtime.Parser#match" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="match(x$1:Int):org.antlr.v4.runtime.Token"></a>
+      <a id="match(Int):Token"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">match</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.Token">Token</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@match(x$1:Int):org.antlr.v4.runtime.Token" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[org.antlr.v4.runtime.RecognitionException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#matchWildcard" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="matchWildcard():org.antlr.v4.runtime.Token"></a>
+      <a id="matchWildcard():Token"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">matchWildcard</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.Token">Token</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@matchWildcard():org.antlr.v4.runtime.Token" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[org.antlr.v4.runtime.RecognitionException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a>
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notify():Unit"></a>
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#notifyErrorListeners" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyErrorListeners(x$1:org.antlr.v4.runtime.Token,x$2:String,x$3:org.antlr.v4.runtime.RecognitionException):Unit"></a>
+      <a id="notifyErrorListeners(Token,String,RecognitionException):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyErrorListeners</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.Token">Token</span></span>, <span name="arg1">arg1: <span class="extype" name="java.lang.String">String</span></span>, <span name="arg2">arg2: <span class="extype" name="org.antlr.v4.runtime.RecognitionException">RecognitionException</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@notifyErrorListeners(x$1:org.antlr.v4.runtime.Token,x$2:String,x$3:org.antlr.v4.runtime.RecognitionException):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#notifyErrorListeners" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyErrorListeners(x$1:String):Unit"></a>
+      <a id="notifyErrorListeners(String):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyErrorListeners</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@notifyErrorListeners(x$1:String):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#precpred" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="precpred(x$1:org.antlr.v4.runtime.RuleContext,x$2:Int):Boolean"></a>
+      <a id="precpred(RuleContext,Int):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">precpred</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.RuleContext">RuleContext</span></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@precpred(x$1:org.antlr.v4.runtime.RuleContext,x$2:Int):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser → Recognizer</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#program" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="program():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ProgramContext"></a>
+      <a id="program():ProgramContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">program</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ProgramContext">ProgramContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@program():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.ProgramContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#properties" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="properties():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.PropertiesContext"></a>
+      <a id="properties():PropertiesContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">properties</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.PropertiesContext">PropertiesContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@properties():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.PropertiesContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#property" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="property():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.PropertyContext"></a>
+      <a id="property():PropertyContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">property</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.PropertyContext">PropertyContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@property():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.PropertyContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="org.antlr.v4.runtime.Parser#pushNewRecursionContext" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="pushNewRecursionContext(x$1:org.antlr.v4.runtime.ParserRuleContext,x$2:Int,x$3:Int):Unit"></a>
+      <a id="pushNewRecursionContext(ParserRuleContext,Int,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pushNewRecursionContext</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.ParserRuleContext">ParserRuleContext</span></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="arg2">arg2: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@pushNewRecursionContext(x$1:org.antlr.v4.runtime.ParserRuleContext,x$2:Int,x$3:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#removeErrorListener" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="removeErrorListener(x$1:org.antlr.v4.runtime.ANTLRErrorListener):Unit"></a>
+      <a id="removeErrorListener(ANTLRErrorListener):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">removeErrorListener</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.ANTLRErrorListener">ANTLRErrorListener</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@removeErrorListener(x$1:org.antlr.v4.runtime.ANTLRErrorListener):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#removeErrorListeners" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="removeErrorListeners():Unit"></a>
+      <a id="removeErrorListeners():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">removeErrorListeners</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@removeErrorListeners():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#removeParseListener" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="removeParseListener(x$1:org.antlr.v4.runtime.tree.ParseTreeListener):Unit"></a>
+      <a id="removeParseListener(ParseTreeListener):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">removeParseListener</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.tree.ParseTreeListener">ParseTreeListener</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@removeParseListener(x$1:org.antlr.v4.runtime.tree.ParseTreeListener):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#removeParseListeners" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="removeParseListeners():Unit"></a>
+      <a id="removeParseListeners():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">removeParseListeners</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@removeParseListeners():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#reset" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="reset():Unit"></a>
+      <a id="reset():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">reset</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@reset():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#schema" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="schema():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.SchemaContext"></a>
+      <a id="schema():SchemaContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">schema</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser.SchemaContext">SchemaContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@schema():ch.usi.inf.l3.sana.dcct.antlr.DcctParser.SchemaContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser#sempred" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="sempred(_localctx:org.antlr.v4.runtime.RuleContext,ruleIndex:Int,predIndex:Int):Boolean"></a>
+      <a id="sempred(RuleContext,Int,Int):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sempred</span><span class="params">(<span name="_localctx">_localctx: <span class="extype" name="org.antlr.v4.runtime.RuleContext">RuleContext</span></span>, <span name="ruleIndex">ruleIndex: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="predIndex">predIndex: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@sempred(_localctx:org.antlr.v4.runtime.RuleContext,ruleIndex:Int,predIndex:Int):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a> → Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#setBuildParseTree" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setBuildParseTree(x$1:Boolean):Unit"></a>
+      <a id="setBuildParseTree(Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setBuildParseTree</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@setBuildParseTree(x$1:Boolean):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#setContext" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setContext(x$1:org.antlr.v4.runtime.ParserRuleContext):Unit"></a>
+      <a id="setContext(ParserRuleContext):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setContext</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.ParserRuleContext">ParserRuleContext</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@setContext(x$1:org.antlr.v4.runtime.ParserRuleContext):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#setErrorHandler" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setErrorHandler(x$1:org.antlr.v4.runtime.ANTLRErrorStrategy):Unit"></a>
+      <a id="setErrorHandler(ANTLRErrorStrategy):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setErrorHandler</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.ANTLRErrorStrategy">ANTLRErrorStrategy</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@setErrorHandler(x$1:org.antlr.v4.runtime.ANTLRErrorStrategy):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#setInputStream" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setInputStream(x$1:org.antlr.v4.runtime.IntStream):Unit"></a>
+      <a id="setInputStream(IntStream):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setInputStream</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.IntStream">IntStream</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@setInputStream(x$1:org.antlr.v4.runtime.IntStream):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser → Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#setInterpreter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setInterpreter(x$1:ATNInterpreter):Unit"></a>
+      <a id="setInterpreter(ParserATNSimulator):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setInterpreter</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.atn.ParserATNSimulator">ParserATNSimulator</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@setInterpreter(x$1:ATNInterpreter):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#setProfile" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setProfile(x$1:Boolean):Unit"></a>
+      <a id="setProfile(Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setProfile</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@setProfile(x$1:Boolean):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#setState" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setState(x$1:Int):Unit"></a>
+      <a id="setState(Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setState</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@setState(x$1:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#setTokenFactory" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setTokenFactory(x$1:org.antlr.v4.runtime.TokenFactory[_]):Unit"></a>
+      <a id="setTokenFactory(TokenFactory[_]):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setTokenFactory</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.TokenFactory">TokenFactory</span>[_]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@setTokenFactory(x$1:org.antlr.v4.runtime.TokenFactory[_]):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser → Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#setTokenStream" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setTokenStream(x$1:org.antlr.v4.runtime.TokenStream):Unit"></a>
+      <a id="setTokenStream(TokenStream):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setTokenStream</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.TokenStream">TokenStream</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@setTokenStream(x$1:org.antlr.v4.runtime.TokenStream):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#setTrace" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setTrace(x$1:Boolean):Unit"></a>
+      <a id="setTrace(Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setTrace</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@setTrace(x$1:Boolean):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#setTrimParseTree" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setTrimParseTree(x$1:Boolean):Unit"></a>
+      <a id="setTrimParseTree(Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setTrimParseTree</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@setTrimParseTree(x$1:Boolean):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
+      <a id="synchronized[T0](⇒T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toString():String"></a>
+      <a id="toString():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@toString():String" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#triggerEnterRuleEvent" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="triggerEnterRuleEvent():Unit"></a>
+      <a id="triggerEnterRuleEvent():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">triggerEnterRuleEvent</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@triggerEnterRuleEvent():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../../../org$antlr$v4$runtime.html" class="extype" name="org.antlr.v4.runtime">org.antlr.v4.runtime</a>] </dd><dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#triggerExitRuleEvent" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="triggerExitRuleEvent():Unit"></a>
+      <a id="triggerExitRuleEvent():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">triggerExitRuleEvent</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@triggerExitRuleEvent():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../../../org$antlr$v4$runtime.html" class="extype" name="org.antlr.v4.runtime">org.antlr.v4.runtime</a>] </dd><dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#unrollRecursionContexts" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="unrollRecursionContexts(x$1:org.antlr.v4.runtime.ParserRuleContext):Unit"></a>
+      <a id="unrollRecursionContexts(ParserRuleContext):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">unrollRecursionContexts</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.ParserRuleContext">ParserRuleContext</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@unrollRecursionContexts(x$1:org.antlr.v4.runtime.ParserRuleContext):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a>
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a>
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.Predef.ArrowAssoc#→" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="→[B](y:B):(A,B)"></a>
+      <a id="→[B](B):(DcctParser,B)"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $u2192" class="implicit">→</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="y">y: <span class="extype" name="scala.Predef.ArrowAssoc.→.B">B</span></span>)</span><span class="result">: (<a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a>, <span class="extype" name="scala.Predef.ArrowAssoc.→.B">B</span>)</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@→[B](y:B):(A,B)" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a> to
+            <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a>] performed by method ArrowAssoc in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>ArrowAssoc</dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Deprecated Value Members</h3>
+              <ol><li name="org.antlr.v4.runtime.Parser#enterRecursionRule" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="enterRecursionRule(x$1:org.antlr.v4.runtime.ParserRuleContext,x$2:Int):Unit"></a>
+      <a id="enterRecursionRule(ParserRuleContext,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version ) see corresponding Javadoc for more information.">enterRecursionRule</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.ParserRuleContext">ParserRuleContext</span></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@enterRecursionRule(x$1:org.antlr.v4.runtime.ParserRuleContext,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd><dt>Annotations</dt><dd>
+                <span class="name">@Deprecated</span>
+              
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version )</i> see corresponding Javadoc for more information.</p></dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#getTokenErrorDisplay" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getTokenErrorDisplay(x$1:org.antlr.v4.runtime.Token):String"></a>
+      <a id="getTokenErrorDisplay(Token):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version ) see corresponding Javadoc for more information.">getTokenErrorDisplay</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.Token">Token</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.dcct.antlr.DcctParser@getTokenErrorDisplay(x$1:org.antlr.v4.runtime.Token):String" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd><dt>Annotations</dt><dd>
+                <span class="name">@Deprecated</span>
+              
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version )</i> see corresponding Javadoc for more information.</p></dd></dl></div>
+    </li></ol>
+            </div>
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="org.antlr.v4.runtime.Parser">
+              <h3>Inherited from <span class="extype" name="org.antlr.v4.runtime.Parser">Parser</span></h3>
+            </div><div class="parent" name="org.antlr.v4.runtime.Recognizer">
+              <h3>Inherited from <span class="extype" name="org.antlr.v4.runtime.Recognizer">Recognizer</span>[<span class="extype" name="org.antlr.v4.runtime.Token">Token</span>, <span class="extype" name="org.antlr.v4.runtime.atn.ParserATNSimulator">ParserATNSimulator</span>]</h3>
+            </div><div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+            </div>
+        <div class="conversion" name="scala.Predef.any2stringadd">
+              <h3>Inherited by implicit conversion any2stringadd from
+                <a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a> to <span class="extype" name="scala.Predef.any2stringadd">any2stringadd</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a>]
+              </h3>
+            </div><div class="conversion" name="scala.Predef.StringFormat">
+              <h3>Inherited by implicit conversion StringFormat from
+                <a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a> to <span class="extype" name="scala.Predef.StringFormat">StringFormat</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a>]
+              </h3>
+            </div><div class="conversion" name="scala.Predef.Ensuring">
+              <h3>Inherited by implicit conversion Ensuring from
+                <a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a> to <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a>]
+              </h3>
+            </div><div class="conversion" name="scala.Predef.ArrowAssoc">
+              <h3>Inherited by implicit conversion ArrowAssoc from
+                <a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a> to <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.dcct.antlr.DcctParser">DcctParser</a>]
+              </h3>
+            </div>
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

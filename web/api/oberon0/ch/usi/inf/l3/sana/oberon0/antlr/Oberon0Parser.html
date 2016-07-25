@@ -1,0 +1,2688 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>Oberon0Parser - Sana Compiler Framework - ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser</title>
+          <meta name="description" content="Oberon0Parser - Sana Compiler Framework - ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser" />
+          <meta name="keywords" content="Oberon0Parser Sana Compiler Framework ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../../../../lib/tools.tooltip.js"></script>
+      <script type="text/javascript" src="../../../../../../../lib/modernizr.custom.js"></script><script type="text/javascript" src="../../../../../../../lib/diagrams.js" id="diagrams-js"></script>
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../../../index.html';
+            var hash = 'ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="type">
+      <div id="definition">
+        <img alt="Class" src="../../../../../../../lib/class_big.png" />
+        <p id="owner"><a href="../../../../../../package.html" class="extype" name="ch">ch</a>.<a href="../../../../../package.html" class="extype" name="ch.usi">usi</a>.<a href="../../../../package.html" class="extype" name="ch.usi.inf">inf</a>.<a href="../../../package.html" class="extype" name="ch.usi.inf.l3">l3</a>.<a href="../../package.html" class="extype" name="ch.usi.inf.l3.sana">sana</a>.<a href="../package.html" class="extype" name="ch.usi.inf.l3.sana.oberon0">oberon0</a>.<a href="package.html" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr">antlr</a></p>
+        <h1>Oberon0Parser</h1><h3><span class="morelinks"><div>Related Doc:
+            <a href="package.html" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr">package antlr</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Oberon0Parser</span><span class="result"> extends <span class="extype" name="org.antlr.v4.runtime.Parser">Parser</span></span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/amanjpro/languages-a-la-carte/blob/master/oberon0/src/main/java/ch/usi/inf/l3/sana/oberon0/antlr/Oberon0Parser.java.scala#L1" target="_blank">Oberon0Parser.java</a></dd></dl><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><span class="extype" name="org.antlr.v4.runtime.Parser">Parser</span>, <span class="extype" name="org.antlr.v4.runtime.Recognizer">Recognizer</span>[<span class="extype" name="org.antlr.v4.runtime.Token">Token</span>, <span class="extype" name="org.antlr.v4.runtime.atn.ParserATNSimulator">ParserATNSimulator</span>], <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+        </div><div class="toggleContainer block diagram-container" id="inheritance-diagram-container">
+                <span class="toggle diagram-link">Type Hierarchy</span>
+                <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#diagrams" target="_blank" class="diagram-help">Learn more about scaladoc diagrams</a>
+                <div class="diagram" id="inheritance-diagram"><svg class="class-diagram" id="graph1" viewBox="0.00 0.00 170.00 118.00" height="118pt" width="170pt" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g transform="scale(1 1) rotate(0) translate(4 114)" class="graph" id="graph0"><polygon points="-4,4 -4,-114 166,-114 166,4 -4,4" stroke="none" fill="white"></polygon><g class="cluster" id="clust1"></g><g class="cluster" id="clust2"></g><!-- node0 --><g class="node this class" id="graph1_0"><g id="a_this class|graph1_0"><a xlink:title="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser (this class)" xlink:href="#inheritance-diagram"><polygon points="137.5,-49 24.5,-49 24.5,-24 137.5,-24 137.5,-49" stroke="#115f3b" fill="#0a955b"></polygon><image xlink:href="../../../../../../../lib/class_diagram.png" y="-43.5" x="35" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-33.5" x="56" text-anchor="start">Oberon0Parser</text></a></g></g><!-- node1 --><g class="node class" id="graph1_1"><g id="a_class|graph1_1"><a xlink:title="org.antlr.v4.runtime.Parser"><polygon points="118,-110 44,-110 44,-85 118,-85 118,-110" stroke="#115f3b" fill="#0a955b"></polygon><image xlink:href="../../../../../../../lib/class_diagram.png" y="-104.5" x="54" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-94.5" x="75" text-anchor="start">Parser</text></a></g></g><!-- node1&#45;&gt;node0 --><g class="edge inheritance" id="graph1_1_0"><g id="a_inheritance|graph1_1_0"><a xlink:title="Oberon0Parser is a subtype of Parser"><path d="M81,-79.6874C81,-69.9173 81,-57.8534 81,-49.1323" stroke="#d4d4d4" fill="none"></path><polygon points="79.2501,-79.8435 81,-84.8435 82.7501,-79.8435 79.2501,-79.8435" stroke="#d4d4d4" fill="none"></polygon></a></g></g></g></svg></div>
+              </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser"><span>Oberon0Parser</span></li><li class="in" name="org.antlr.v4.runtime.Parser"><span>Parser</span></li><li class="in" name="org.antlr.v4.runtime.Recognizer"><span>Recognizer</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+                <span class="filtertype">Implicitly<br />
+                </span>
+                <ol id="implicits"> <li class="in" name="scala.Predef.any2stringadd" data-hidden="true"><span>by any2stringadd</span></li><li class="in" name="scala.Predef.StringFormat" data-hidden="true"><span>by StringFormat</span></li><li class="in" name="scala.Predef.Ensuring" data-hidden="true"><span>by Ensuring</span></li><li class="in" name="scala.Predef.ArrowAssoc" data-hidden="true"><span>by ArrowAssoc</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li>
+            </ol>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        <div id="constructors" class="members">
+              <h3>Instance Constructors</h3>
+              <ol><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(input:org.antlr.v4.runtime.TokenStream):ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser"></a>
+      <a id="&lt;init&gt;:Oberon0Parser"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Oberon0Parser</span><span class="params">(<span name="input">input: <span class="extype" name="org.antlr.v4.runtime.TokenStream">TokenStream</span></span>)</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@&lt;init&gt;(input:org.antlr.v4.runtime.TokenStream):ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="org.antlr.v4.runtime.Parser.TraceListener" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="TraceListenerextendsParseTreeListener"></a>
+      <a id="TraceListener:TraceListener"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <span class="name">TraceListener</span><span class="result"> extends <span class="extype" name="org.antlr.v4.runtime.tree.ParseTreeListener">ParseTreeListener</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@TraceListenerextendsParseTreeListener" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a>
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="##():Int"></a>
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@##():Int" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.Predef.any2stringadd#+" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="+(other:String):String"></a>
+      <a id="+(String):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $plus" class="implicit">+</span><span class="params">(<span name="other">other: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@+(other:String):String" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a> to
+            <span class="extype" name="scala.Predef.any2stringadd">any2stringadd</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a>] performed by method any2stringadd in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>any2stringadd</dd></dl></div>
+    </li><li name="scala.Predef.ArrowAssoc#-&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="-&gt;[B](y:B):(A,B)"></a>
+      <a id="-&gt;[B](B):(Oberon0Parser,B)"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $minus$greater" class="implicit">-&gt;</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="y">y: <span class="extype" name="scala.Predef.ArrowAssoc.-&gt;.B">B</span></span>)</span><span class="result">: (<a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a>, <span class="extype" name="scala.Predef.ArrowAssoc.-&gt;.B">B</span>)</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@-&gt;[B](y:B):(A,B)" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a> to
+            <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a>] performed by method ArrowAssoc in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>ArrowAssoc</dd><dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a>
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#action" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="action(x$1:org.antlr.v4.runtime.RuleContext,x$2:Int,x$3:Int):Unit"></a>
+      <a id="action(RuleContext,Int,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">action</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.RuleContext">RuleContext</span></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="arg2">arg2: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@action(x$1:org.antlr.v4.runtime.RuleContext,x$2:Int,x$3:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#actualParameters" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="actualParameters():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ActualParametersContext"></a>
+      <a id="actualParameters():ActualParametersContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">actualParameters</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ActualParametersContext">ActualParametersContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@actualParameters():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ActualParametersContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="org.antlr.v4.runtime.Parser#addContextToParseTree" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="addContextToParseTree():Unit"></a>
+      <a id="addContextToParseTree():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addContextToParseTree</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@addContextToParseTree():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../../../org$antlr$v4$runtime.html" class="extype" name="org.antlr.v4.runtime">org.antlr.v4.runtime</a>] </dd><dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#addErrorListener" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="addErrorListener(x$1:org.antlr.v4.runtime.ANTLRErrorListener):Unit"></a>
+      <a id="addErrorListener(ANTLRErrorListener):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addErrorListener</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.ANTLRErrorListener">ANTLRErrorListener</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@addErrorListener(x$1:org.antlr.v4.runtime.ANTLRErrorListener):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#addParseListener" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="addParseListener(x$1:org.antlr.v4.runtime.tree.ParseTreeListener):Unit"></a>
+      <a id="addParseListener(ParseTreeListener):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addParseListener</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.tree.ParseTreeListener">ParseTreeListener</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@addParseListener(x$1:org.antlr.v4.runtime.tree.ParseTreeListener):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#arrayType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="arrayType():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ArrayTypeContext"></a>
+      <a id="arrayType():ArrayTypeContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">arrayType</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ArrayTypeContext">ArrayTypeContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@arrayType():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ArrayTypeContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#assignment" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="assignment():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.AssignmentContext"></a>
+      <a id="assignment():AssignmentContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">assignment</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.AssignmentContext">AssignmentContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@assignment():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.AssignmentContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#booleanValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="booleanValue():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.BooleanValueContext"></a>
+      <a id="booleanValue():BooleanValueContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">booleanValue</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.BooleanValueContext">BooleanValueContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@booleanValue():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.BooleanValueContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a>
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@clone():Object" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#compileParseTreePattern" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="compileParseTreePattern(x$1:String,x$2:Int,x$3:org.antlr.v4.runtime.Lexer):org.antlr.v4.runtime.tree.pattern.ParseTreePattern"></a>
+      <a id="compileParseTreePattern(String,Int,Lexer):ParseTreePattern"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">compileParseTreePattern</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="arg2">arg2: <span class="extype" name="org.antlr.v4.runtime.Lexer">Lexer</span></span>)</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.tree.pattern.ParseTreePattern">ParseTreePattern</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@compileParseTreePattern(x$1:String,x$2:Int,x$3:org.antlr.v4.runtime.Lexer):org.antlr.v4.runtime.tree.pattern.ParseTreePattern" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#compileParseTreePattern" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="compileParseTreePattern(x$1:String,x$2:Int):org.antlr.v4.runtime.tree.pattern.ParseTreePattern"></a>
+      <a id="compileParseTreePattern(String,Int):ParseTreePattern"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">compileParseTreePattern</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.tree.pattern.ParseTreePattern">ParseTreePattern</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@compileParseTreePattern(x$1:String,x$2:Int):org.antlr.v4.runtime.tree.pattern.ParseTreePattern" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#constDeclaration" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="constDeclaration():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ConstDeclarationContext"></a>
+      <a id="constDeclaration():ConstDeclarationContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">constDeclaration</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ConstDeclarationContext">ConstDeclarationContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@constDeclaration():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ConstDeclarationContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="org.antlr.v4.runtime.Parser#consume" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="consume():org.antlr.v4.runtime.Token"></a>
+      <a id="consume():Token"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">consume</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.Token">Token</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@consume():org.antlr.v4.runtime.Token" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#declarations" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="declarations():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.DeclarationsContext"></a>
+      <a id="declarations():DeclarationsContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">declarations</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.DeclarationsContext">DeclarationsContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@declarations():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.DeclarationsContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="org.antlr.v4.runtime.Parser#dumpDFA" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="dumpDFA():Unit"></a>
+      <a id="dumpDFA():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dumpDFA</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@dumpDFA():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#elseIf" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="elseIf():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ElseIfContext"></a>
+      <a id="elseIf():ElseIfContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">elseIf</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ElseIfContext">ElseIfContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@elseIf():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ElseIfContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#elsep" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="elsep():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ElsepContext"></a>
+      <a id="elsep():ElsepContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">elsep</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ElsepContext">ElsepContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@elsep():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ElsepContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.Predef.Ensuring#ensuring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensuring(cond:A=&gt;Boolean,msg:=&gt;Any):A"></a>
+      <a id="ensuring((Oberon0Parser)⇒Boolean,⇒Any):Oberon0Parser"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: (<a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>, <span name="msg">msg: ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@ensuring(cond:A=&gt;Boolean,msg:=&gt;Any):A" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a> to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a>] performed by method Ensuring in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
+    </li><li name="scala.Predef.Ensuring#ensuring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensuring(cond:A=&gt;Boolean):A"></a>
+      <a id="ensuring((Oberon0Parser)⇒Boolean):Oberon0Parser"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: (<a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@ensuring(cond:A=&gt;Boolean):A" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a> to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a>] performed by method Ensuring in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
+    </li><li name="scala.Predef.Ensuring#ensuring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensuring(cond:Boolean,msg:=&gt;Any):A"></a>
+      <a id="ensuring(Boolean,⇒Any):Oberon0Parser"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>, <span name="msg">msg: ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@ensuring(cond:Boolean,msg:=&gt;Any):A" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a> to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a>] performed by method Ensuring in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
+    </li><li name="scala.Predef.Ensuring#ensuring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensuring(cond:Boolean):A"></a>
+      <a id="ensuring(Boolean):Oberon0Parser"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@ensuring(cond:Boolean):A" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a> to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a>] performed by method Ensuring in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#enterOuterAlt" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="enterOuterAlt(x$1:org.antlr.v4.runtime.ParserRuleContext,x$2:Int):Unit"></a>
+      <a id="enterOuterAlt(ParserRuleContext,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">enterOuterAlt</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.ParserRuleContext">ParserRuleContext</span></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@enterOuterAlt(x$1:org.antlr.v4.runtime.ParserRuleContext,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#enterRecursionRule" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="enterRecursionRule(x$1:org.antlr.v4.runtime.ParserRuleContext,x$2:Int,x$3:Int,x$4:Int):Unit"></a>
+      <a id="enterRecursionRule(ParserRuleContext,Int,Int,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">enterRecursionRule</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.ParserRuleContext">ParserRuleContext</span></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="arg2">arg2: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="arg3">arg3: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@enterRecursionRule(x$1:org.antlr.v4.runtime.ParserRuleContext,x$2:Int,x$3:Int,x$4:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#enterRule" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="enterRule(x$1:org.antlr.v4.runtime.ParserRuleContext,x$2:Int,x$3:Int):Unit"></a>
+      <a id="enterRule(ParserRuleContext,Int,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">enterRule</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.ParserRuleContext">ParserRuleContext</span></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="arg2">arg2: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@enterRule(x$1:org.antlr.v4.runtime.ParserRuleContext,x$2:Int,x$3:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a>
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(x$1:Any):Boolean"></a>
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#exitRule" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="exitRule():Unit"></a>
+      <a id="exitRule():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">exitRule</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@exitRule():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#expression" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="expression():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ExpressionContext"></a>
+      <a id="expression():ExpressionContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">expression</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ExpressionContext">ExpressionContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@expression():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ExpressionContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#factor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="factor():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.FactorContext"></a>
+      <a id="factor():FactorContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">factor</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.FactorContext">FactorContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@factor():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.FactorContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#fieldList" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fieldList():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.FieldListContext"></a>
+      <a id="fieldList():FieldListContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fieldList</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.FieldListContext">FieldListContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@fieldList():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.FieldListContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finalize():Unit"></a>
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.lang.Throwable]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#formalParameters" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="formalParameters():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.FormalParametersContext"></a>
+      <a id="formalParameters():FormalParametersContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">formalParameters</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.FormalParametersContext">FormalParametersContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@formalParameters():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.FormalParametersContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.Predef.StringFormat#formatted" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="formatted(fmtstr:String):String"></a>
+      <a id="formatted(String):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">formatted</span><span class="params">(<span name="fmtstr">fmtstr: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@formatted(fmtstr:String):String" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a> to
+            <span class="extype" name="scala.Predef.StringFormat">StringFormat</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a>] performed by method StringFormat in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>StringFormat</dd><dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#fpSection" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fpSection():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.FpSectionContext"></a>
+      <a id="fpSection():FpSectionContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fpSection</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.FpSectionContext">FpSectionContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@fpSection():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.FpSectionContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#getATN" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getATN():org.antlr.v4.runtime.atn.ATN"></a>
+      <a id="getATN():ATN"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getATN</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.atn.ATN">ATN</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getATN():org.antlr.v4.runtime.atn.ATN" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a> → Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getATNWithBypassAlts" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getATNWithBypassAlts():org.antlr.v4.runtime.atn.ATN"></a>
+      <a id="getATNWithBypassAlts():ATN"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getATNWithBypassAlts</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.atn.ATN">ATN</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getATNWithBypassAlts():org.antlr.v4.runtime.atn.ATN" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getBuildParseTree" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getBuildParseTree():Boolean"></a>
+      <a id="getBuildParseTree():Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getBuildParseTree</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getBuildParseTree():Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getClass():Class[_]"></a>
+      <a id="getClass():Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getContext" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getContext():org.antlr.v4.runtime.ParserRuleContext"></a>
+      <a id="getContext():ParserRuleContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getContext</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.ParserRuleContext">ParserRuleContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getContext():org.antlr.v4.runtime.ParserRuleContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getCurrentToken" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getCurrentToken():org.antlr.v4.runtime.Token"></a>
+      <a id="getCurrentToken():Token"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getCurrentToken</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.Token">Token</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getCurrentToken():org.antlr.v4.runtime.Token" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getDFAStrings" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getDFAStrings():java.util.List[String]"></a>
+      <a id="getDFAStrings():List[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getDFAStrings</span><span class="params">()</span><span class="result">: <span class="extype" name="java.util.List">List</span>[<span class="extype" name="java.lang.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getDFAStrings():java.util.List[String]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getErrorHandler" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getErrorHandler():org.antlr.v4.runtime.ANTLRErrorStrategy"></a>
+      <a id="getErrorHandler():ANTLRErrorStrategy"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getErrorHandler</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.ANTLRErrorStrategy">ANTLRErrorStrategy</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getErrorHandler():org.antlr.v4.runtime.ANTLRErrorStrategy" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#getErrorHeader" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getErrorHeader(x$1:org.antlr.v4.runtime.RecognitionException):String"></a>
+      <a id="getErrorHeader(RecognitionException):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getErrorHeader</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.RecognitionException">RecognitionException</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getErrorHeader(x$1:org.antlr.v4.runtime.RecognitionException):String" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#getErrorListenerDispatch" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getErrorListenerDispatch():org.antlr.v4.runtime.ANTLRErrorListener"></a>
+      <a id="getErrorListenerDispatch():ANTLRErrorListener"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getErrorListenerDispatch</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.ANTLRErrorListener">ANTLRErrorListener</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getErrorListenerDispatch():org.antlr.v4.runtime.ANTLRErrorListener" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#getErrorListeners" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getErrorListeners():java.util.List[_&lt;:org.antlr.v4.runtime.ANTLRErrorListener]"></a>
+      <a id="getErrorListeners():List[_&lt;:ANTLRErrorListener]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getErrorListeners</span><span class="params">()</span><span class="result">: <span class="extype" name="java.util.List">List</span>[_ &lt;: <span class="extype" name="org.antlr.v4.runtime.ANTLRErrorListener">ANTLRErrorListener</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getErrorListeners():java.util.List[_&lt;:org.antlr.v4.runtime.ANTLRErrorListener]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getExpectedTokens" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getExpectedTokens():org.antlr.v4.runtime.misc.IntervalSet"></a>
+      <a id="getExpectedTokens():IntervalSet"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getExpectedTokens</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.misc.IntervalSet">IntervalSet</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getExpectedTokens():org.antlr.v4.runtime.misc.IntervalSet" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getExpectedTokensWithinCurrentRule" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getExpectedTokensWithinCurrentRule():org.antlr.v4.runtime.misc.IntervalSet"></a>
+      <a id="getExpectedTokensWithinCurrentRule():IntervalSet"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getExpectedTokensWithinCurrentRule</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.misc.IntervalSet">IntervalSet</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getExpectedTokensWithinCurrentRule():org.antlr.v4.runtime.misc.IntervalSet" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#getGrammarFileName" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getGrammarFileName():String"></a>
+      <a id="getGrammarFileName():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getGrammarFileName</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getGrammarFileName():String" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a> → Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getInputStream" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getInputStream():org.antlr.v4.runtime.TokenStream"></a>
+      <a id="getInputStream():TokenStream"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getInputStream</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.TokenStream">TokenStream</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getInputStream():org.antlr.v4.runtime.TokenStream" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser → Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#getInterpreter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getInterpreter():ATNInterpreter"></a>
+      <a id="getInterpreter():ParserATNSimulator"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getInterpreter</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.atn.ParserATNSimulator">ParserATNSimulator</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getInterpreter():ATNInterpreter" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getInvokingContext" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getInvokingContext(x$1:Int):org.antlr.v4.runtime.ParserRuleContext"></a>
+      <a id="getInvokingContext(Int):ParserRuleContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getInvokingContext</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.ParserRuleContext">ParserRuleContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getInvokingContext(x$1:Int):org.antlr.v4.runtime.ParserRuleContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getNumberOfSyntaxErrors" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getNumberOfSyntaxErrors():Int"></a>
+      <a id="getNumberOfSyntaxErrors():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getNumberOfSyntaxErrors</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getNumberOfSyntaxErrors():Int" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getParseInfo" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getParseInfo():org.antlr.v4.runtime.atn.ParseInfo"></a>
+      <a id="getParseInfo():ParseInfo"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getParseInfo</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.atn.ParseInfo">ParseInfo</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getParseInfo():org.antlr.v4.runtime.atn.ParseInfo" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser → Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getParseListeners" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getParseListeners():java.util.List[org.antlr.v4.runtime.tree.ParseTreeListener]"></a>
+      <a id="getParseListeners():List[ParseTreeListener]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getParseListeners</span><span class="params">()</span><span class="result">: <span class="extype" name="java.util.List">List</span>[<span class="extype" name="org.antlr.v4.runtime.tree.ParseTreeListener">ParseTreeListener</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getParseListeners():java.util.List[org.antlr.v4.runtime.tree.ParseTreeListener]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getPrecedence" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getPrecedence():Int"></a>
+      <a id="getPrecedence():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getPrecedence</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getPrecedence():Int" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getRuleContext" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getRuleContext():org.antlr.v4.runtime.ParserRuleContext"></a>
+      <a id="getRuleContext():ParserRuleContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getRuleContext</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.ParserRuleContext">ParserRuleContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getRuleContext():org.antlr.v4.runtime.ParserRuleContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getRuleIndex" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getRuleIndex(x$1:String):Int"></a>
+      <a id="getRuleIndex(String):Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getRuleIndex</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getRuleIndex(x$1:String):Int" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#getRuleIndexMap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getRuleIndexMap():java.util.Map[String,Integer]"></a>
+      <a id="getRuleIndexMap():Map[String,Integer]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getRuleIndexMap</span><span class="params">()</span><span class="result">: <span class="extype" name="java.util.Map">Map</span>[<span class="extype" name="java.lang.String">String</span>, <span class="extype" name="java.lang.Integer">Integer</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getRuleIndexMap():java.util.Map[String,Integer]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getRuleInvocationStack" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getRuleInvocationStack(x$1:org.antlr.v4.runtime.RuleContext):java.util.List[String]"></a>
+      <a id="getRuleInvocationStack(RuleContext):List[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getRuleInvocationStack</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.RuleContext">RuleContext</span></span>)</span><span class="result">: <span class="extype" name="java.util.List">List</span>[<span class="extype" name="java.lang.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getRuleInvocationStack(x$1:org.antlr.v4.runtime.RuleContext):java.util.List[String]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getRuleInvocationStack" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getRuleInvocationStack():java.util.List[String]"></a>
+      <a id="getRuleInvocationStack():List[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getRuleInvocationStack</span><span class="params">()</span><span class="result">: <span class="extype" name="java.util.List">List</span>[<span class="extype" name="java.lang.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getRuleInvocationStack():java.util.List[String]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#getRuleNames" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getRuleNames():Array[String]"></a>
+      <a id="getRuleNames():Array[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getRuleNames</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Array" class="extype" target="_top">Array</a>[<span class="extype" name="java.lang.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getRuleNames():Array[String]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a> → Recognizer</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#getSerializedATN" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getSerializedATN():String"></a>
+      <a id="getSerializedATN():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getSerializedATN</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getSerializedATN():String" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a> → Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getSourceName" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getSourceName():String"></a>
+      <a id="getSourceName():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getSourceName</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getSourceName():String" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#getState" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getState():Int"></a>
+      <a id="getState():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getState</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getState():Int" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getTokenFactory" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getTokenFactory():org.antlr.v4.runtime.TokenFactory[_]"></a>
+      <a id="getTokenFactory():TokenFactory[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getTokenFactory</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.TokenFactory">TokenFactory</span>[_]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getTokenFactory():org.antlr.v4.runtime.TokenFactory[_]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser → Recognizer</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#getTokenNames" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getTokenNames():Array[String]"></a>
+      <a id="getTokenNames():Array[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getTokenNames</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Array" class="extype" target="_top">Array</a>[<span class="extype" name="java.lang.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getTokenNames():Array[String]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a> → Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getTokenStream" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getTokenStream():org.antlr.v4.runtime.TokenStream"></a>
+      <a id="getTokenStream():TokenStream"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getTokenStream</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.TokenStream">TokenStream</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getTokenStream():org.antlr.v4.runtime.TokenStream" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#getTokenType" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getTokenType(x$1:String):Int"></a>
+      <a id="getTokenType(String):Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getTokenType</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getTokenType(x$1:String):Int" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#getTokenTypeMap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getTokenTypeMap():java.util.Map[String,Integer]"></a>
+      <a id="getTokenTypeMap():Map[String,Integer]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getTokenTypeMap</span><span class="params">()</span><span class="result">: <span class="extype" name="java.util.Map">Map</span>[<span class="extype" name="java.lang.String">String</span>, <span class="extype" name="java.lang.Integer">Integer</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getTokenTypeMap():java.util.Map[String,Integer]" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#getTrimParseTree" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getTrimParseTree():Boolean"></a>
+      <a id="getTrimParseTree():Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getTrimParseTree</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getTrimParseTree():Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#getVocabulary" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getVocabulary():org.antlr.v4.runtime.Vocabulary"></a>
+      <a id="getVocabulary():Vocabulary"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getVocabulary</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.Vocabulary">Vocabulary</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getVocabulary():org.antlr.v4.runtime.Vocabulary" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a> → Recognizer</dd></dl></div>
+    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="hashCode():Int"></a>
+      <a id="hashCode():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#identList" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="identList():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.IdentListContext"></a>
+      <a id="identList():IdentListContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">identList</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.IdentListContext">IdentListContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@identList():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.IdentListContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#ifStatement" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ifStatement():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.IfStatementContext"></a>
+      <a id="ifStatement():IfStatementContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ifStatement</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.IfStatementContext">IfStatementContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@ifStatement():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.IfStatementContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="org.antlr.v4.runtime.Parser#inContext" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="inContext(x$1:String):Boolean"></a>
+      <a id="inContext(String):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">inContext</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@inContext(x$1:String):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#isExpectedToken" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isExpectedToken(x$1:Int):Boolean"></a>
+      <a id="isExpectedToken(Int):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isExpectedToken</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@isExpectedToken(x$1:Int):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#isTrace" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isTrace():Boolean"></a>
+      <a id="isTrace():Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isTrace</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@isTrace():Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#match" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="match(x$1:Int):org.antlr.v4.runtime.Token"></a>
+      <a id="match(Int):Token"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">match</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.Token">Token</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@match(x$1:Int):org.antlr.v4.runtime.Token" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[org.antlr.v4.runtime.RecognitionException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#matchWildcard" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="matchWildcard():org.antlr.v4.runtime.Token"></a>
+      <a id="matchWildcard():Token"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">matchWildcard</span><span class="params">()</span><span class="result">: <span class="extype" name="org.antlr.v4.runtime.Token">Token</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@matchWildcard():org.antlr.v4.runtime.Token" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[org.antlr.v4.runtime.RecognitionException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#module" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="module():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ModuleContext"></a>
+      <a id="module():ModuleContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">module</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ModuleContext">ModuleContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@module():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ModuleContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#name" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="name():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.NameContext"></a>
+      <a id="name():NameContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">name</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.NameContext">NameContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@name():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.NameContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a>
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notify():Unit"></a>
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#notifyErrorListeners" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyErrorListeners(x$1:org.antlr.v4.runtime.Token,x$2:String,x$3:org.antlr.v4.runtime.RecognitionException):Unit"></a>
+      <a id="notifyErrorListeners(Token,String,RecognitionException):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyErrorListeners</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.Token">Token</span></span>, <span name="arg1">arg1: <span class="extype" name="java.lang.String">String</span></span>, <span name="arg2">arg2: <span class="extype" name="org.antlr.v4.runtime.RecognitionException">RecognitionException</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@notifyErrorListeners(x$1:org.antlr.v4.runtime.Token,x$2:String,x$3:org.antlr.v4.runtime.RecognitionException):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#notifyErrorListeners" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyErrorListeners(x$1:String):Unit"></a>
+      <a id="notifyErrorListeners(String):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyErrorListeners</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@notifyErrorListeners(x$1:String):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#number" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="number():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.NumberContext"></a>
+      <a id="number():NumberContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">number</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.NumberContext">NumberContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@number():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.NumberContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="org.antlr.v4.runtime.Parser#precpred" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="precpred(x$1:org.antlr.v4.runtime.RuleContext,x$2:Int):Boolean"></a>
+      <a id="precpred(RuleContext,Int):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">precpred</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.RuleContext">RuleContext</span></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@precpred(x$1:org.antlr.v4.runtime.RuleContext,x$2:Int):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser → Recognizer</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#procedureBody" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="procedureBody():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ProcedureBodyContext"></a>
+      <a id="procedureBody():ProcedureBodyContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">procedureBody</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ProcedureBodyContext">ProcedureBodyContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@procedureBody():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ProcedureBodyContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#procedureCall" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="procedureCall():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ProcedureCallContext"></a>
+      <a id="procedureCall():ProcedureCallContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">procedureCall</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ProcedureCallContext">ProcedureCallContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@procedureCall():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ProcedureCallContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#procedureDeclaration" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="procedureDeclaration():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ProcedureDeclarationContext"></a>
+      <a id="procedureDeclaration():ProcedureDeclarationContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">procedureDeclaration</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ProcedureDeclarationContext">ProcedureDeclarationContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@procedureDeclaration():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ProcedureDeclarationContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#procedureHeading" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="procedureHeading():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ProcedureHeadingContext"></a>
+      <a id="procedureHeading():ProcedureHeadingContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">procedureHeading</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ProcedureHeadingContext">ProcedureHeadingContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@procedureHeading():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.ProcedureHeadingContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="org.antlr.v4.runtime.Parser#pushNewRecursionContext" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="pushNewRecursionContext(x$1:org.antlr.v4.runtime.ParserRuleContext,x$2:Int,x$3:Int):Unit"></a>
+      <a id="pushNewRecursionContext(ParserRuleContext,Int,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pushNewRecursionContext</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.ParserRuleContext">ParserRuleContext</span></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="arg2">arg2: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@pushNewRecursionContext(x$1:org.antlr.v4.runtime.ParserRuleContext,x$2:Int,x$3:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#recordType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="recordType():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.RecordTypeContext"></a>
+      <a id="recordType():RecordTypeContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">recordType</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.RecordTypeContext">RecordTypeContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@recordType():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.RecordTypeContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="org.antlr.v4.runtime.Recognizer#removeErrorListener" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="removeErrorListener(x$1:org.antlr.v4.runtime.ANTLRErrorListener):Unit"></a>
+      <a id="removeErrorListener(ANTLRErrorListener):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">removeErrorListener</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.ANTLRErrorListener">ANTLRErrorListener</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@removeErrorListener(x$1:org.antlr.v4.runtime.ANTLRErrorListener):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#removeErrorListeners" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="removeErrorListeners():Unit"></a>
+      <a id="removeErrorListeners():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">removeErrorListeners</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@removeErrorListeners():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#removeParseListener" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="removeParseListener(x$1:org.antlr.v4.runtime.tree.ParseTreeListener):Unit"></a>
+      <a id="removeParseListener(ParseTreeListener):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">removeParseListener</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.tree.ParseTreeListener">ParseTreeListener</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@removeParseListener(x$1:org.antlr.v4.runtime.tree.ParseTreeListener):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#removeParseListeners" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="removeParseListeners():Unit"></a>
+      <a id="removeParseListeners():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">removeParseListeners</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@removeParseListeners():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#reset" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="reset():Unit"></a>
+      <a id="reset():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">reset</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@reset():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#select" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="select():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.SelectContext"></a>
+      <a id="select():SelectContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">select</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.SelectContext">SelectContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@select():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.SelectContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#selector" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="selector():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.SelectorContext"></a>
+      <a id="selector():SelectorContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">selector</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.SelectorContext">SelectorContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@selector():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.SelectorContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="org.antlr.v4.runtime.Recognizer#sempred" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="sempred(x$1:org.antlr.v4.runtime.RuleContext,x$2:Int,x$3:Int):Boolean"></a>
+      <a id="sempred(RuleContext,Int,Int):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sempred</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.RuleContext">RuleContext</span></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="arg2">arg2: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@sempred(x$1:org.antlr.v4.runtime.RuleContext,x$2:Int,x$3:Int):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#setBuildParseTree" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setBuildParseTree(x$1:Boolean):Unit"></a>
+      <a id="setBuildParseTree(Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setBuildParseTree</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@setBuildParseTree(x$1:Boolean):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#setContext" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setContext(x$1:org.antlr.v4.runtime.ParserRuleContext):Unit"></a>
+      <a id="setContext(ParserRuleContext):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setContext</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.ParserRuleContext">ParserRuleContext</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@setContext(x$1:org.antlr.v4.runtime.ParserRuleContext):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#setErrorHandler" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setErrorHandler(x$1:org.antlr.v4.runtime.ANTLRErrorStrategy):Unit"></a>
+      <a id="setErrorHandler(ANTLRErrorStrategy):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setErrorHandler</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.ANTLRErrorStrategy">ANTLRErrorStrategy</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@setErrorHandler(x$1:org.antlr.v4.runtime.ANTLRErrorStrategy):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#setInputStream" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setInputStream(x$1:org.antlr.v4.runtime.IntStream):Unit"></a>
+      <a id="setInputStream(IntStream):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setInputStream</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.IntStream">IntStream</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@setInputStream(x$1:org.antlr.v4.runtime.IntStream):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser → Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#setInterpreter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setInterpreter(x$1:ATNInterpreter):Unit"></a>
+      <a id="setInterpreter(ParserATNSimulator):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setInterpreter</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.atn.ParserATNSimulator">ParserATNSimulator</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@setInterpreter(x$1:ATNInterpreter):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#setProfile" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setProfile(x$1:Boolean):Unit"></a>
+      <a id="setProfile(Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setProfile</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@setProfile(x$1:Boolean):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#setState" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setState(x$1:Int):Unit"></a>
+      <a id="setState(Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setState</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@setState(x$1:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#setTokenFactory" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setTokenFactory(x$1:org.antlr.v4.runtime.TokenFactory[_]):Unit"></a>
+      <a id="setTokenFactory(TokenFactory[_]):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setTokenFactory</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.TokenFactory">TokenFactory</span>[_]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@setTokenFactory(x$1:org.antlr.v4.runtime.TokenFactory[_]):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser → Recognizer</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#setTokenStream" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setTokenStream(x$1:org.antlr.v4.runtime.TokenStream):Unit"></a>
+      <a id="setTokenStream(TokenStream):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setTokenStream</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.TokenStream">TokenStream</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@setTokenStream(x$1:org.antlr.v4.runtime.TokenStream):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#setTrace" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setTrace(x$1:Boolean):Unit"></a>
+      <a id="setTrace(Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setTrace</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@setTrace(x$1:Boolean):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#setTrimParseTree" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setTrimParseTree(x$1:Boolean):Unit"></a>
+      <a id="setTrimParseTree(Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setTrimParseTree</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@setTrimParseTree(x$1:Boolean):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#simpleExpression" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="simpleExpression():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.SimpleExpressionContext"></a>
+      <a id="simpleExpression():SimpleExpressionContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">simpleExpression</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.SimpleExpressionContext">SimpleExpressionContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@simpleExpression():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.SimpleExpressionContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#simpleExpression2" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="simpleExpression2():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.SimpleExpression2Context"></a>
+      <a id="simpleExpression2():SimpleExpression2Context"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">simpleExpression2</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.SimpleExpression2Context">SimpleExpression2Context</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@simpleExpression2():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.SimpleExpression2Context" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#statement" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="statement():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.StatementContext"></a>
+      <a id="statement():StatementContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">statement</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.StatementContext">StatementContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@statement():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.StatementContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#statementSequence" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="statementSequence():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.StatementSequenceContext"></a>
+      <a id="statementSequence():StatementSequenceContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">statementSequence</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.StatementSequenceContext">StatementSequenceContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@statementSequence():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.StatementSequenceContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
+      <a id="synchronized[T0](⇒T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#term" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="term():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.TermContext"></a>
+      <a id="term():TermContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">term</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.TermContext">TermContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@term():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.TermContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#term2" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="term2():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.Term2Context"></a>
+      <a id="term2():Term2Context"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">term2</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.Term2Context">Term2Context</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@term2():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.Term2Context" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toString():String"></a>
+      <a id="toString():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@toString():String" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#triggerEnterRuleEvent" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="triggerEnterRuleEvent():Unit"></a>
+      <a id="triggerEnterRuleEvent():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">triggerEnterRuleEvent</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@triggerEnterRuleEvent():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../../../org$antlr$v4$runtime.html" class="extype" name="org.antlr.v4.runtime">org.antlr.v4.runtime</a>] </dd><dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Parser#triggerExitRuleEvent" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="triggerExitRuleEvent():Unit"></a>
+      <a id="triggerExitRuleEvent():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">triggerExitRuleEvent</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@triggerExitRuleEvent():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../../../org$antlr$v4$runtime.html" class="extype" name="org.antlr.v4.runtime">org.antlr.v4.runtime</a>] </dd><dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#type" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="type():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.TypeContext"></a>
+      <a id="type():TypeContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">type</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.TypeContext">TypeContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@type():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.TypeContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#typeDeclaration" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="typeDeclaration():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.TypeDeclarationContext"></a>
+      <a id="typeDeclaration():TypeDeclarationContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">typeDeclaration</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.TypeDeclarationContext">TypeDeclarationContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@typeDeclaration():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.TypeDeclarationContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="org.antlr.v4.runtime.Parser#unrollRecursionContexts" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="unrollRecursionContexts(x$1:org.antlr.v4.runtime.ParserRuleContext):Unit"></a>
+      <a id="unrollRecursionContexts(ParserRuleContext):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">unrollRecursionContexts</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.ParserRuleContext">ParserRuleContext</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@unrollRecursionContexts(x$1:org.antlr.v4.runtime.ParserRuleContext):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#varDeclaration" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="varDeclaration():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.VarDeclarationContext"></a>
+      <a id="varDeclaration():VarDeclarationContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">varDeclaration</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.VarDeclarationContext">VarDeclarationContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@varDeclaration():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.VarDeclarationContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a>
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a>
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser#whileStatement" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="whileStatement():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.WhileStatementContext"></a>
+      <a id="whileStatement():WhileStatementContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">whileStatement</span><span class="params">()</span><span class="result">: <span class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.WhileStatementContext">WhileStatementContext</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@whileStatement():ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser.WhileStatementContext" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.Predef.ArrowAssoc#→" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="→[B](y:B):(A,B)"></a>
+      <a id="→[B](B):(Oberon0Parser,B)"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $u2192" class="implicit">→</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="y">y: <span class="extype" name="scala.Predef.ArrowAssoc.→.B">B</span></span>)</span><span class="result">: (<a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a>, <span class="extype" name="scala.Predef.ArrowAssoc.→.B">B</span>)</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@→[B](y:B):(A,B)" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a> to
+            <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a>] performed by method ArrowAssoc in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>ArrowAssoc</dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Deprecated Value Members</h3>
+              <ol><li name="org.antlr.v4.runtime.Parser#enterRecursionRule" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="enterRecursionRule(x$1:org.antlr.v4.runtime.ParserRuleContext,x$2:Int):Unit"></a>
+      <a id="enterRecursionRule(ParserRuleContext,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version ) see corresponding Javadoc for more information.">enterRecursionRule</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.ParserRuleContext">ParserRuleContext</span></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@enterRecursionRule(x$1:org.antlr.v4.runtime.ParserRuleContext,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Parser</dd><dt>Annotations</dt><dd>
+                <span class="name">@Deprecated</span>
+              
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version )</i> see corresponding Javadoc for more information.</p></dd></dl></div>
+    </li><li name="org.antlr.v4.runtime.Recognizer#getTokenErrorDisplay" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getTokenErrorDisplay(x$1:org.antlr.v4.runtime.Token):String"></a>
+      <a id="getTokenErrorDisplay(Token):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version ) see corresponding Javadoc for more information.">getTokenErrorDisplay</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.antlr.v4.runtime.Token">Token</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../../index.html#ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser@getTokenErrorDisplay(x$1:org.antlr.v4.runtime.Token):String" title="Permalink" target="_top">
+        <img src="../../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Recognizer</dd><dt>Annotations</dt><dd>
+                <span class="name">@Deprecated</span>
+              
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version )</i> see corresponding Javadoc for more information.</p></dd></dl></div>
+    </li></ol>
+            </div>
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="org.antlr.v4.runtime.Parser">
+              <h3>Inherited from <span class="extype" name="org.antlr.v4.runtime.Parser">Parser</span></h3>
+            </div><div class="parent" name="org.antlr.v4.runtime.Recognizer">
+              <h3>Inherited from <span class="extype" name="org.antlr.v4.runtime.Recognizer">Recognizer</span>[<span class="extype" name="org.antlr.v4.runtime.Token">Token</span>, <span class="extype" name="org.antlr.v4.runtime.atn.ParserATNSimulator">ParserATNSimulator</span>]</h3>
+            </div><div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+            </div>
+        <div class="conversion" name="scala.Predef.any2stringadd">
+              <h3>Inherited by implicit conversion any2stringadd from
+                <a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a> to <span class="extype" name="scala.Predef.any2stringadd">any2stringadd</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a>]
+              </h3>
+            </div><div class="conversion" name="scala.Predef.StringFormat">
+              <h3>Inherited by implicit conversion StringFormat from
+                <a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a> to <span class="extype" name="scala.Predef.StringFormat">StringFormat</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a>]
+              </h3>
+            </div><div class="conversion" name="scala.Predef.Ensuring">
+              <h3>Inherited by implicit conversion Ensuring from
+                <a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a> to <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a>]
+              </h3>
+            </div><div class="conversion" name="scala.Predef.ArrowAssoc">
+              <h3>Inherited by implicit conversion ArrowAssoc from
+                <a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a> to <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="ch.usi.inf.l3.sana.oberon0.antlr.Oberon0Parser">Oberon0Parser</a>]
+              </h3>
+            </div>
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>
