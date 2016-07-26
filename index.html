@@ -21,7 +21,7 @@
     crossorigin="anonymous"></script>
 </head>
 <body>
-  <div>
+  <div class="container">
     <h3>Scaladoc for the available language modules</h3>
     <ul>
       <li><a href="web/api/tiny/index.html">tiny</a></li>
@@ -40,37 +40,43 @@
       <li><a href="web/api/oberon0/index.html">oberon-0</a></li>
     </ul>
   </div>
-  </div>
-    <h3>SBT dependency</h3>
-    If you are using sbt 0.13.6+, you can skip adding a resolver for JCenter:
+  <div class="container">
+    <h3>SBT</h3>
+    If you are using sbt 0.13.6+, you can skip adding a resolver for JCenter: <br/>
 
     <code>
     resolvers += Resolver.jcenterRepo
     </code>
+    <br/>
 
-    For tiny (the bare framework):
+    For tiny (the bare framework):<br/>
 
     <code>
       libraryDependencies ++= List("ch.usi.inf.l3.sana" % "tiny" % "1.0.1")
-      </code>
-
+    </code>
+    <br/>
     For the full Java 1.0:
-
+    <br/>
     <code>
       libraryDependencies ++= List("ch.usi.inf.l3.sana" % "guod" % "1.0.1")
-      </code>
+    </code>
 
+    <br/>
     Other trims are:
       calcj, primj, brokenj, arrayj, ooj, arrooj, robustj, dynj, ppj, modulej
 
+    <br/>
     To know what they contain, please refer to the manual.
   </div>
-  </div>
+  <div class="container">
     <h3>Publications</h3>
     Forthcoming...
   </div>
-  </div>
-    Last, but not least the source code can be found at: github.com/amanjpro/languages-a-la-carte
+  <div class="container">
+    <h3>Source Code</h3>
+    Last, but not least the source code can be found at:
+    <br/>
+    <a href="github.com/amanjpro/languages-a-la-carte">github.com/amanjpro/languages-a-la-carte</a>
   </div>
 </body>
 </html>
