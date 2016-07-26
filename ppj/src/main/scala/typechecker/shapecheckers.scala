@@ -57,7 +57,7 @@ trait SynchronizedShapeCheckerComponent extends ShapeCheckerComponent {
 
 
 
-  /** @see [[TreeUtils.isValidExpression]] */
+  /** @see {{{TreeUtils.isValidExpression}}} */
   protected def isValidExpression(t: Tree): Boolean =
     TreeUtils.isValidExpression(t)
 }
@@ -66,7 +66,7 @@ trait SynchronizedShapeCheckerComponent extends ShapeCheckerComponent {
 trait ValDefShapeCheckerComponent
   extends robustj.typechecker.ValDefShapeCheckerComponent {
 
-  /** @see [[TreeUtils.isSimpleExpression]] */
+  /** @see {{{TreeUtils.isSimpleExpression}}} */
   override protected def isSimpleExpression(e: Tree): Boolean =
     TreeUtils.isSimpleExpression(e)
 }
@@ -76,7 +76,7 @@ trait ValDefShapeCheckerComponent
 trait BlockShapeCheckerComponent
   extends robustj.typechecker.BlockShapeCheckerComponent {
 
-  /** @see [[TreeUtils.isValidStatement]] */
+  /** @see {{{TreeUtils.isValidStatement}}} */
   override protected def isValidStmt(t: Tree): Boolean =
     TreeUtils.isValidStatement(t)
 }
@@ -85,7 +85,7 @@ trait BlockShapeCheckerComponent
 trait IfShapeCheckerComponent
   extends robustj.typechecker.IfShapeCheckerComponent {
 
-  /** @see [[TreeUtils.isValidStatement]] */
+  /** @see {{{TreeUtils.isValidStatement}}} */
   override protected def isValidStmt(t: Tree): Boolean =
     TreeUtils.isValidStatement(t)
 }
@@ -94,7 +94,7 @@ trait IfShapeCheckerComponent
 trait WhileShapeCheckerComponent
   extends robustj.typechecker.WhileShapeCheckerComponent {
 
-  /** @see [[TreeUtils.isValidStatement]] */
+  /** @see {{{TreeUtils.isValidStatement}}} */
   override protected def isValidStmt(t: Tree): Boolean =
     TreeUtils.isValidStatement(t)
 }
@@ -104,7 +104,7 @@ trait WhileShapeCheckerComponent
 trait ForShapeCheckerComponent
   extends robustj.typechecker.ForShapeCheckerComponent {
 
-  /** @see [[TreeUtils.isValidStatement]] */
+  /** @see {{{TreeUtils.isValidStatement}}} */
   override protected def isValidStmt(t: Tree): Boolean =
     TreeUtils.isValidStatement(t)
 }
@@ -115,7 +115,7 @@ trait ForShapeCheckerComponent
 trait LabelShapeCheckerComponent
   extends robustj.typechecker.LabelShapeCheckerComponent {
 
-  /** @see [[TreeUtils.canHaveLabel]] */
+  /** @see {{{TreeUtils.canHaveLabel}}} */
   override protected def canHaveLabel(stmt: Expr): Boolean =
     TreeUtils.canHaveLabel(stmt)
 }

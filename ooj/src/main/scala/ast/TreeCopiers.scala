@@ -44,7 +44,7 @@ import sana.brokenj.ast.{TreeCopiers => TC, _}
 
 trait TreeCopiers {
 
-  /** @see [[sana.brokenj.ast.TreeCopiers.copyProperties]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copyProperties}}} */
   protected def copyProperties(template: Tree,
       newTree: Tree): Unit = newTree.attributes = template.attributes
   /**
@@ -198,19 +198,19 @@ trait TreeCopiers {
 
 
   // tiny
-  /** @see [[sana.brokenj.ast.TreeCopiers.copyIdent]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copyIdent}}} */
   def copyIdent(template: IdentApi)
             (name: Name): IdentApi = {
     TC.copyIdent(template)(name)
   }
 
-  /** @see [[sana.brokenj.ast.TreeCopiers.copyTypeUse]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copyTypeUse}}} */
   def copyTypeUse(template: TypeUseApi)(name: Name): TypeUseApi = {
     TC.copyTypeUse(template)(name)
   }
   // calcj
 
-  /** @see [[sana.brokenj.ast.TreeCopiers.copyCast]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copyCast}}} */
   def copyCast(template: CastApi)(
       tpt: UseTree = template.tpt,
       expr: Expr = template.expr): CastApi = {
@@ -218,60 +218,60 @@ trait TreeCopiers {
   }
 
 
-  /** @see [[sana.brokenj.ast.TreeCopiers.copyLiteral]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copyLiteral}}} */
   def copyLiteral(template: LiteralApi)
       (constant: Constant): LiteralApi = {
     TC.copyLiteral(template)(constant)
   }
 
 
-  /** @see [[sana.brokenj.ast.TreeCopiers.copyBinary]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copyBinary}}} */
   def copyBinary(template: BinaryApi)(lhs: Expr = template.lhs,
       op: BOp = template.op, rhs: Expr = template.rhs): BinaryApi = {
     TC.copyBinary(template)(lhs, op, rhs)
   }
 
-  /** @see [[sana.brokenj.ast.TreeCopiers.copyUnary]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copyUnary}}} */
   def copyUnary(template: UnaryApi)(isPostfix: Boolean = template.isPostfix,
     op: UOp = template.op, expr: Expr = template.expr): UnaryApi = {
     TC.copyUnary(template)(isPostfix, op, expr)
   }
   // primj
 
-  /** @see [[sana.brokenj.ast.TreeCopiers.copyAssign]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copyAssign}}} */
   def copyAssign(template: AssignApi)(lhs: Expr = template.lhs,
     rhs: Expr = template.rhs): AssignApi = {
     TC.copyAssign(template)(lhs, rhs)
   }
 
 
-  /** @see [[sana.brokenj.ast.TreeCopiers.copyIf]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copyIf}}} */
   def copyIf(template: IfApi)(cond: Expr = template.cond,
     thenp: Expr = template.thenp, elsep: Expr = template.elsep): IfApi = {
     TC.copyIf(template)(cond, thenp, elsep)
   }
 
 
-  /** @see [[sana.brokenj.ast.TreeCopiers.copyWhile]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copyWhile}}} */
   def copyWhile(template: WhileApi)(isDoWhile: Boolean = template.isDoWhile,
     cond: Expr = template.cond, body: Expr = template.body): WhileApi = {
     TC.copyWhile(template)(isDoWhile, cond, body)
   }
 
-  /** @see [[sana.brokenj.ast.TreeCopiers.copyFor]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copyFor}}} */
   def copyFor(template: ForApi)(inits: List[Tree] = template.inits,
     cond: Expr = template.cond, steps: List[Expr] = template.steps,
     body: Expr = template.body): ForApi = {
     TC.copyFor(template)(inits, cond, steps, body)
   }
 
-  /** @see [[sana.brokenj.ast.TreeCopiers.copyBlock]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copyBlock}}} */
   def copyBlock(template: BlockApi)(stmts: List[Tree] =
     template.stmts): BlockApi = {
     TC.copyBlock(template)(stmts)
   }
 
-  /** @see [[sana.brokenj.ast.TreeCopiers.copyTernary]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copyTernary}}} */
   def copyTernary(template: TernaryApi)(cond: Expr = template.cond,
     thenp: Expr = template.thenp,
     elsep: Expr = template.elsep): TernaryApi = {
@@ -279,20 +279,20 @@ trait TreeCopiers {
   }
 
 
-  /** @see [[sana.brokenj.ast.TreeCopiers.copyApply]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copyApply}}} */
   def copyApply(template: ApplyApi)(fun: Expr = template.fun,
     args: List[Expr] = template.args): ApplyApi = {
     TC.copyApply(template)(fun, args)
   }
 
-  /** @see [[sana.brokenj.ast.TreeCopiers.copyReturn]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copyReturn}}} */
   def copyReturn(template: ReturnApi)(expr: Option[Expr] =
       template.expr): ReturnApi = {
     TC.copyReturn(template)(expr)
   }
 
 
-  /** @see [[sana.brokenj.ast.TreeCopiers.copyValDef]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copyValDef}}} */
   def copyValDef(template: ValDefApi)(mods: Flags = template.mods,
     tpt: UseTree = template.tpt, name: Name = template.name,
     rhs: Expr = template.rhs): ValDefApi = {
@@ -301,31 +301,31 @@ trait TreeCopiers {
 
   // brokenj
 
-  /** @see [[sana.brokenj.ast.TreeCopiers.copyLabel]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copyLabel}}} */
   def copyLabel(template: LabelApi)(name: Name = template.name,
     stmt: Expr = template.stmt): LabelApi = {
     TC.copyLabel(template)(name, stmt)
   }
 
-  /** @see [[sana.brokenj.ast.TreeCopiers.copyBreak]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copyBreak}}} */
   def copyBreak(template: BreakApi)(label:
     Option[Name] = template.label): BreakApi = {
     TC.copyBreak(template)(label)
   }
 
-  /** @see [[sana.brokenj.ast.TreeCopiers.copyContinue]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copyContinue}}} */
   def copyContinue(template: ContinueApi)(label: Option[Name] =
         template.label): ContinueApi = {
     TC.copyContinue(template)(label)
   }
 
-  /** @see [[sana.brokenj.ast.TreeCopiers.copyCase]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copyCase}}} */
   def copyCase(template: CaseApi)(guards: List[Expr] = template.guards,
     body: Tree = template.body): CaseApi = {
     TC.copyCase(template)(guards, body)
   }
 
-  /** @see [[sana.brokenj.ast.TreeCopiers.copySwitch]] */
+  /** @see {{{sana.brokenj.ast.TreeCopiers.copySwitch}}} */
   def copySwitch(template: SwitchApi)(expr: Expr = template.expr,
     cases: List[CaseApi] = template.cases): SwitchApi = {
       TC.copySwitch(template)(expr, cases)

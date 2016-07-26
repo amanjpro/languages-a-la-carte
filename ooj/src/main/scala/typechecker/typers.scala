@@ -138,7 +138,7 @@ trait ValDefTyperComponent extends TyperComponent {
     } else res
   }
 
-  /** @see [[TypePromotions.widenIfNeeded]] */
+  /** @see {{{TypePromotions.widenIfNeeded}}} */
   protected def widenIfNeeded(expr: Expr, tpe: Option[Type]): Expr =
     TypePromotions.widenIfNeeded(expr, tpe)
 
@@ -232,7 +232,7 @@ trait ValDefTyperComponent extends TyperComponent {
     } else typed(valdef.rhs).asInstanceOf[Expr]
   }
 
-  /** @see [[TreeUtils.getDefaultFieldValue]] */
+  /** @see {{{TreeUtils.getDefaultFieldValue}}} */
   protected def getDefaultFieldValue(tpe: Option[Type]): Tree =
     TreeUtils.getDefaultFieldValue(tpe)
 
@@ -295,7 +295,7 @@ trait ClassDefTyperComponent extends TyperComponent {
     TreeCopiers.copyClassDef(clazz)(body = body, parents = parents)
   }
 
-  /** @param[[SymbolUtils.allAbstractMembers]] */
+  /** @see {{{SymbolUtils.allAbstractMembers}}} */
   def allAbstractMembers(symbol: Option[Symbol]): List[Symbol] =
     SymbolUtils.allAbstractMembers(symbol)
 
@@ -431,16 +431,16 @@ trait ClassDefTyperComponent extends TyperComponent {
   protected def isObject(symbol: Option[Symbol]): Boolean =
     symbol.map(_ == SymbolUtils.objectClassSymbol).getOrElse(false)
 
-  /** @see [[SymbolUtils.packageName]] */
+  /** @see {{{SymbolUtils.packageName}}} */
   protected def packageName(symbol: ClassSymbol): String =
     SymbolUtils.packageName(symbol)
 
 
-  /** @see [[TreeUtils.isInImplementsClause]] */
+  /** @see {{{TreeUtils.isInImplementsClause}}} */
   protected def isInImplementsClause(tree: UseTree): Boolean =
     TreeUtils.isInImplementsClause(tree)
 
-  /** @see [[TreeUtils.isInExtendsClause]] */
+  /** @see {{{TreeUtils.isInExtendsClause}}} */
   protected def isInExtendsClause(tree: UseTree): Boolean =
     TreeUtils.isInExtendsClause(tree)
 }
@@ -588,11 +588,11 @@ trait MethodDefTyperComponent
   protected def isConstructor(symbol: Option[Symbol]): Boolean =
     symbol.map(SymbolUtils.isConstructor(_)).getOrElse(false)
 
-  /** @see [[SymbolUtils.enclosingMethod]] */
+  /** @see {{{SymbolUtils.enclosingMethod}}} */
   protected def enclosingMethod(symbol: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingMethod(symbol)
 
-  /** @see [[SymbolUtils.enclosingClass]] */
+  /** @see {{{SymbolUtils.enclosingClass}}} */
   protected def enclosingClass(symbol: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingClass(symbol)
 }
@@ -760,7 +760,7 @@ trait ApplyTyperComponent extends TyperComponent {
     res
   }
 
-  /** @see [[TypePromotions.widenIfNeeded]] */
+  /** @see {{{TypePromotions.widenIfNeeded}}} */
   protected def widenIfNeeded(expr: Expr, tpe: Option[Type]): Expr =
     TypePromotions.widenIfNeeded(expr, tpe)
 
@@ -781,7 +781,7 @@ trait ApplyTyperComponent extends TyperComponent {
     }
   }
 
-  /** @see [[TreeUtils.isExplicitConstructorInvocation]] */
+  /** @see {{{TreeUtils.isExplicitConstructorInvocation}}} */
   protected def isExplicitConstructorInvocation(tree: Tree): Boolean =
     TreeUtils.isExplicitConstructorInvocation(tree)
 
@@ -820,7 +820,7 @@ trait TypeUseTyperComponent
     }
   }
 
-  /** Uses [[TypeUseNamer.nameTypeUse]] to name instance of TypeUseApi */
+  /** Uses {{{TypeUseNamer.nameTypeUse}}} to name instance of TypeUseApi */
   protected def nameTypeUse(tuse: TypeUseApi): UseTree =
     typeUseNamer.nameTypeUse(tuse)
 
@@ -886,7 +886,7 @@ trait TypeUseNamer {
   }
 
 
-  /** @see [[SymbolUtils.isAnAccessibleType]] */
+  /** @see {{{SymbolUtils.isAnAccessibleType}}} */
   protected def isAnAccessibleType(sym: Option[Symbol],
     encl: Option[Symbol]): Boolean =
       SymbolUtils.isAnAccessibleType(sym, encl)
@@ -1136,18 +1136,18 @@ trait IdentNamer {
       .map(_.mods.isStatic).getOrElse(false)
   }
 
-  /** @see [[SymbolUtils.enclosingNonLocal]] */
+  /** @see {{{SymbolUtils.enclosingNonLocal}}} */
   protected def enclosingNonLocal(sym: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingNonLocal(sym)
-  /** @see [[SymbolUtils.enclosingClass]] */
+  /** @see {{{SymbolUtils.enclosingClass}}} */
   protected def enclosingClass(sym: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingClass(sym)
 
-  /** @see [[SymbolUtils.isAccessible]] */
+  /** @see {{{SymbolUtils.isAccessible}}} */
   protected def isAccessible(symbol: Symbol, from: Symbol): Boolean =
     SymbolUtils.isAccessible(symbol, from)
 
-  /** @see [[SymbolUtils.mostSpecificMethods]] */
+  /** @see {{{SymbolUtils.mostSpecificMethods}}} */
   protected def mostSpecificMethods(symbols: List[Symbol]): List[Symbol] =
     SymbolUtils.mostSpecificMethods(symbols)
 
@@ -1228,7 +1228,7 @@ trait BinaryTyperComponent extends calcj.typechecker.BinaryTyperComponent {
 
 
   /**
-   * [[caclj.typechecker.BinaryTyperComponent.castIfNeeded]] is overriden
+   * {{{caclj.typechecker.BinaryTyperComponent.castIfNeeded}}} is overriden
    * to support potential castings for {{{java.lang.String}}} when
    * concatenating a String with a non-String.
    *
@@ -1331,7 +1331,7 @@ trait AssignTyperComponent extends primj.typechecker.AssignTyperComponent {
 
 @component
 trait UnaryTyperComponent extends primj.typechecker.UnaryTyperComponent {
-  /** @see [[TreeUtils.isVariable]] */
+  /** @see {{{TreeUtils.isVariable}}} */
   override protected def isVariable(tree: Tree): Boolean =
     TreeUtils.isVariable(tree)
 }
@@ -1340,7 +1340,7 @@ trait UnaryTyperComponent extends primj.typechecker.UnaryTyperComponent {
 trait TernaryTyperComponent extends
   primj.typechecker.TernaryTyperComponent {
 
-  /** @see [[TypeUtils.unifyTernaryBranches]] */
+  /** @see {{{TypeUtils.unifyTernaryBranches}}} */
   override protected def unifyTernaryBranches(lhs: Expr,
       rhs: Expr): Option[Type] = TypeUtils.unifyTernaryBranches(lhs, rhs)
 }
@@ -1356,7 +1356,7 @@ trait LiteralTyperComponent extends TyperComponent {
     lit
   }
 
-  /** @see [[SymbolUtils.getSymbol]] */
+  /** @see {{{SymbolUtils.getSymbol}}} */
   protected def getSymbol(t: Type): Option[Symbol] =
     SymbolUtils.getSymbol(t)
 }

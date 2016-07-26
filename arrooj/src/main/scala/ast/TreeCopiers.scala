@@ -40,24 +40,24 @@ import tiny.source.Position
 import arrayj.ast.{TreeCopiers => ATreeCopiers, _}
 
 trait TreeCopiers extends ooj.ast.TreeCopiers {
-  /** @see [[arrayj.ast.TreeCopiers.copyArrayInitializer]] */
+  /** @see {{{arrayj.ast.TreeCopiers.copyArrayInitializer}}} */
   def copyArrayInitializer(template: ArrayInitializerApi)(
       elements: List[Expr] = template.elements): ArrayInitializerApi =
     ATreeCopiers.copyArrayInitializer(template)(elements)
 
 
-  /** @see [[arrayj.ast.TreeCopiers.copyArrayAccess]] */
+  /** @see {{{arrayj.ast.TreeCopiers.copyArrayAccess}}} */
   def copyArrayAccess(template: ArrayAccessApi)(
     array: Expr = template.array,
     index: Expr = template.index): ArrayAccessApi =
     ATreeCopiers.copyArrayAccess(template)(array, index)
 
-  /** @see [[arrayj.ast.TreeCopiers.copyArrayTypeUse]] */
+  /** @see {{{arrayj.ast.TreeCopiers.copyArrayTypeUse}}} */
   def copyArrayTypeUse(template: ArrayTypeUseApi)(
       tpt: UseTree = template.tpt): ArrayTypeUseApi =
     ATreeCopiers.copyArrayTypeUse(template)(tpt)
 
-  /** @see [[arrayj.ast.TreeCopiers.copyArrayCreation]] */
+  /** @see {{{arrayj.ast.TreeCopiers.copyArrayCreation}}} */
   def copyArrayCreation(template: ArrayCreationApi)(
       array: Expr = template.array,
       size: Option[Expr] = template.size): ArrayCreationApi =

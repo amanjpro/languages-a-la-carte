@@ -252,7 +252,7 @@ trait ArrayInitializerTyperComponent extends TyperComponent {
     }
   }
 
-  /** @see [[sana.primj.typechecker.TypePromotions.widenIfNeeded]] */
+  /** @see {{{sana.primj.typechecker.TypePromotions.widenIfNeeded}}} */
   protected def widenIfNeeded(expr: Expr, tpe: Option[Type]): Expr =
     TypePromotions.widenIfNeeded(expr, tpe)
 

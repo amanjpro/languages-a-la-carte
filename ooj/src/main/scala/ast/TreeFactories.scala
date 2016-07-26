@@ -241,7 +241,7 @@ trait TreeFactories {
 
 
 
-  /** @see [[sana.brokenj.ast.TreeFactories.mkIdent]] */
+  /** @see {{{sana.brokenj.ast.TreeFactories.mkIdent}}} */
   def mkIdent(name: Name,
             pos: Option[Position] = None,
             symbol: Option[Symbol] = None,
@@ -252,7 +252,7 @@ trait TreeFactories {
     res
   }
 
-  /** @see [[sana.brokenj.ast.TreeFactories.mkTypeUse]] */
+  /** @see {{{sana.brokenj.ast.TreeFactories.mkTypeUse}}} */
   def mkTypeUse(name: Name,
             pos: Option[Position] = None,
             symbol: Option[Symbol] = None,
@@ -294,14 +294,14 @@ trait TreeFactories {
   // Delegating already working ones to brokenj.ast.TreeFactories
 
   // From calcj
-  /** @see [[sana.brokenj.ast.TreeFactories.mkCast]] */
+  /** @see {{{sana.brokenj.ast.TreeFactories.mkCast}}} */
   def mkCast(tpt: UseTree, expr: Expr,
            pos: Option[Position] = None): CastApi = {
     TF.mkCast(tpt, expr, pos)
   }
 
 
-  /** @see [[sana.brokenj.ast.TreeFactories.mkLiteral]] */
+  /** @see {{{sana.brokenj.ast.TreeFactories.mkLiteral}}} */
   def mkLiteral(constant: Constant,
               pos: Option[Position] = None,
               owner: Option[Symbol] = None): LiteralApi = {
@@ -309,7 +309,7 @@ trait TreeFactories {
   }
 
 
-  /** @see [[sana.brokenj.ast.TreeFactories.mkBinary]] */
+  /** @see {{{sana.brokenj.ast.TreeFactories.mkBinary}}} */
   def mkBinary(lhs: Expr, op: BOp, rhs: Expr,
               pos: Option[Position] = None,
               tpe: Option[Type]     = None,
@@ -317,7 +317,7 @@ trait TreeFactories {
     TF.mkBinary(lhs, op, rhs, pos, tpe, owner)
   }
 
-  /** @see [[sana.brokenj.ast.TreeFactories.mkUnary]] */
+  /** @see {{{sana.brokenj.ast.TreeFactories.mkUnary}}} */
   def mkUnary(isPostfix: Boolean, op: UOp, expr: Expr,
               pos: Option[Position] = None,
               tpe: Option[Type]     = None,
@@ -328,7 +328,7 @@ trait TreeFactories {
   // From primj
 
 
-  /** @see [[sana.brokenj.ast.TreeFactories.mkAssign]] */
+  /** @see {{{sana.brokenj.ast.TreeFactories.mkAssign}}} */
   def mkAssign(lhs: Expr, rhs: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): AssignApi = {
@@ -336,7 +336,7 @@ trait TreeFactories {
   }
 
 
-  /** @see [[sana.brokenj.ast.TreeFactories.mkIf]] */
+  /** @see {{{sana.brokenj.ast.TreeFactories.mkIf}}} */
   def mkIf(cond: Expr, thenp: Expr, elsep: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): IfApi = {
@@ -344,28 +344,28 @@ trait TreeFactories {
   }
 
 
-  /** @see [[sana.brokenj.ast.TreeFactories.mkWhile]] */
+  /** @see {{{sana.brokenj.ast.TreeFactories.mkWhile}}} */
   def mkWhile(isDoWhile: Boolean, cond: Expr, body: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): WhileApi = {
     TF.mkWhile(isDoWhile, cond, body, pos, owner)
   }
 
-  /** @see [[sana.brokenj.ast.TreeFactories.mkFor]] */
+  /** @see {{{sana.brokenj.ast.TreeFactories.mkFor}}} */
   def mkFor(inits: List[Tree], cond: Expr, steps: List[Expr],
     body: Expr, pos: Option[Position] = None,
     symbol: Option[Symbol] = None): ForApi = {
     TF.mkFor(inits, cond, steps, body, pos, symbol)
   }
 
-  /** @see [[sana.brokenj.ast.TreeFactories.mkBlock]] */
+  /** @see {{{sana.brokenj.ast.TreeFactories.mkBlock}}} */
   def mkBlock(stmts: List[Tree],
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None): BlockApi = {
     TF.mkBlock(stmts, pos, symbol)
   }
 
-  /** @see [[sana.brokenj.ast.TreeFactories.mkTernary]] */
+  /** @see {{{sana.brokenj.ast.TreeFactories.mkTernary}}} */
   def mkTernary(cond: Expr, thenp: Expr, elsep: Expr,
     pos: Option[Position] = None,
     tpe: Option[Type]     = None,
@@ -374,14 +374,14 @@ trait TreeFactories {
   }
 
 
-  /** @see [[sana.brokenj.ast.TreeFactories.mkApply]] */
+  /** @see {{{sana.brokenj.ast.TreeFactories.mkApply}}} */
   def mkApply(fun: Expr, args: List[Expr],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): ApplyApi = {
     TF.mkApply(fun, args, pos, owner)
   }
 
-  /** @see [[sana.brokenj.ast.TreeFactories.mkReturn]] */
+  /** @see {{{sana.brokenj.ast.TreeFactories.mkReturn}}} */
   def mkReturn(expr: Option[Expr],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): ReturnApi = {
@@ -390,7 +390,7 @@ trait TreeFactories {
 
 
 
-  /** @see [[sana.brokenj.ast.TreeFactories.mkValDef]] */
+  /** @see {{{sana.brokenj.ast.TreeFactories.mkValDef}}} */
   def mkValDef(mods: Flags, tpt: UseTree, name: Name,
     rhs: Expr, pos: Option[Position] = None,
     symbol: Option[Symbol] = None): ValDefApi = {
@@ -399,35 +399,35 @@ trait TreeFactories {
   }
 
   // brokenj
-  /** @see [[sana.brokenj.ast.TreeFactories.mkLabel]] */
+  /** @see {{{sana.brokenj.ast.TreeFactories.mkLabel}}} */
   def mkLabel(name: Name, stmt: Expr,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): LabelApi = {
     TF.mkLabel(name, stmt, pos, owner)
   }
 
-  /** @see [[sana.brokenj.ast.TreeFactories.mkBreak]] */
+  /** @see {{{sana.brokenj.ast.TreeFactories.mkBreak}}} */
   def mkBreak(label: Option[Name],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): BreakApi = {
     TF.mkBreak(label, pos, owner)
   }
 
-  /** @see [[sana.brokenj.ast.TreeFactories.mkContinue]] */
+  /** @see {{{sana.brokenj.ast.TreeFactories.mkContinue}}} */
   def mkContinue(label: Option[Name],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): ContinueApi = {
     TF.mkContinue(label, pos, owner)
   }
 
-  /** @see [[sana.brokenj.ast.TreeFactories.mkCase]] */
+  /** @see {{{sana.brokenj.ast.TreeFactories.mkCase}}} */
   def mkCase(guards: List[Expr], body: Tree,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): CaseApi = {
     TF.mkCase(guards, body, pos, owner)
   }
 
-  /** @see [[sana.brokenj.ast.TreeFactories.mkSwitch]] */
+  /** @see {{{sana.brokenj.ast.TreeFactories.mkSwitch}}} */
   def mkSwitch(expr: Expr, cases: List[CaseApi],
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): SwitchApi = {

@@ -100,7 +100,7 @@ trait TreeCopiers {
   }
 
   // ppj
-  /** @see [[sana.ppj.ast.TreeCopiers.copySynchronized]] */
+  /** @see {{{sana.ppj.ast.TreeCopiers.copySynchronized}}} */
   def copySynchronized(template: SynchronizedApi)(
       expr: Expr = template.expr, block: BlockApi = template.block,
       pos: Option[Position] = template.pos,

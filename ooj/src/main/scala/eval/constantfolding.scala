@@ -63,7 +63,7 @@ import tiny.ast.{TreeCopiers => _, _}
  * After performing constant collection, this phase comes and evaluates
  * the program.
  *
- * @see [[ConstantCollectingComponent]]
+ * @see {{{ConstantCollectingComponent}}}
  */
 trait ConstantFoldingComponent extends
   TransformationComponent[(Tree, Env), (Tree, Env)] {
@@ -238,13 +238,13 @@ trait ValDefConstantFoldingComponent
     TreeCopiers.copyValDef(valdef)(rhs = rhs)
   }
 
-  /** @see [[TreeUtils.narrowDown]] */
+  /** @see {{{TreeUtils.narrowDown}}} */
   protected def narrowDown(lit: LiteralApi, tpe: Type): LiteralApi =
     TreeUtils.narrowDown(lit, tpe)
-  /** @see [[TreeUtils.widen]] */
+  /** @see {{{TreeUtils.widen}}} */
   protected def widen(lit: LiteralApi, tpe: Type): LiteralApi =
     TreeUtils.widen(lit, tpe)
-  /** @see [[TypePromotions.narrowDown]] */
+  /** @see {{{TypePromotions.narrowDown}}} */
   protected def isNarrawableTo(e: Tree, t: Type): Boolean =
     TypePromotions.isNarrawableTo(e, t)
 
@@ -338,7 +338,7 @@ trait SelectConstantFoldingComponent
     } else (slct, env)
   }
 
-  /** @see [[TreeUtils.isConstantLiteral]] */
+  /** @see {{{TreeUtils.isConstantLiteral}}} */
   protected def isConstantLiteral(tree: Tree): Boolean =
     TreeUtils.isConstantLiteral(tree)
 
@@ -357,7 +357,7 @@ trait SelectConstantFoldingComponent
    */
   protected val stringClassType: Type = TypeUtils.stringClassType
 
-  /** @see [[SymbolUtils.isTypeSymbol]] */
+  /** @see {{{SymbolUtils.isTypeSymbol}}} */
   def isTypeSymbol(sym: Option[Symbol]): Boolean =
     SymbolUtils.isTypeSymbol(sym)
 
@@ -378,7 +378,7 @@ trait TypeUseConstantFoldingComponent
     (nameTypeUse(tuse), env)
   }
 
-  /** Uses [[TypeUseNamer.nameTypeUse]] to name instance of TypeUseApi */
+  /** Uses {{{TypeUseNamer.nameTypeUse}}} to name instance of TypeUseApi */
   protected def nameTypeUse(tuse: TypeUseApi): UseTree =
     typeUseNamer.nameTypeUse(tuse)
 
@@ -809,7 +809,7 @@ trait BinaryConstantFoldingComponent
     case Mod     => _ % _
   }
 
-  /** @see [[TypeUtils.stringClassType]] */
+  /** @see {{{TypeUtils.stringClassType}}} */
   protected val stringClassType: Type = TypeUtils.stringClassType
 }
 
@@ -937,11 +937,11 @@ trait TernaryConstantFoldingComponent
     (res, env3)
   }
 
-  /** @see [[TreeUtils.isConstantLiteral]] */
+  /** @see {{{TreeUtils.isConstantLiteral}}} */
   protected def isConstantLiteral(tree: Tree): Boolean =
     TreeUtils.isConstantLiteral(tree)
 
-  /** @see [[TypeUtils.unifyTernaryBranches]] */
+  /** @see {{{TypeUtils.unifyTernaryBranches}}} */
   protected def unifyTernaryBranches(lhs: Expr, rhs: Expr): Option[Type] =
     TypeUtils.unifyTernaryBranches(lhs, rhs)
 }
@@ -980,18 +980,18 @@ trait CastConstantFoldingComponent
     (newTree, newEnv)
   }
 
-  /** @see [[TreeUtils.narrowDown]] */
+  /** @see {{{TreeUtils.narrowDown}}} */
   protected def narrowDown(lit: LiteralApi, tpe: Type): LiteralApi =
     TreeUtils.narrowDown(lit, tpe)
 
-  /** @see [[TreeUtils.widen]] */
+  /** @see {{{TreeUtils.widen}}} */
   protected def widen(lit: LiteralApi, tpe: Type): LiteralApi =
     TreeUtils.widen(lit, tpe)
 
-  /** @see [[TypeUtils..stringClassType]] */
+  /** @see {{{TypeUtils..stringClassType}}} */
   protected val stringClassType: Type = TypeUtils.stringClassType
 
-  /** @see [[TypePromotions.isNarrawableTo]] */
+  /** @see {{{TypePromotions.isNarrawableTo}}} */
   protected def isNarrawableTo(e: Tree, t: Type): Boolean =
     TypePromotions.isNarrawableTo(e, t)
 }

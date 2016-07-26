@@ -110,7 +110,7 @@ trait IdentTyperComponent extends ooj.typechecker.IdentTyperComponent {
     }
   }
 
-  /** @see [[TreeUtils.attachQualifiedNameAttribute]] */
+  /** @see {{{TreeUtils.attachQualifiedNameAttribute}}} */
   protected def attachQualifiedNameAttribute(use: UseTree): Unit =
     TreeUtils.attachQualifiedNameAttribute(use)
 }
@@ -145,7 +145,7 @@ trait TypeUseTyperComponent
     }
   }
 
-  /** @see [[TreeUtils.attachQualifiedNameAttribute]] */
+  /** @see {{{TreeUtils.attachQualifiedNameAttribute}}} */
   protected def attachQualifiedNameAttribute(use: UseTree): Unit =
     TreeUtils.attachQualifiedNameAttribute(use)
 }
@@ -158,7 +158,7 @@ trait SelectTyperComponent extends arrooj.typechecker.SelectTyperComponent {
     super.apply(slct)
   }
 
-  /** @see [[TreeUtils.attachQualifiedNameAttribute]] */
+  /** @see {{{TreeUtils.attachQualifiedNameAttribute}}} */
   protected def attachQualifiedNameAttribute(use: UseTree): Unit =
     TreeUtils.attachQualifiedNameAttribute(use)
 }

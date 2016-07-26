@@ -177,7 +177,7 @@ trait ClassDefNamerComponent extends NamerComponent {
     res.getOrElse("")
   }
 
-  /** @see [[SymbolUtils.enclosingPackage]] */
+  /** @see {{{SymbolUtils.enclosingPackage}}} */
   protected def enclosingPackage(sym: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingPackage(sym)
 
@@ -187,7 +187,7 @@ trait ClassDefNamerComponent extends NamerComponent {
   protected def langPackageName: Name =
     StdNames.LANG_PACKAGE_NAME
 
-  /** @see [[SymbolUtils.langPackageName]] */
+  /** @see {{{SymbolUtils.langPackageName}}} */
   protected def langPackageSymbol: PackageSymbol =
     SymbolUtils.langPackageSymbol
 
@@ -255,7 +255,7 @@ trait TypeUseNamerComponent extends NamerComponent {
     tuse
   }
 
-  /** @see [[SymbolUtils.isAnAccessibleType]] */
+  /** @see {{{SymbolUtils.isAnAccessibleType}}} */
   protected def isAnAccessibleType(sym: Option[Symbol],
     encl: Option[Symbol]): Boolean =
       SymbolUtils.isAnAccessibleType(sym, encl)
@@ -336,7 +336,7 @@ trait IdentNamerComponent extends NamerComponent {
   }
 
 
-  /** @see [[IdentNamer.identNamer]] */
+  /** @see {{{IdentNamer.identNamer}}} */
   protected def nameIdent(id: IdentApi): UseTree =
     identNamer.nameIdent(id)
 
@@ -422,7 +422,7 @@ trait IdentNamer {
 
 
 
-  /** @see [[SymbolUtils.isAnAccessibleType]] */
+  /** @see {{{SymbolUtils.isAnAccessibleType}}} */
   protected def isAnAccessibleType(sym: Option[Symbol],
     encl: Option[Symbol]): Boolean =
     SymbolUtils.isAnAccessibleType(sym, encl)

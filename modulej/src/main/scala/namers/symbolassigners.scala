@@ -85,7 +85,7 @@ trait CompilationUnitSymbolAssignerComponent extends SymbolAssignerComponent {
     }
   }
 
-  /** @see [[SymbolUtils.rootSymbol]] */
+  /** @see {{{SymbolUtils.rootSymbol}}} */
   protected def rootSymbol: Option[Symbol] =
     SymbolUtils.rootSymbol
 }

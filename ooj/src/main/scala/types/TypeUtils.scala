@@ -100,7 +100,6 @@ trait TypeUtils extends sana.primj.types.TypeUtils {
     ClassType(qual, name, Set(SymbolUtils.objectClassSymbol))
   }
 
-  /** @see [[primj.types.TypeUtils.unifyTernaryBranches]] */
   override def unifyTernaryBranches(lhs: Expr, rhs: Expr): Option[Type] = {
     (lhs.tpe, rhs.tpe) match {
       case (Some(NullType), Some(tpe))                                 =>

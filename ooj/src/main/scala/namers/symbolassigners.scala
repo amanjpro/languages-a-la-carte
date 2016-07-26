@@ -296,14 +296,14 @@ trait ClassDefSymbolAssignerComponent extends SymbolAssignerComponent {
   /** Returns the symbol of void */
   protected def voidSymbol: Option[Symbol]  = Some(VoidSymbol)
 
-  /** @see [[TreeUtils.isConstructor]] */
+  /** @see {{{TreeUtils.isConstructor}}} */
   protected def isConstructor(tree: Tree): Boolean =
     TreeUtils.isConstructor(tree)
-  /** @see [[SymbolUtils.enclosingPackage]] */
+  /** @see {{{SymbolUtils.enclosingPackage}}} */
   protected def enclosingPackage(sym: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingPackage(sym)
 
-  /** @see [[SymbolUtils.langPackageSymbol]] */
+  /** @see {{{SymbolUtils.langPackageSymbol}}} */
   protected def langPackageSymbol: Symbol = SymbolUtils.langPackageSymbol
 
   /**
@@ -381,7 +381,7 @@ trait ThisSymbolAssignerComponent extends SymbolAssignerComponent {
     ths
   }
 
-  /** @see [[SymbolUtils.enclosingClass]] */
+  /** @see {{{SymbolUtils.enclosingClass}}} */
   def enclosingClass(owner: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingClass(owner)
 }
@@ -517,9 +517,9 @@ trait MethodDefSymbolAssignerComponent
 
   protected def voidName: Name              = StdNames.VOID_TYPE_NAME
   protected val constructorName: Name       = StdNames.CONSTRUCTOR_NAME
-  /** @see [[SymbolUtils.langPackageSymbol]] */
+  /** @see {{{SymbolUtils.langPackageSymbol}}} */
   protected val langPackageSymbol: Symbol   = SymbolUtils.langPackageSymbol
-  /** @see [[SymbolUtils.enclosingPackage]] */
+  /** @see {{{SymbolUtils.enclosingPackage}}} */
   protected def enclosingPackage(sym: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingPackage(sym)
 }
@@ -546,7 +546,7 @@ trait ValDefSymbolAssignerComponent
     }
   }
 
-  /** @see [[SymbolUtils.enclosingClass]] */
+  /** @see {{{SymbolUtils.enclosingClass}}} */
   protected def enclosingClass(symbol: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingClass(symbol)
 }

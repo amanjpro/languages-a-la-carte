@@ -195,7 +195,7 @@ trait TemplateInitializerComponent extends InitializerComponent {
 
   }
 
-  /** @see [[SymbolUtils.enclosingClass]] */
+  /** @see {{{SymbolUtils.enclosingClass}}} */
   protected def enclosingClass(owner: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingClass(owner)
 }

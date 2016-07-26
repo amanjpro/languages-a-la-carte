@@ -40,7 +40,7 @@ import tiny.source.Position
 import arrayj.ast.{TreeFactories => ATreeFactories, _}
 
 trait TreeFactories extends ooj.ast.TreeFactories {
-  /** @see [[arrayj.ast.TreeFactories.mkArrayInitializer]] */
+  /** @see {{{arrayj.ast.TreeFactories.mkArrayInitializer}}} */
   def mkArrayInitializer(elements: List[Expr],
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None,
@@ -49,7 +49,7 @@ trait TreeFactories extends ooj.ast.TreeFactories {
     ATreeFactories.mkArrayInitializer(elements, pos, symbol, owner, tpe)
 
 
-  /** @see [[arrayj.ast.TreeFactories.mkArrayAccess]] */
+  /** @see {{{arrayj.ast.TreeFactories.mkArrayAccess}}} */
   def mkArrayAccess(array: Expr, index: Expr,
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None,
@@ -58,7 +58,7 @@ trait TreeFactories extends ooj.ast.TreeFactories {
     ATreeFactories.mkArrayAccess(array, index, pos, symbol, owner, tpe)
 
 
-  /** @see [[arrayj.ast.TreeFactories.mkArrayTypeUse]] */
+  /** @see {{{arrayj.ast.TreeFactories.mkArrayTypeUse}}} */
   def mkArrayTypeUse(tpt: UseTree,
     pos: Option[Position] = None,
     symbol: Option[Symbol] = None,
@@ -66,7 +66,7 @@ trait TreeFactories extends ooj.ast.TreeFactories {
     tpe: Option[Type] = None): ArrayTypeUseApi =
     ATreeFactories.mkArrayTypeUse(tpt, pos, symbol, owner, tpe)
 
-  /** @see [[arrayj.ast.TreeFactories.mkArrayCreation]] */
+  /** @see {{{arrayj.ast.TreeFactories.mkArrayCreation}}} */
   def mkArrayCreation(array: Expr,
     size: Option[Expr],
     pos: Option[Position] = None,

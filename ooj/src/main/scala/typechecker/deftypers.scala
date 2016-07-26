@@ -151,7 +151,7 @@ trait ClassDefDefTyperComponent extends DefTyperComponent {
   }
 
 
-  /** @see [[SymbolUtils.packageName]] */
+  /** @see {{{SymbolUtils.packageName}}} */
   protected def packageName(symbol: ClassSymbol): String =
     SymbolUtils.packageName(symbol)
 }

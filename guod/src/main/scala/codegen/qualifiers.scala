@@ -195,7 +195,7 @@ trait IdentQualifierComponent extends QualifierComponent {
     }
   }
 
-  /** @see [[SymbolUtils.enclosingClass]] */
+  /** @see {{{SymbolUtils.enclosingClass}}} */
   protected def enclosingClass(owner: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingClass(owner)
 }
@@ -479,11 +479,11 @@ trait TypeUseQualifierComponent extends QualifierComponent {
     }
   }
 
-  /** @see [[TreeUtils.fromQualifiedString]] */
+  /** @see {{{TreeUtils.fromQualifiedString}}} */
   protected def fromQualifiedString(name: String): UseTree =
     TreeUtils.fromQualifiedString(name)
 
-  /** @see [[SymbolUtils.toFullyQualifiedTypeName]] */
+  /** @see {{{SymbolUtils.toFullyQualifiedTypeName}}} */
   protected def toFullyQualifiedTypeName(symbol: Option[Symbol]): String =
     SymbolUtils.toFullyQualifiedTypeName(symbol)
 }

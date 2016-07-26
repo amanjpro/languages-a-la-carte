@@ -129,7 +129,7 @@ class Env {
 
   /**
    * Enters a new method. Whenever entering a new method, the
-   * [[Env.env]], [[Env.current]] and [[Env.max]] is reset
+   * {{{Env.env}}} [[Env.current]] and [[Env.max]] is reset
    *
    * @param symbol the symbol of the new method
    */

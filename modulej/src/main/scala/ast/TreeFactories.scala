@@ -86,7 +86,7 @@ trait TreeFactories {
   }
 
   // ppj
-  /** @see [[sana.ppj.ast.TreeFactories.mkSynchronized]] */
+  /** @see {{{sana.ppj.ast.TreeFactories.mkSynchronized}}} */
   def mkSynchronized(expr: Expr, block: BlockApi,
     pos: Option[Position] = None,
     owner: Option[Symbol] = None): SynchronizedApi = {

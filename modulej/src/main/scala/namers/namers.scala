@@ -56,7 +56,7 @@ import modulej.ast.Implicits._
 @component
 trait ClassDefNamerComponent extends ooj.namers.ClassDefNamerComponent {
 
-  /** @see [[ooj.namers.ClassDefNamerComponent.addObjectParentIfNeeded]] */
+  /** @see {{{ooj.namers.ClassDefNamerComponent.addObjectParentIfNeeded}}} */
   override protected def addObjectParentIfNeeded(
     clazz: ClassDefApi): List[UseTree] = {
     if(clazz.name == objectClassName &&
@@ -111,11 +111,11 @@ trait CompilationUnitNamerComponent extends NamerComponent {
     }
   }
 
-  /** @see [[TreeUtils.toQualifiedString]] */
+  /** @see {{{TreeUtils.toQualifiedString}}} */
   protected def toQualifiedString(use: UseTree): String =
     TreeUtils.toQualifiedString(use)
 
-  /** @see [[SymbolUtils.langPackageSymbol]] */
+  /** @see {{{SymbolUtils.langPackageSymbol}}} */
   protected def langPackageSymbol: PackageSymbol =
     SymbolUtils.langPackageSymbol
 }
@@ -150,7 +150,7 @@ trait TypeUseNamerComponent extends NamerComponent {
     }
   }
 
-  /** @see [[SymbolUtils.isAnAccessibleType]] */
+  /** @see {{{SymbolUtils.isAnAccessibleType}}} */
   protected def isAnAccessibleType(sym: Option[Symbol],
     encl: Option[Symbol]): Boolean =
       SymbolUtils.isAnAccessibleType(sym, encl)
@@ -173,7 +173,7 @@ trait TypeUseNamerComponent extends NamerComponent {
     }
   }
 
-  /** @see [[TreeUtils.attachQualifiedNameAttribute]] */
+  /** @see {{{TreeUtils.attachQualifiedNameAttribute}}} */
   protected def attachQualifiedNameAttribute(use: UseTree): Unit =
     TreeUtils.attachQualifiedNameAttribute(use)
 }
@@ -203,7 +203,7 @@ trait IdentNamerComponent extends ooj.namers.IdentNamerComponent {
     }
   }
 
-  /** @see [[TreeUtils.attachQualifiedNameAttribute]] */
+  /** @see {{{TreeUtils.attachQualifiedNameAttribute}}} */
   protected def attachQualifiedNameAttribute(use: UseTree): Unit =
     TreeUtils.attachQualifiedNameAttribute(use)
 }
@@ -215,7 +215,7 @@ trait IdentNamerComponent extends ooj.namers.IdentNamerComponent {
  */
 trait TypeUseNamer extends SimpleUseNamer with ooj.typechecker.TypeUseNamer {
 
-  /** @see [[ooj.typechecker.TypeUseNamer.nameTypeUse]] */
+  /** @see {{{ooj.typechecker.TypeUseNamer.nameTypeUse}}} */
   override def nameTypeUse(tuse: TypeUseApi): UseTree = {
     val imports = enclosingCompilationUnit(tuse.owner) match {
       case Some(sym: CompilationUnitSymbol) =>
@@ -258,7 +258,7 @@ trait TypeUseNamer extends SimpleUseNamer with ooj.typechecker.TypeUseNamer {
  * of `import` statements into account when naming.
  */
 trait IdentNamer extends ooj.namers.IdentNamer with SimpleUseNamer {
-  /** [[ooj.namers.IdentNamer.nameIdent]] */
+  /** {{{ooj.namers.IdentNamer.nameIdent}}} */
   override def nameIdent(id: IdentApi): UseTree = {
     val res = super.nameIdent(id)
     res.symbol match {
@@ -400,7 +400,7 @@ trait SimpleUseNamer {
   }
 
 
-  /** @see [[SymbolUtils.enclosingCompilationUnit]] */
+  /** @see {{{SymbolUtils.enclosingCompilationUnit}}} */
   protected def enclosingCompilationUnit(sym:
       Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingCompilationUnit(sym)
@@ -426,7 +426,7 @@ trait SimpleUseNamer {
     !(use.isImportQual || use.isQualified || use.isImported)
 
 
-  /** @see [[TreeUtils.toQualifiedString]] */
+  /** @see {{{TreeUtils.toQualifiedString}}} */
   protected def toQualifiedString(use: UseTree): String =
     TreeUtils.toQualifiedString(use)
 
@@ -455,11 +455,11 @@ trait SimpleUseNamer {
         tree
     }
 
-  /** @see [[TreeUtils.toPackage]] */
+  /** @see {{{TreeUtils.toPackage}}} */
   protected def toPackage(names: List[String]): PackageDefApi =
     TreeUtils.toPackage(names)
 
-  /** @see [[SymbolUtils.rootSymbol]] */
+  /** @see {{{SymbolUtils.rootSymbol}}} */
   protected def rootSymbol: Option[Symbol] =
     SymbolUtils.rootSymbol
 
@@ -473,7 +473,7 @@ trait SelectNamerComponent extends ooj.namers.SelectNamerComponent {
     super.apply(slct)
   }
 
-  /** @see [[TreeUtils.attachQualifiedNameAttribute]] */
+  /** @see {{{TreeUtils.attachQualifiedNameAttribute}}} */
   protected def attachQualifiedNameAttribute(use: UseTree): Unit =
     TreeUtils.attachQualifiedNameAttribute(use)
 }

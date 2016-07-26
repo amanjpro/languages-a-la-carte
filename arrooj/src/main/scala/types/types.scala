@@ -53,10 +53,10 @@ trait ArrayType extends RefType {
   /** The type of the component of this array-type */
   def componentType: Type
 
-  /** @see [[RefType.parents]] */
+  /** @see {{{RefType.parents}}} */
   def parents: Set[Symbol] = Set.empty
 
-  /** @see [[RefType.name]] */
+  /** @see {{{RefType.name}}} */
   def name: Name   = componentType match {
     case ct: RefType =>
       Name(s"[${ct.name.asString}]")

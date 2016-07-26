@@ -438,7 +438,7 @@ trait AssignConstructorsCheckerComponent extends
     }
   }
 
-  /** @see [[SymbolUtils.enclosingNonLocal]] */
+  /** @see {{{SymbolUtils.enclosingNonLocal}}} */
   protected def enclosingNonLocal(owner: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingNonLocal(owner)
 }

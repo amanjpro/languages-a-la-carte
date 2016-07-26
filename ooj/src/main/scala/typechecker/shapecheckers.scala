@@ -143,7 +143,7 @@ trait MethodDefShapeCheckerComponent extends
   protected def isConstructor(sym: Option[Symbol]): Boolean =
     sym.map(s => SymbolUtils.isConstructor(s)).getOrElse(false)
 
-  /** @see [[TreeUtils.isTypeUse]] */
+  /** @see {{{TreeUtils.isTypeUse}}} */
   override protected def isTypeUse(tree: UseTree): Boolean =
     TreeUtils.isTypeUse(tree)
 }
@@ -183,7 +183,7 @@ trait ClassDefShapeCheckerComponent extends
     }
   }
 
-  /** @see [[TreeUtils.isTypeUse]] */
+  /** @see {{{TreeUtils.isTypeUse}}} */
   protected def isTypeUse(tree: UseTree): Boolean =
     TreeUtils.isTypeUse(tree)
 }
@@ -210,11 +210,11 @@ trait ValDefShapeCheckerComponent extends
   primj.typechecker.ValDefShapeCheckerComponent {
 
 
-  /** @see [[TreeUtils.isTypeUse]] */
+  /** @see {{{TreeUtils.isTypeUse}}} */
   override protected def isTypeUse(tree: UseTree): Boolean =
     TreeUtils.isTypeUse(tree)
 
-  /** @see [[TreeUtils.isSimpleExpression]] */
+  /** @see {{{TreeUtils.isSimpleExpression}}} */
   override protected def isSimpleExpression(tree: Tree): Boolean =
     TreeUtils.isSimpleExpression(tree)
 }
@@ -225,7 +225,7 @@ trait LabelShapeCheckerComponent extends
   brokenj.typechecker.LabelShapeCheckerComponent {
 
 
-  /** @see [[TreeUtils.canHaveLabel]] */
+  /** @see {{{TreeUtils.canHaveLabel}}} */
   override protected def canHaveLabel(stmt: Expr): Boolean =
     TreeUtils.canHaveLabel(stmt)
 }
@@ -234,7 +234,7 @@ trait LabelShapeCheckerComponent extends
 trait BlockShapeCheckerComponent extends
   primj.typechecker.BlockShapeCheckerComponent {
 
-  /** @see [[TreeUtils.isValidStatement]] */
+  /** @see {{{TreeUtils.isValidStatement}}} */
   override protected def isValidStmt(t: Tree): Boolean =
     TreeUtils.isValidStatement(t)
 }
@@ -243,11 +243,11 @@ trait BlockShapeCheckerComponent extends
 trait IfShapeCheckerComponent extends
   primj.typechecker.IfShapeCheckerComponent {
 
-  /** @see [[TreeUtils.isValidStatement]] */
+  /** @see {{{TreeUtils.isValidStatement}}} */
   override protected def isValidStmt(t: Tree): Boolean =
     TreeUtils.isValidStatement(t)
 
-  /** @see [[TreeUtils.isValidExpression]] */
+  /** @see {{{TreeUtils.isValidExpression}}} */
   override protected def isValidExpr(t: Tree): Boolean =
     TreeUtils.isValidExpression(t)
 
@@ -257,11 +257,11 @@ trait IfShapeCheckerComponent extends
 trait WhileShapeCheckerComponent extends
   primj.typechecker.WhileShapeCheckerComponent {
 
-  /** @see [[TreeUtils.isValidStatement]] */
+  /** @see {{{TreeUtils.isValidStatement}}} */
   override protected def isValidStmt(t: Tree): Boolean =
     TreeUtils.isValidStatement(t)
 
-  /** @see [[TreeUtils.isValidExpression]] */
+  /** @see {{{TreeUtils.isValidExpression}}} */
   override protected def isValidExpr(t: Tree): Boolean =
     TreeUtils.isValidExpression(t)
 
@@ -271,15 +271,15 @@ trait WhileShapeCheckerComponent extends
 trait ForShapeCheckerComponent extends
   primj.typechecker.ForShapeCheckerComponent {
 
-  /** @see [[TreeUtils.isValDefOrStatementExpression]] */
+  /** @see {{{TreeUtils.isValDefOrStatementExpression}}} */
   override protected def isValDefOrStatementExpression(t: Tree): Boolean =
     TreeUtils.isValDefOrStatementExpression(t)
 
-  /** @see [[TreeUtils.isValidStatement]] */
+  /** @see {{{TreeUtils.isValidStatement}}} */
   override protected def isValidStmt(t: Tree): Boolean =
     TreeUtils.isValidStatement(t)
 
-  /** @see [[TreeUtils.isValidExpression]] */
+  /** @see {{{TreeUtils.isValidExpression}}} */
   override protected def isValidExpr(t: Tree): Boolean =
     TreeUtils.isValidExpression(t)
 }
@@ -288,7 +288,7 @@ trait ForShapeCheckerComponent extends
 trait CastShapeCheckerComponent extends
   primj.typechecker.CastShapeCheckerComponent {
 
-  /** @see [[TreeUtils.isTypeUse]] */
+  /** @see {{{TreeUtils.isTypeUse}}} */
   override protected def isTypeUse(t: UseTree): Boolean =
     TreeUtils.isTypeUse(t)
 }

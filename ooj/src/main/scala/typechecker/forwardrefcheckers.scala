@@ -140,7 +140,7 @@ trait BlockForwardRefCheckerComponent extends ForwardRefCheckerComponent {
     }
   }
 
-  /** @see [[SymbolUtils.enclosingClass]] */
+  /** @see {{{SymbolUtils.enclosingClass}}} */
   protected def enclosingClass(sym: Option[Symbol]): Option[Symbol] =
     SymbolUtils.enclosingClass(sym)
 }
