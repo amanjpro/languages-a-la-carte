@@ -49,9 +49,35 @@ And the integration tests can run using:
 ```
 
 
+## SBT
+
+If you are using sbt 0.13.6+, you can skip adding a resolver for JCenter:
+
+```
+resolvers += Resolver.jcenterRepo
+```
+
+For tiny (the bare framework):
+
+```
+  libraryDependencies ++= List("ch.usi.inf.l3.sana" % "tiny" % "1.0.1")
+```
+
+For the full Java 1.0:
+
+```
+  libraryDependencies ++= List("ch.usi.inf.l3.sana" % "guod" % "1.0.1")
+```
+
+Other trims are:
+  calcj, primj, brokenj, arrayj, ooj, arrooj, robustj, dynj, ppj, modulej
+
+To know what they contain, please refer to the manual.
+
 ## Usage
 
 Please refer to the [wiki](https://github.com/amanjpro/languages-a-la-carte/wiki)
+
 
 ## Contributing
 
