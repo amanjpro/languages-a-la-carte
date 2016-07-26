@@ -54,7 +54,6 @@ And the integration tests can run using:
 If you are using sbt 0.13.6+, you can skip adding a resolver for JCenter:
 
 ```
-resolvers += Resolver.jcenterRepo
 ```
 
 For tiny (the bare framework):
@@ -93,7 +92,7 @@ Please refer to the [wiki](https://github.com/amanjpro/languages-a-la-carte/wiki
 [here](https://groups.google.com/d/forum/sana-compiler-framework)
 
 ## Scaladoc and Website
-[here](https://groups.google.com/d/forum/sana-compiler-framework)
+[here](http://amanjpro.github.io/languages-a-la-carte/)
 
 [](## History)
 
