@@ -42,10 +42,35 @@
   </div>
   </div>
     <h3>SBT dependency</h3>
-    Add the following to your SBT build script to include Sana as dependency.
+    If you are using sbt 0.13.6+, you can skip adding a resolver for JCenter:
+
     <code>
-      kja
+    resolvers += Resolver.jcenterRepo
     </code>
+
+    For tiny (the bare framework):
+
+    <code>
+      libraryDependencies ++= List("ch.usi.inf.l3.sana" % "tiny" % "1.0.1")
+      </code>
+
+    For the full Java 1.0:
+
+    <code>
+      libraryDependencies ++= List("ch.usi.inf.l3.sana" % "guod" % "1.0.1")
+      </code>
+
+    Other trims are:
+      calcj, primj, brokenj, arrayj, ooj, arrooj, robustj, dynj, ppj, modulej
+
+    To know what they contain, please refer to the manual.
+  </div>
+  </div>
+    <h3>Publications</h3>
+    Forthcoming...
+  </div>
+  </div>
+    Last, but not least the source code can be found at: github.com/amanjpro/languages-a-la-carte
   </div>
 </body>
 </html>
