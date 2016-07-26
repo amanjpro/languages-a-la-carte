@@ -2,6 +2,8 @@ import sbt._
 import Keys._
 import com.simplytyped.Antlr4Plugin._
 import sbtunidoc.Plugin._
+import bintray.BintrayPlugin._
+import bintray.BintrayKeys._
 import UnidocKeys._
 import sbtassembly.AssemblyPlugin.autoImport._
 import de.heikoseeberger.sbtheader.HeaderPattern
@@ -10,8 +12,8 @@ import de.heikoseeberger.sbtheader.HeaderKey._
 
 
 object SharedSettings {
-  // def sourceURL(proj: String, branch: String = "master"): String =
-  //   s"https://github.com/amanjpro/sana/blob/$branch/$proj€{FILE_PATH}.scala#L1"
+  def sourceURL(proj: String, branch: String = "master"): String =
+    s"https://github.com/amanjpro/languages-a-la-carte/blob/$branch/$proj€{FILE_PATH}.scala#L1"
 
   def antlr(proj: String): Option[String] =
     Some(s"ch.usi.inf.l3.sana.$proj.antlr")
@@ -21,10 +23,36 @@ object SharedSettings {
   def antlrSetting(name: String): Setting[Option[String]] =
     antlr4PackageName in Antlr4 := antlr(name)
 
-  val buildSettings  = antlr4Settings ++ Defaults.defaultSettings ++ Seq(
-    version := "0.1-SNAPSHOT",
-    organization := "ch.usi.inf.l3",
+
+  val buildSettings  = antlr4Settings ++ Defaults.defaultSettings ++
+      bintraySettings ++ Seq(
+    version := "1.0.1",
+    organization := "ch.usi.inf.l3.sana",
+    bintrayOrganization := Some("sana"),
+    crossPaths := false,
+    publishMavenStyle := true,
+    // pomExtra := pomXml,
+    pomExtra := (
+      <scm>
+        <url>git@github.com:amanjpro/languages-a-la-carte.git</url>
+        <connection>scm:git:git@github.com:amanjpro/languages-a-la-carte.git</connection>
+      </scm>
+      <developers>
+        <developer>
+          <id>amanjpro</id>
+          <name>Amanj Sherwany</name>
+          <url>https://github.com/amanjpro</url>
+        </developer>
+        <developer>
+          <id>nosheenzaza</id>
+          <name>Nosheen Zaza</name>
+          <url>https://github.com/nosheenzaza</url>
+        </developer>
+      </developers>
+    ),
     scalaVersion := "2.11.7",
+    licenses += ("BSD New",
+      url("http://opensource.org/licenses/https://opensource.org/licenses/BSD-3-Clause")),
     headers := Map(
       "scala" -> ((
         HeaderPattern.cStyleBlockComment,
@@ -58,7 +86,6 @@ object SharedSettings {
            |""".stripMargin
       ))
     ),
-    apiURL := Some(url("http://sana.github.io")),
     exportJars := true,
     javaSource in Antlr4 := (javaSource in Compile).value,
     antlr4GenListener in Antlr4 := false,
@@ -120,13 +147,14 @@ object build extends Build {
     val proj = Project(
       id   = name,
       base = file(name),
-      settings = buildSettings ++ moreSettings
-        // ++ Seq(
-        // scalacOptions in (Compile, doc) <++= (baseDirectory in
-        //   LocalProject(name)).map {
-        //     bd => Seq("-sourcepath", bd.getAbsolutePath,
-        //       "-doc-source-url", sourceURL(name))
-        //   })
+      settings = buildSettings ++ moreSettings ++ Seq(
+        // publishTo := Some("Sana repository" at "https://api.bintray.com/maven/amanjpro"),
+        apiURL := Some(url(s"http://amanjpro.github.io/languages-a-la-carte/web/api/$name")),
+        scalacOptions in (Compile, doc) <++= (baseDirectory in
+          LocalProject(name)).map {
+            bd => Seq("-sourcepath", bd.getAbsolutePath,
+              "-doc-source-url", sourceURL(name))
+      })
     )
     deps match {
       case Seq()      => proj
@@ -140,7 +168,7 @@ object build extends Build {
   lazy val root = Project(
     id = "root",
     base = file("."),
-    settings = buildSettings,
+    settings = buildSettings ++ Seq(publish := { }),
       // ++
       // site.settings ++ ghpages.settings: _*) ++ settings ),
     aggregate = Seq(testLang, tiny, calcj, primj,
@@ -152,7 +180,7 @@ object build extends Build {
 
   lazy val tiny        = project("tiny")
   lazy val calcj       = project("calcj", Seq(tiny))
-  lazy val testLang    = project("testLang", Seq(tiny))
+  lazy val testLang    = project("testLang", Seq(tiny), Seq(publish := { } ))
   lazy val primj       = project("primj", Seq(calcj), Seq(antlrSetting("primj")))
   lazy val brokenj     = project("brokenj", Seq(primj))
   lazy val ooj         = project("ooj", Seq(brokenj), Seq(antlrSetting("ooj")))
