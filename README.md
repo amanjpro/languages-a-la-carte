@@ -54,6 +54,7 @@ And the integration tests can run using:
 If you are using sbt 0.13.6+, you can skip adding a resolver for JCenter:
 
 ```
+resolvers += Resolver.jcenterRepo
 ```
 
 For tiny (the bare framework):
